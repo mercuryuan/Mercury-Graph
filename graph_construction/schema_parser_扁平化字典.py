@@ -10,21 +10,22 @@ from scipy.stats import norm, kstest
 from neo4j import GraphDatabase
 
 DATE_FORMATS = [
-        '%Y-%m-%d',
-        '%Y/%m/%d',
-        '%Y.%m.%d',
-        '%m/%d/%Y',
-        '%m-%d-%Y',
-        '%d/%m/%Y',
-        '%d-%m-%Y',
-        '%Y-%m-%d %H:%M:%S',
-        '%Y/%m/%d %H:%M:%S',
-        '%Y.%m.%d %H:%M:%S',
-        '%m/%d/%Y %H:%M:%S',
-        '%m-%d-%Y %H:%M:%S',
-        '%d/%m/%Y %H:%M:%S',
-        '%d-%m-%Y %H:%M:%S'
-    ]
+    '%Y-%m-%d',
+    '%Y/%m/%d',
+    '%Y.%m.%d',
+    '%m/%d/%Y',
+    '%m-%d-%Y',
+    '%d/%m/%Y',
+    '%d-%m-%Y',
+    '%Y-%m-%d %H:%M:%S',
+    '%Y/%m/%d %H:%M:%S',
+    '%Y.%m.%d %H:%M:%S',
+    '%m/%d/%Y %H:%M:%S',
+    '%m-%d-%Y %H:%M:%S',
+    '%d/%m/%Y %H:%M:%S',
+    '%d-%m-%Y %H:%M:%S'
+]
+
 
 def convert_date_string(date_str):
     """
@@ -40,6 +41,8 @@ def convert_date_string(date_str):
             continue
     print(f"无法将日期字符串 {date_str} 转换为有效的日期时间格式，请检查数据格式！")
     return None
+
+
 class SchemaParser:
     def __init__(self, neo4j_uri, neo4j_user, neo4j_password, database_file):
         """
@@ -186,7 +189,8 @@ class SchemaParser:
     def _get_column_samples_and_attributes(self, table_name, column_name, data_type):
         """
         随机抽样获取列的数据样本，并计算附加属性（范围或类别等多种属性），
-        为所有类型的列节点添加数据条数属性，对于非id主键的数值型数据添加平均数等相关属性。
+        为所有类型的列节点添加数据条数属性，对于非id主键的数值型数据添加平均数等相关属性，
+        新增根据数据库设计判断列是否为主键或外键并统一添加相应属性到key_type的功能。
 
         :param table_name: 表名
         :param column_name: 列名
@@ -208,11 +212,13 @@ class SchemaParser:
                 # 添加所有类型通用的属性：数据条数
                 additional_attributes['data_count'] = len(values) if values else 0
 
-                # 判断是否为类似id主键的字段（这里简单通过字段名包含"id"来判断，可根据实际调整）
-                is_id_column = "id" in column_name.lower()
+                # 查询列是否为主键
+                is_primary_key = self._is_primary_key(table_name, column_name)
+                # 查询列是否为外键
+                is_foreign_key = self._is_foreign_key(table_name, column_name)
 
                 # 数值型列（INTEGER、REAL）相关属性
-                if data_type.upper() in ["INTEGER", "REAL"] and not is_id_column:
+                if data_type.upper() in ["INTEGER", "REAL"]:
                     additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
                     # additional_attributes['numeric_distribution_type'] = self._get_distribution_type(values)
                     additional_attributes['numeric_mode'] = self._get_mode(values)
@@ -246,17 +252,87 @@ class SchemaParser:
                         rows) if rows else 0
                     additional_attributes['time_completeness'] = (len(values) / len(rows)) if rows else 0
 
-                # 如果是id主键字段，仅设置数据条数属性（也可根据需求添加其他更合适的简单属性）
-                elif is_id_column:
-                    additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
+                # 根据查询结果添加key_type属性（仅针对主键或外键列）
+                key_type = []
+                if is_primary_key:
+                    key_type.append("primary_key")
+                if is_foreign_key:
+                    key_type.append("foreign_key")
+                if key_type:
+                    additional_attributes['key_type'] = key_type
 
             except Exception as e:
                 print(f"Error processing column {column_name} in table {table_name}: {e}")
 
         return samples, additional_attributes
 
-    import numpy as np
-    from scipy.stats import norm, kstest
+    def _is_primary_key(self, table_name, column_name):
+        """
+        判断指定表中的指定列是否为主键，通过查询数据库元数据（以SQLite为例）。
+
+        :param table_name: 表名
+        :param column_name: 列名
+        :return: True如果是主键，False否则
+        """
+        with sqlite3.connect(self.database_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA table_info({table_name})")
+            columns_info = cursor.fetchall()
+            for column_info in columns_info:
+                if column_info[1] == column_name:  # 第2个元素（索引为1）是列名
+                    return bool(column_info[5])  # 第6个元素（索引为5）表示是否为主键，1为主键，0为非主键，不同数据库该位置可能不同
+        return False
+
+    def _is_foreign_key(self, table_name, column_name):
+        """
+        判断指定表中的指定列是否为外键，通过查询数据库元数据（以SQLite为例）。
+
+        :param table_name: 表名
+        :param column_name: 列名
+        :return: True如果是外键，False否则
+        """
+        with sqlite3.connect(self.database_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA foreign_key_list({table_name})")
+            foreign_keys = cursor.fetchall()
+            for foreign_key in foreign_keys:
+                if foreign_key[3] == column_name:  # 第4个元素（索引为3）是本地列名，对应外键列
+                    return True
+        return False
+
+    def _is_primary_key(self, table_name, column_name):
+        """
+        判断指定表中的指定列是否为主键，通过查询数据库元数据（以SQLite为例）。
+
+        :param table_name: 表名
+        :param column_name: 列名
+        :return: True如果是主键，False否则
+        """
+        with sqlite3.connect(self.database_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA table_info({table_name})")
+            columns_info = cursor.fetchall()
+            for column_info in columns_info:
+                if column_info[1] == column_name:  # 第2个元素（索引为1）是列名
+                    return bool(column_info[5])  # 第6个元素（索引为5）表示是否为主键，1为主键，0为非主键，不同数据库该位置可能不同
+        return False
+
+    def _is_foreign_key(self, table_name, column_name):
+        """
+        判断指定表中的指定列是否为外键，通过查询数据库元数据（以SQLite为例）。
+
+        :param table_name: 表名
+        :param column_name: 列名
+        :return: True如果是外键，False否则
+        """
+        with sqlite3.connect(self.database_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA foreign_key_list({table_name})")
+            foreign_keys = cursor.fetchall()
+            for foreign_key in foreign_keys:
+                if foreign_key[3] == column_name:  # 第4个元素（索引为3）是本地列名，对应外键列
+                    return True
+        return False
 
     # def _get_distribution_type(self, values):
     #     """
@@ -387,7 +463,8 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7687"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    database_file = "/data/bird/books/books.sqlite"
+    database_file = "../data/bird/books/books.sqlite"
+    # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/e_commerce.sqlite"
 
     parser = SchemaParser(neo4j_uri, neo4j_user, neo4j_password, database_file)
