@@ -251,7 +251,7 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7687"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    database_file = "E:/Mercury-Graph/Mercury-Graph/data/books/books.sqlite"
+    database_file = "/data/bird/books/books.sqlite"
 
     parser = SchemaParser(neo4j_uri, neo4j_user, neo4j_password, database_file)
     schema = parser.parse_and_store_schema()

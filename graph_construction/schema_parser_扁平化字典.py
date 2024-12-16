@@ -3,12 +3,43 @@ import operator
 import sqlite3
 import random
 from collections import defaultdict, Counter
+from datetime import datetime
 
 import numpy as np
 from scipy.stats import norm, kstest
 from neo4j import GraphDatabase
 
+DATE_FORMATS = [
+        '%Y-%m-%d',
+        '%Y/%m/%d',
+        '%Y.%m.%d',
+        '%m/%d/%Y',
+        '%m-%d-%Y',
+        '%d/%m/%Y',
+        '%d-%m-%Y',
+        '%Y-%m-%d %H:%M:%S',
+        '%Y/%m/%d %H:%M:%S',
+        '%Y.%m.%d %H:%M:%S',
+        '%m/%d/%Y %H:%M:%S',
+        '%m-%d-%Y %H:%M:%S',
+        '%d/%m/%Y %H:%M:%S',
+        '%d-%m-%Y %H:%M:%S'
+    ]
 
+def convert_date_string(date_str):
+    """
+    尝试将输入的日期字符串按照多种常见格式转换为datetime对象。
+
+    :param date_str: 日期字符串
+    :return: 转换后的datetime对象，如果转换失败则返回None
+    """
+    for format_str in DATE_FORMATS:
+        try:
+            return datetime.strptime(date_str, format_str)
+        except ValueError:
+            continue
+    print(f"无法将日期字符串 {date_str} 转换为有效的日期时间格式，请检查数据格式！")
+    return None
 class SchemaParser:
     def __init__(self, neo4j_uri, neo4j_user, neo4j_password, database_file):
         """
@@ -152,11 +183,10 @@ class SchemaParser:
             """, from_table=from_table, from_column=from_column, to_table=to_table, to_column=to_column,
                         foreign_key_path=foreign_key_path)
 
-
     def _get_column_samples_and_attributes(self, table_name, column_name, data_type):
         """
         随机抽样获取列的数据样本，并计算附加属性（范围或类别等多种属性），
-        为所有类型的列节点添加数据条数属性，为数值型数据添加平均数属性。
+        为所有类型的列节点添加数据条数属性，对于非id主键的数值型数据添加平均数等相关属性。
 
         :param table_name: 表名
         :param column_name: 列名
@@ -178,8 +208,11 @@ class SchemaParser:
                 # 添加所有类型通用的属性：数据条数
                 additional_attributes['data_count'] = len(values) if values else 0
 
+                # 判断是否为类似id主键的字段（这里简单通过字段名包含"id"来判断，可根据实际调整）
+                is_id_column = "id" in column_name.lower()
+
                 # 数值型列（INTEGER、REAL）相关属性
-                if data_type.upper() in ["INTEGER", "REAL"]:
+                if data_type.upper() in ["INTEGER", "REAL"] and not is_id_column:
                     additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
                     # additional_attributes['numeric_distribution_type'] = self._get_distribution_type(values)
                     additional_attributes['numeric_mode'] = self._get_mode(values)
@@ -192,9 +225,9 @@ class SchemaParser:
                     else:
                         additional_attributes['numeric_mean'] = None
 
-                    # 类别型列（可根据实际情况进一步明确具体类型，这里简单示例）相关属性
+                # 类别型列（可根据实际情况进一步明确具体类型，这里简单示例）相关属性
                 elif data_type.upper() in ["TEXT", "VARCHAR"]:
-                    if   len(set(values)) <= 6:
+                    if len(set(values)) <= 6:
                         additional_attributes['category_categories'] = list(set(values))
                     additional_attributes['average_char_length'] = self._get_average_char_length(
                         values) if values else 0
@@ -208,10 +241,14 @@ class SchemaParser:
                 # 时间类型列（如DATE、DATETIME等，可根据实际数据库中的时间类型调整）相关属性
                 elif data_type.upper() in ["DATE", "DATETIME"]:
                     additional_attributes['time_span'] = self._get_time_span(values) if values else None
-                    additional_attributes['time_periodicity'] = self._get_periodicity(values) if values else ""
+                    # additional_attributes['time_periodicity'] = self._get_periodicity(values) if values else ""
                     additional_attributes['time_null_ratio'] = len([v for v in values if v is None]) / len(
                         rows) if rows else 0
                     additional_attributes['time_completeness'] = (len(values) / len(rows)) if rows else 0
+
+                # 如果是id主键字段，仅设置数据条数属性（也可根据需求添加其他更合适的简单属性）
+                elif is_id_column:
+                    additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
 
             except Exception as e:
                 print(f"Error processing column {column_name} in table {table_name}: {e}")
@@ -317,29 +354,32 @@ class SchemaParser:
 
     def _get_time_span(self, values):
         """
-        计算时间类型数据的时间跨度。
+        计算时间类型数据的时间跨度，兼容多种日期时间格式的数据。
 
         :param values: 时间数据列表
         :return: 时间跨度描述字符串（示例，可按需求调整格式）
         """
         if values:
-            from datetime import datetime
-            min_time = min(values)
-            max_time = max(values)
-            time_diff = max_time - min_time
-            return f"{time_diff.days} days"
+            datetime_values = [convert_date_string(v) for v in values if convert_date_string(v) is not None]
+            if datetime_values:
+                min_time = min(datetime_values)
+                max_time = max(datetime_values)
+                time_diff = max_time - min_time
+                return f"{time_diff.days} days"
         return None
 
-    def _get_periodicity(self, values):
-        """
-        简单判断时间类型数据的周期规律（示例，可进一步完善）。
-
-        :param values: 时间数据列表
-        """
-        # 这里只是简单示例，实际可通过更复杂的时间序列分析方法判断，如自相关分析等
-        if len(values) < 10:
-            return ""
-        return "monthly" if all((v.month - values[0].month) % 12 == 0 for v in values[1:]) else ""
+    # def _get_periodicity(self, values):
+    #     """
+    #     简单判断时间类型数据的周期规律（示例，可进一步完善），兼容多种日期时间格式的数据。
+    #
+    #     :param values: 时间数据列表
+    #     """
+    #     if len(values) < 10:
+    #         return ""
+    #     datetime_values = [convert_date_string(v) for v in values if convert_date_string(v) is not None]
+    #     if datetime_values:
+    #         return "monthly" if all((v.month - datetime_values[0].month) % 12 == 0 for v in datetime_values[1:]) else ""
+    #     return ""
 
 
 if __name__ == "__main__":
@@ -347,7 +387,7 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7687"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    database_file = "E:/Mercury-Graph/Mercury-Graph/data/books/books.sqlite"
+    database_file = "/data/bird/books/books.sqlite"
     # database_file = "../data/e_commerce.sqlite"
 
     parser = SchemaParser(neo4j_uri, neo4j_user, neo4j_password, database_file)
