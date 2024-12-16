@@ -165,11 +165,14 @@ class SchemaParser:
             foreign_key_columns = [fk[3] for fk in foreign_keys]  # 第4个元素（索引为3）是本地列名，对应外键列
             return foreign_key_columns
 
+    import sqlite3
+
     def _create_column_node_and_relation_in_neo4j(self, table_name, column_name, data_type, samples,
                                                   additional_attributes):
         """
         在Neo4j图数据库中创建表示列的节点，并建立其与对应表节点的关系。
-        将additional_attributes扁平化处理，每个属性单独作为列节点的属性存储。
+        将additional_attributes扁平化处理，每个属性单独作为列节点的属性存储，
+        同时为关系添加属性，以区别列节点是普通列、主键列、外键列、还是同时作为主键和外键。
 
         :param table_name: 表名
         :param column_name: 列名
@@ -177,6 +180,11 @@ class SchemaParser:
         :param samples: 列的随机抽样数据
         :param additional_attributes: 列的附加属性字典
         """
+        # 查询列是否为主键
+        is_primary_key = self._is_primary_key(table_name, column_name)
+        # 查询列是否为外键
+        is_foreign_key = self._is_foreign_key(table_name, column_name)
+
         with self.neo4j_driver.session() as session:
             props = {
                 "name": column_name,
@@ -188,13 +196,26 @@ class SchemaParser:
                 props[key] = value
 
             property_str = ', '.join([f"{key}: ${key}" for key in props])
+
+            # 根据主键和外键情况确定关系的属性值
+            relation_type = ""
+            if is_primary_key and is_foreign_key:
+                relation_type = "primary_and_foreign_key"
+            elif is_primary_key:
+                relation_type = "primary_key"
+            elif is_foreign_key:
+                relation_type = "foreign_key"
+            else:
+                # relation_type = "normal_column"
+                relation_type = "——"
+
             session.run(f"""
                 MATCH (t:Table {{name: ${'table_name'}}})
                 CREATE (c:Column {{ {property_str} }})
-                CREATE (t)-[:HAS_COLUMN]->(c)
-            """, table_name=table_name, **props)
+                CREATE (t)-[r:HAS_COLUMN {{relation_type: '{relation_type}'}}]->(c)
+            """, table_name=table_name, **props, relation_type=relation_type)
 
-    import sqlite3
+
 
     def _create_foreign_key_relations_in_neo4j(self, from_table, from_column, to_table, to_column):
         """
