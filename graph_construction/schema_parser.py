@@ -194,12 +194,14 @@ class SchemaParser:
                 CREATE (t)-[:HAS_COLUMN]->(c)
             """, table_name=table_name, **props)
 
+    import sqlite3
 
     def _create_foreign_key_relations_in_neo4j(self, from_table, from_column, to_table, to_column):
         """
         在Neo4j图数据库中创建外键关系对应的节点和关系。
         确保表节点之间只有一条表示外键的关系边，具有指定属性，新增关联列信息格式的属性，
-        同时对to_table节点添加referenced_path属性，对to_table的to_column节点添加referenced_by属性。
+        同时对to_table节点添加referenced_path属性，对to_table的to_column节点添加referenced_by属性，
+        对from_table节点添加main_reference_path属性，对from_table的from_column节点添加referenced_to属性。
 
         :param from_table: 外键来源表
         :param from_column: 外键来源列
@@ -231,9 +233,15 @@ class SchemaParser:
                              r.to_table = $to_table, r.to_column = $to_column,
                              r.reference_path = $reference_path
                 // 设置to_table节点的referenced_path属性
-                SET to_table.referenced_path = $reference_path
-                // 使用WITH语句进行过渡，将to_table传递到下一个语句块
-                WITH to_table
+                SET to_table.referenced_by = $reference_path
+                // 设置from_table节点的main_reference_path属性
+                SET from_table.reference_to = $reference_path
+                // 使用WITH语句进行过渡，传递相关节点数据到下一个语句块
+                WITH from_table, to_table
+                MATCH (from_table)-[:HAS_COLUMN]->(from_column_node:Column {name: $from_column})
+                SET from_column_node.referenced_to = coalesce(from_column_node.referenced_to, []) + [$to_table + '.' + $to_column]
+                // 添加WITH语句进行过渡，将to_table和from_table传递到下一个MATCH语句所在块
+                WITH to_table, from_table
                 MATCH (to_table)-[:HAS_COLUMN]->(to_column_node:Column {name: $to_column})
                 SET to_column_node.referenced_by = coalesce(to_column_node.referenced_by, []) + [$from_table + '.' + $from_column]
             """, from_table=from_table, from_column=from_column, to_table=to_table, to_column=to_column,
@@ -442,8 +450,8 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7687"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    database_file = "../data/bird/books/books.sqlite"
-    # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
+    # database_file = "../data/bird/books/books.sqlite"
+    database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/e_commerce.sqlite"
 
     parser = SchemaParser(neo4j_uri, neo4j_user, neo4j_password, database_file)
