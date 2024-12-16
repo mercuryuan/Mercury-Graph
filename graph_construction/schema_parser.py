@@ -215,13 +215,11 @@ class SchemaParser:
                 CREATE (t)-[r:HAS_COLUMN {{relation_type: '{relation_type}'}}]->(c)
             """, table_name=table_name, **props, relation_type=relation_type)
 
-
-
     def _create_foreign_key_relations_in_neo4j(self, from_table, from_column, to_table, to_column):
         """
         在Neo4j图数据库中创建外键关系对应的节点和关系。
-        确保表节点之间只有一条表示外键的关系边，具有指定属性，新增关联列信息格式的属性，
-        同时对to_table节点添加referenced_path属性，对to_table的to_column节点添加referenced_by属性，
+        针对两个表之间可能存在的多外键引用情况，为每一条外键关系都创建一条关系边，具有指定属性，
+        新增关联列信息格式的属性，同时对to_table节点添加referenced_path属性，对to_table的to_column节点添加referenced_by属性，
         对from_table节点添加main_reference_path属性，对from_table的from_column节点添加referenced_to属性。
 
         :param from_table: 外键来源表
@@ -246,13 +244,13 @@ class SchemaParser:
             session.run("""
                 MATCH (from_table:Table {name: $from_table})
                 MATCH (to_table:Table {name: $to_table})
-                MERGE (from_table)-[r:FOREIGN_KEY]->(to_table)
-                ON CREATE SET r.from_table = $from_table, r.from_column = $from_column,
-                              r.to_table = $to_table, r.to_column = $to_column,
-                              r.reference_path = $reference_path
-                ON MATCH SET r.from_table = $from_table, r.from_column = $from_column,
-                             r.to_table = $to_table, r.to_column = $to_column,
-                             r.reference_path = $reference_path
+                MERGE (from_table)-[r:FOREIGN_KEY {
+                from_table: $from_table,
+                from_column: $from_column,
+                to_table: $to_table,
+                to_column: $to_column,
+                reference_path: $reference_path
+            }]->(to_table)
                 // 设置to_table节点的referenced_path属性
                 SET to_table.referenced_by = $reference_path
                 // 设置from_table节点的main_reference_path属性
@@ -473,7 +471,8 @@ if __name__ == "__main__":
     neo4j_password = "12345678"  # 根据实际情况修改
     # database_file = "../data/bird/books/books.sqlite"
     database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
-    # database_file = "../data/e_commerce.sqlite"
+    # database_file = "../data/spider/e_commerce.sqlite"
+    # database_file = "../data/spider/medicine_enzyme_interaction/medicine_enzyme_interaction.sqlite"
 
     parser = SchemaParser(neo4j_uri, neo4j_user, neo4j_password, database_file)
     schema = parser.parse_and_store_schema()
