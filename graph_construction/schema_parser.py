@@ -241,9 +241,9 @@ class SchemaParser:
 
     def _get_column_samples_and_attributes(self, table_name, column_name, data_type):
         """
-        随机抽样获取列的数据样本，并计算附加属性（范围或类别等多种属性），
-        为所有类型的列节点添加数据条数属性，对于非id主键的数值型数据添加平均数等相关属性，
-        新增根据数据库设计判断列是否为主键或外键并统一添加相应属性到key_type的功能。
+        随机抽样获取列的数据样本，并计算附加属性（范围或类别等多种属性）。
+        实现为所有类型的列节点添加数据条数属性，对于非id主键的数值型数据添加平均数等相关属性，
+        同时根据数据库设计判断列是否为主键或外键并统一添加相应属性到key_type。
 
         :param table_name: 表名
         :param column_name: 列名
@@ -255,14 +255,15 @@ class SchemaParser:
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
             try:
+                # 查询列数据，最多取100条记录
                 cursor.execute(f"SELECT {column_name} FROM {table_name} LIMIT 100;")
                 rows = cursor.fetchall()
                 values = [row[0] for row in rows if row[0] is not None]
 
-                # 获取随机样本
+                # 获取随机样本，最多取5条（如果数据量小于等于5则取全部）
                 samples = random.sample(values, min(len(values), 5))
 
-                # 添加所有类型通用的属性：数据条数
+                # 1. 为所有类型列节点添加数据条数属性
                 additional_attributes['data_count'] = len(values) if values else 0
 
                 # 查询列是否为主键
@@ -270,21 +271,25 @@ class SchemaParser:
                 # 查询列是否为外键
                 is_foreign_key = self._is_foreign_key(table_name, column_name)
 
-                # 数值型列（INTEGER、REAL）相关属性
+                # 2. 根据数据类型处理不同类型列的附加属性
                 if data_type.upper() in ["INTEGER", "REAL"]:
                     additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
-                    # additional_attributes['numeric_distribution_type'] = self._get_distribution_type(values)
-                    additional_attributes['numeric_mode'] = self._get_mode(values)
-                    additional_attributes['numeric_null_ratio'] = len([v for v in values if v is None]) / len(
-                        rows) if rows else 0
-                    additional_attributes['numeric_completeness'] = (len(values) / len(rows)) if rows else 0
-                    # 添加平均数属性
-                    if values:
-                        additional_attributes['numeric_mean'] = np.mean(values)
+                    # 判断是否为类似id主键的字段（这里简单通过字段名包含"id"来判断，可根据实际调整）
+                    is_id_column = "id" in column_name.lower()
+                    if not is_id_column:
+                        additional_attributes['numeric_mode'] = self._get_mode(values)
+                        additional_attributes['numeric_null_ratio'] = len([v for v in values if v is None]) / len(
+                            rows) if rows else 0
+                        additional_attributes['numeric_completeness'] = (len(values) / len(rows)) if rows else 0
+                        # 添加平均数属性（针对非id主键的数值型数据）
+                        if values:
+                            additional_attributes['numeric_mean'] = np.mean(values)
+                        else:
+                            additional_attributes['numeric_mean'] = None
                     else:
-                        additional_attributes['numeric_mean'] = None
+                        # 对于id主键字段，可根据需求添加其他合适属性，目前仅确保有数据条数属性、范围属性
+                        pass
 
-                # 类别型列（可根据实际情况进一步明确具体类型，这里简单示例）相关属性
                 elif data_type.upper() in ["TEXT", "VARCHAR"]:
                     if len(set(values)) <= 6:
                         additional_attributes['category_categories'] = list(set(values))
@@ -297,7 +302,6 @@ class SchemaParser:
                         rows) if rows else 0
                     additional_attributes['completeness'] = (len(values) / len(rows)) if rows else 0
 
-                # 时间类型列（如DATE、DATETIME等，可根据实际数据库中的时间类型调整）相关属性
                 elif data_type.upper() in ["DATE", "DATETIME"]:
                     additional_attributes['time_span'] = self._get_time_span(values) if values else None
                     # additional_attributes['time_periodicity'] = self._get_periodicity(values) if values else ""
@@ -305,7 +309,7 @@ class SchemaParser:
                         rows) if rows else 0
                     additional_attributes['time_completeness'] = (len(values) / len(rows)) if rows else 0
 
-                # 根据查询结果添加key_type属性（仅针对主键或外键列）
+                # 3. 根据主键或外键查询结果添加key_type属性（仅针对主键或外键列）
                 key_type = []
                 if is_primary_key:
                     key_type.append("primary_key")
@@ -353,85 +357,7 @@ class SchemaParser:
                     return True
         return False
 
-    def _is_primary_key(self, table_name, column_name):
-        """
-        判断指定表中的指定列是否为主键，通过查询数据库元数据（以SQLite为例）。
 
-        :param table_name: 表名
-        :param column_name: 列名
-        :return: True如果是主键，False否则
-        """
-        with sqlite3.connect(self.database_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute(f"PRAGMA table_info({table_name})")
-            columns_info = cursor.fetchall()
-            for column_info in columns_info:
-                if column_info[1] == column_name:  # 第2个元素（索引为1）是列名
-                    return bool(column_info[5])  # 第6个元素（索引为5）表示是否为主键，1为主键，0为非主键，不同数据库该位置可能不同
-        return False
-
-    def _is_foreign_key(self, table_name, column_name):
-        """
-        判断指定表中的指定列是否为外键，通过查询数据库元数据（以SQLite为例）。
-
-        :param table_name: 表名
-        :param column_name: 列名
-        :return: True如果是外键，False否则
-        """
-        with sqlite3.connect(self.database_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute(f"PRAGMA foreign_key_list({table_name})")
-            foreign_keys = cursor.fetchall()
-            for foreign_key in foreign_keys:
-                if foreign_key[3] == column_name:  # 第4个元素（索引为3）是本地列名，对应外键列
-                    return True
-        return False
-
-    # def _get_distribution_type(self, values):
-    #     """
-    #     判断数值型数据的分布类型，支持识别正态分布、均匀分布、离散均匀分布以及顺序递增（类似自增ID）等常见类型，
-    #     并针对text2sql任务定制合适的名称用于区分，方便后续使用（示例，可根据实际情况进一步完善）。
-    #
-    #     :param values: 数值列表
-    #     :return: 分布类型字符串，如"normal"（正态分布）、"uniform"（均匀分布）、"discrete_uniform"（离散均匀分布）、"sequential"（顺序递增）等
-    #     """
-    #     if len(values) < 10:
-    #         return ""
-    #
-    #     try:
-    #         # 尝试将输入的数值列表转换为numpy数组，方便后续计算
-    #         values_np = np.array(values)
-    #
-    #         # 判断是否接近均匀分布
-    #         range_value = max(values_np) - min(values_np)
-    #         if range_value == len(values_np) - 1:
-    #             return "uniform"
-    #
-    #         # 判断是否接近离散均匀分布（假设数据为整数且等间隔）
-    #         sorted_values = np.sort(values_np)
-    #         diff = np.diff(sorted_values)
-    #         if np.all(diff == diff[0]) and len(set(sorted_values)) == len(values_np):
-    #             return "discrete_uniform"
-    #
-    #         # 判断是否为顺序递增的数据（类似自增ID）
-    #         if np.all(np.diff(sorted_values) == 1) and len(set(values_np)) == len(values_np):
-    #             return "sequential"
-    #
-    #         # 使用Kolmogorov-Smirnov检验来初步判断是否接近正态分布
-    #         _, p_value = kstest(values_np, 'norm')
-    #         if p_value > 0.05:
-    #             # 可以进一步结合均值、标准差以及可视化（如绘制直方图与正态分布曲线对比等，这里暂不详细实现可视化部分）来辅助判断
-    #             mean = np.mean(values_np)
-    #             std = np.std(values_np)
-    #             if (mean - 3 * std) < min(values_np) and max(values_np) < (mean + 3 * std):
-    #                 return "normal"
-    #
-    #     except Exception as e:
-    #         print(f"Error in determining distribution type: {e}")
-    #
-    #     return "无法识别到分布模式"
-
-    from collections import Counter
 
     def _get_mode(self, values):
         """
