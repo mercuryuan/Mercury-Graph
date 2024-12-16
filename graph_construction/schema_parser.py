@@ -110,14 +110,60 @@ class SchemaParser:
                     self._create_foreign_key_relations_in_neo4j(table_name, from_column, to_table, to_column)
         return schema
 
+    import sqlite3
+
     def _create_table_node_in_neo4j(self, table_name):
         """
-        在Neo4j图数据库中创建表示表的节点。
+        在Neo4j图数据库中创建表示表的节点，并根据实际情况为表节点添加主键和外键属性。
+        属性名为primary_key和foreign_key，主键外键如果只有一个就单独为主外键名称，若有多个才返回键列表，若没有则不添加属性。
 
         :param table_name: 表名
         """
+        primary_key_columns = self._get_primary_key_columns(table_name)
+        foreign_key_columns = self._get_foreign_key_columns(table_name)
+
+        properties = {"name": table_name}
+        if primary_key_columns:
+            properties["primary_key"] = primary_key_columns if len(primary_key_columns) > 1 else primary_key_columns[0]
+        if foreign_key_columns:
+            properties["foreign_key"] = foreign_key_columns if len(foreign_key_columns) > 1 else foreign_key_columns[0]
+
+        property_str = ', '.join(f"{key}: ${key}" for key in properties)
+        query = f"CREATE (:Table {{ {property_str} }})"
+
         with self.neo4j_driver.session() as session:
-            session.run("CREATE (:Table {name: $table_name})", table_name=table_name)
+            session.run(query, **properties)
+
+    def _get_primary_key_columns(self, table_name):
+        """
+        获取指定表的主键列信息（以SQLite为例）。
+
+        :param table_name: 表名
+        :return: 主键列名列表，如果是单个主键则返回只包含该列名的列表，无主键返回空列表
+        """
+        with sqlite3.connect(self.database_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA table_info({table_name})")
+            columns_info = cursor.fetchall()
+            primary_key_columns = []
+            for column_info in columns_info:
+                if column_info[5] != 0:  # 假设第6个元素（索引为5）表示是否为主键，1为主键，0为非主键，不同数据库该位置可能不同
+                    primary_key_columns.append(column_info[1])  # 第2个元素（索引为1）是列名
+            return primary_key_columns
+
+    def _get_foreign_key_columns(self, table_name):
+        """
+        获取指定表的外键列信息（以SQLite为例）。
+
+        :param table_name: 表名
+        :return: 外键列名列表，如果是单个外键则返回只包含该列名的列表，无外键返回空列表
+        """
+        with sqlite3.connect(self.database_file) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA foreign_key_list({table_name})")
+            foreign_keys = cursor.fetchall()
+            foreign_key_columns = [fk[3] for fk in foreign_keys]  # 第4个元素（索引为3）是本地列名，对应外键列
+            return foreign_key_columns
 
     def _create_column_node_and_relation_in_neo4j(self, table_name, column_name, data_type, samples,
                                                   additional_attributes):
@@ -172,7 +218,7 @@ class SchemaParser:
                         primary_key_column = column_info[1]  # 第2个元素（索引为1）是列名
                         break
                 to_column = primary_key_column
-        foreign_key_path = f"{from_table}.{from_column}->{to_table}.{to_column}"
+        reference_path = f"{from_table}.{from_column}->{to_table}.{to_column}"
         with self.neo4j_driver.session() as session:
             session.run("""
                 MATCH (from_table:Table {name: $from_table})
@@ -180,18 +226,18 @@ class SchemaParser:
                 MERGE (from_table)-[r:FOREIGN_KEY]->(to_table)
                 ON CREATE SET r.from_table = $from_table, r.from_column = $from_column,
                               r.to_table = $to_table, r.to_column = $to_column,
-                              r.foreign_key_path = $foreign_key_path
+                              r.reference_path = $reference_path
                 ON MATCH SET r.from_table = $from_table, r.from_column = $from_column,
                              r.to_table = $to_table, r.to_column = $to_column,
-                             r.foreign_key_path = $foreign_key_path
+                             r.reference_path = $reference_path
                 // 设置to_table节点的referenced_path属性
-                SET to_table.referenced_path = $foreign_key_path
+                SET to_table.referenced_path = $reference_path
                 // 使用WITH语句进行过渡，将to_table传递到下一个语句块
                 WITH to_table
                 MATCH (to_table)-[:HAS_COLUMN]->(to_column_node:Column {name: $to_column})
                 SET to_column_node.referenced_by = coalesce(to_column_node.referenced_by, []) + [$from_table + '.' + $from_column]
             """, from_table=from_table, from_column=from_column, to_table=to_table, to_column=to_column,
-                        foreign_key_path=foreign_key_path)
+                        reference_path=reference_path)
 
     def _get_column_samples_and_attributes(self, table_name, column_name, data_type):
         """
