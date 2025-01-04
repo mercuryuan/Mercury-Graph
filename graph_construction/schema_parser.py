@@ -269,48 +269,49 @@ class SchemaParser:
     def _create_foreign_key_relations_in_neo4j(self, from_table, from_column, to_table, to_column):
         """
         在Neo4j图数据库中创建外键关系对应的节点和关系。
-        针对两个表之间可能存在的多外键引用情况，为每一条外键关系都创建一条关系边，具有指定属性，
-        新增关联列信息格式的属性，同时对to_table节点添加referenced_path属性，对to_table的to_column节点添加referenced_by属性，
-        对from_table节点添加main_reference_path属性，对from_table的from_column节点添加referenced_to属性。
-
-        :param from_table: 外键来源表
-        :param from_column: 外键来源列
-        :param to_table: 外键目标表
-        :param to_column: 外键目标列
+        对于每条外键关系，更新相关节点和列的属性，确保多外键关系场景下的完整性。
         """
+        # 如果未指定目标列，则获取目标表的主键列
         if to_column is None:
-            # 获取to_table的主键列信息（以SQLite为例，通过PRAGMA查询，不同数据库需相应调整）
             with sqlite3.connect(self.database_file) as conn:
                 cursor = conn.cursor()
                 cursor.execute(f"PRAGMA table_info({to_table})")
                 columns_info = cursor.fetchall()
                 primary_key_column = None
                 for column_info in columns_info:
-                    if column_info[5] == 1:  # 假设第6个元素（索引为5）表示是否为主键，1为主键，0为非主键，不同数据库该位置可能不同
+                    if column_info[5] == 1:  # 假设第6个元素（索引为5）表示是否为主键
                         primary_key_column = column_info[1]  # 第2个元素（索引为1）是列名
                         break
                 to_column = primary_key_column
+
+        # 构造外键引用路径
         reference_path = f"{from_table}.{from_column}->{to_table}.{to_column}"
+
         with self.neo4j_driver.session() as session:
             session.run("""
                 MATCH (from_table:Table {name: $from_table})
                 MATCH (to_table:Table {name: $to_table})
+                // 创建外键关系
                 MERGE (from_table)-[r:FOREIGN_KEY {
-                from_table: $from_table,
-                from_column: $from_column,
-                to_table: $to_table,
-                to_column: $to_column,
-                reference_path: $reference_path
-            }]->(to_table)
-                // 设置to_table节点的referenced_path属性
-                SET to_table.referenced_by = $reference_path
-                // 设置from_table节点的main_reference_path属性
-                SET from_table.reference_to = $reference_path
-                // 使用WITH语句进行过渡，传递相关节点数据到下一个语句块
+                    from_table: $from_table,
+                    from_column: $from_column,
+                    to_table: $to_table,
+                    to_column: $to_column,
+                    reference_path: $reference_path
+                }]->(to_table)
+
+                // 更新目标表的 referenced_by 属性
+                SET to_table.referenced_by = coalesce(to_table.referenced_by, []) + [$reference_path]
+
+                // 更新来源表的 reference_to 属性
+                SET from_table.reference_to = coalesce(from_table.reference_to, []) + [$reference_path]
+
+                // 处理来源列的 referenced_to 属性
                 WITH from_table, to_table
                 MATCH (from_table)-[:HAS_COLUMN]->(from_column_node:Column {name: $from_column})
                 SET from_column_node.referenced_to = coalesce(from_column_node.referenced_to, []) + [$to_table + '.' + $to_column]
-                // 添加WITH语句进行过渡，将to_table和from_table传递到下一个MATCH语句所在块
+
+                // 处理目标列的 referenced_by 属性
                 WITH to_table, from_table
                 MATCH (to_table)-[:HAS_COLUMN]->(to_column_node:Column {name: $to_column})
                 SET to_column_node.referenced_by = coalesce(to_column_node.referenced_by, []) + [$from_table + '.' + $from_column]
@@ -520,9 +521,9 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7687"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    # database_file = "../data/bird/books/books.sqlite"
+    database_file = "../data/bird/books/books.sqlite"
     # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
-    database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
+    # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
     # database_file = "../data/spider/medicine_enzyme_interaction/medicine_enzyme_interaction.sqlite"
 
