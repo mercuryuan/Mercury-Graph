@@ -7,7 +7,7 @@ import os
 RELATION_DESCRIPTION_FILE = "relation_descriptions.json"
 
 class GraphEnricher:
-    def __init__(self, neo4j_uri, neo4j_user, neo4j_password, api_key):
+    def __init__(self, neo4j_uri, neo4j_user, neo4j_password,api_key):
         """
         初始化GraphEnricher类，建立与Neo4j数据库的连接，并创建ChatGPT API包装类的实例。
 
@@ -36,6 +36,7 @@ class GraphEnricher:
         :return: 两节点之间关系描述（字符串形式），优先从json文件获取，若不存在则调用ChatGPT获取并保存到json文件
         """
         node_pair_key = self._generate_node_pair_key(node1_label, node1_properties, node2_label, node2_properties)
+        print(node_pair_key)
         relation_description = self._load_relation_description_from_json(node_pair_key)
         if relation_description:
             print(f"从JSON文件中读取节点 {node1_label} 与 {node2_label} 之间的关系描述: {relation_description}")
@@ -73,8 +74,9 @@ class GraphEnricher:
                 for j in range(i + 1, len(nodes)):
                     node1 = nodes[i]
                     node2 = nodes[j]
-                    node1_label = node1.labels.pop()  # 获取节点标签，假设只有一个标签，可根据实际调整
-                    node2_label = node2.labels.pop()
+                    # 将frozenset转换为set，再获取其中唯一的标签元素
+                    node1_label = set(node1.labels).pop()
+                    node2_label = set(node2.labels).pop()
                     node1_properties = dict(node1)
                     node2_properties = dict(node2)
 
@@ -116,7 +118,7 @@ class GraphEnricher:
         :return: 关系描述（字符串形式），如果文件不存在或节点对描述不存在则返回None
         """
         if os.path.exists(RELATION_DESCRIPTION_FILE):
-            with open(RELATION_DESCRIPTION_FILE, 'r') as file:
+            with open(RELATION_DESCRIPTION_FILE, 'r',encoding="UTF-8") as file:
                 relation_descriptions = json.load(file)
                 return relation_descriptions.get(node_pair_key)
         return None
@@ -130,7 +132,7 @@ class GraphEnricher:
         """
         relation_descriptions = {}
         if os.path.exists(RELATION_DESCRIPTION_FILE):
-            with open(RELATION_DESCRIPTION_FILE, 'r') as file:
+            with open(RELATION_DESCRIPTION_FILE, 'r',encoding="UTF-8") as file:
                 relation_descriptions = json.load(file)
 
         relation_descriptions[node_pair_key] = relation_description
