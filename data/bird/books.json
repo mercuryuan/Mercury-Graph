@@ -1,0 +1,1190 @@
+[
+{
+        "db_id": "books",
+        "question": "Among the books published by publisher ID 1929, how many of them have over 500 pages?",
+        "evidence": "books have over 500 pages refers to num_pages > 500",
+        "SQL": "SELECT COUNT(*) FROM book WHERE publisher_id = 1929 AND num_pages > 500"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the publication date of the book with the most pages?",
+        "evidence": "book with the most pages refers to Max(num_pages)",
+        "SQL": "SELECT publication_date FROM book ORDER BY num_pages DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the name of the publisher of the book \"The Illuminati\"?",
+        "evidence": "\"The Illuminati\" is the title of the book; name of publisher refers to publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'The Illuminati'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were published by publisher \"Thomas Nelson\"?",
+        "evidence": "\"Thomas Nelson\" is the publisher_name",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Thomas Nelson'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the name of the publisher that has published the most number of books?",
+        "evidence": "name of publisher refers to publisher_name; publisher published the most number of books refers to Max(Count(book_id))",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id GROUP BY T2.publisher_name ORDER BY COUNT(T1.book_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "Please give the title of the oldest book published by publisher \"Thomas Nelson\".",
+        "evidence": "\"Thomas Nelson\" is the publisher_name; oldest book refers to Min(publication_date)",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Thomas Nelson' ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books published by publisher \"Thomas Nelson\", how many of them have over 300 pages?",
+        "evidence": "\"Thomas Nelson\" is the publisher_name; books with over 300 pages refers to num_pages > 300",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Thomas Nelson' AND T1.num_pages > 300"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the name of the publisher of the book with the most pages?",
+        "evidence": "book with the most pages refers to Max(num_pages); name of publisher refers to publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id ORDER BY T1.num_pages DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books are in English?",
+        "evidence": "books in English refers to language_name = 'English'",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T2.language_name = 'English'"
+    },
+    {
+        "db_id": "books",
+        "question": "Please list the titles of all the books in British English.",
+        "evidence": "\"British English\" is the language_name of the book",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T2.language_name = 'British English'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the cheapest order price of the book \"The Little House\"?",
+        "evidence": "\"The Little House\" is the title of book; cheapest order price refers to Min(price)",
+        "SQL": "SELECT MIN(T2.price) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T1.title = 'The Little House'"
+    },
+    {
+        "db_id": "books",
+        "question": "Please list the titles of all the books that Lucas Wyldbore has ordered.",
+        "evidence": "",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T4.first_name = 'Lucas' AND T4.last_name = 'Wyldbore'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books ordered by Lucas Wyldbore, how many of them are over 300 pages?",
+        "evidence": "books have over 300 pages refers to num_pages > 300",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T4.first_name = 'Lucas' AND T4.last_name = 'Wyldbore' AND T1.num_pages > 300"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the total price of all the books ordered by Lucas Wyldbore?",
+        "evidence": "total price refers to Sum(price)",
+        "SQL": "SELECT SUM(T1.price) FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T3.first_name = 'Lucas' AND T3.last_name = 'Wyldbore'"
+    },
+    {
+        "db_id": "books",
+        "question": "How much money on average does Lucas Wyldbore spend on book orders?",
+        "evidence": "average spend on book orders = AVG (price)",
+        "SQL": "SELECT SUM(T1.price) / COUNT(*) FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T3.first_name = 'Lucas' AND T3.last_name = 'Wyldbore'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books ordered by Lucas Wyldbore, what is the percentage of those books over $13?",
+        "evidence": "books over $13 refers to price > 13; percentage = Divide (Sum (order_id where price > 13), Count (order_id)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T1.price > 13 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T3.first_name = 'Lucas' AND T3.last_name = 'Wyldbore'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which city does the address id 547 belong to?",
+        "evidence": "",
+        "SQL": "SELECT city FROM address WHERE address_id = 547"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders has Cordy Dumbarton made?",
+        "evidence": "",
+        "SQL": "SELECT COUNT(*) FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id WHERE T1.first_name = 'Cordy' AND T1.last_name = 'Dumbarton'"
+    },
+    {
+        "db_id": "books",
+        "question": "List the title of the earliest published Japanese book.",
+        "evidence": "Japanese book refers to language_name = 'Japanese'; earliest published refers to Min(publication_date)",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T2.language_name = 'Japanese' ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "For the publisher which published the most books, show its name.",
+        "evidence": "published the most books refers to Max(Count(book_id)); publisher refers to publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id GROUP BY T2.publisher_name ORDER BY COUNT(T2.publisher_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were published by Kensington?",
+        "evidence": "\"Kensington\" is the publisher_name;",
+        "SQL": "SELECT COUNT(T1.book_id) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Kensington'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which language was book id 1405 written in?",
+        "evidence": "language written in refers to language_name;",
+        "SQL": "SELECT T2.language_name FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T1.book_id = 1405"
+    },
+    {
+        "db_id": "books",
+        "question": "Which customer has made the most orders? Show his/her full name.",
+        "evidence": "most order refers to Max(Count(order_id)); customer refers to first_name, last_name",
+        "SQL": "SELECT T1.first_name, T1.last_name FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.first_name, T1.last_name ORDER BY COUNT(*) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "Name the book title of the bestseller.",
+        "evidence": "book title refers to title; best sellers refers to title where Max(count(order_id))",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id GROUP BY T1.title ORDER BY COUNT(T1.title) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books did David Foster Wallace write?",
+        "evidence": "\"David Foster Wallace\" is the author_name;",
+        "SQL": "SELECT COUNT(T1.title) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'David Foster Wallace'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders does the book \"O Xar\u00e1\" have?",
+        "evidence": "\"O Xar\u00e1\" is the title of the book",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T1.title = 'O Xar\u00e1'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which country does Malina Johnson live in?",
+        "evidence": "country refers to country_name",
+        "SQL": "SELECT T4.country_name FROM customer AS T1 INNER JOIN customer_address AS T2 ON T1.customer_id = T2.customer_id INNER JOIN address AS T3 ON T3.address_id = T2.address_id INNER JOIN country AS T4 ON T4.country_id = T3.country_id WHERE T1.first_name = 'Malina' AND T1.last_name = 'Johnson' AND T2.status_id = 2"
+    },
+    {
+        "db_id": "books",
+        "question": "Give the number of Ukrainian addresses in the database.",
+        "evidence": "Ukrainian address refers to country_name = 'Ukraine'",
+        "SQL": "SELECT COUNT(*) FROM country AS T1 INNER JOIN address AS T2 ON T1.country_id = T2.country_id WHERE T1.country_name = 'Ukraine'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which country does \u017dirovnica city belong to?",
+        "evidence": "\"\u017dirovnica\" is the city; country refers to country_name",
+        "SQL": "SELECT T1.country_name FROM country AS T1 INNER JOIN address AS T2 ON T1.country_id = T2.country_id WHERE T2.city = '\u017dirovnica'"
+    },
+    {
+        "db_id": "books",
+        "question": "Calculate the percentage of the International shipping orders on 2022/11/10.",
+        "evidence": "International shipping order refers to method_name = 'International'; orders on 2022/11/10 refers to order_date LIKE '2022-11-10%'; percentage = Divide (Sum(order_id\u00a0 where method_name = 'International'), Count(order_id)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T1.method_name = 'International' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM shipping_method AS T1 INNER JOIN cust_order AS T2 ON T1.method_id = T2.shipping_method_id WHERE T2.order_date LIKE '2022-11-10%'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the average number of pages of David Coward's books?",
+        "evidence": "number of pages refers to num_pages; average = Divide (Sum(num_pages), Count(book_id))",
+        "SQL": "SELECT AVG(T1.num_pages) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'David Coward'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the cost of the slowest and least expensive shipping method?",
+        "evidence": "slowest and least expesive method refers to shipping_method = 'Standard'",
+        "SQL": "SELECT method_name FROM shipping_method ORDER BY cost ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the title of the first book that was published in 1900?",
+        "evidence": "published in 1900 refers to publication_date LIKE '1900%'; first book refers to Min(publication_date)",
+        "SQL": "SELECT title FROM book WHERE STRFTIME('%Y', publication_date) = '1900' ORDER BY publication_date LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the full name of the customer who owns the \"aalleburtonkc@yellowbook.com\" e-mail address?",
+        "evidence": "\"aalleburtonkc@yellowbook.com\" is the email of customer; full name refers to first_name, last_name",
+        "SQL": "SELECT first_name, last_name FROM customer WHERE email = 'aalleburtonkc@yellowbook.com'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders in 2022 have Iran as their destinations?",
+        "evidence": "Iran as their destination refers to country_name = 'Iran'; orders in 2022 refers to order_date LIKE '2022%'",
+        "SQL": "SELECT COUNT(*) FROM country AS T1 INNER JOIN address AS T2 ON T1.country_id = T2.country_id INNER JOIN cust_order AS T3 ON T3.dest_address_id = T2.address_id WHERE T1.country_name = 'Iran' AND STRFTIME('%Y', T3.order_date) = '2022'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among Daisey Lamball's orders, how many were shipped via International shipping?",
+        "evidence": "via international shipping refers to method_name = 'International'",
+        "SQL": "SELECT COUNT(*) FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id INNER JOIN shipping_method AS T3 ON T3.method_id = T2.shipping_method_id WHERE T1.first_name = 'Daisey' AND T1.last_name = 'Lamball' AND T3.method_name = 'International'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the full name of the customer who ordered the most books of all time?",
+        "evidence": "customer who ordered the most book refers to customer_id where Max(count(order_id)); full name refers to first_name, last_name",
+        "SQL": "SELECT T1.first_name, T1.last_name FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.first_name, T1.last_name ORDER BY COUNT(*) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders did Antonia Poltun return?",
+        "evidence": "order returned refers to status_value = 'Returned'",
+        "SQL": "SELECT COUNT(*) FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T1.status_value = 'Returned' AND T4.first_name = 'Antonia' AND T4.last_name = 'Poltun'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which shipping method is preferred by customers the most?",
+        "evidence": "shipping method preferred the most by customers refers to method_id where Max(Count(method_id)); which shipping method refers to method_name",
+        "SQL": "SELECT T2.method_name FROM cust_order AS T1 INNER JOIN shipping_method AS T2 ON T1.shipping_method_id = T2.method_id GROUP BY T2.method_name ORDER BY COUNT(T2.method_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders were delivered in 2021?",
+        "evidence": "delivered refers to status_value = 'Delivered'; in 2021 refers to status_date LIKE '2021%'",
+        "SQL": "SELECT COUNT(*) FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id WHERE T1.status_value = 'Delivered' AND STRFTIME('%Y', T2.status_date) = '2021'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the name of the first book written by J.K Rowling?",
+        "evidence": "\"J.K Rowling\" is the author_name; first published book refers to book_id where Min(publication_date); name of the book refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'J.K. Rowling' ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books did A.R. Braunmuller write?",
+        "evidence": "\"A.R. Braunmuller\" is the author_name",
+        "SQL": "SELECT COUNT(*) FROM author AS T1 INNER JOIN book_author AS T2 ON T1.author_id = T2.author_id WHERE T1.author_name = 'A.R. Braunmuller'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the name of the publisher who published Agatha Christie's first book?",
+        "evidence": "\"Agatha Christie\" is the author_name; name of publisher refers to publisher_name; first book refers to Min(publication_date)",
+        "SQL": "SELECT T4.publisher_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN publisher AS T4 ON T4.publisher_id = T1.publisher_id WHERE T3.author_name = 'Agatha Christie' ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "List all the names of the books written by Danielle Steel.",
+        "evidence": "\"Danielle Steel\" is the author_name; name of books refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Danielle Steel'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books by William Shakespeare were published by Penguin Classics?",
+        "evidence": "\"William Shakespeare\" is the author_name; \"Penguin Classics\" is the publisher_name",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN publisher AS T4 ON T4.publisher_id = T1.publisher_id WHERE T3.author_name = 'William Shakespeare' AND T4.publisher_name = 'Penguin Classics'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the name of the publisher that published the most books?",
+        "evidence": "name of publisher refers to publisher_name; publisher published the most number of books refers to Max(Count(book_id))",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id GROUP BY T2.publisher_name ORDER BY COUNT(T2.publisher_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the total shipping cost of all the orders made by Page Holsey? Indicate how many of the said orders were ordered in 2022.",
+        "evidence": "shipping cost refers to cost; ordered in 2022 refers to order_date LIKE '2022%'",
+        "SQL": "SELECT SUM(T3.cost) FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id INNER JOIN shipping_method AS T3 ON T3.method_id = T2.shipping_method_id WHERE T1.first_name = 'Page' AND T1.last_name = 'Holsey' AND STRFTIME('%Y', T2.order_date) = '2022'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the name of the publisher with publisher ID 22?",
+        "evidence": "name of publisher refers to publisher_name",
+        "SQL": "SELECT publisher_name FROM publisher WHERE publisher_id = 22"
+    },
+    {
+        "db_id": "books",
+        "question": "How many of the books authored by Al Gore have less than 400 pages?",
+        "evidence": "\"AI Gore\" is the author_name; have less than 400 pages refers to num_pages < 400",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Al Gore' AND T1.num_pages < 400"
+    },
+    {
+        "db_id": "books",
+        "question": "List the author's and publisher's name of the book published on July 10, 1997.",
+        "evidence": "author's name refers to author_name; publisher's name refers to publisher_name; book published on July 10, 1997 refers to publication_date LIKE '1997-07-10'",
+        "SQL": "SELECT T3.author_name, T4.publisher_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN publisher AS T4 ON T4.publisher_id = T1.publisher_id WHERE T1.publication_date = '1997-07-10'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the language of the book with ISBN 23755004321?",
+        "evidence": "\"23755004321\" is the isbn13; language refers to language_name",
+        "SQL": "SELECT T2.language_name FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T1.isbn13 = 23755004321"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the title of the most expensive book?",
+        "evidence": "most expensive book refers to Max(price)",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id ORDER BY T2.price DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "Calculate the total price of books ordered by customer named Lucas Wyldbore.",
+        "evidence": "total price refers to Sum(price); full name is composed of first name, last name",
+        "SQL": "SELECT SUM(T1.price) FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T3.first_name = 'Lucas' AND T3.last_name = 'Wyldbore'"
+    },
+    {
+        "db_id": "books",
+        "question": "List the ISBN of the book published in Spanish.",
+        "evidence": "\"Spanish\" is the language_name; ISBN refers to isbn13",
+        "SQL": "SELECT T1.isbn13 FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T2.language_name = 'Spanish'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books that cost less than 1 dollar, how many were published by Berkley Trade?",
+        "evidence": "book cost less than 1 dollar refers to price < 1; 'Berkley Trade' is the publisher_name;",
+        "SQL": "SELECT COUNT(*) FROM publisher AS T1 INNER JOIN book AS T2 ON T1.publisher_id = T2.publisher_id INNER JOIN order_line AS T3 ON T3.book_id = T2.book_id WHERE T1.publisher_name = 'Berkley' AND T3.price < 1"
+    },
+    {
+        "db_id": "books",
+        "question": "List the title of the books purchased by the customer named Zia Roizin.",
+        "evidence": "",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T4.first_name = 'Zia' AND T4.last_name = 'Roizin'"
+    },
+    {
+        "db_id": "books",
+        "question": "Who authored the book with greatest number of pages?",
+        "evidence": "greatest number of pages refers to Max(num_pages); who authored refers to author_name",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id ORDER BY T1.num_pages DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "List the email of customers that bought the book titled Switch on the Night.",
+        "evidence": "\"Switch on the Night\" is the title",
+        "SQL": "SELECT T4.email FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T1.title = 'Switch on the Night'"
+    },
+    {
+        "db_id": "books",
+        "question": "List the author's name of the books published by Abrams.",
+        "evidence": "\"Abrams\" is the publisher_name; author's name refers to author_name",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN publisher AS T4 ON T4.publisher_id = T1.publisher_id WHERE T4.publisher_name = 'Abrams'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the publisher name of the book titled The Illuminati?",
+        "evidence": "\"The Illuminati\" is the title of book",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'The Illuminati'"
+    },
+    {
+        "db_id": "books",
+        "question": "In books authored by Abraham Lincoln, what is the percentage of the books published in 1992?",
+        "evidence": "\"Abraham Lincoln\" is the author_name; published in 1992 refers to publication_date LIKE '1992%'; percentage = Divide (Sum(publication_date LIKE '1992%'), Count(publication_date)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN STRFTIME('%Y', T1.publication_date) = '1992' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Abraham Lincoln'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books published in 2004, list the name of the publisher of books with number of pages greater than 70% of the average number of pages of all books.",
+        "evidence": "published in 2004 refers to publication_date LIKE '2004%'; books with number of pages greater than 70% of the average number of pages refers to num_pages > Multiply(Avg(num_pages), 0.7); name of publisher refers to publisher_name",
+        "SQL": "SELECT T1.title, T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE STRFTIME('%Y', T1.publication_date) = '2004' AND T1.num_pages * 100 > ( SELECT AVG(num_pages) FROM book ) * 70"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the contact email of Moss Zarb.",
+        "evidence": "",
+        "SQL": "SELECT email FROM customer WHERE first_name = 'Moss' AND last_name = 'Zarb'"
+    },
+    {
+        "db_id": "books",
+        "question": "Name the streets in Dallas.",
+        "evidence": "\"Dallas\" is the city; streets refers to street_name",
+        "SQL": "SELECT street_name FROM address WHERE city = 'Dallas'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which books were released by Orson Scott Card in 2001?",
+        "evidence": "\"Orson Scott Card\" is the author_name; released in 2001 refers to publication_date LIKE '2001%'; books refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Orson Scott Card' AND STRFTIME('%Y', T1.publication_date) = '2001'"
+    },
+    {
+        "db_id": "books",
+        "question": "Count the number of books written by Orson Scott Card.",
+        "evidence": "\"Orson Scott Card\" is the author_name",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Orson Scott Card'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the authors and titles of the books which have more than 3000 pages.",
+        "evidence": "authors refers to author_name; more than 3000 pages refers to num_pages > 3000",
+        "SQL": "SELECT T3.author_name, T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T1.num_pages > 3000"
+    },
+    {
+        "db_id": "books",
+        "question": "Who wrote \"The Prophet\"?",
+        "evidence": "\"The Prophet\" is the title of the book: who wrote refers to author_name",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T1.title = 'The Prophet'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were published by Ace Hardcover?",
+        "evidence": "\"Ace Hardcover\" is the publisher_name",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Ace Hardcover'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which publisher published Barry Eisler's book?",
+        "evidence": "\"Barry Eisler\" is the author_name; publisher refers to publisher_name",
+        "SQL": "SELECT T4.publisher_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN publisher AS T4 ON T4.publisher_id = T1.publisher_id WHERE T3.author_name = 'Barry Eisler'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were published in Japanese?",
+        "evidence": "published in Japanese refers to language_name = 'Japanese'",
+        "SQL": "SELECT COUNT(T2.book_id) FROM book_language AS T1 INNER JOIN book AS T2 ON T1.language_id = T2.language_id WHERE T1.language_name = 'Japanese'"
+    },
+    {
+        "db_id": "books",
+        "question": "Sum the total price of the orders for The Prophet book.",
+        "evidence": "\"The Prophet\" is the title of the book: total price refers to Sum(price)",
+        "SQL": "SELECT SUM(T1.price) FROM order_line AS T1 INNER JOIN book AS T2 ON T1.book_id = T2.book_id WHERE T2.title = 'The Prophet'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the number of orders by Daisey Lamball in 2021.",
+        "evidence": "in 2021 refers to order_date LIKE '2021%'",
+        "SQL": "SELECT COUNT(*) FROM cust_order AS T1 INNER JOIN customer AS T2 ON T1.customer_id = T2.customer_id WHERE T2.first_name = 'Daisey' AND T2.last_name = 'Lamball' AND STRFTIME('%Y', T1.order_date) = '2021'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many customers are from Australia?",
+        "evidence": "\"Australia\" is the country_name;",
+        "SQL": "SELECT COUNT(*) FROM customer_address AS T1 INNER JOIN address AS T2 ON T2.address_id = T1.address_id INNER JOIN country AS T3 ON T3.country_id = T2.country_id WHERE T3.country_name = 'Australia'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders were delivered in December 2019?",
+        "evidence": "delivered refers to status_value = 'Delivered'; in December 2019 refers to status_date LIKE '2019-12%'",
+        "SQL": "SELECT COUNT(*) FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id WHERE T1.status_value = 'Delivered' AND STRFTIME('%Y', T2.status_date) = '2019'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the customers' names who ordered the Fantasmas.",
+        "evidence": "\"Fantasmas\" is the title of the book; customer names refers to first_name, last_name",
+        "SQL": "SELECT T4.first_name, T4.last_name FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T1.title = 'Fantasmas'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many percent of orders in 2020 used international shipping?",
+        "evidence": "international shipping refers to method_name = 'International'; orders in 2020 refers to order_date = '2020%'; percentage = Divide (Sum(method_name = 'International'), Count(order_id)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T2.method_name = 'International' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cust_order AS T1 INNER JOIN shipping_method AS T2 ON T1.shipping_method_id = T2.method_id WHERE STRFTIME('%Y', T1.order_date) = '2020'"
+    },
+    {
+        "db_id": "books",
+        "question": "List all the authors named \"George\".",
+        "evidence": "author named 'George' refers to author_name = 'George%'",
+        "SQL": "SELECT author_name FROM author WHERE author_name LIKE 'George%'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which year has the most customer orders?",
+        "evidence": "year with the most customer orders refers to Max(count(order_id))",
+        "SQL": "SELECT strftime('%Y', order_date) FROM cust_order GROUP BY strftime('%Y', order_date) ORDER BY COUNT(strftime('%Y', order_date)) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the average price for the order line?",
+        "evidence": "average price refers to AVG(price)",
+        "SQL": "SELECT AVG(price) FROM order_line"
+    },
+    {
+        "db_id": "books",
+        "question": "List all of the books that were published in 1995.",
+        "evidence": "published in 1995 refers to publication_date LIKE '1995%'; ; list of book refers to title",
+        "SQL": "SELECT title FROM book WHERE STRFTIME('%Y', publication_date) = '1995'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the most common domain for the email address among all the customers?",
+        "evidence": "most common domain for the email refers to Max(Count(SUBSTR(email, CHARINDEX('@', email) + 1, length(email) - charindex('@', email))))",
+        "SQL": "SELECT SUBSTR(email, INSTR(email, '@') + 1, LENGTH(email) - INSTR(email, '@')) AS ym FROM customer GROUP BY SUBSTR(email, INSTR(email, '@') + 1, LENGTH(email) - INSTR(email, '@')) ORDER BY COUNT(*) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many publishers have the word \"book\" in their name?",
+        "evidence": "publisher have the word 'book' refers to publisher_name LIKE '%book%'",
+        "SQL": "SELECT COUNT(*) FROM publisher WHERE publisher_name LIKE '%book%'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which language is the rarest among all the books?",
+        "evidence": "language written in refers to language_name; rarest refers to Min(Count(book_id))",
+        "SQL": "SELECT T2.language_name FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id GROUP BY T2.language_name ORDER BY COUNT(T2.language_name) ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "List all the order dates for the customer named \"Adrian Kunzelmann\".",
+        "evidence": "",
+        "SQL": "SELECT T3.order_date FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T4.first_name = 'Adrian' AND T4.last_name = 'Kunzelmann'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many addresses are from the Philippines?",
+        "evidence": "\"Philippines\" is the country_name",
+        "SQL": "SELECT COUNT(T2.country_id) FROM address AS T1 INNER JOIN country AS T2 ON T2.country_id = T1.country_id WHERE T2.country_name = 'Philippines'"
+    },
+    {
+        "db_id": "books",
+        "question": "Who is the author who wrote the most books?",
+        "evidence": "author refers to author_name; who wrote the most book refers to Max(Count(author_id))",
+        "SQL": "SELECT T1.author_name FROM author AS T1 INNER JOIN book_author AS T2 ON T1.author_id = T2.author_id GROUP BY T1.author_name ORDER BY COUNT(T2.author_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What are the books published by \"Harper Collins\"?",
+        "evidence": "\"Harper Collins\" is the publisher_name; books refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Harper Collins'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders were returned in the year 2020?",
+        "evidence": "returned refers to status_value = 'Returned'; in the year 2020 refers to status_date LIKE '%2020%'",
+        "SQL": "SELECT COUNT(*) FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id WHERE T1.status_value = 'Returned' AND STRFTIME('%Y', T2.status_date) = '2020'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the second-least common method of shipping?",
+        "evidence": "method of shipping refers to method_name; least method refers to Min(Count(method_id))",
+        "SQL": "SELECT T2.method_name FROM cust_order AS T1 INNER JOIN shipping_method AS T2 ON T1.shipping_method_id = T2.method_id GROUP BY T2.method_name ORDER BY COUNT(T2.method_id) ASC LIMIT 1, 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many of the customer addresses are inactive?",
+        "evidence": "addresses are inactive refers to address_status = 'Inactive'",
+        "SQL": "SELECT COUNT(*) FROM customer_address AS T1 INNER JOIN address_status AS T2 ON T1.status_id = T2.status_id WHERE T2.address_status = 'Inactive'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the book with the most orders?",
+        "evidence": "books refers to title; the most orders refers to Max(Count(order_id))",
+        "SQL": "SELECT T2.title FROM order_line AS T1 INNER JOIN book AS T2 ON T1.book_id = T2.book_id GROUP BY T2.title ORDER BY COUNT(T1.book_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the address that received the most orders?",
+        "evidence": "address refers to street_name, city; received the most orders refers to Max(count(dest_address_id))",
+        "SQL": "SELECT T2.street_name, T2.city FROM cust_order AS T1 INNER JOIN address AS T2 ON T1.dest_address_id = T2.address_id GROUP BY T2.street_number, T2.street_name, T2.city ORDER BY COUNT(T1.dest_address_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How much time does it take to update the status of order \"2398\"?",
+        "evidence": "\"2398\" is the order_id; time = \u00a0 Subtract(strftime('%Y', status_date), strftime('%Y', order_date)) AS \"year\" , Subtract(strftime('%m', status_date), strftime('%m', order_date)) AS \"month\", Subtract (strftime('%d', status_date), strftime('%d', order_date)) AS \"day\"",
+        "SQL": "SELECT strftime('%J', T2.status_date) - strftime('%J', T1.order_date) FROM cust_order AS T1 INNER JOIN order_history AS T2 ON T1.order_id = T2.order_id WHERE T1.order_id = 2398"
+    },
+    {
+        "db_id": "books",
+        "question": "Which customer has the most addresses?",
+        "evidence": "customer refers to first_name, last_name; the most address refers to Max(count(address_id))",
+        "SQL": "SELECT T1.first_name, T1.last_name FROM customer AS T1 INNER JOIN customer_address AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.first_name, T1.last_name ORDER BY COUNT(T2.customer_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What percentage of the total prices of all orders are shipped internationally?",
+        "evidence": "shipped internationally refers to method_name = 'International'; percentage = Divide (Sum(price where method_name = 'International'), Sum(price)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T3.method_name = 'International' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cust_order AS T1 INNER JOIN order_line AS T2 ON T1.order_id = T2.order_id INNER JOIN shipping_method AS T3 ON T3.method_id = T1.shipping_method_id"
+    },
+    {
+        "db_id": "books",
+        "question": "List all the authors who wrote fewer pages than the average.",
+        "evidence": "author refers to author_name; who wrote fewer pages than the average refers to num_pages < AVG(num_pages)",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T1.num_pages < ( SELECT AVG(num_pages) FROM book )"
+    },
+    {
+        "db_id": "books",
+        "question": "Other than zero, what is the lowest price paid by a customer for an order?",
+        "evidence": "other than 0 refers to price ! = 0; lowest price paid refers to Min(price)",
+        "SQL": "SELECT MIN(price) FROM order_line WHERE price <> 0"
+    },
+    {
+        "db_id": "books",
+        "question": "How many customers have an address that is located in the city of Villeneuve-la-Garenne?",
+        "evidence": "\"Villeneuve-la-Garenne\" is the city",
+        "SQL": "SELECT COUNT(address_id) FROM address WHERE city = 'Villeneuve-la-Garenne'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many authors are named Adam?",
+        "evidence": "authors named Adam refers to author_name LIKE 'Adam'",
+        "SQL": "SELECT COUNT(*) FROM author WHERE author_name LIKE 'Adam%'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many customers use a Yahoo! Mail e-mail address?",
+        "evidence": "Yahoo! Mail e-mail address refers to email LIKE '%@yahoo.com'",
+        "SQL": "SELECT COUNT(*) FROM customer WHERE email LIKE '%@yahoo.com'"
+    },
+    {
+        "db_id": "books",
+        "question": "What are the city addresses of the customers located in the United States of America?",
+        "evidence": "\"United States of America\" is the country_name",
+        "SQL": "SELECT DISTINCT T2.city FROM country AS T1 INNER JOIN address AS T2 ON T1.country_id = T2.country_id WHERE T1.country_name = 'United States of America'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders did Marcelia Goering place in 2021 that uses the Priority Shipping method?",
+        "evidence": "in 2021 refers to substr(order_date, 1, 4) = '2021'; priority shipping method refers to method_name = 'Priority'",
+        "SQL": "SELECT COUNT(*) FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id INNER JOIN shipping_method AS T3 ON T3.method_id = T2.shipping_method_id WHERE T1.first_name = 'Marcelia' AND T1.last_name = 'Goering' AND STRFTIME('%Y', T2.order_date) = '2021' AND T3.method_name = 'Priority'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which books have the most expensive price?",
+        "evidence": "most expensive book refers to Max(price)",
+        "SQL": "SELECT T2.title FROM order_line AS T1 INNER JOIN book AS T2 ON T1.book_id = T2.book_id ORDER BY T1.price DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many customers ordered the book titled \"Anleitung zum Zickigsein\"",
+        "evidence": "\"Anleitung zum Zickigsein\" is the title of the book",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T1.title = 'Anleitung zum Zickigsein'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the most expensive price paid by a customer for the book \"Bite Me If You Can (Argeneau #6)\"?",
+        "evidence": "\"Bite Me If You Can (Argeneau #6)\" is the title of the book; most expensive price refers to Max(price)",
+        "SQL": "SELECT MAX(T2.price) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T1.title = 'Bite Me If You Can (Argeneau #6)'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many customers ordered the oldest book?",
+        "evidence": "oldest book refers to Min(publiation_date)",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id GROUP BY T1.publication_date ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "List all the titles of the Spanish books published by Alfaguara.",
+        "evidence": "\"Spanish\" is the language_name; 'Alfaguara' is the publisher_name",
+        "SQL": "SELECT T2.title FROM book_language AS T1 INNER JOIN book AS T2 ON T2.language_id = T1.language_id INNER JOIN publisher AS T3 ON T3.publisher_id = T2.publisher_id WHERE T1.language_name = 'Spanish' AND T3.publisher_name = 'Alfaguara' GROUP BY T2.title"
+    },
+    {
+        "db_id": "books",
+        "question": "How many customers ordered Stephen King's first book?",
+        "evidence": "\"Stephen King\" is the author_name; first book refers to Min(publication_date)",
+        "SQL": "SELECT COUNT(T1.publication_date) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN order_line AS T4 ON T4.book_id = T1.book_id WHERE T3.author_name = 'Stephen King' ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What are the languages of the first two published books?",
+        "evidence": "first two published book refers to Min(publication_date); language refers to language_name",
+        "SQL": "SELECT T2.language_name FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id ORDER BY T1.publication_date ASC LIMIT 2"
+    },
+    {
+        "db_id": "books",
+        "question": "Who published the book \"The Secret Garden\"?",
+        "evidence": "\"The Secret Garden\" is the title of the book; who published the book refers to\u00a0publisher_name",
+        "SQL": "SELECT DISTINCT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'The Secret Garden'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books that were published by Scholastic, how many were written by J.K Rowling?",
+        "evidence": "\"J.K Rowling\" is the author_name; 'Scholastic' is the publisher_name",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id INNER JOIN book_author AS T3 ON T3.book_id = T1.book_id INNER JOIN author AS T4 ON T4.author_id = T3.author_id WHERE T2.publisher_name = 'Scholastic' AND T4.author_name = 'J.K. Rowling'"
+    },
+    {
+        "db_id": "books",
+        "question": "What are the names of all the publishers who have published at least 30 books?",
+        "evidence": "published at least 30 books refers to Count(book_id) > = 30",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id GROUP BY T2.publisher_name HAVING COUNT(T2.publisher_name) >= 30"
+    },
+    {
+        "db_id": "books",
+        "question": "Indicate the last number of each street.",
+        "evidence": "street refers to street_name; last number of each street refers to Substr (street_number, -1)",
+        "SQL": "SELECT street_number FROM address"
+    },
+    {
+        "db_id": "books",
+        "question": "Indicate the complete address of customers located in Lazaro Cardenas.",
+        "evidence": "complete address refers to street_number, street_name, city, country; \"Lazaro Cardenas\" is the city",
+        "SQL": "SELECT street_number, street_name, city, country_id FROM address WHERE city = 'Lazaro Cardenas'"
+    },
+    {
+        "db_id": "books",
+        "question": "Indicate the ISBN13 of all the books that have less than 140 pages and more than 135.",
+        "evidence": "ISBN13 refers to isbn13; less than 140 pages and more than 135 refers to num_pages > 135 AND num_pages < 140;",
+        "SQL": "SELECT isbn13 FROM book WHERE num_pages < 140 AND num_pages > 135"
+    },
+    {
+        "db_id": "books",
+        "question": "Indicate the title of the six books with the greatest potential value as collectibles.",
+        "evidence": "greatest potential value refers to Min(publication_date)",
+        "SQL": "SELECT title FROM book ORDER BY publication_date ASC LIMIT 6"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were ordered in the last month of the year 2020?",
+        "evidence": "ordered in last month of the year 2020 refers to Substr(order_date, 1, 7) = '2020-12'",
+        "SQL": "SELECT COUNT(*) FROM cust_order WHERE order_date LIKE '2020-12%'"
+    },
+    {
+        "db_id": "books",
+        "question": "Indicate the full name of all customers whose last name begins with the letter K.",
+        "evidence": "full name refers to first_name, last_name; last name begin with the letter 'K' refers to last_name LIKE 'K%'",
+        "SQL": "SELECT first_name, last_name FROM customer WHERE last_name LIKE 'K%'"
+    },
+    {
+        "db_id": "books",
+        "question": "In which cities are the customers of Costa Rica located?",
+        "evidence": "\"Costa Rica\" is the country_name",
+        "SQL": "SELECT T1.city FROM address AS T1 INNER JOIN country AS T2 ON T2.country_id = T1.country_id WHERE T2.country_name = 'Costa Rica'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which customer addresses are no longer active?",
+        "evidence": "no longer active refers to address_status = 'Inactive'; customer address refers to street_number, street_name, city",
+        "SQL": "SELECT DISTINCT T1.street_name FROM address AS T1 INNER JOIN customer_address AS T2 ON T1.address_id = T2.address_id INNER JOIN address_status AS T3 ON T3.status_id = T2.status_id WHERE T3.address_status = 'Inactive'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the full name of the customers who live in Baiyin city?",
+        "evidence": "full name refers to first_name, last_name; 'Baiyin' is the city",
+        "SQL": "SELECT T3.first_name, T3.last_name FROM address AS T1 INNER JOIN customer_address AS T2 ON T1.address_id = T2.address_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T1.city = 'Baiyin'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the email of the customers who place their orders with priority method?",
+        "evidence": "priority method refers to method_name = 'Priority'",
+        "SQL": "SELECT T1.email FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id INNER JOIN shipping_method AS T3 ON T3.method_id = T2.shipping_method_id WHERE T3.method_name = 'Priority'"
+    },
+    {
+        "db_id": "books",
+        "question": "On what date did the customers who live at number 460 of their respective streets place their orders?",
+        "evidence": "live at number 460 refers to street_number = '460'; date the customers placed their orders refers to order_date",
+        "SQL": "SELECT T1.order_date FROM cust_order AS T1 INNER JOIN address AS T2 ON T1.dest_address_id = T2.address_id WHERE T2.street_number = 460"
+    },
+    {
+        "db_id": "books",
+        "question": "Identify by their id all the orders that have been cancelled.",
+        "evidence": "have been cancelled refers to status_value = 'cancelled'; id refers to order_id",
+        "SQL": "SELECT T2.order_id FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id WHERE T1.status_value = 'Cancelled'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the status of the orders placed on 04/10/2022?",
+        "evidence": "placed on 04/10/2022 refers to SUBSTR(order_date, 1, 10) = '2022-04-10'; status of order refers to status_value",
+        "SQL": "SELECT DISTINCT T1.status_value FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id WHERE T3.order_date LIKE '2022-04-10%'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the highest price at which a customer bought the book 'The Prophet'?",
+        "evidence": "\"The Prophet\" is the title of the book; highest price refers to Max(price)",
+        "SQL": "SELECT MAX(T2.price) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T1.title = 'The Prophet'"
+    },
+    {
+        "db_id": "books",
+        "question": "On what dates were books ordered at a price of 16.54?",
+        "evidence": "price of 16.54 refers to price = 16.54; dates the book ordered refers to order_date",
+        "SQL": "SELECT T1.order_date FROM cust_order AS T1 INNER JOIN order_line AS T2 ON T1.order_id = T2.order_id WHERE T2.price = 16.54"
+    },
+    {
+        "db_id": "books",
+        "question": "List the titles of all the books that Peter H. Smith wrote.",
+        "evidence": "\"Peter H.Smit\" is the author_name",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Peter H. Smith'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books under 300 pages has HarperCollins Publishers published?",
+        "evidence": "under 300 pages refers to num_pages < 300; 'HarperCollins Publishers\" is the publisher_name",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'HarperCollins Publishers' AND T1.num_pages < 300"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books have been published in Japanese?",
+        "evidence": "in Japanese refers to language_name = 'Japanese",
+        "SQL": "SELECT COUNT(*) FROM book_language AS T1 INNER JOIN book AS T2 ON T1.language_id = T2.language_id WHERE T1.language_name = 'Japanese'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the average number of pages in the books written by Jennifer Crusie?",
+        "evidence": "\"Jennifer Crusie\" is the author_name; average number of pages refers to AVG(num_pages)",
+        "SQL": "SELECT AVG(T1.num_pages) FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Jennifer Crusie'"
+    },
+    {
+        "db_id": "books",
+        "question": "What percentage of the orders placed by Kaleena were shipped by the international method?",
+        "evidence": "shipped by international method refers to method_name = 'International'; percentage = Divide (Sum(method_name = 'International'), Count(method_name)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T3.method_name = 'International' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM customer AS T1 INNER JOIN cust_order AS T2 ON T1.customer_id = T2.customer_id INNER JOIN shipping_method AS T3 ON T3.method_id = T2.shipping_method_id WHERE T1.first_name = 'Kaleena'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the full name of the customers who have ordered the book The Sorrows of Young Werther.",
+        "evidence": "full name refers to first_name, last_name; 'The Sorrows of Young Werther' is the title of the book",
+        "SQL": "SELECT T4.first_name, T4.last_name FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T1.title = 'The Sorrows of Young Werther'"
+    },
+    {
+        "db_id": "books",
+        "question": "List every book that Ursola Purdy has ordered.",
+        "evidence": "book refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T4.first_name = 'Ursola' AND T4.last_name = 'Purdy'"
+    },
+    {
+        "db_id": "books",
+        "question": "Who is the author of the book with the biggest page count?",
+        "evidence": "author refers to author_name, biggest page count refers to Max(num_pages)",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id ORDER BY T1.num_pages DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books written by Akira Watanabe are available on Gravity?",
+        "evidence": "\"Akira Watanabe\" is the author_name",
+        "SQL": "SELECT COUNT(*) FROM author AS T1 INNER JOIN book_author AS T2 ON T1.author_id = T2.author_id WHERE T1.author_name = 'Akira Watanabe'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the full address of Ursola Purdy.",
+        "evidence": "full address refers to street_number, street_name, city, country_name",
+        "SQL": "SELECT T3.street_number, T3.street_name, T3.city FROM customer AS T1 INNER JOIN customer_address AS T2 ON T1.customer_id = T2.customer_id INNER JOIN address AS T3 ON T3.address_id = T2.address_id INNER JOIN country AS T4 ON T4.country_id = T3.country_id WHERE T1.first_name = 'Ursola' AND T1.last_name = 'Purdy'"
+    },
+    {
+        "db_id": "books",
+        "question": "Who is the author of the book The Mystery in the Rocky Mountains?",
+        "evidence": "author refers to author_name; 'The Mystery in the Rocky Mountains' is the title of the book",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T1.title = 'The Mystery in the Rocky Mountains'"
+    },
+    {
+        "db_id": "books",
+        "question": "Identify the publisher of the book Girls' Night In.",
+        "evidence": "\"Girls' Night In\" is the title of the book; publisher is the publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'Girls'' Night In'"
+    },
+    {
+        "db_id": "books",
+        "question": "Name the publisher of the oldest book.",
+        "evidence": "publisher refers to publisher_name;\u00a0 oldest book refers to Min(publication_date)",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "Identify the cost difference between Priority and Express shipping methods.",
+        "evidence": "\"Priority\" and \"Express\" are both method_name; cost difference = Subtract (Sum(cost where method_name = 'Express'), Sum(cost where method_name 'Priority'))",
+        "SQL": "SELECT SUM(CASE WHEN method_name = 'Priority' THEN cost ELSE 0 END) - SUM(CASE WHEN method_name = 'Express' THEN cost ELSE 0 END) FROM shipping_method"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders have been cancelled in 2022?",
+        "evidence": "cancelled refers to status_value = 'Cancelled'; in 2022 refers to SUBSTR(status_date, 1, 4) = '2022'",
+        "SQL": "SELECT COUNT(*) FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id WHERE T1.status_value = 'Cancelled' AND STRFTIME('%Y', T2.status_date) = '2022'"
+    },
+    {
+        "db_id": "books",
+        "question": "List all the books published by BBC Audiobooks.",
+        "evidence": "\"BBC Audiobooks\" refers to publisher_name; books refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'BBC Audiobooks'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were published in 2017?",
+        "evidence": "published in 2017 refers to Substr(publication_date,1, 4) = '2017'",
+        "SQL": "SELECT COUNT(*) FROM book WHERE STRFTIME('%Y', publication_date) = '2017'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the International Standard Book Number of the book The Mystery in the Rocky Mountains.",
+        "evidence": "International Standard Book Number refers to isbn13; 'The Mystery in the Rocky Mountains' is the title of the book",
+        "SQL": "SELECT isbn13 FROM book WHERE title = 'The Mystery in the Rocky Mountains'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among all orders updated in 2022, identify the percentage that has been returned.",
+        "evidence": "order updated in 2022 refers to SUBSTR(status_date, 1, 4) = '2022'; has been returned refers to status_value = 'Returned'; percentage = Divide (Count(status_value = 'Returned'), Count(status_value)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T1.status_value = 'Returned' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id WHERE STRFTIME('%Y', T2.status_date) = '2022'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among all addresses provided by customers, identify the percentage that are not in use anymore.",
+        "evidence": "address not in use refers to address_status = 'Inactive'; percentage = Divide (Count(address_status = 'Inactive'), Count(address_status)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T2.address_status = 'Inactive' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM customer_address AS T1 INNER JOIN address_status AS T2 ON T2.status_id = T1.status_id"
+    },
+    {
+        "db_id": "books",
+        "question": "How many pages does 'Seaward' have?",
+        "evidence": "\"Seaward\" is the title of the book; pages refers to num_pages",
+        "SQL": "SELECT num_pages FROM book WHERE title = 'Seaward'"
+    },
+    {
+        "db_id": "books",
+        "question": "Who is the author of First Things First?",
+        "evidence": "\"First Things First\" is the title of the book; author refers to author_name",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T1.title = 'First Things First'"
+    },
+    {
+        "db_id": "books",
+        "question": "List all books authored by Tom Clancy.",
+        "evidence": "\"Tom Clancy\" is the author_name; books refers title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Tom Clancy'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which book by Hirohiko Araki was published on 6/6/2006?",
+        "evidence": "\"Hirohiko Araki\" is the author_name; on 6/6/2006 refers to publication_date = '2006-06-06'; which book refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'Hirohiko Araki' AND T1.publication_date = '2006-06-06'"
+    },
+    {
+        "db_id": "books",
+        "question": "Who is the publisher of Hitchhiker's Guide To The Galaxy: The Filming of the Douglas Adams classic?",
+        "evidence": "\"Hitchhiker's Guide To The Galaxy: The Filming of the Douglas Adams classic\" is the title of the book; publisher refers to publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'Hitchhiker''s Guide To The Galaxy: The Filming of the Douglas Adams classic'"
+    },
+    {
+        "db_id": "books",
+        "question": "List all books published by ADV Manga.",
+        "evidence": "\"ADV Manga\" is the publisher_name; books refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'ADV Manga'"
+    },
+    {
+        "db_id": "books",
+        "question": "Write the full name of the customers whose address is at 55 Dorton Pass, Huangqiao.",
+        "evidence": "full name refers to first_name, last_name; '55' is the street_number, 'Dorton Pass' is the street_name; 'Huangqiao' is the city",
+        "SQL": "SELECT DISTINCT T1.first_name, T1.last_name FROM customer AS T1 INNER JOIN customer_address AS T2 ON T1.customer_id = T2.customer_id INNER JOIN address AS T3 ON T3.address_id = T2.address_id WHERE T3.street_number = 55 AND T3.street_name = 'Dorton Pass' AND T3.city = 'Huangqiao'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which country is 9 Green Ridge Point, Arendal located at?",
+        "evidence": "\"9\" is the street_number; 'Green Reidge Point' is the street_name; 'Arendal' is the city",
+        "SQL": "SELECT T2.country_name FROM address AS T1 INNER JOIN country AS T2 ON T2.country_id = T1.country_id WHERE T1.street_number = 9 AND T1.street_name = 'Green Ridge Point' AND T1.city = 'Arendal'"
+    },
+    {
+        "db_id": "books",
+        "question": "List 10 addresses located in Poland.",
+        "evidence": "\"Polan\" is the country_name; address refers to street_number, street_name, city",
+        "SQL": "SELECT T1.street_number, T1.street_name, T1.city FROM address AS T1 INNER JOIN country AS T2 ON T2.country_id = T1.country_id WHERE T2.country_name = 'Poland' LIMIT 10"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the shipping method ordered by Nicolette Sadler at 6/29/2020 7:40:07 PM?",
+        "evidence": "ordered at 6/29/2020 7:40:07 PM refers to order_date = '2020-06-29 19:40:07'; shipping method refers to method_name",
+        "SQL": "SELECT T3.method_name FROM cust_order AS T1 INNER JOIN customer AS T2 ON T1.customer_id = T2.customer_id INNER JOIN shipping_method AS T3 ON T3.method_id = T1.shipping_method_id WHERE T2.first_name = 'Nicolette' AND T2.last_name = 'Sadler' AND T1.order_date = '2020-06-29 19:40:07'"
+    },
+    {
+        "db_id": "books",
+        "question": "List all books written in Arabic.",
+        "evidence": "\"Arabic\" is the language_name; book refers to title",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T2.language_name = 'Arabic'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which language is 'El plan infinito' written in?",
+        "evidence": "\"El plan infinito\" is the title of the book; language refers to language_name",
+        "SQL": "SELECT T2.language_name FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T1.title = 'El plan infinito'"
+    },
+    {
+        "db_id": "books",
+        "question": "What percentage of books written by Hirohiko make up the number of books published by Viz Media?",
+        "evidence": "\"Hirohiko Araki\" is the author_name; 'Viz Media' is the publisher_name; percentage = Divide (Count(author_name = 'Hirohiko Araki'), Count(book_id)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T1.author_name = 'Hirohiko Araki' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM author AS T1 INNER JOIN book_author AS T2 ON T2.author_id = T1.author_id INNER JOIN book AS T3 ON T3.book_id = T2.book_id INNER JOIN publisher AS T4 ON T4.publisher_id = T3.publisher_id WHERE T4.publisher_name = 'VIZ Media'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the average number of book pages written by Zilpha Keatley Snyder?",
+        "evidence": "\"Zilpha Keatley Snyder\" is the author_name; average number of book pages refers to AVG(num_pages)",
+        "SQL": "SELECT AVG(T3.num_pages) FROM book_author AS T1 INNER JOIN author AS T2 ON T1.author_id = T2.author_id INNER JOIN book AS T3 ON T3.book_id = T1.book_id WHERE T2.author_name = 'Zilpha Keatley Snyder'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the full name of customer with email ckupis4@tamu.edu?",
+        "evidence": "\"ckupis4@tamu.edu\" is the email of customer; full name refers to first_name, last_name",
+        "SQL": "SELECT first_name, last_name FROM customer WHERE email = 'ckupis4@tamu.edu'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which book has the most number of pages?",
+        "evidence": "books with the most number of pages refers to Max(num_pages)",
+        "SQL": "SELECT title FROM book ORDER BY num_pages DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were written by author A.J. Ayer?",
+        "evidence": "\"A.J. Ayer\" is the author_name;",
+        "SQL": "SELECT COUNT(*) FROM book_author AS T1 INNER JOIN author AS T2 ON T1.author_id = T2.author_id WHERE T2.author_name = 'A.J. Ayer'"
+    },
+    {
+        "db_id": "books",
+        "question": "Name the title of books written by author A.J.Ayer.",
+        "evidence": "\"A.J. Ayer\" is the author_name;",
+        "SQL": "SELECT T3.title FROM book_author AS T1 INNER JOIN author AS T2 ON T1.author_id = T2.author_id INNER JOIN book AS T3 ON T3.book_id = T1.book_id WHERE T2.author_name = 'A.J. Ayer'"
+    },
+    {
+        "db_id": "books",
+        "question": "The book name \"The Season: A Candid Look at Broadway\" was published by which publisher?",
+        "evidence": "\"The Season: A Candid Look at Broadway\" is the\u00a0 title of the book; publisher refers to publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'The Season: A Candid Look at Broadway'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the average of English books among all books published by Carole Marsh Mysteries?",
+        "evidence": "English book refers to language_name = 'English'; 'Carole Marsh Mysteries' is the publisher_name; average = Divide (Count(language_name = 'English'), Count(book_id))",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T1.language_name = 'English' THEN 1 ELSE 0 END) AS REAL) / COUNT(*) FROM book_language AS T1 INNER JOIN book AS T2 ON T1.language_id = T2.language_id INNER JOIN publisher AS T3 ON T3.publisher_id = T2.publisher_id WHERE T3.publisher_name = 'Carole Marsh Mysteries'"
+    },
+    {
+        "db_id": "books",
+        "question": "Name the title of the book with the most number of pages that was published from 1990 to 2000 by publisher Free Press.",
+        "evidence": "books with the most number of pages refers to Max(num_pages); published from 1990 to 2000 refers to SUBSTR(publication_date, 1, 4) BETWEEN '1990' AND '2000'; 'Free Press' is the publisher_name",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Free Press' AND STRFTIME('%Y', T1.publication_date) BETWEEN '1990' AND '2000' ORDER BY T1.num_pages DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the order price of the book \"The Servant Leader\" in 2003?",
+        "evidence": "\"The Servant Leader\" is the title of the book; book in 2003 refers to SUBSTR(publication_date, 1, 4) = '2003'",
+        "SQL": "SELECT T2.price FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T1.title = 'The Servant Leader' AND STRFTIME('%Y', T1.publication_date) = '2003'"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the current address of customer Kandy?",
+        "evidence": "current address refers to address_status = 1; address refers to street_number, street_name, city",
+        "SQL": "SELECT T3.street_number, T3.street_name, T3.city FROM customer AS T1 INNER JOIN customer_address AS T2 ON T1.customer_id = T2.customer_id INNER JOIN address AS T3 ON T3.address_id = T2.address_id INNER JOIN address_status AS T4 ON T4.status_id = T2.status_id WHERE T1.first_name = 'Kandy'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were ordered by customer Kandy Adamec?",
+        "evidence": "",
+        "SQL": "SELECT COUNT(*) FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T3.first_name = 'Kandy' AND T3.last_name = 'Adamec'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many orders got returned in 2022?",
+        "evidence": "orders got returned refers to status_value = 'Returned'; in 2022 refers to SUBSTR(status_date, 1, 4) = '2022'",
+        "SQL": "SELECT COUNT(*) FROM order_status AS T1 INNER JOIN order_history AS T2 ON T1.status_id = T2.status_id WHERE T1.status_value = 'Returned' AND STRFTIME('%Y', T2.status_date) = '2022'"
+    },
+    {
+        "db_id": "books",
+        "question": "Which country does the customer with the email \"rturbitt2@geocities.jp\" from?",
+        "evidence": "\"rturbitt2@geocities.jp\" is the email of customer; country refers to country_name",
+        "SQL": "SELECT T4.country_name FROM customer AS T1 INNER JOIN customer_address AS T2 ON T1.customer_id = T2.customer_id INNER JOIN address AS T3 ON T3.address_id = T2.address_id INNER JOIN country AS T4 ON T4.country_id = T3.country_id WHERE T1.email = 'rturbitT2@geocities.jp'"
+    },
+    {
+        "db_id": "books",
+        "question": "Name the publisher who published the most books.",
+        "evidence": "published the most books refers to Max(Count(book_id)); publisher refers to publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id GROUP BY T2.publisher_name ORDER BY COUNT(T2.publisher_id) DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the title of the first book that was written by A.J. Ayer?",
+        "evidence": "\"A.J. Ayer\" is the author_name; first book refers to Min(publication_date)",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id WHERE T3.author_name = 'A.J. Ayer' ORDER BY T1.publication_date ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the percentage of books that cost greater than $10 and were ordered by customer Ruthanne Vatini?",
+        "evidence": "cost greater than $10 refers to price > 10; percentage = Divide (Count(book_id where price >10), Count(book_id)) * 100; full name refers to the composition of first name, lastname",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T1.price > 10 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T3.first_name = 'Ruthanne' AND T3.last_name = 'Vatini'"
+    },
+    {
+        "db_id": "books",
+        "question": "List the title of books published by AK Press.",
+        "evidence": "\"AK Press\" is the publisher_name",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'AK Press'"
+    },
+    {
+        "db_id": "books",
+        "question": "Who ordered the book with the cheapest price?",
+        "evidence": "book with cheapest price refers to Min(price); who order means name of customer which refers to first_name, last_name",
+        "SQL": "SELECT T3.first_name, T3.last_name FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id ORDER BY T1.price ASC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "List down the ISBN of the books purchased by the customer with an email of fsier3e@ihg.com.",
+        "evidence": "\"fsier3e@ihg.com\" is the email of customer; ISBN refers to isbn13",
+        "SQL": "SELECT T1.isbn13 FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T4.email = 'fsier3e@ihg.com'"
+    },
+    {
+        "db_id": "books",
+        "question": "Give the author's name of the books that cost 19 dollars and above.",
+        "evidence": "books cost 19 dollars and above refers to price > = 19",
+        "SQL": "SELECT DISTINCT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN order_line AS T4 ON T4.book_id = T1.book_id WHERE T4.price > 19"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the publisher name of the book with ISBN 76092025986.",
+        "evidence": "\"76092025986\" is the isbn13",
+        "SQL": "SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.isbn13 = 76092025986"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books published by Birlinn in 2008, how many books have pages around 600 to 700?",
+        "evidence": "\"Birlinn\" is the publisher_name; books have pages around 600 to 700 refers to num_pages BETWEEN 600 AND 700; in 2008 refers to SUBSTR(publication_date, 1, 4) = '2008'",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Birlinn' AND STRFTIME('%Y', T1.publication_date) = '2008' AND T1.num_pages BETWEEN 600 AND 700"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the price of the book with ISBN 9780763628321?",
+        "evidence": "\"9780763628321\" is the isbn13",
+        "SQL": "SELECT T2.price FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T1.isbn13 = 9780763628321"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the number of pages of the book in the order ID 1167?",
+        "evidence": "number of pages refers to num_pages",
+        "SQL": "SELECT T1.num_pages FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T2.order_id = 1167"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the title of the books published in British-English.",
+        "evidence": "\"British English\" is the language_name of the book",
+        "SQL": "SELECT DISTINCT T1.title FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T2.language_name = 'British English'"
+    },
+    {
+        "db_id": "books",
+        "question": "How many books were published by Brava in 2006?",
+        "evidence": "\"Brava\" is the publisher_name; in 2006 refers to SUBSTR(publication_date, 1, 4) = '2006'",
+        "SQL": "SELECT COUNT(*) FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T2.publisher_name = 'Brava' AND STRFTIME('%Y', T1.publication_date) = '2006'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the ISBN and price of the book with book ID 7160.",
+        "evidence": "ISBN refers to isbn13;",
+        "SQL": "SELECT T1.isbn13, T2.price FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T2.book_id = 6503"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the title of the book in the order ID 931?",
+        "evidence": "",
+        "SQL": "SELECT T1.title FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T2.order_id = 931"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the language of the book titled Zorro?",
+        "evidence": "\"Zorro\" is the title of the book; langauge refers to language_name",
+        "SQL": "SELECT T2.language_name FROM book AS T1 INNER JOIN book_language AS T2 ON T1.language_id = T2.language_id WHERE T1.title = 'Zorro'"
+    },
+    {
+        "db_id": "books",
+        "question": "Provide the email of the customers that purchased books with a price range of 3 to 5 dollars.",
+        "evidence": "books with a price range of 3 to 5 dollars refers to price BETWEEN 3 AND 5",
+        "SQL": "SELECT DISTINCT T3.email FROM order_line AS T1 INNER JOIN cust_order AS T2 ON T2.order_id = T1.order_id INNER JOIN customer AS T3 ON T3.customer_id = T2.customer_id WHERE T1.price BETWEEN 3 AND 5"
+    },
+    {
+        "db_id": "books",
+        "question": "List the ISBN of the books that cost 7.5 dollars.",
+        "evidence": "ISBN refers to isbn13; books cost 7.5 dollars refers to price = 7.5",
+        "SQL": "SELECT T1.isbn13 FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T2.price = 7.5"
+    },
+    {
+        "db_id": "books",
+        "question": "Give the publisher's name of the books authored by Alan Lee.",
+        "evidence": "\"Alan Lee\" is the author_name; publisher's name refers to publisher_name",
+        "SQL": "SELECT T4.publisher_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id INNER JOIN publisher AS T4 ON T4.publisher_id = T1.publisher_id WHERE T3.author_name = 'Alan Lee' GROUP BY T4.publisher_name"
+    },
+    {
+        "db_id": "books",
+        "question": "What is the sum of the number of pages of the books ordered by Mick Sever?",
+        "evidence": "sum of the number of pages refers to Sum(num_pages)",
+        "SQL": "SELECT SUM(T1.num_pages) FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id INNER JOIN cust_order AS T3 ON T3.order_id = T2.order_id INNER JOIN customer AS T4 ON T4.customer_id = T3.customer_id WHERE T4.first_name = 'Mick' AND T4.last_name = 'Sever'"
+    },
+    {
+        "db_id": "books",
+        "question": "Write down the author's name of the book most recently published.",
+        "evidence": "author's name refers to author_name; book most recently published refers to Max(publication_date)",
+        "SQL": "SELECT T3.author_name FROM book AS T1 INNER JOIN book_author AS T2 ON T1.book_id = T2.book_id INNER JOIN author AS T3 ON T3.author_id = T2.author_id ORDER BY T1.publication_date DESC LIMIT 1"
+    },
+    {
+        "db_id": "books",
+        "question": "In books published by Ace Book, what is the percentage of English books published?",
+        "evidence": "\"Ace Book\" is the publisher_name; English book refers to language_name = 'English'; percentage = Divide (Count(book_id where language_name = 'English'), Count(book_id)) * 100",
+        "SQL": "SELECT CAST(SUM(CASE WHEN T1.language_name = 'English' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM book_language AS T1 INNER JOIN book AS T2 ON T1.language_id = T2.language_id INNER JOIN publisher AS T3 ON T3.publisher_id = T2.publisher_id WHERE T3.publisher_name = 'Ace Book'"
+    },
+    {
+        "db_id": "books",
+        "question": "Among the books purchased by less than 1 dollar, what is the difference between the number of books with less than 500 pages and books with greater than 500 pages?",
+        "evidence": "book purchased by less than 1 dollar refers to price < 1; books with less than 500 pages refers to num_pages < 500; greater than 500 pages refers to num_pages > 500; Difference = Subtract (Count(book_id where num_pages < 500), Count(book_id where num_pages > 500))",
+        "SQL": "SELECT SUM(CASE WHEN T1.num_pages < 500 THEN 1 ELSE 0 END) - SUM(CASE WHEN T1.num_pages > 500 THEN 1 ELSE 0 END) AS dif FROM book AS T1 INNER JOIN order_line AS T2 ON T1.book_id = T2.book_id WHERE T2.price < 1"
+    },
+    {
+        "db_id": "books",
+        "question": "What are the language and title of the ordered books with price less than 20% of the average price of all ordered books?",
+        "evidence": "language refers to language_name; books with price less than 20% of the average price refers to price < Multiply (AVG(price), 0.2)",
+        "SQL": "SELECT DISTINCT T3.language_name, T2.title FROM order_line AS T1 INNER JOIN book AS T2 ON T1.book_id = T2.book_id INNER JOIN book_language AS T3 ON T3.language_id = T2.language_id WHERE T1.price * 100 < ( SELECT AVG(price) FROM order_line ) * 20"
+    }
+]

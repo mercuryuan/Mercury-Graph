@@ -34,18 +34,21 @@ class GraphSearch:
             if node1_id is None or node2_id is None:
                 print(f"节点 {node1_name} 或 {node2_name} 不存在，请检查输入的节点名称是否正确。")
                 return None
-
             result = session.run("""
                 MATCH p = shortestPath((n) -[*]-(m))
                 WHERE elementId(n) = $node1_id AND elementId(m) = $node2_id
                 RETURN p
             """, node1_id=node1_id, node2_id=node2_id)
-
             path = result.single()
             if path:
                 nodes = path["p"].nodes
                 relationships = path["p"].relationships
                 readable_path = self._parse_path(nodes, relationships)
+                # 打印查询子图的cypher
+                new_node1_id = node1_id.split(':')[-1] if node1_id else None
+                new_node2_id = node2_id.split(':')[-1] if node2_id else None
+                this_cypher = f"查询语句：MATCH p = shortestPath((n) -[*]-(m)) WHERE Id(n) = {new_node1_id} AND Id(m) = {new_node2_id} RETURN p"
+                print(this_cypher)
                 return readable_path
             else:
                 print(f"未找到 {node1_name} 和 {node2_name} 之间的路径。")
@@ -145,7 +148,7 @@ if __name__ == "__main__":
     graph_search = GraphSearch(neo4j_uri, neo4j_user, neo4j_password)
 
     node1_name = "book_language.language_id"
-    node2_name = "customer.customer_id"
+    node2_name = "customer"
 
     shortest_path = graph_search.find_shortest_path_between_nodes(node1_name, node2_name)
     if shortest_path:
