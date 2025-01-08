@@ -1,0 +1,662 @@
+[
+{
+        "db_id": "shakespeare",
+        "question": "How many of Shakespeare's works were finished before the year 1602?",
+        "evidence": "finished before the year 1602 refers to Date < 1602",
+        "SQL": "SELECT COUNT(id) FROM works WHERE Date < 1602"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many scenes are there in Act 1 in Twelfth Night?",
+        "evidence": "Twelfth Night refers to Title = 'Twelfth Night'",
+        "SQL": "SELECT COUNT(T1.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Act = 1 AND T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the description of Act 1, Scene 2 in Twelfth Night?",
+        "evidence": "Twelfth Night refers to Title = 'Twelfth Night'",
+        "SQL": "SELECT T2.Description FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Twelfth Night' AND T2.Act = 1 AND T2.Scene = 2"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many more scenes are there in Act 1 than in Act 5 in Twelfth Night?",
+        "evidence": "in Twelfth Night refers to Title = 'Twelfth Night'; How many more scenes = subtract(sum(Act = 1), sum(Act = 5))",
+        "SQL": "SELECT SUM(IIF(T2.Act = 1, 1, 0)) - SUM(IIF(T2.Act = 5, 1, 0)) AS more FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Which work is the character Lord Abergavenny from? Please give its short or abbreviated title.",
+        "evidence": "Lord Abergavenny refers to CharName = 'Lord Abergavenny'; short or abbreviated title refers to Title",
+        "SQL": "SELECT DISTINCT T1.Title FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T4.CharName = 'Lord Abergavenny'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please list the character names of all the characters from the work Twelfth Night.",
+        "evidence": "character names refers to CharName; Twelfth Night refers to Title = 'Twelfth Night'",
+        "SQL": "SELECT DISTINCT T4.CharName FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many paragraphs are there in Act 1, Scene 1 in Twelfth Night?",
+        "evidence": "Twelfth Night refers to Title = 'Twelfth Night'",
+        "SQL": "SELECT SUM(T3.ParagraphNum) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id WHERE T2.Act = 1 AND T2.Scene = 1 AND T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please list all the paragraphs in Act 1, Scene 1 in Twelfth Night.",
+        "evidence": "Twelfth Night refers to Title = 'Twelfth Night'; list the paragraphs refers to PlainText",
+        "SQL": "SELECT T3.PlainText FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id WHERE T2.Act = 1 AND T2.Scene = 1 AND T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many paragraphs contain the character Lord Abergavenny?",
+        "evidence": "Lord Abergavenny refers to CharName = 'Lord Abergavenny'",
+        "SQL": "SELECT SUM(T1.ParagraphNum) FROM paragraphs AS T1 INNER JOIN characters AS T2 ON T1.character_id = T2.id WHERE T2.CharName = 'Lord Abergavenny'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please list the IDs of the paragraphs in which the character \"son to Tamora\" appears.",
+        "evidence": "character \"son to Tamora\"\u00a0 refers to characters.Description = 'son to Tamora'",
+        "SQL": "SELECT T1.id FROM paragraphs AS T1 INNER JOIN characters AS T2 ON T1.character_id = T2.id WHERE T2.Description = 'son to Tamora'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "For how many times has the scene \"OLIVIA\u2019S house.\" appeared in Twelfth Night?",
+        "evidence": "\"OLIVIA\u2019S house.\"\u00a0 refers to chapters.Description = 'OLIVIA\u2019S house.'; Twelfth Night refers to Title = 'Twelfth Night'",
+        "SQL": "SELECT COUNT(T2.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Description = 'OLIVIA\u2019S house.' AND T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many characters are there in Twelfth Night?",
+        "evidence": "Twelfth Night refers to Title = 'Twelfth Night'",
+        "SQL": "SELECT COUNT(DISTINCT T4.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please give the title of the work of Shakespeare that has the most characters.",
+        "evidence": "most characters refers to max(count(character_id))",
+        "SQL": "SELECT T.Title FROM ( SELECT T1.Title, COUNT(T3.character_id) AS num FROM works T1 INNER JOIN chapters T2 ON T1.id = T2.work_id INNER JOIN paragraphs T3 ON T2.id = T3.chapter_id INNER JOIN characters T4 ON T3.character_id = T4.id GROUP BY T3.character_id, T1.Title ) T ORDER BY T.num DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the average number of characters in all the works of Shakespeare?",
+        "evidence": "average number = divide(sum(character_id), count(work_id))",
+        "SQL": "SELECT SUM(DISTINCT T4.id) / COUNT(T1.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many scenes are there on average in one act in Twelfth Night?",
+        "evidence": "Twelfth Night refers to Title = 'Twelfth Night'; average scene = divide(sum(Scene), count(Act))",
+        "SQL": "SELECT SUM(T2.Scene) / COUNT(T2.Act) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many comedies did Shakespeare create?",
+        "evidence": "comedies refers to GenreType = 'Comedy'",
+        "SQL": "SELECT COUNT(id) FROM works WHERE GenreType = 'Comedy'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "When did Shakespeare write the first poem?",
+        "evidence": "first poem refers to GenreType = 'Poem' and Date = 'min'",
+        "SQL": "SELECT MIN(Date) FROM works WHERE GenreType = 'Poem'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Give the abbreviation name for the character \"Earl of Westmoreland\".",
+        "evidence": "abbreviation name refers to Abbrev; character \"Earl of Westmoreland\" refers to CharName = 'Earl of Westmoreland'",
+        "SQL": "SELECT DISTINCT Abbrev FROM characters WHERE CharName = 'Earl of Westmoreland'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Which chapter has the most paragraphs? Give the description of the chapter.",
+        "evidence": "most paragraphs refers to max(count(chapter_id))",
+        "SQL": "SELECT T1.Description FROM chapters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.chapter_id ORDER BY T2.ParagraphNum DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Which character was mentioned in the paragraph \"Would he do so, I'ld beg your precious mistress, Which he counts but a trifle.\"? Give the character name.",
+        "evidence": "paragraph \"Would he do so, I'ld beg your precious mistress, Which he counts but a trifle.\"\u00a0 refers to PlainText = 'Would he do so, I'ld beg your precious mistress, Which he counts but a trifle.'",
+        "SQL": "SELECT T1.CharName FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.PlainText = 'Would he do so, I''ld beg your precious mistress,Which he counts but a trifle.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many characters are there in Titus Andronicus?",
+        "evidence": "Titus Andronicus refers to Title = 'Titus Andronicus'",
+        "SQL": "SELECT COUNT(DISTINCT T3.character_id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id WHERE T1.Title = 'Titus Andronicus'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "List the number of acts in Two Gentlemen of Verona.",
+        "evidence": "Two Gentlemen of Verona refers to LongTitle = 'Two Gentlemen of Verona'",
+        "SQL": "SELECT DISTINCT T1.Act FROM chapters AS T1 INNER JOIN works AS T2 ON T1.id = T1.work_id WHERE T2.LongTitle = 'Two Gentlemen of Verona'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the description for the character mentioned in paragraph No.640171?",
+        "evidence": "paragraph No.640171 refers to paragraphs.id = '640171'",
+        "SQL": "SELECT T1.Description FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.id = '640171'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Give the title of the work that contains the character \"Shylock\".",
+        "evidence": "character \"Shylock\" refers to CharName = 'Shylock'",
+        "SQL": "SELECT DISTINCT T1.Title FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T4.CharName = 'Shylock'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many scenes are there in King John?",
+        "evidence": "King John refers to Title = 'King John'",
+        "SQL": "SELECT COUNT(T2.Scene) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'King John'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many chapters does the character Demetrius show in the story?",
+        "evidence": "character Demetrius refers to CharName = 'Demetrius'",
+        "SQL": "SELECT COUNT(DISTINCT T2.chapter_id) FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T1.CharName = 'Demetrius'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Which Shakespeare story with character ID 324 has description of 'this friend of Caesar'?",
+        "evidence": "",
+        "SQL": "SELECT T1.Title FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T2.id = '324' AND T2.Description = 'friend to Caesar'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Give the description for the Act No.2, Scene No.2 of Midsummer Night's Dream.",
+        "evidence": "Act No.2 refers to Act = '2'; Scene No.2\u00a0 refers to Scene = '2'; Midsummer Night's Dream refers to Title = 'Midsummer Night''s Dream'",
+        "SQL": "SELECT T2.Description FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Act = '2' AND T2.Scene = '2' AND T1.Title = 'Midsummer Night''s Dream'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Which Shakespeare tragedy has the most scenes? Give the long title.",
+        "evidence": "tragedy refers to GenreType = 'Tragedy'; most scenes refers to max(count(Scene))",
+        "SQL": "SELECT T.LongTitle FROM ( SELECT T1.LongTitle, COUNT(T2.Scene) AS num FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.GenreType = 'Tragedy' GROUP BY T1.LongTitle, T2.Scene ) AS T ORDER BY T.num DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many paragraphs are there in the scene whose description is \"A Sea-port in Cyprus. An open place near the quay.\"?",
+        "evidence": "",
+        "SQL": "SELECT SUM(T2.ParagraphNum) FROM chapters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.chapter_id WHERE T1.Description = 'A Sea-port in Cyprus. An open place near the quay.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What percentage of all scenes are tragic scenes in Shakespeare's work in 1594?",
+        "evidence": "tragic scenes refers to GenreType = 'Tragedy'; work in 1594 refers to Date = '1594'; percentage = divide((sum(Scene) when GenreType = 'Tragedy'), count(Scene))as percentage",
+        "SQL": "SELECT CAST(SUM(IIF(T2.GenreType = 'Tragedy', 1, 0)) AS REAL) * 100 / COUNT(T1.Scene) FROM chapters AS T1 INNER JOIN works AS T2 ON T1.work_id = T2.id WHERE T2.Date = '1594'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Gives the average number of chapters in Shakespeare's 1599 work.",
+        "evidence": "1599 work refers to Date = '1599'; average number refers to divide(count(chapters.id), count(works.id))",
+        "SQL": "SELECT CAST(COUNT(T1.id) AS REAL) / COUNT(DISTINCT T2.id) FROM chapters AS T1 INNER JOIN works AS T2 ON T1.work_id = T2.id WHERE T2.Date = '1599'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many \"servant to Timon\" characters are there?",
+        "evidence": "servant to Timon refers to characters.Description = 'servant to Timon'",
+        "SQL": "SELECT COUNT(id) FROM characters WHERE Description = 'servant to Timon'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the title of the first ever work of William Shakespeare?",
+        "evidence": "first ever work refers to min(Date)",
+        "SQL": "SELECT Title FROM works WHERE Date = ( SELECT MIN(Date) FROM works )"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many poems did Shakespeare write?",
+        "evidence": "poems refers to GenreType = 'Poem'",
+        "SQL": "SELECT COUNT(id) FROM works WHERE GenreType = 'Poem'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many scenes are there in work id 7, act 1?",
+        "evidence": "",
+        "SQL": "SELECT COUNT(id) FROM chapters WHERE work_id = 7 AND Act = 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In the year 1500s, how many tragedies did Shakespeare write?",
+        "evidence": "year 1500s refers to Date between 1500 and 1599; tragedies refers to GenreType = 'Tragedy'",
+        "SQL": "SELECT COUNT(id) FROM works WHERE GenreType = 'Tragedy' AND Date BETWEEN 1500 AND 1599"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Who is the daughter of Capulet?",
+        "evidence": "daughter of Capulet refers to characters.Description = 'Daughter to Capulet'",
+        "SQL": "SELECT CharName FROM characters WHERE Description = 'Daughter to Capulet'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many paragraphs are there in \"Ay, surely, mere the truth: I know his lady.\"?",
+        "evidence": "\"Ay, surely, mere the truth: I know his lady.\" refers to PlainText = 'Ay, surely, mere the truth: I know his lady.'",
+        "SQL": "SELECT ParagraphNum FROM paragraphs WHERE PlainText = 'Ay, surely, mere the truth: I know his lady.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the long title of the work with the highest number of scenes in act 1?",
+        "evidence": "highest number of scenes refers to max(count(Scene))",
+        "SQL": "SELECT T2.LongTitle FROM chapters AS T1 INNER JOIN works AS T2 ON T1.work_id = T2.id WHERE T1.Act = 1 ORDER BY T1.Scene DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the description of the chapter with the longest number of paragraphs?",
+        "evidence": "chapter with the longest number of paragraphs refers to max(ParagraphNum)",
+        "SQL": "SELECT T2.Description FROM paragraphs AS T1 INNER JOIN chapters AS T2 ON T1.chapter_id = T2.id ORDER BY T1.ParagraphNum DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In \"Twelfth Night, Or What You Will\", what is the description of the chapter in 2nd scene, Act 2?",
+        "evidence": "\"Twelfth Night, Or What You Will\"\u00a0 refers to LongTitle = 'Twelfth Night, Or What You Will'; 2nd scene refers to Scene = 2",
+        "SQL": "SELECT T2.Description FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.LongTitle = 'Twelfth Night, Or What You Will' AND T2.Scene = 2 AND T2.Act = 2"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What are the descriptions of the short chapters?",
+        "evidence": "short chapters refers to ParagraphNum < 150",
+        "SQL": "SELECT DISTINCT T2.Description FROM paragraphs AS T1 INNER JOIN chapters AS T2 ON T1.chapter_id = T2.id WHERE T1.ParagraphNum < 150"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Which of Shakespeare's work has chapter description of \"A field near Windsor\"?",
+        "evidence": "",
+        "SQL": "SELECT T2.Title FROM chapters AS T1 INNER JOIN works AS T2 ON T1.work_id = T2.id WHERE T1.Description = 'A field near Windsor.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many paragraphs are there in the chapter with the highest amount of scenes in act 1?",
+        "evidence": "How many paragraphs refers to ParagraphNum; highest amount of scenes refers to max(count(Scene))",
+        "SQL": "SELECT T1.ParagraphNum FROM paragraphs AS T1 INNER JOIN chapters AS T2 ON T1.chapter_id = T2.id WHERE T2.Act = 1 ORDER BY T2.Scene DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Other than \"stage directions\", what is the name of the character that appeared 5 times in \"the sea-coast\"?",
+        "evidence": "Other than \"stage directions\" refers to CharName ! = '(stage directions)'; name of the character refers to CharName; appeared 5 times in \"the sea-coast\" refers to chapters.Description = 'The sea-coast.' and count(character_id) = 5",
+        "SQL": "SELECT T.CharName FROM ( SELECT T3.CharName, COUNT(T3.id) AS num FROM paragraphs AS T1 INNER JOIN chapters AS T2 ON T1.chapter_id = T2.id INNER JOIN characters AS T3 ON T1.character_id = T3.id WHERE T2.Description = 'The sea-coast.' AND T3.CharName != '(stage directions)' AND T1.chapter_id = 18709 GROUP BY T3.id, T3.CharName ) AS T WHERE T.num = 5"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Among the chapters in \"As You Like It\", how many chapters have a paragraph number of no more than 50?",
+        "evidence": "\"As You Like It\" refers to Title = 'As You Like It' ;paragraph number of no more than 50 refers to ParagraphNum < 50",
+        "SQL": "SELECT COUNT(T3.chapter_id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id WHERE T1.Title = 'As You Like It' AND T3.ParagraphNum < 50"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In \"Florence. Without the walls. A tucket afar off\", what is the id of the character that was mentioned in \"His name, I pray you.\"?",
+        "evidence": "\"Florence. Without the walls. A tucket afar off\" refers to chapters.Description = 'Florence. Without the walls. A tucket afar off.'; \"His name, I pray you.\" refers to PlainText = 'His name, I pray you.'",
+        "SQL": "SELECT T1.character_id FROM paragraphs AS T1 INNER JOIN chapters AS T2 ON T1.chapter_id = T2.id WHERE T1.PlainText = 'His name, I pray you.' AND T2.Description = 'Florence. Without the walls. A tucket afar off.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many characters are there in Hamlet?",
+        "evidence": "Hamlet refers to Title = 'Hamlet'",
+        "SQL": "SELECT COUNT(DISTINCT T3.character_id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id WHERE T1.Title = 'Hamlet'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many scenes are there in the 5th act of \"History of Henry VIII\"?",
+        "evidence": "5th act refers to Act = 5; \"History of Henry VIII\" refers to LongTitle = 'History of Henry VIII'",
+        "SQL": "SELECT SUM(T2.Scene) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Act = 5 AND T1.LongTitle = 'History of Henry VIII'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Among the history works written by Shakespeare, how many works whose 1st acts have no more than 2 scenes?",
+        "evidence": "history refers to GenreType = 'History' ; 1st acts\u00a0 refers to Act = 1; no more than 2 scenes refers to count(Scene) < 2",
+        "SQL": "SELECT COUNT(DISTINCT T2.work_id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Act = 1 AND T2.Scene < 2 AND T1.GenreType = 'History'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many acts are there in Sonnets?",
+        "evidence": "Sonnets refers to Title = 'Sonnets'",
+        "SQL": "SELECT SUM(DISTINCT T2.Act) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Sonnets'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the description of the chapter where the character whose abrreviated name is 1Play appeared first?",
+        "evidence": "abbreviated name is 1Play; appeared first refers to Abbrev = '1Play' and min(chapter_id)",
+        "SQL": "SELECT T2.Description FROM paragraphs AS T1 INNER JOIN chapters AS T2 ON T1.chapter_id = T2.id INNER JOIN characters AS T3 ON T1.character_id = T3.id WHERE T3.Abbrev = '1Play' ORDER BY T1.chapter_id LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What are the titles and genres of the one-act works of Shakespeare?",
+        "evidence": "one-act works refers to count(Act) = 1; genre refers to GenreType\n",
+        "SQL": "SELECT DISTINCT T1.Title, T1.GenreType FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Act = 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many paragraphs are there in the longest chapter where Sir Richard Ratcliff appeared?",
+        "evidence": "longest chapter refers to max(ParagraphNum); Sir Richard Ratcliff\u00a0 refers to CharName = 'Sir Richard Ratcliff'",
+        "SQL": "SELECT MAX(T2.ParagraphNum) FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T1.CharName = 'Sir Richard Ratcliff'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In \"A Lover's Complaint\", what is the description of Act 1, Scene 1?",
+        "evidence": "\"A Lover's Complaint\" refers to Title = 'A Lover''s Complaint'",
+        "SQL": "SELECT T2.Description FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Act = 1 AND T2.Scene = 1 AND T1.Title = 'A Lover''s Complaint'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "When did Shakespeare create his work that has 154 scenes?",
+        "evidence": "When refers to Date; has 154 scenes refers to count(Scene) = 154",
+        "SQL": "SELECT T1.Date, T1.id FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Scene = 154"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "On average, how many scenes are there in each of the comedy works written by Shakespeare?",
+        "evidence": "comedy refers to GenreType = 'Comedy'; average = divide(sum(count(Scene)), count(work.id))",
+        "SQL": "SELECT CAST(SUM(T2.Scene) AS REAL) / COUNT(T1.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.GenreType = 'Comedy'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Between Rome and Juliet, which character was mentioned the most in the The Tragedy of Romeo and Juliet? Calculate for Romeo and Juliet's individual amount of appearance in percentage against the overall number of characters that appeared in the said work.",
+        "evidence": "Rome and Juliet refers to CharName = 'Romeo' and CharName = 'Juliet'; The Tragedy of Romeo and Juliet refers to LongTitle = 'The Tragedy of Romeo and Juliet'; percentage = divide(sum(charater.id) when CharName = 'Romeo', sum(charater.id)) as percentage and percentage = divide(sum(charater.id) when CharName = 'Juliet', count(charater.id)) as percentage",
+        "SQL": "SELECT SUM(IIF(T4.CharName = 'Romeo', 1, 0)), SUM(IIF(T4.CharName = 'Juliet', 1, 0)), CAST(SUM(IIF(T4.CharName = 'Romeo', 1, 0)) + SUM(IIF(T4.CharName = 'Juliet', 1, 0)) AS REAL) * 100 / COUNT(T1.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the paragraph number with plain text \"This is Illyria, lady\"?",
+        "evidence": "paragraph number refers to ParagraphNum",
+        "SQL": "SELECT ParagraphNum FROM paragraphs WHERE PlainText = 'This is Illyria, lady.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many number of paragraphs are there in chapter ID 18881?",
+        "evidence": "number of paragraphs refers to ParagraphNum",
+        "SQL": "SELECT COUNT(ParagraphNum) FROM paragraphs WHERE chapter_id = 18881"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "List down any 5 titles in the history genre.",
+        "evidence": "in the history genre refers to GenreType = 'History'",
+        "SQL": "SELECT Title FROM works WHERE GenreType = 'History' LIMIT 5"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many scenes are there in Act 5 of work ID 9?",
+        "evidence": "",
+        "SQL": "SELECT COUNT(Scene) FROM chapters WHERE work_id = 9 AND Act = 5"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "List the character names and descriptions of chapter ID 18710.",
+        "evidence": "character names refers to CharName",
+        "SQL": "SELECT DISTINCT T1.CharName, T1.Description FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.Chapter_id = 18710"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many chapters are there in \"Midsummer Night's Dream\"?",
+        "evidence": "in \"Midsummer Night's Dream\" refers to Title = 'Midsummer Night's Dream'",
+        "SQL": "SELECT COUNT(T2.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Midsummer Night''s Dream'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many paragraphs are there in Act 5 Scene 1 of \"Comedy of Errors\"?",
+        "evidence": "\"Comedy of Errors\" refers to Title = 'Comedy of Errors'",
+        "SQL": "SELECT COUNT(T3.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id WHERE T2.Act = 5 AND T2.Scene = 1 AND T1.Title = 'Comedy of Errors'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What are the character names and descriptions of characters in \"Venus and Adonis\"?",
+        "evidence": "character names refers to CharName; \"Venus and Adonis\" refers to Title = 'Venus and Adonis'",
+        "SQL": "SELECT DISTINCT T4.CharName, T2.Description FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T1.Title = 'Venus and Adonis'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the title which has character named \"Froth\"?",
+        "evidence": "character named \"Froth\" refers to CharName = 'Froth'",
+        "SQL": "SELECT DISTINCT T1.title FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T4.CharName = 'Froth'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many chapters include the character name \"First Witch\"?",
+        "evidence": "character name \"First Witch\" refers to CharName = 'First Witch'",
+        "SQL": "SELECT COUNT(T2.chapter_id) FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T1.CharName = 'First Witch'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "List the scenes and descriptions in Act 1 of \" Pericles, Prince of Tyre\".",
+        "evidence": "\" Pericles, Prince of Tyre\" refers to LongTitle = 'Pericles, Prince of Tyre'",
+        "SQL": "SELECT T2.Scene, T2.Description FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.LongTitle = 'Pericles, Prince of Tyre' AND T2.Act = 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Describe the full title which had the character named Servant to Montague.",
+        "evidence": "full title refers to LongTitle; character named Servant to Montague refers to characters.Description = 'Servant to Montague'",
+        "SQL": "SELECT DISTINCT T1.LongTitle FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T4.Description = 'Servant to Montague'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Describe the scene number, act, and title of work which had the description of \"The house of ANTIPHOLUS of Ephesus\" in chapter.",
+        "evidence": "",
+        "SQL": "SELECT T2.Act, T2.Scene, T1.Title FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Description = 'The house of ANTIPHOLUS of Ephesus.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Provide the character name, paragraph number, and plain text of \"cousin to the king\" description.",
+        "evidence": "character name refers to CharName; paragraph number refers to ParagraphNum",
+        "SQL": "SELECT T1.CharName, T2.ParagraphNum, T2.PlainText FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T1.Description = 'cousin to the king'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Calculate average scene per act in Antony and Cleopatra.",
+        "evidence": "Antony and Cleopatra refers to Title = 'Antony and Cleopatra'; average scene per act = divide(sum(Scene), count(act))\n",
+        "SQL": "SELECT CAST(SUM(T2.Scene) AS REAL) / COUNT(T2.act) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Antony and Cleopatra'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Calculate the percentage of paragraphs in all chapters of \"All's Well That Ends Well\".",
+        "evidence": "\"All's Well That Ends Well\" refers to Title = 'All's Well That Ends Well'; percentage = divide(sum(paragraphs.id) when Title = 'All's Well That Ends Well', count(paragraphs.id)) as percentage",
+        "SQL": "SELECT CAST(SUM(IIF(T1.Title = 'All''s Well That Ends Well', 1, 0)) AS REAL) * 100 / COUNT(T3.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many \"all\" character names have the \"all\" abbreviation?",
+        "evidence": "character names refers to CharName\uff1b\"all\" abbreviation refers to Abbrev = 'all'",
+        "SQL": "SELECT COUNT(id) FROM characters WHERE Abbrev = 'All'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please name any three comedic works.",
+        "evidence": "comedic works refers to GenreType = 'comedy'",
+        "SQL": "SELECT Title FROM works WHERE GenreType = 'comedy' LIMIT 3"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "From 1593 onwards, what is the difference between the number of comedy works and history works?",
+        "evidence": "From 1593 onwards refers to Date > 1593; comedy works and history works refers to GenreType = 'comedy' and GenreType = 'History'",
+        "SQL": "SELECT SUM(IIF(GenreType = 'Comedy', 1, 0)) - SUM(IIF(GenreType = 'History', 1, 0)) FROM works WHERE Date > 1593"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please name the latest historical work.",
+        "evidence": "name refers to LongTitle; latest historical work refers to GenreType = 'History' and max(Date)",
+        "SQL": "SELECT LongTitle FROM works WHERE GenreType = 'History' ORDER BY Date DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What are the work numbers that are related to King Henry?",
+        "evidence": "work numbers refers to works.id; related to King Henry refers to Title = '%Henry%'",
+        "SQL": "SELECT id FROM works WHERE Title LIKE '%Henry%'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What are the character names for a senator of Venice?",
+        "evidence": "character names refers to CharName; a senator of Venice refers to characters.Description = 'a senator of Venice'",
+        "SQL": "SELECT CharName FROM characters WHERE Description = 'a senator of Venice'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the name of the character that can be found in paragraph 8 of chapter 18820?",
+        "evidence": "name of the character refers to CharName; paragraph 8 refers to ParagraphNum = 8; chapter 18820 refers to chapter_id = 18820",
+        "SQL": "SELECT T1.CharName FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.ParagraphNum = 8 AND T2.chapter_id = 18820"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the description of chapter 18704, where there is a character called Orsino?",
+        "evidence": "chapter 18704 refers to chapters.id = 18704; character called Orsino refers to CharName = 'Orsino'",
+        "SQL": "SELECT DISTINCT T3.Description FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id INNER JOIN chapters AS T3 ON T2.chapter_id = T3.id WHERE T1.CharName = 'Orsino' AND T3.ID = 18704"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many scenes can be found in \"Twelfth Night, Or What You Will\"?",
+        "evidence": "\"Twelfth Night, Or What You Will\" refers to LongTitle",
+        "SQL": "SELECT COUNT(T2.Scene) AS cnt FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.LongTitle = 'Cymbeline, King of Britain'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please list all of the character descriptions in paragraph 20.",
+        "evidence": "paragraph 20 refers to ParagraphNum = 20",
+        "SQL": "SELECT T1.Description FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.ParagraphNum = 20"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many chapters have the name Gratiano as a character for \"friend to Antonio and Bassiano\"?",
+        "evidence": "name Gratiano as a character refers to CharName = 'Gratiano'; \"friend to Antonio and Bassiano\" refers to characters.Description = 'friend to Antonio and Bassiano'",
+        "SQL": "SELECT COUNT(DISTINCT T2.chapter_id) FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T1.CharName = 'Gratiano' AND T1.Description = 'friend to Antonio and Bassiano'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the description of chapter 18706 in \"All's Well That Ends Well\"?",
+        "evidence": "chapter 18706 refers to chapters.id; \"All's Well That Ends Well\" refers to Title = 'All's Well That Ends Well'",
+        "SQL": "SELECT T2.Description FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.id = 18706 AND T1.Title = 'All''s Well That Ends Well'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What are the character names in paragraph 3?",
+        "evidence": "character names refers to CharName; paragraph 3 refers to ParagraphNum = 3",
+        "SQL": "SELECT DISTINCT T1.CharName FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.ParagraphNum = 3"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please list all of the paragraphs that have the character name Aedile.",
+        "evidence": "paragraphs\u00a0 refers to ParagraphNum; character name Aedile refers to CharName = 'Aedile'",
+        "SQL": "SELECT T2.ParagraphNum FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T1.CharName = 'Aedile'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Please list any two character names in chapter 18708.",
+        "evidence": "character names refers to CharName; chapter 18708 refers to chapter_id = 18708",
+        "SQL": "SELECT T1.CharName FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.chapter_id = 18708 LIMIT 2"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many acts can be found in the comedy \"Two Gentlemen of Verona\"?",
+        "evidence": "comedy refers to GenreType = 'comedy'; \"Two Gentlemen of Verona\" refers to Title = 'Two Gentlemen of Verona'",
+        "SQL": "SELECT COUNT(T1.ACT) FROM chapters AS T1 LEFT JOIN works AS T2 ON T1.work_id = T2.id WHERE T2.GenreType = 'Comedy' AND T2.Title = 'Two Gentlemen of Verona'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the percentage of historical works that have not fewer than five scenes in the 1500s?",
+        "evidence": "historical works refers to GenreType = 'history'; have not fewer than five scenes in the 1500s refers to count(Scene) > = 5 and DATE > = 1500 AND DATE < = 1599; percentage = divide(count(works.id) where GenreType = 'history' and count(Scene) > = 5, count(works.id) ) as percentage",
+        "SQL": "SELECT CAST(( SELECT COUNT(T1.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.GenreType = 'History' AND T1.DATE BETWEEN 1500 AND 1599 GROUP BY T1.id HAVING COUNT(T2.Scene) >= 5 ) AS REAL) * 100 / COUNT(id) FROM works WHERE GenreType = 'History' AND DATE BETWEEN 1500 AND 1599"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the percentage of act number 5 in Titus Andronicus?",
+        "evidence": "act number 5 refers to Act = 5; Titus Andronicus refers to Title = 'Titus Andronicus'; percentage = divide(sum(Act = 5), count(Act)) as percentage",
+        "SQL": "SELECT CAST(SUM(IIF(T2.act = 5, 1, 0)) AS REAL) * 100 / COUNT(T2.act) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Titus Andronicus'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "How many of the works of Shakespeare are Tragedy?",
+        "evidence": "Tragedy refers to GenreType = 'Tragedy'",
+        "SQL": "SELECT COUNT(id) FROM works WHERE GenreType = 'Tragedy'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Among the works of Shakespeare, how many of them have the word \"Henry\" on its title?",
+        "evidence": "works refers to Title; have the word \"Henry\" on its title refers to Title = '%Henry%'",
+        "SQL": "SELECT COUNT(id) FROM works WHERE Title LIKE '%Henry%'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Give the character's ID of the character that said the paragraph \"O my poor brother! and so perchance may he be.\"",
+        "evidence": "\"O my poor brother! and so perchance may he be.\" refers to\u00a0 PlainText = 'O my poor brother! and so perchance may he be.'",
+        "SQL": "SELECT character_id FROM paragraphs WHERE PlainText = 'O my poor brother! and so perchance may he be.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "List the paragraph number and paragraphs said by the character named \"Sir Andrew Aguecheek\".",
+        "evidence": "paragraph number refers to ParagraphNum; character named \"Sir Andrew Aguecheek\" refers to CharName = 'Sir Andrew Aguecheek'",
+        "SQL": "SELECT T2.ParagraphNum, T2.id FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T1.CharName = 'Sir Andrew Aguecheek'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Give the title and the characters name of the most recent work of Shakespeare.",
+        "evidence": "characters name refers to CharName; most recent work refers to max(Date)",
+        "SQL": "SELECT T1.Title, T4.CharName FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id ORDER BY T1.Date DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Among paragraphs with paragraph number between 1900 to 1950, list the texts said by a character described as a sea captain, friend to Sebatian.",
+        "evidence": "paragraph number between 1900 to 1950 refers to ParagraphNum > = 1500 AND ParagraphNum < = 1950; texts refers to PlainText; a character described as a sea captain, friend to Sebatian refers to characters.Description = 'a sea captain, friend to Sebastian'",
+        "SQL": "SELECT T1.description FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.PlainText = 'a sea captain, friend to Sebastian' AND T2.ParagraphNum BETWEEN 1500 AND 1950"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the long title of the Shakespeare's work with Act 4 Scene 5 described as \"Mytilene. A street before the brothel.\"?",
+        "evidence": "described as \"Mytilene. A street before the brothel.\" refers to chapters.Description = 'Mytilene. A street before the brothel.'",
+        "SQL": "SELECT T1.LongTitle FROM works AS T1 RIGHT JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T2.Description = 'Mytilene. A street before the brothel.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Who is the character that said \"This is Illyria, lady.\"?",
+        "evidence": "character refers to CharName; \"This is Illyria, lady.\" refers to PlainText = 'This is Illyria, lady.'",
+        "SQL": "SELECT T1.CharName FROM characters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.character_id WHERE T2.PlainText = 'This is Illyria, lady.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In Shakespeare's works between 1600 to 1610, how many of these have a character as a \"Third Servingman\"?",
+        "evidence": "between 1600 to 1610 refers to DATE > = 1600 AND DATE < = 1610; \"Third Servingman\" refers to CharName = 'Third Servingman'",
+        "SQL": "SELECT COUNT(DISTINCT T2.work_id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T1.DATE BETWEEN 1600 AND 1610 AND T4.CharName = 'Third Servingman'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In the Venus and Adonis, what is the description of the last scene listed?",
+        "evidence": "Venus and Adonis refers to Title = 'Venus and Adonis'; last scene refers to max(Scene)",
+        "SQL": "SELECT T2.Description FROM works AS T1 RIGHT JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.Title = 'Venus and Adonis' ORDER BY T2.Scene DESC LIMIT 1"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In Act 1 Scene 2 of the Twelfth Night, what is the total number of of lines said by Viola?",
+        "evidence": "Twelfth Night refers to Title = 'Twelfth Night'; total number of lines said by Viola refers to count(character_id) where CharName = 'Viola'",
+        "SQL": "SELECT COUNT(T4.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T2.Act = 1 AND T2.Scene = 2 AND T4.id = 1238 AND T4.CharName = 'Viola' AND T1.Title = 'Twelfth Night'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the character and work ID of the text \"Fear not thou, man, thou shalt lose nothing here.\"?",
+        "evidence": "character refers to chapter_id; text \"Fear not thou, man, thou shalt lose nothing here.\"\u00a0 refers to PlainText = 'Fear not thou, man, thou shalt lose nothing here.'",
+        "SQL": "SELECT T2.character_id, T1.work_id FROM chapters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.chapter_id WHERE T2.PlainText = 'Fear not thou, man, thou shalt lose nothing here.'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "What is the chapter description where the paragraph \"What, wilt thou hear some music, my sweet love?\" belongs?",
+        "evidence": "paragraph \"What, wilt thou hear some music, my sweet love?\" refers to\u00a0 PlainText = 'What, wilt thou hear some music, my sweet love?'",
+        "SQL": "SELECT T1.id, T1.Description FROM chapters AS T1 INNER JOIN paragraphs AS T2 ON T1.id = T2.chapter_id WHERE T2.PlainText = 'What, wilt thou hear some music, my sweet love?'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "List the scene numbers involving the character named Sir Toby Belch in the Twelfth Night.",
+        "evidence": "scene numbers refers to Scene; character named Sir Toby Belch refers to CharName = 'Sir Toby Belch'; in the Twelfth Night refers to Title = 'Twelfth Night'",
+        "SQL": "SELECT DISTINCT T2.Scene FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T1.Title = 'Twelfth Night' AND T4.CharName = 'Sir Toby Belch'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "In Shakespeare's works before 1600, list down the title of the tragic story he had written that involved a character named \"Tybalt\".",
+        "evidence": "works before 1600 refers to DATE < 1600; tragic story refers to GenreType = 'Tragedy'; character named \"Tybalt\" refers to CharName = 'Tybalt'",
+        "SQL": "SELECT DISTINCT T1.title FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T1.DATE < 1600 AND T1.GenreType = 'Tragedy' AND T4.CharName = 'Tybalt'"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "List the chapter ID of the works with a year greater than the 89% of average year of all listed works of Shakespeare.",
+        "evidence": "a year greater than the 89% of average year refers to DATE > multiply(divide(SUM(DATE) , COUNT(DATE)), 0.89)",
+        "SQL": "SELECT T2.id FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id WHERE T1.DATE > ( SELECT AVG(DATE) FROM works ) * 0.89"
+    },
+    {
+        "db_id": "shakespeare",
+        "question": "Among the comedy works of Shakespeare, what is the percentage of his works with a character named \"antonio\"?",
+        "evidence": "comedy works refers to GenreType = 'Comedy'; a character named \"antonio\" refers to CharName = 'antonio'; percentage = divide(sum(CharName = 'Antonio'), count(CharName)) as percentage",
+        "SQL": "SELECT CAST(SUM(IIF(T4.CharName = 'antonio', 1, 0)) AS REAL) * 100 / COUNT(T1.id) FROM works AS T1 INNER JOIN chapters AS T2 ON T1.id = T2.work_id INNER JOIN paragraphs AS T3 ON T2.id = T3.chapter_id INNER JOIN characters AS T4 ON T3.character_id = T4.id WHERE T1.GenreType = 'Comedy'"
+    }
+]

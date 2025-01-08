@@ -173,12 +173,15 @@ class SchemaParser:
     def read_column_description_csv(self, table_name):
         """
         从对应的CSV文件中读取指定表的列描述信息。
+        特别地，当表名为 "sqlite_sequence" 时，直接返回空列表。
 
         :param table_name: 表名
         :return: 包含列描述信息的字典列表，每个字典包含'original_column_name'、'column_name'、
                  'column_description'、'data_format'、'value_description'等键值对
         """
         # 获取 database_file 的目录部分
+        if table_name == "sqlite_sequence":
+            return []
         dir_path = os.path.dirname(database_file)
         file_path = os.path.join(dir_path, "database_description", f"{table_name}.csv")  # 假设文件路径格式如此，可根据实际调整
         column_descriptions = []
@@ -502,18 +505,6 @@ class SchemaParser:
                 return f"{time_diff.days} days"
         return None
 
-    # def _get_periodicity(self, values):
-    #     """
-    #     简单判断时间类型数据的周期规律（示例，可进一步完善），兼容多种日期时间格式的数据。
-    #
-    #     :param values: 时间数据列表
-    #     """
-    #     if len(values) < 10:
-    #         return ""
-    #     datetime_values = [convert_date_string(v) for v in values if convert_date_string(v) is not None]
-    #     if datetime_values:
-    #         return "monthly" if all((v.month - datetime_values[0].month) % 12 == 0 for v in datetime_values[1:]) else ""
-    #     return ""
 
 
 if __name__ == "__main__":
@@ -528,6 +519,9 @@ if __name__ == "__main__":
     # database_file = "../data/spider/medicine_enzyme_interaction/medicine_enzyme_interaction.sqlite"
 
     parser = SchemaParser(neo4j_uri, neo4j_user, neo4j_password, database_file)
-    schema = parser.parse_and_store_schema()
+    try:
+        parser.parse_and_store_schema()
+        print("Schema parsing and storing completed successfully.")
+    except Exception as e:
+        print("Error occurred during schema parsing and storing:", e)
     parser.close_connections()
-    print(schema)
