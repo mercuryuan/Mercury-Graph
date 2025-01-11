@@ -1,4 +1,5 @@
 import sqlglot
+from neo4j.graph import Relationship, Node
 from sqlglot.expressions import Table, Column, Join, Where
 from neo4j import GraphDatabase
 
@@ -36,6 +37,7 @@ class SqlParserTool:
     def extract_table_info(self, expression):
         """
         从解析后的表达式中提取表信息，返回表名与别名的映射字典以及表定义集合。
+        确保unique_tables中每个表记录唯一，遵循有别名则用别名，无别名则用表名自身的原则。
         参数:
             expression (sqlglot.Expression): 解析后的SQL表达式对象。
         返回:
@@ -46,19 +48,19 @@ class SqlParserTool:
         for table in expression.find_all(Table):
             table_name = table.name
             alias = table.alias_or_name  # 直接使用alias_or_name获取别名，如果没有别名则返回表名本身
-            if alias!= table_name:  # 只有当别名和表名不同的时候，才记录别名与表名的映射关系
+            if alias != table_name:  # 只有当别名和表名不同的时候，才记录别名与表名的映射关系
                 alias_to_table[alias] = table_name
             tables.add((table_name, alias))
 
-        unique_tables = set()
+        unique_tables = {}
         for table, alias in tables:
-            if alias == table_name:  # 如果别名和表名相同，说明是没有额外别名的表，直接添加到unique_tables
-                unique_tables.add((table, alias))
-            elif alias is None and table in alias_to_table.values():
-                continue
-            else:
-                unique_tables.add((table, alias))
-        return alias_to_table, unique_tables
+            # 如果表还没记录过或者当前记录的是表名（无别名情况）但新出现了别名，则更新记录
+            if table not in unique_tables or (unique_tables[table] == table and alias != table):
+                if alias is not None:
+                    unique_tables[table] = alias
+                else:
+                    unique_tables[table] = table
+        return alias_to_table, set(unique_tables.items())
 
     def extract_column_info(self, expression, alias_to_table):
         """
@@ -87,22 +89,26 @@ class SqlParserTool:
     def extract_join_relationships(self, expression, alias_to_table):
         """
         从解析后的表达式中提取JOIN关系信息，基于表名与别名的映射字典，返回JOIN关系列表。
+        重点获取连接类型，并将JOIN关系中的on条件里的别名替换为对应的表名。
         参数:
             expression (sqlglot.Expression): 解析后的SQL表达式对象。
             alias_to_table (dict): 表名与别名的映射字典。
         返回:
-            list: 包含JOIN关系信息字典的列表，每个字典包含左表、右表和连接条件等信息。
+            list: 包含JOIN关系信息字典的列表，每个字典包含连接类型、连接条件等信息。
         """
         joins = []
         for join in expression.find_all(Join):
-            left_table = alias_to_table.get(join.this.name, join.this.name)
-            right_table_expr = join.args.get("this")
-            right_table = alias_to_table.get(right_table_expr.name, right_table_expr.name)
+            join_type = join.kind  # 获取连接类型，例如INNER、LEFT等
             on_condition = join.args.get("on")
+            if on_condition:
+                # 将on条件中的别名替换为表名
+                on_condition_str = self.format_condition(on_condition)
+                for alias, table_name in alias_to_table.items():
+                    on_condition_str = on_condition_str.replace(alias, table_name)
+                on_condition = on_condition_str
             joins.append({
-                "left_table": left_table,
-                "right_table": right_table,
-                "on": self.format_condition(on_condition) if on_condition else None
+                "join_type": join_type,
+                "on": on_condition
             })
         return joins
 
@@ -121,6 +127,7 @@ class SqlParserTool:
     def extract_where_conditions(self, expression):
         """
         从解析后的表达式中提取WHERE条件信息，返回WHERE条件列表。
+        将WHERE条件字符串里的别名都替换为对应的表名。
         参数:
             expression (sqlglot.Expression): 解析后的SQL表达式对象。
         返回:
@@ -129,7 +136,11 @@ class SqlParserTool:
         conditions = []
         where_clause = expression.find(Where)
         if where_clause:
-            conditions.append(self.format_condition(where_clause.this))
+            condition_str = self.format_condition(where_clause.this)
+            alias_to_table, _ = self.extract_table_info(expression)
+            for alias, table_name in alias_to_table.items():
+                condition_str = condition_str.replace(alias, table_name)
+            conditions.append(condition_str)
         return conditions
 
     def extract_entities_and_relationships(self, sql):
@@ -194,12 +205,15 @@ class SqlParserTool:
         print()
         self.print_entities_by_table(entities)
         print("\n对应子图查询语句：")
-        cypher_query = self.sql2subgraph(entities)
-        # self.validate_cypher_query(cypher_query)  # 验证Cypher查询语句，仅做测试，不在正式版本中使用
+        cypher_query = self.sql2subgraph(entities,relationships)
         print(cypher_query)
+        print()
+        self.validate_cypher_query(cypher_query)  # 验证Cypher查询语句，仅做测试，不在正式版本中使用
 
-    def sql2subgraph(self, entities):
+    def sql2subgraph_simple_version(self, entities):
         """
+        简单通过entities生成子图查询语句
+        效率高一点
         根据 SQL 解析的数据库实体生成对应的 Neo4j 子图查询语句。
         参数：
             entities (dict): 包含表和列的实体信息。
@@ -244,6 +258,131 @@ class SqlParserTool:
 
         return query
 
+    def sql2subgraph(self, entities, relationships):
+        """
+    将 SQL 查询解析的数据库实体和关系信息转化为 Neo4j 子图查询语句。
+
+    此函数主要完成以下任务：
+    1. 将数据库的表和列建模为图数据库的节点和关系。
+    2. 使用 `HAS_COLUMN` 关系描述表和其列之间的从属关系。
+    3. 使用 `FOREIGN_KEY` 关系描述表与表之间的外键关联。
+    4. 自动为关系（从属关系和外键关系）命名唯一的别名，并在查询语句中返回所有节点和关系。
+
+    参数：
+        entities (dict): 包含表和列信息的实体描述。
+          - tables: Set[Tuple[str, Optional[str]]]
+            表信息集合，每个元素是一个元组，包含表名及其可选的别名。
+          - columns: Set[Tuple[str, str]]
+            列信息集合，每个元素是一个元组，表示列所属的表和列名。
+        relationships (dict): 包含表间关系和查询条件的描述。
+          - joins: List[Dict[str, str]]
+            JOIN 关系的列表，每个元素是一个字典，描述表之间的连接条件。
+          - conditions: List[str]
+            条件列表，表示 SQL 查询中的筛选条件（未直接用于图查询）。
+
+    返回：
+        str: 生成的 Neo4j 子图查询语句，包括 MATCH 和 RETURN 子句。
+          - MATCH 子句：定义了图数据库中需要匹配的节点和关系，包括表与列的从属关系以及表与表之间的外键关系。
+          - RETURN 子句：返回所有表节点、列节点和关系，按照表节点、列节点、关系的顺序排列。
+
+    实现细节：
+    1. 表节点处理：
+       - 每个表生成一个 `Table` 类型的节点，若有别名则优先使用别名作为标识。
+       - 为每个表分配一个唯一的别名，并在 RETURN 子句中加入对应的表节点。
+    2. 列节点处理：
+       - 根据列的所属表生成 `Column` 类型的节点。
+       - 使用 `HAS_COLUMN` 关系连接表和列，关系别名以 `r` 开头，按顺序递增。
+       - 每个表的列节点编号独立递增，以避免重复命名或混淆。
+    3. 外键关系处理：
+       - 根据 JOIN 关系描述表之间的外键关联，生成 `FOREIGN_KEY` 类型的关系。
+       - 关系别名以 `f` 开头，按顺序递增。
+    4. 返回顺序规范：
+       - RETURN 子句按照表节点、列节点、从属关系、外键关系的顺序输出，确保结构清晰，便于调试和理解。
+
+    示例：
+        输入：
+            entities = {
+                'tables': {('book', None), ('author', 'a')},
+                'columns': {('book', 'book_id'), ('author', 'author_id')}
+            }
+            relationships = {
+                'joins': [{'on': 'book.author_id = author.author_id'}],
+                'conditions': []
+            }
+        输出：
+            MATCH (tbook:Table {name: 'book'}),
+                  (ta:Table {name: 'author'}),
+                  (tbook)-[r1:HAS_COLUMN]->(cbook_1:Column {name: 'book_id'}),
+                  (ta)-[r2:HAS_COLUMN]->(ca_1:Column {name: 'author_id'}),
+                  (tbook)-[f1:FOREIGN_KEY]-(ta)
+            RETURN tbook, ta, cbook_1, ca_1, r1, r2, f1
+    """
+        # 提取表和列信息
+        tables = entities['tables']
+        columns = entities['columns']
+        joins = relationships['joins']
+
+        match_clauses = []
+        return_table_clauses = []
+        return_column_clauses = []
+        return_relationship_clauses = []
+        relationship_clauses = []
+
+        # 为每个表生成 MATCH 子句和列的从属关系
+        relationship_counter = 1
+        table_alias_map = {}
+        table_column_counters = {}  # 为每个表单独维护列计数器
+
+        for table_name, alias in tables:
+            table_alias = alias if alias else table_name
+            table_alias_map[table_name] = table_alias
+            table_column_counters[table_alias] = 1  # 初始化该表的列计数器
+
+            # 表的 MATCH 子句
+            match_clauses.append(f"(t{table_alias}:Table {{name: '{table_name}'}})")
+            return_table_clauses.append(f"t{table_alias}")
+
+            # 列的 MATCH 子句
+            table_columns = [col_name for tbl_name, col_name in columns if tbl_name == table_name]
+            for col_name in table_columns:
+                column_counter = table_column_counters[table_alias]
+                match_clauses.append(
+                    f"(t{table_alias})-[r{relationship_counter}:HAS_COLUMN]->(c{table_alias}_{column_counter}:Column {{name: '{col_name}'}})"
+                )
+                return_column_clauses.append(f"c{table_alias}_{column_counter}")
+                return_relationship_clauses.append(f"r{relationship_counter}")
+                relationship_counter += 1
+                table_column_counters[table_alias] += 1
+
+        # 处理外键关系
+        foreign_key_counter = 1
+        for join in joins:
+            on_condition = join['on']
+            left_table, left_column = on_condition.split('=')[0].strip().split('.')
+            right_table, right_column = on_condition.split('=')[1].strip().split('.')
+
+            left_alias = table_alias_map[left_table]
+            right_alias = table_alias_map[right_table]
+
+            relationship_clauses.append(
+                f"(t{left_alias})-[f{foreign_key_counter}:FOREIGN_KEY]-(t{right_alias})"
+            )
+            return_relationship_clauses.append(f"f{foreign_key_counter}")
+            foreign_key_counter += 1
+
+        # 组合 MATCH 子句
+        match_query = "MATCH " + ",\n      ".join(match_clauses + relationship_clauses)
+
+        # 组合 RETURN 子句
+        return_query = "RETURN " + ", ".join(
+            return_table_clauses + return_column_clauses + return_relationship_clauses
+        )
+
+        # 拼接完整的查询语句
+        query = f"{match_query}\n{return_query}"
+
+        return query
+
     def validate_cypher_query(self, cypher_query):
         """
         验证Cypher查询语句是否可以在Neo4j中执行，输出相应的调试信息。
@@ -252,17 +391,44 @@ class SqlParserTool:
         """
         try:
             with self.neo4j_driver.session() as session:
-                session.run(cypher_query)
-            print("Cypher查询语句验证通过，可以在Neo4j中正常执行。")
+                result = session.run(cypher_query)
+
+                # 初始化统计值
+                node_count = 0
+                relationship_count = 0
+                table_count = 0
+                column_count = 0
+                column_relationship_count = 0
+                foreign_key_relationship_count = 0
+
+                # 统计节点和关系的数量
+                for record in result:
+                    for value in record.values():
+                        if isinstance(value, Node):  # 判断是否为节点
+                            node_count += 1
+                            labels = value.labels
+                            if 'Table' in labels:
+                                table_count += 1
+                            if 'Column' in labels:
+                                column_count += 1
+                        elif isinstance(value, Relationship):  # 判断是否为关系
+                            relationship_count += 1
+                            if value.type == 'HAS_COLUMN':
+                                column_relationship_count += 1
+                            elif value.type == 'FOREIGN_KEY':
+                                foreign_key_relationship_count += 1
+
+                # 输出查询验证结果
+                print(
+                    f"Cypher查询验证结果：验证通过 | 总节点数: {node_count} | 总关系数: {relationship_count} | 表节点数: {table_count} | 列节点数: {column_count} | HAS_COLUMN数: {column_relationship_count} | FOREIGN_KEY数: {foreign_key_relationship_count}")
+
         except Exception as e:
-            print(f"Cypher查询语句验证失败，无法在Neo4j中执行，错误信息如下：\n{e}")
-
-
+            print(f"Cypher查询验证失败，错误信息：{e}")
 
 
 if __name__ == '__main__':
     # Neo4j数据库连接配置
-    neo4j_uri = "bolt://localhost:7687"  # 根据实际情况修改
+    neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
 
@@ -278,7 +444,6 @@ if __name__ == '__main__':
         """
         tool = SqlParserTool(driver)
         entities, relationships = tool.extract_entities_and_relationships(sql)
-        cypher_query = tool.sql2subgraph(entities)
         tool.parse_and_display(sql)
     finally:
         tool.close_neo4j_connection()

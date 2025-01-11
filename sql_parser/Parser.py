@@ -43,7 +43,7 @@ def analyze_single_sql_in_entry(entry, session, driver):
         tool = SqlParserTool(driver)
         entities, relationships = tool.extract_entities_and_relationships(sql)
         analyze_sql_query(sql,driver,question,db_id)
-        cypher_query = tool.sql2subgraph(entities)
+        cypher_query = tool.sql2subgraph(entities,relationships)
         try:
             session.run(cypher_query)
             return True
@@ -79,7 +79,7 @@ def analyze_json_sql_data(json_file_path, driver):
 
 if __name__ == "__main__":
     # Neo4j数据库连接配置，根据实际情况修改
-    neo4j_uri = "bolt://localhost:7687"
+    neo4j_uri = "bolt://localhost:7689"
     neo4j_user = "neo4j"
     neo4j_password = "12345678"
     driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
