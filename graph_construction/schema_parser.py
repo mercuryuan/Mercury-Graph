@@ -7,7 +7,7 @@ import random
 from collections import defaultdict, Counter
 from datetime import datetime
 from decimal import Decimal
-
+import chardet
 import numpy as np
 from scipy.stats import norm, kstest
 from neo4j import GraphDatabase
@@ -41,7 +41,14 @@ def convert_date_string(date_str):
         '%m/%d/%Y %H:%M:%S',
         '%m-%d-%Y %H:%M:%S',
         '%d/%m/%Y %H:%M:%S',
-        '%d-%m-%Y %H:%M:%S'
+        '%d-%m-%Y %H:%M:%S',
+        '%Y-%m-%d %H:%M:%S.%f',  # 新增的日期时间格式
+        '%Y/%m/%d %H:%M:%S.%f',  # 新增的日期时间格式
+        '%Y.%m.%d %H:%M:%S.%f',  # 新增的日期时间格式
+        '%m/%d/%Y %H:%M:%S.%f',  # 新增的日期时间格式
+        '%m-%d-%Y %H:%M:%S.%f',  # 新增的日期时间格式
+        '%d/%m/%Y %H:%M:%S.%f',  # 新增的日期时间格式
+        '%d-%m-%Y %H:%M:%S.%f'   # 新增的日期时间格式
     ]
     for format_str in date_formats:
         try:
@@ -109,6 +116,14 @@ def calculate_time_attributes(values):
 
     return time_attributes
 
+def quote_identifier(identifier):
+    """
+    引用标识符（表名或列名），防止包含空格或特殊字符时出错。
+
+    :param identifier: 表名或列名
+    :return: 引用后的标识符
+    """
+    return f'"{identifier}"'  # 使用双引号引用
 
 class SchemaParser:
     def __init__(self, driver, database_file):
@@ -152,6 +167,7 @@ class SchemaParser:
             tables = cursor.fetchall()
             for table in tables:
                 table_name = table[0]
+                row_count = self._get_table_row_count(table_name)
                 # 在Neo4j中创建表节点
                 self._create_table_node_in_neo4j(table_name)
                 # 获取表的字段信息
@@ -160,8 +176,17 @@ class SchemaParser:
                 for column in columns:
                     column_name = column[1]
                     data_type = column[2]
-                    samples, additional_attributes = self._get_column_samples_and_attributes(table_name, column_name,
-                                                                                             data_type)
+                        # 如果表的行数小于等于100,000
+                    if row_count <= 100000:
+                        # 对列进行抽样，并计算列的附加属性
+                        samples, additional_attributes = self._get_column_samples_and_attributes(table_name, column_name,
+                                                                                                 data_type)
+                    # 如果表的行数大于100,000
+                    else:
+                        # 对列进行抽样，但抽样数量限制为100,000
+                        samples, additional_attributes = self._get_column_samples_and_attributes(table_name, column_name,
+                                                                                                 data_type, 100000)
+
                     schema[table_name]['columns'].append((column_name, data_type, samples, additional_attributes))
                     # 在Neo4j中创建列节点，并与对应的表节点建立关系
                     self._create_column_node_and_relation_in_neo4j(table_name, column_name, data_type, samples,
@@ -287,6 +312,9 @@ class SchemaParser:
             foreign_key_columns = [fk[3] for fk in foreign_keys]  # 第4个元素（索引为3）是本地列名，对应外键列
             return foreign_key_columns
 
+
+
+
     def read_column_description_csv(self, table_name):
         """
         从对应的CSV文件中读取指定表的列描述信息。
@@ -299,11 +327,12 @@ class SchemaParser:
         # 获取 database_file 的目录部分
         if table_name == "sqlite_sequence":
             return []
-        dir_path = os.path.dirname(database_file)
+        dir_path = os.path.dirname(self.database_file)
         file_path = os.path.join(dir_path, "database_description", f"{table_name}.csv")  # 假设文件路径格式如此，可根据实际调整
         column_descriptions = []
         try:
-            with open(file_path, 'r', encoding='utf-8-sig') as csvfile:  # 使用utf-8-sig编码来自动去除BOM字符
+            # 先尝试使用 utf-8-sig 编码打开文件
+            with open(file_path, 'r', encoding='utf-8-sig') as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader:
                     expected_keys = ['original_column_name', 'column_name', 'column_description', 'data_format',
@@ -313,6 +342,25 @@ class SchemaParser:
                     else:
                         print(f"行数据 {row} 缺少预期键，已跳过该数据")
                 return column_descriptions
+        except UnicodeDecodeError:
+            # 编码错误时，动态检测文件编码
+            try:
+                with open(file_path, 'rb') as raw_file:
+                    raw_data = raw_file.read()
+                    detected_encoding = chardet.detect(raw_data)['encoding']
+                with open(file_path, 'r', encoding=detected_encoding) as csvfile:
+                    reader = csv.DictReader(csvfile)
+                    for row in reader:
+                        expected_keys = ['original_column_name', 'column_name', 'column_description', 'data_format',
+                                         'value_description']
+                        if all(key in row for key in expected_keys):
+                            column_descriptions.append(row)
+                        else:
+                            print(f"行数据 {row} 缺少预期键，已跳过该数据")
+                    return column_descriptions
+            except Exception as e:
+                print(f"读取文件时发生错误，尝试动态编码检测后仍失败: {e}")
+                return []
         except FileNotFoundError:
             print(f"未找到表 {table_name} 对应的列描述文件 {file_path}")
             return []
@@ -442,7 +490,7 @@ class SchemaParser:
     import numpy as np
     from decimal import Decimal
 
-    def _get_column_samples_and_attributes(self, table_name, column_name, data_type):
+    def _get_column_samples_and_attributes(self, table_name, column_name, data_type,sample_size=None):
         """
         随机抽样获取列的数据样本，并计算附加属性（范围或类别等多种属性）。
         实现为所有类型的列节点添加数据条数属性，对于非id主键的数值型数据添加平均数等相关属性，
@@ -463,16 +511,25 @@ class SchemaParser:
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
             try:
+                # 新的引用表名和列名
+                table_name = quote_identifier(table_name)
+                column_name = quote_identifier(column_name)
+
                 # 查询列数据
-                cursor.execute(f"SELECT {column_name} FROM {table_name};")
+                if sample_size is not None:
+                    # 如果指定了抽样个数，则限制查询结果
+                    cursor.execute(f"SELECT {column_name} FROM {table_name} LIMIT {sample_size};")
+                else:
+                    # 否则查询全部数据
+                    cursor.execute(f"SELECT {column_name} FROM {table_name};")
                 rows = cursor.fetchall()
                 values = [row[0] for row in rows if row[0] is not None]
 
                 # 获取随机样本，最多取6条（如果数据量小于等于5则取全部）
                 samples = random.sample(values, min(len(values), 6))
 
-                # 1. 为所有类型列节点添加数据条数属性
-                additional_attributes['data_count'] = len(values) if values else 0
+                # 1. 为所有类型列节点添加抽样个数属性
+                additional_attributes['sample_count'] = len(values) if values else 0
 
                 # 查询列是否可为空
                 is_nullable = self._is_column_nullable(table_name, column_name)
@@ -740,11 +797,15 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    database_file = "../data/bird/books/books.sqlite"
+    # database_file = "../data/bird/books/books.sqlite"
     # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
     # database_file = "../data/spider/medicine_enzyme_interaction/medicine_enzyme_interaction.sqlite"
+    # database_file = "../data/bird/app_store/app_store.sqlite" # csv描述表名对应不上
+    # database_file = "E:/BIRD_train/train/train_databases/bike_share_1/bike_share_1.sqlite" # 百万级数据，对生成有效率上的挑战
+    # database_file = "E:/BIRD_train/train/train_databases/car_retails/car_retails.sqlite"  # 自引用情况
+    database_file = "E:/BIRD_train/train/train_databases/donor/donor.sqlite"
     # 创建 Neo4j 驱动连接
     neo4j_driver = get_driver()
     parser = SchemaParser(neo4j_driver, database_file)
