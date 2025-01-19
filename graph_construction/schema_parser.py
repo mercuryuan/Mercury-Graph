@@ -274,7 +274,7 @@ class SchemaParser:
         try:
             with sqlite3.connect(self.database_file) as conn:
                 cursor = conn.cursor()
-                cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+                cursor.execute(f"SELECT COUNT(*) FROM {quote_identifier(table_name)}")
                 row_count = cursor.fetchone()[0]
                 return row_count
         except Exception as e:
@@ -521,7 +521,7 @@ class SchemaParser:
                     cursor.execute(f"SELECT {column_name} FROM {table_name} LIMIT {sample_size};")
                 else:
                     # 否则查询全部数据
-                    cursor.execute(f"SELECT {column_name} FROM {table_name};")
+                    cursor.execute(f"SELECT {column_name} FROM {table_name} LIMIT 100 ;")
                 rows = cursor.fetchall()
                 values = [row[0] for row in rows if row[0] is not None]
 
@@ -536,8 +536,8 @@ class SchemaParser:
                 additional_attributes['is_nullable'] = is_nullable
 
                 # 查询列是否可重复
-                is_distinct = self._is_column_distinct(table_name, column_name)
-                additional_attributes['is_distinct'] = is_distinct
+                is_distinct = self._is_column_unique(table_name, column_name)
+                additional_attributes['is_unique'] = is_distinct
 
                 # 查询列是否为主键
                 is_primary_key = self._is_primary_key(table_name, column_name)
@@ -630,21 +630,29 @@ class SchemaParser:
         return None
 
 
-    def _is_column_distinct(self, table_name, column_name):
+    def _is_column_unique(self, table_name, column_name):
         """
-        判断列是否可重复。
+        判断列是否具有唯一性约束。
 
         :param table_name: 表名
         :param column_name: 列名
-        :return: True 表示列不允许重复，False 表示列允许重复
+        :return: True 表示列具有唯一性约束，False 表示列没有唯一性约束
         """
-        with sqlite3.connect(self.database_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT COUNT(DISTINCT {column_name}) FROM {table_name}")
-            distinct_count = cursor.fetchone()[0]
-            cursor.execute(f"SELECT COUNT({column_name}) FROM {table_name}")
-            total_count = cursor.fetchone()[0]
-            return distinct_count == total_count
+        try:
+            with sqlite3.connect(self.database_file) as conn:
+                cursor = conn.cursor()
+                cursor.execute(f"PRAGMA table_info({table_name})")
+                columns_info = cursor.fetchall()
+                for column_info in columns_info:
+                    if column_info[1] == column_name:  # 第2个元素（索引为1）是列名
+                        # 第6个元素（索引为5）表示约束信息，以逗号分隔，可能包含 'UNIQUE' 或 'PRIMARY KEY'
+                        constraints = column_info[5].split(',') if column_info[5] else []
+                        # 检查是否有 UNIQUE 或 PRIMARY KEY 约束，两者都表示唯一性约束
+                        if 'UNIQUE' in [c.strip() for c in constraints] or 'PRIMARY KEY' in [c.strip() for c in constraints]:
+                            return True
+        except sqlite3.Error as e:
+            print(f"Error checking if column {column_name} in table {table_name} has uniqueness constraint: {e}")
+        return False
 
     def _is_primary_key(self, table_name, column_name):
         """
@@ -797,7 +805,7 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    # database_file = "../data/bird/books/books.sqlite"
+    database_file = "../data/bird/books/books.sqlite"
     # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
@@ -805,7 +813,8 @@ if __name__ == "__main__":
     # database_file = "../data/bird/app_store/app_store.sqlite" # csv描述表名对应不上
     # database_file = "E:/BIRD_train/train/train_databases/bike_share_1/bike_share_1.sqlite" # 百万级数据，对生成有效率上的挑战
     # database_file = "E:/BIRD_train/train/train_databases/car_retails/car_retails.sqlite"  # 自引用情况
-    database_file = "E:/BIRD_train/train/train_databases/donor/donor.sqlite"
+    # database_file = "E:/BIRD_train/train/train_databases/donor/donor.sqlite" # 百万级数据，论文表有长文本
+    # database_file = "E:/BIRD_train/train/train_databases/airline/airline.sqlite" # 百万级数据，论文表有长文本
     # 创建 Neo4j 驱动连接
     neo4j_driver = get_driver()
     parser = SchemaParser(neo4j_driver, database_file)
