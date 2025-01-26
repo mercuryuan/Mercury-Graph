@@ -27,6 +27,15 @@ def convert_date_string(date_str):
     :param date_str: 日期字符串
     :return: 转换后的datetime对象或date对象，如果转换失败则返回None
     """
+    # 检查 date_str 是否为字符串类型，如果不是则尝试转换为字符串
+    # print(date_str)
+    if not isinstance(date_str, str):
+        try:
+            date_str = str(date_str)
+        except Exception as e:
+            print(f"无法将输入 {date_str} 转换为字符串类型，错误信息: {e}")
+            return None
+
     date_formats = [
         '%Y-%m-%d',
         '%Y/%m/%d',
@@ -48,18 +57,22 @@ def convert_date_string(date_str):
         '%m/%d/%Y %H:%M:%S.%f',  # 新增的日期时间格式
         '%m-%d-%Y %H:%M:%S.%f',  # 新增的日期时间格式
         '%d/%m/%Y %H:%M:%S.%f',  # 新增的日期时间格式
-        '%d-%m-%Y %H:%M:%S.%f'   # 新增的日期时间格式
+        '%d-%m-%Y %H:%M:%S.%f',  # 新增的日期时间格式
+        '%Y'  # 仅年份的格式
     ]
     for format_str in date_formats:
         try:
             dt = datetime.strptime(date_str, format_str)
             # 如果格式是纯日期（没有时间部分），返回 date 对象
-            if format_str in ['%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d', '%m/%d/%Y', '%m-%d-%Y', '%d/%m/%Y', '%d-%m-%Y']:
+            if format_str in ['%Y-%m-%d', '%Y/%m/%d', '%Y.%m.%d', '%m/%d/%Y', '%m-%d-%Y', '%d/%m/%Y', '%d-%m-%Y', '%Y']:
+                if format_str == '%Y':
+                    # 对于仅年份的格式，将其转换为该年的 1 月 1 日
+                    return date(dt.year, 1, 1)
                 return dt.date()
             return dt
         except ValueError:
             continue
-    print(f"无法将日期字符串 {date_str} 转换为有效的日期时间格式，请检查数据格式！")
+    print(f"无法将日期字符串 {date_str} 转换为有效的日期时间格式，请检查数据格式！(大概率是问题数据，建议跳过)")
     return None
 
 
@@ -171,7 +184,7 @@ class SchemaParser:
                 # 在Neo4j中创建表节点
                 self._create_table_node_in_neo4j(table_name)
                 # 获取表的字段信息
-                cursor.execute(f"PRAGMA table_info({table_name})")
+                cursor.execute(f"PRAGMA table_info({quote_identifier(table_name)})")
                 columns = cursor.fetchall()
                 for column in columns:
                     column_name = column[1]
@@ -192,7 +205,7 @@ class SchemaParser:
                     self._create_column_node_and_relation_in_neo4j(table_name, column_name, data_type, samples,
                                                                    additional_attributes)
                 # 获取表的外键关系（如果有）
-                cursor.execute(f"PRAGMA foreign_key_list({table_name})")
+                cursor.execute(f"PRAGMA foreign_key_list({quote_identifier(table_name)})")
                 foreign_keys = cursor.fetchall()
                 for foreign_key in foreign_keys:
                     from_column = foreign_key[3]
@@ -259,7 +272,7 @@ class SchemaParser:
         """
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
-            cursor.execute(f"PRAGMA table_info({table_name})")
+            cursor.execute(f"PRAGMA table_info({quote_identifier(table_name)})")
             columns_info = cursor.fetchall()
             columns = [column_info[1] for column_info in columns_info]
         return columns
@@ -283,34 +296,46 @@ class SchemaParser:
 
     def _get_primary_key_columns(self, table_name):
         """
-        获取指定表的主键列信息（以SQLite为例）。
+        获取指定表的主键列信息（以 SQLite 为例）。
 
         :param table_name: 表名
         :return: 主键列名列表，如果是单个主键则返回只包含该列名的列表，无主键返回空列表
         """
-        with sqlite3.connect(self.database_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute(f"PRAGMA table_info({table_name})")
-            columns_info = cursor.fetchall()
-            primary_key_columns = []
-            for column_info in columns_info:
-                if column_info[5] != 0:  # 假设第6个元素（索引为5）表示是否为主键，1为主键，0为非主键，不同数据库该位置可能不同
-                    primary_key_columns.append(column_info[1])  # 第2个元素（索引为1）是列名
-            return primary_key_columns
+        try:
+            with sqlite3.connect(self.database_file) as conn:
+                cursor = conn.cursor()
+                sql_statement = f"PRAGMA table_info({quote_identifier(table_name)})"
+                cursor.execute(sql_statement)
+                columns_info = cursor.fetchall()
+                primary_key_columns = []
+                for column_info in columns_info:
+                    if column_info[5]!= 0:  # 假设第 6 个元素（索引为 5）表示是否为主键，1 为主键，0 为非主键，不同数据库该位置可能不同
+                        primary_key_columns.append(column_info[1])  # 第 2 个元素（索引为 1）是列名
+                return primary_key_columns
+        except sqlite3.Error as e:
+            print(f"Error occurred while executing SQL statement: {sql_statement}")
+            print(f"Error message: {e}")
+            return []
 
     def _get_foreign_key_columns(self, table_name):
         """
-        获取指定表的外键列信息（以SQLite为例）。
+        获取指定表的外键列信息（以 SQLite 为例）。
 
         :param table_name: 表名
         :return: 外键列名列表，如果是单个外键则返回只包含该列名的列表，无外键返回空列表
         """
-        with sqlite3.connect(self.database_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute(f"PRAGMA foreign_key_list({table_name})")
-            foreign_keys = cursor.fetchall()
-            foreign_key_columns = [fk[3] for fk in foreign_keys]  # 第4个元素（索引为3）是本地列名，对应外键列
-            return foreign_key_columns
+        try:
+            with sqlite3.connect(self.database_file) as conn:
+                cursor = conn.cursor()
+                sql_statement = f"PRAGMA foreign_key_list({quote_identifier(table_name)})"
+                cursor.execute(sql_statement)
+                foreign_keys = cursor.fetchall()
+                foreign_key_columns = [fk[3] for fk in foreign_keys]  # 第 4 个元素（索引为 3）是本地列名，对应外键列
+                return foreign_key_columns
+        except sqlite3.Error as e:
+            print(f"Error occurred while executing SQL statement: {sql_statement}")
+            print(f"Error message: {e}")
+            return []
 
 
 
@@ -510,103 +535,101 @@ class SchemaParser:
 
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
-            try:
-                # 新的引用表名和列名
-                table_name = quote_identifier(table_name)
-                column_name = quote_identifier(column_name)
+            # try:
+            # 查询列数据
+            if sample_size is not None:
+                # 如果指定了抽样个数，则限制查询结果
+                query = f"SELECT {quote_identifier(column_name)} FROM {quote_identifier(table_name)} LIMIT {sample_size};"
+            else:
+                # 否则查询全部数据
+                query = f"SELECT {quote_identifier(column_name)} FROM {quote_identifier(table_name)} LIMIT 100 ;"
 
-                # 查询列数据
-                if sample_size is not None:
-                    # 如果指定了抽样个数，则限制查询结果
-                    cursor.execute(f"SELECT {column_name} FROM {table_name} LIMIT {sample_size};")
-                else:
-                    # 否则查询全部数据
-                    cursor.execute(f"SELECT {column_name} FROM {table_name} LIMIT 100 ;")
-                rows = cursor.fetchall()
-                values = [row[0] for row in rows if row[0] is not None]
+            # 打印即将执行的 SQL 语句
+            # print(f"即将执行的 SQL 语句: {query}")
 
-                # 获取随机样本，最多取6条（如果数据量小于等于5则取全部）
-                samples = random.sample(values, min(len(values), 6))
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            values = [row[0] for row in rows if row[0] is not None]
 
-                # 1. 为所有类型列节点添加抽样个数属性
-                additional_attributes['sample_count'] = len(values) if values else 0
+            # 获取随机样本，最多取6条（如果数据量小于等于5则取全部）
+            samples = random.sample(values, min(len(values), 6))
 
-                # 查询列是否可为空
-                is_nullable = self._is_column_nullable(table_name, column_name)
-                additional_attributes['is_nullable'] = is_nullable
+            # 1. 为所有类型列节点添加抽样个数属性
+            additional_attributes['sample_count'] = len(values) if values else 0
 
-                # 查询列是否可重复
-                is_distinct = self._is_column_unique(table_name, column_name)
-                additional_attributes['is_unique'] = is_distinct
+            # 查询列是否可为空
+            is_nullable = self._is_column_nullable(table_name, column_name)
+            additional_attributes['is_nullable'] = is_nullable
 
-                # 查询列是否为主键
-                is_primary_key = self._is_primary_key(table_name, column_name)
-                # 查询列是否为外键
-                is_foreign_key = self._is_foreign_key(table_name, column_name)
 
-                # 2. 根据数据类型处理不同类型列的附加属性
-                numeric_types = [
-                    "INTEGER", "INT", "SMALLINT", "BIGINT", "TINYINT", "MEDIUMINT",  # 整数类型
-                    "REAL", "FLOAT", "DOUBLE",  # 浮点数类型
-                    "DECIMAL", "NUMERIC",  # 高精度小数类型
-                    "BOOLEAN"  # 布尔类型
-                ]
-                text_types = [
-                    "TEXT", "VARCHAR", "CHAR", "NCHAR", "NVARCHAR", "NTEXT",  # 常见文本类型
-                    "CLOB", "TINYTEXT", "MEDIUMTEXT", "LONGTEXT",  # 大文本类型
-                    "JSON", "XML"  # 结构化文本类型
-                ]
-                if base_data_type in numeric_types:
-                    additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
-                    is_id_column = "id" in column_name.lower()
-                    if not is_id_column:
-                        additional_attributes['numeric_mode'] = self._get_mode(values)
-                        if values:
-                            # 处理高精度数值
-                            if base_data_type in ["DECIMAL", "NUMERIC"]:
-                                additional_attributes['numeric_mean'] = float(
-                                    np.mean([float(Decimal(str(v))) for v in values]))
-                            # 处理布尔类型
-                            elif base_data_type == "BOOLEAN":
-                                additional_attributes['numeric_mean'] = np.mean([int(v) for v in values])
-                            else:
-                                additional_attributes['numeric_mean'] = np.mean(values)
+            # 查询列是否为主键
+            is_primary_key = self._is_primary_key(table_name, column_name)
+            # 查询列是否为外键
+            is_foreign_key = self._is_foreign_key(table_name, column_name)
+
+            # 2. 根据数据类型处理不同类型列的附加属性
+            numeric_types = [
+                "INTEGER", "INT", "SMALLINT", "BIGINT", "TINYINT", "MEDIUMINT",  # 整数类型
+                "REAL", "FLOAT", "DOUBLE",  # 浮点数类型
+                "DECIMAL", "NUMERIC",  # 高精度小数类型
+                "BOOLEAN"  # 布尔类型
+            ]
+            text_types = [
+                "TEXT", "VARCHAR", "CHAR", "NCHAR", "NVARCHAR", "NTEXT",  # 常见文本类型
+                "CLOB", "TINYTEXT", "MEDIUMTEXT", "LONGTEXT",  # 大文本类型
+                "JSON", "XML"  # 结构化文本类型
+            ]
+            if base_data_type in numeric_types:
+                additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
+                is_id_column = "id" in column_name.lower()
+                if not is_id_column:
+                    additional_attributes['numeric_mode'] = self._get_mode(values)
+                    if values:
+                        # 处理高精度数值
+                        if base_data_type in ["DECIMAL", "NUMERIC"]:
+                            additional_attributes['numeric_mean'] = float(
+                                np.mean([float(Decimal(str(v))) for v in values]))
+                        # 处理布尔类型
+                        elif base_data_type == "BOOLEAN":
+                            additional_attributes['numeric_mean'] = np.mean([int(v) for v in values])
                         else:
-                            additional_attributes['numeric_mean'] = None
+                            additional_attributes['numeric_mean'] = np.mean(values)
                     else:
-                        # 对于id主键字段，可根据需求添加其他合适属性
-                        pass
+                        additional_attributes['numeric_mean'] = None
+                else:
+                    # 对于id主键字段，可根据需求添加其他合适属性
+                    pass
 
-                elif base_data_type in text_types:
-                    # 如果唯一值数量小于等于 6，将其视为类别型数据
-                    if len(set(values)) <= 6:
-                        additional_attributes['category_categories'] = list(set(values))
+            elif base_data_type in text_types:
+                # 如果唯一值数量小于等于 6，将其视为类别型数据
+                if len(set(values)) <= 6:
+                    additional_attributes['category_categories'] = list(set(values))
 
-                    # 计算平均字符长度
-                    additional_attributes['average_char_length'] = self._get_average_char_length(
-                        values) if values else 0
+                # 计算平均字符长度
+                additional_attributes['average_char_length'] = self._get_average_char_length(
+                    values) if values else 0
 
-                    # 计算词频属性，并转换为 JSON 字符串
-                    # 在 _get_column_samples_and_attributes 中使用
-                    word_frequency_dict = self._get_word_frequency(values) if values else {}
-                    additional_attributes['word_frequency'] = json.dumps(word_frequency_dict, ensure_ascii=False)
+                # 计算词频属性，并转换为 JSON 字符串
+                # 在 _get_column_samples_and_attributes 中使用
+                word_frequency_dict = self._get_word_frequency(values) if values else {}
+                additional_attributes['word_frequency'] = json.dumps(word_frequency_dict, ensure_ascii=False)
 
-                elif base_data_type in ["DATE", "DATETIME", "TIMESTAMP"]:
-                    additional_attributes['time_span'] = self._get_time_span(values) if values else None
-                    time_attributes = calculate_time_attributes(values)
-                    additional_attributes.update(time_attributes)
+            elif base_data_type in ["DATE", "DATETIME", "TIMESTAMP"]:
+                additional_attributes['time_span'] = self._get_time_span(values) if values else None
+                time_attributes = calculate_time_attributes(values)
+                additional_attributes.update(time_attributes)
 
-                # 3. 根据主键或外键查询结果添加key_type属性（仅针对主键或外键列）
-                key_type = []
-                if is_primary_key:
-                    key_type.append("primary_key")
-                if is_foreign_key:
-                    key_type.append("foreign_key")
-                if key_type:
-                    additional_attributes['key_type'] = key_type
+            # 3. 根据主键或外键查询结果添加key_type属性（仅针对主键或外键列）
+            key_type = []
+            if is_primary_key:
+                key_type.append("primary_key")
+            if is_foreign_key:
+                key_type.append("foreign_key")
+            if key_type:
+                additional_attributes['key_type'] = key_type
 
-            except Exception as e:
-                print(f"Error processing column {column_name} in table {table_name}: {e}")
+            # except Exception as e:
+            #     print(f"Error processing column {column_name} in table {table_name}: {e}")
 
         return samples, additional_attributes
 
@@ -621,7 +644,7 @@ class SchemaParser:
         """
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
-            cursor.execute(f"PRAGMA table_info({table_name})")
+            cursor.execute(f"PRAGMA table_info({quote_identifier(table_name)})")
             columns_info = cursor.fetchall()
             for column_info in columns_info:
                 if column_info[1] == column_name:  # 第2个元素（索引为1）是列名
@@ -630,29 +653,6 @@ class SchemaParser:
         return None
 
 
-    def _is_column_unique(self, table_name, column_name):
-        """
-        判断列是否具有唯一性约束。
-
-        :param table_name: 表名
-        :param column_name: 列名
-        :return: True 表示列具有唯一性约束，False 表示列没有唯一性约束
-        """
-        try:
-            with sqlite3.connect(self.database_file) as conn:
-                cursor = conn.cursor()
-                cursor.execute(f"PRAGMA table_info({table_name})")
-                columns_info = cursor.fetchall()
-                for column_info in columns_info:
-                    if column_info[1] == column_name:  # 第2个元素（索引为1）是列名
-                        # 第6个元素（索引为5）表示约束信息，以逗号分隔，可能包含 'UNIQUE' 或 'PRIMARY KEY'
-                        constraints = column_info[5].split(',') if column_info[5] else []
-                        # 检查是否有 UNIQUE 或 PRIMARY KEY 约束，两者都表示唯一性约束
-                        if 'UNIQUE' in [c.strip() for c in constraints] or 'PRIMARY KEY' in [c.strip() for c in constraints]:
-                            return True
-        except sqlite3.Error as e:
-            print(f"Error checking if column {column_name} in table {table_name} has uniqueness constraint: {e}")
-        return False
 
     def _is_primary_key(self, table_name, column_name):
         """
@@ -664,7 +664,7 @@ class SchemaParser:
         """
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
-            cursor.execute(f"PRAGMA table_info({table_name})")
+            cursor.execute(f"PRAGMA table_info({quote_identifier(table_name)})")
             columns_info = cursor.fetchall()
             for column_info in columns_info:
                 if column_info[1] == column_name:  # 第2个元素（索引为1）是列名
@@ -681,7 +681,7 @@ class SchemaParser:
         """
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
-            cursor.execute(f"PRAGMA foreign_key_list({table_name})")
+            cursor.execute(f"PRAGMA foreign_key_list({quote_identifier(table_name)})")
             foreign_keys = cursor.fetchall()
             for foreign_key in foreign_keys:
                 if foreign_key[3] == column_name:  # 第4个元素（索引为3）是本地列名，对应外键列
@@ -805,7 +805,7 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    database_file = "../data/bird/books/books.sqlite"
+    # database_file = "../data/bird/books/books.sqlite"
     # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
@@ -814,7 +814,9 @@ if __name__ == "__main__":
     # database_file = "E:/BIRD_train/train/train_databases/bike_share_1/bike_share_1.sqlite" # 百万级数据，对生成有效率上的挑战
     # database_file = "E:/BIRD_train/train/train_databases/car_retails/car_retails.sqlite"  # 自引用情况
     # database_file = "E:/BIRD_train/train/train_databases/donor/donor.sqlite" # 百万级数据，论文表有长文本
-    # database_file = "E:/BIRD_train/train/train_databases/airline/airline.sqlite" # 百万级数据，论文表有长文本
+    database_file = "E:/BIRD_train/train/train_databases/talkingdata/talkingdata.sqlite" # DATETIME类型有问题数据的
+    # database_file = "E:/BIRD_train/train/train_databases/mondial_geo/mondial_geo.sqlite"
+    # database_file = "E:/BIRD_train/train/train_databases/ice_hockey_draft/ice_hockey_draft.sqlite"
     # 创建 Neo4j 驱动连接
     neo4j_driver = get_driver()
     parser = SchemaParser(neo4j_driver, database_file)
