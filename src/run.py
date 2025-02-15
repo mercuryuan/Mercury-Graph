@@ -32,6 +32,9 @@ if __name__ == "__main__":
         # 创建 Neo4j 驱动连接
         neo4j_driver = get_driver()
 
-        # 请将 'your_root_folder' 替换为你想要遍历的文件夹的实际路径
+        # 请将 'root_folder' 替换为你想要遍历的文件夹的实际路径
+        # BIRD 训练集路径
         root_folder = 'E:/BIRD_train/train/train_databases'
+        # SPIDER 训练集路径
+        # root_folder = 'E:/spider/database'
         traverse_folders(root_folder)

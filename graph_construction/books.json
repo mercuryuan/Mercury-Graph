@@ -1,0 +1,1558 @@
+{
+    "nodes": [
+        {
+            "referenced_to": [
+                "book_language.language_id"
+            ],
+            "column_description": "the id of the book language\nMaps to book_language (language_id)",
+            "is_distinct": false,
+            "name": "language_id",
+            "data_type": "INTEGER",
+            "sample_count": 11127,
+            "samples": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "numeric_range": [
+                1,
+                27
+            ]
+        },
+        {
+            "column_description": "the number of the pages",
+            "numeric_mode": [
+                288
+            ],
+            "is_distinct": false,
+            "numeric_mean": 336.2858811898984,
+            "name": "num_pages",
+            "data_type": "INTEGER",
+            "sample_count": 11127,
+            "samples": [
+                182,
+                288,
+                320,
+                304,
+                412,
+                720
+            ],
+            "numeric_range": [
+                0,
+                6576
+            ]
+        },
+        {
+            "time_span": "43919 days",
+            "column_description": "the publication date of the book",
+            "is_distinct": false,
+            "earliest_time": "1900-01-01",
+            "name": "publication_date",
+            "data_type": "DATE",
+            "sample_count": 11127,
+            "value_description": "commonsense evidence:\nThe publication date of a book can provide information about when the book was released to the public. This can be useful for understanding the context in which the book was written, as well as for determining how current or outdated the information in the book might be. Additionally, the publication date can provide insight into the age of the book and its potential value as a collectible.",
+            "latest_time": "2020-03-31",
+            "samples": [
+                "2006-09-05",
+                "2006-06-01",
+                "2005-06-18",
+                "2006-02-07",
+                "2001-09-01",
+                "1992-08-15"
+            ]
+        },
+        {
+            "referenced_to": [
+                "publisher.publisher_id"
+            ],
+            "column_description": "the id of the publisher\nMaps to publisher (publisher_id)",
+            "is_distinct": false,
+            "name": "publisher_id",
+            "data_type": "INTEGER",
+            "sample_count": 11127,
+            "samples": [
+                2184,
+                900,
+                791,
+                242,
+                88,
+                1885
+            ],
+            "numeric_range": [
+                1,
+                2264
+            ]
+        },
+        {
+            "reference_to": [
+                "book_author.book_id->book.book_id",
+                "book_author.author_id->author.author_id"
+            ],
+            "database_name": "books",
+            "columns": [
+                "book_id",
+                "author_id"
+            ],
+            "column_count": 2,
+            "foreign_key": [
+                "book_id",
+                "author_id"
+            ],
+            "name": "book_author",
+            "primary_key": [
+                "book_id",
+                "author_id"
+            ],
+            "row_count": 17642
+        },
+        {
+            "referenced_to": [
+                "book.book_id"
+            ],
+            "column_description": "the id of the book\nMaps to book(book_id)",
+            "is_distinct": false,
+            "name": "book_id",
+            "data_type": "INTEGER",
+            "sample_count": 17642,
+            "samples": [
+                1489,
+                4262,
+                5545,
+                10801,
+                8025,
+                7344
+            ],
+            "numeric_range": [
+                1,
+                11127
+            ]
+        },
+        {
+            "referenced_to": [
+                "author.author_id"
+            ],
+            "column_description": "the id of the author\nMaps to author(author_id)",
+            "is_distinct": false,
+            "name": "author_id",
+            "data_type": "INTEGER",
+            "sample_count": 17642,
+            "value_description": "commonsense evidence:\nBooks with the same author id are written by the same author. ",
+            "samples": [
+                1961,
+                4005,
+                4137,
+                5190,
+                6560,
+                3561
+            ],
+            "numeric_range": [
+                1,
+                9235
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "method_id",
+                "method_name",
+                "cost"
+            ],
+            "column_count": 3,
+            "name": "shipping_method",
+            "primary_key": "method_id",
+            "referenced_by": [
+                "cust_order.shipping_method_id->shipping_method.method_id"
+            ],
+            "row_count": 4
+        },
+        {
+            "column_description": "the unique identifier of the method",
+            "is_distinct": true,
+            "name": "method_id",
+            "data_type": "INTEGER",
+            "sample_count": 4,
+            "samples": [
+                4,
+                3,
+                1,
+                2
+            ],
+            "numeric_range": [
+                1,
+                4
+            ],
+            "referenced_by": [
+                "cust_order.shipping_method_id"
+            ]
+        },
+        {
+            "average_char_length": 9.0,
+            "column_description": "the method name",
+            "is_distinct": true,
+            "name": "method_name",
+            "data_type": "TEXT",
+            "sample_count": 4,
+            "word_frequency": "{\"Standard\": 1, \"Priority\": 1, \"Express\": 1, \"International\": 1}",
+            "category_categories": [
+                "International",
+                "Priority",
+                "Standard",
+                "Express"
+            ],
+            "samples": [
+                "Express",
+                "International",
+                "Standard",
+                "Priority"
+            ]
+        },
+        {
+            "column_description": "the cost of the shipping method",
+            "numeric_mode": [
+                5.9,
+                8.9,
+                11.9,
+                24.5
+            ],
+            "is_distinct": true,
+            "numeric_mean": 12.8,
+            "name": "cost",
+            "data_type": "REAL",
+            "sample_count": 4,
+            "value_description": "commonsense evidence:\nThe main difference between the various shipping methods, such as standard, priority, express, and international, is the speed at which the item is delivered. Standard shipping is the slowest and least expensive option, while express and priority shipping are faster and more expensive. International shipping is for items that are being shipped to a destination outside of the country where they originated.",
+            "samples": [
+                5.9,
+                8.9,
+                24.5,
+                11.9
+            ],
+            "numeric_range": [
+                5.9,
+                24.5
+            ]
+        },
+        {
+            "reference_to": [
+                "cust_order.dest_address_id->address.address_id",
+                "cust_order.shipping_method_id->shipping_method.method_id",
+                "cust_order.customer_id->customer.customer_id"
+            ],
+            "database_name": "books",
+            "columns": [
+                "order_id",
+                "order_date",
+                "customer_id",
+                "shipping_method_id",
+                "dest_address_id"
+            ],
+            "column_count": 5,
+            "foreign_key": [
+                "dest_address_id",
+                "shipping_method_id",
+                "customer_id"
+            ],
+            "name": "cust_order",
+            "primary_key": "order_id",
+            "referenced_by": [
+                "order_history.order_id->cust_order.order_id",
+                "order_line.order_id->cust_order.order_id"
+            ],
+            "row_count": 7550
+        },
+        {
+            "column_description": "the unique identifier of the customer order",
+            "is_distinct": true,
+            "name": "order_id",
+            "data_type": "INTEGER",
+            "sample_count": 7550,
+            "samples": [
+                5486,
+                1668,
+                10787,
+                11288,
+                11009,
+                9741
+            ],
+            "numeric_range": [
+                1,
+                11434
+            ],
+            "referenced_by": [
+                "order_history.order_id",
+                "order_line.order_id"
+            ]
+        },
+        {
+            "time_span": "1094 days",
+            "column_description": "the date of the order",
+            "is_distinct": false,
+            "earliest_time": "2019-12-09 22:26:34",
+            "name": "order_date",
+            "data_type": "DATETIME",
+            "sample_count": 7550,
+            "latest_time": "2022-12-08 14:17:14",
+            "samples": [
+                "2021-03-04 06:05:30",
+                "2022-11-01 08:10:41",
+                "2021-07-19 08:01:46",
+                "2020-12-05 09:23:16",
+                "2020-04-11 03:41:47",
+                "2020-09-25 02:59:18"
+            ]
+        },
+        {
+            "referenced_to": [
+                "customer.customer_id"
+            ],
+            "column_description": "the id of the customer\nMaps to customer(customer_Id)",
+            "is_distinct": false,
+            "name": "customer_id",
+            "data_type": "INTEGER",
+            "sample_count": 7550,
+            "value_description": "commonsense evidence:\nThe number of orders ordered by the customer = the show-up times of the relative customer id in the table",
+            "samples": [
+                493,
+                148,
+                1593,
+                1316,
+                1484,
+                643
+            ],
+            "numeric_range": [
+                1,
+                2000
+            ]
+        },
+        {
+            "referenced_to": [
+                "shipping_method.method_id"
+            ],
+            "column_description": "the id of the shipping method\nMaps to shipping_method(method_id)",
+            "is_distinct": false,
+            "name": "shipping_method_id",
+            "data_type": "INTEGER",
+            "sample_count": 7550,
+            "samples": [
+                2,
+                2,
+                4,
+                2,
+                4,
+                1
+            ],
+            "numeric_range": [
+                1,
+                4
+            ]
+        },
+        {
+            "referenced_to": [
+                "address.address_id"
+            ],
+            "column_description": "the id of the destination address\nMaps to address(address_id)",
+            "is_distinct": false,
+            "name": "dest_address_id",
+            "data_type": "INTEGER",
+            "sample_count": 7550,
+            "samples": [
+                340,
+                35,
+                142,
+                157,
+                176,
+                377
+            ],
+            "numeric_range": [
+                1,
+                736
+            ]
+        },
+        {
+            "reference_to": [
+                "order_history.status_id->order_status.status_id",
+                "order_history.order_id->cust_order.order_id"
+            ],
+            "database_name": "books",
+            "columns": [
+                "history_id",
+                "order_id",
+                "status_id",
+                "status_date"
+            ],
+            "column_count": 4,
+            "foreign_key": [
+                "status_id",
+                "order_id"
+            ],
+            "name": "order_history",
+            "primary_key": "history_id",
+            "row_count": 22348
+        },
+        {
+            "column_description": "the unique identifier of the order history",
+            "is_distinct": true,
+            "name": "history_id",
+            "data_type": "INTEGER",
+            "sample_count": 22348,
+            "samples": [
+                23551,
+                2256,
+                19224,
+                19374,
+                12758,
+                6441
+            ],
+            "numeric_range": [
+                1,
+                25283
+            ]
+        },
+        {
+            "referenced_to": [
+                "cust_order.order_id"
+            ],
+            "column_description": "the id of the order\nMaps to cust_order(order_id)",
+            "is_distinct": false,
+            "name": "order_id",
+            "data_type": "INTEGER",
+            "sample_count": 22348,
+            "samples": [
+                2247,
+                5319,
+                4982,
+                117,
+                4503,
+                5452
+            ],
+            "numeric_range": [
+                1,
+                11434
+            ]
+        },
+        {
+            "referenced_to": [
+                "order_status.status_id"
+            ],
+            "column_description": "the id of the order\nMaps to order_status(status_id)",
+            "is_distinct": false,
+            "name": "status_id",
+            "data_type": "INTEGER",
+            "sample_count": 22348,
+            "value_description": "commonsense evidence:\nThe order statuses include order received, pending delivery, delivery in progress, delivered, canceled, and returned.",
+            "samples": [
+                1,
+                1,
+                1,
+                1,
+                3,
+                1
+            ],
+            "numeric_range": [
+                1,
+                6
+            ]
+        },
+        {
+            "time_span": "1094 days",
+            "column_description": "the date of the status updated ",
+            "is_distinct": false,
+            "earliest_time": "2019-12-10 03:20:38",
+            "name": "status_date",
+            "data_type": "DATETIME",
+            "sample_count": 22348,
+            "latest_time": "2022-12-08 09:17:39",
+            "samples": [
+                "2022-06-21 14:13:13",
+                "2022-05-02 04:48:02",
+                "2022-02-07 22:23:51",
+                "2021-04-16 04:52:40",
+                "2021-03-05 02:48:12",
+                "2020-03-05 01:42:22"
+            ]
+        },
+        {
+            "reference_to": [
+                "order_line.book_id->book.book_id",
+                "order_line.order_id->cust_order.order_id"
+            ],
+            "database_name": "books",
+            "columns": [
+                "line_id",
+                "order_id",
+                "book_id",
+                "price"
+            ],
+            "column_count": 4,
+            "foreign_key": [
+                "book_id",
+                "order_id"
+            ],
+            "name": "order_line",
+            "primary_key": "line_id",
+            "row_count": 7550
+        },
+        {
+            "column_description": "the unique identifier of the order line",
+            "is_distinct": true,
+            "name": "line_id",
+            "data_type": "INTEGER",
+            "sample_count": 7550,
+            "samples": [
+                7858,
+                4920,
+                4296,
+                6082,
+                5375,
+                8242
+            ],
+            "numeric_range": [
+                1024,
+                8573
+            ]
+        },
+        {
+            "referenced_to": [
+                "cust_order.order_id"
+            ],
+            "column_description": "the id of the order\nMaps to cust_order(order_id)",
+            "is_distinct": true,
+            "name": "order_id",
+            "data_type": "INTEGER",
+            "sample_count": 7550,
+            "samples": [
+                9775,
+                8392,
+                7051,
+                4847,
+                6639,
+                254
+            ],
+            "numeric_range": [
+                1,
+                11434
+            ]
+        },
+        {
+            "referenced_to": [
+                "book.book_id"
+            ],
+            "column_description": "the id of the book\nMaps to book(book_id)",
+            "is_distinct": false,
+            "name": "book_id",
+            "data_type": "INTEGER",
+            "sample_count": 7550,
+            "samples": [
+                8957,
+                303,
+                7322,
+                7774,
+                532,
+                1458
+            ],
+            "numeric_range": [
+                3,
+                11125
+            ]
+        },
+        {
+            "column_description": "the price of the order",
+            "numeric_mode": [
+                19.66,
+                16.97
+            ],
+            "is_distinct": false,
+            "numeric_mean": 9.993406622516556,
+            "name": "price",
+            "data_type": "REAL",
+            "sample_count": 7550,
+            "value_description": "commonsense evidence:\nEven though the customer ordered the book with the same book id, the price could be different. The price of the order may be influenced by the shipping method, seasonal discount, and the number of books the customer ordered. ",
+            "samples": [
+                1.92,
+                1.95,
+                4.23,
+                8.16,
+                0.04,
+                8.75
+            ],
+            "numeric_range": [
+                0.0,
+                20.0
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "status_id",
+                "address_status"
+            ],
+            "column_count": 2,
+            "name": "address_status",
+            "primary_key": "status_id",
+            "row_count": 2
+        },
+        {
+            "column_description": "the unique identifier of the status",
+            "is_distinct": true,
+            "name": "status_id",
+            "data_type": "INTEGER",
+            "sample_count": 2,
+            "samples": [
+                2,
+                1
+            ],
+            "numeric_range": [
+                1,
+                2
+            ]
+        },
+        {
+            "average_char_length": 7.0,
+            "column_description": "the status of the address",
+            "is_distinct": true,
+            "name": "address_status",
+            "data_type": "TEXT",
+            "sample_count": 2,
+            "word_frequency": "{\"Active\": 1, \"Inactive\": 1}",
+            "category_categories": [
+                "Active",
+                "Inactive"
+            ],
+            "value_description": "commonsense evidence:\n\u00c2\u0095\tactive: the address is still in use\n\u00c2\u0095\tinactive: the address is not in use anymore",
+            "samples": [
+                "Inactive",
+                "Active"
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "author_id",
+                "author_name"
+            ],
+            "column_count": 2,
+            "name": "author",
+            "primary_key": "author_id",
+            "referenced_by": [
+                "book_author.author_id->author.author_id"
+            ],
+            "row_count": 9235
+        },
+        {
+            "column_description": "the unique identifier of the author",
+            "is_distinct": true,
+            "name": "author_id",
+            "data_type": "INTEGER",
+            "sample_count": 9235,
+            "samples": [
+                1703,
+                166,
+                857,
+                4291,
+                6663,
+                465
+            ],
+            "numeric_range": [
+                1,
+                9235
+            ],
+            "referenced_by": [
+                "book_author.author_id"
+            ]
+        },
+        {
+            "average_char_length": 13.960909583107743,
+            "column_description": "the name of the author",
+            "is_distinct": false,
+            "name": "author_name",
+            "data_type": "TEXT",
+            "sample_count": 9235,
+            "word_frequency": "{\"James Campbell\": 3, \"Andrew Hunt\": 2, \"Bill Phillips\": 2, \"Bill Bryson\": 2, \"Colin Wells\": 2, \"David Young\": 2, \"David West\": 2, \"David Allen\": 2, \"Elizabeth Stewart\": 2, \"Elizabeth George\": 2}",
+            "samples": [
+                "Molly Brown",
+                "T.B. Bottomore",
+                "Frank J. Moore",
+                "Daniel Roche",
+                "Emma Merritt",
+                "Robert Doisneau"
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "language_id",
+                "language_code",
+                "language_name"
+            ],
+            "column_count": 3,
+            "name": "book_language",
+            "primary_key": "language_id",
+            "referenced_by": [
+                "book.language_id->book_language.language_id"
+            ],
+            "row_count": 27
+        },
+        {
+            "column_description": "the unique identifier of the language ",
+            "is_distinct": true,
+            "name": "language_id",
+            "data_type": "INTEGER",
+            "sample_count": 27,
+            "samples": [
+                24,
+                8,
+                13,
+                27,
+                5,
+                22
+            ],
+            "numeric_range": [
+                1,
+                27
+            ],
+            "referenced_by": [
+                "book.language_id"
+            ]
+        },
+        {
+            "average_char_length": 3.185185185185185,
+            "column_description": "the language code",
+            "is_distinct": true,
+            "name": "language_code",
+            "data_type": "TEXT",
+            "sample_count": 27,
+            "word_frequency": "{\"eng\": 1, \"en-US\": 1, \"fre\": 1, \"spa\": 1, \"en-GB\": 1, \"mul\": 1, \"grc\": 1, \"enm\": 1, \"en-CA\": 1, \"ger\": 1}",
+            "value_description": "commonsense evidence:\nA language code is a unique identifier for a specific language. It is typically used to identify a language in computing and other technical contexts. Some common language codes include \"en\" for English, \"fr\" for French, and \"es\" for Spanish. The specific codes used for each language can vary depending on the context and the system in which they are being used.",
+            "samples": [
+                "tur",
+                "srp",
+                "rus",
+                "ita",
+                "ara",
+                "zho"
+            ]
+        },
+        {
+            "average_char_length": 8.62962962962963,
+            "column_description": "the language name",
+            "is_distinct": true,
+            "name": "language_name",
+            "data_type": "TEXT",
+            "sample_count": 27,
+            "word_frequency": "{\"English\": 1, \"United States English\": 1, \"French\": 1, \"Spanish\": 1, \"British English\": 1, \"Multiple Languages\": 1, \"Greek\": 1, \"Middle English\": 1, \"Canadian English\": 1, \"German\": 1}",
+            "samples": [
+                "Italian",
+                "Russian",
+                "Middle English",
+                "Japanese",
+                "Gaelic",
+                "Malaysian"
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "country_id",
+                "country_name"
+            ],
+            "column_count": 2,
+            "name": "country",
+            "primary_key": "country_id",
+            "referenced_by": [
+                "address.country_id->country.country_id"
+            ],
+            "row_count": 232
+        },
+        {
+            "column_description": "the unique identifier of the country",
+            "is_distinct": true,
+            "name": "country_id",
+            "data_type": "INTEGER",
+            "sample_count": 232,
+            "samples": [
+                180,
+                214,
+                115,
+                53,
+                173,
+                145
+            ],
+            "numeric_range": [
+                1,
+                232
+            ],
+            "referenced_by": [
+                "address.country_id"
+            ]
+        },
+        {
+            "average_char_length": 9.137931034482758,
+            "column_description": "the country name",
+            "is_distinct": false,
+            "name": "country_name",
+            "data_type": "TEXT",
+            "sample_count": 232,
+            "word_frequency": "{\"Singapore\": 2, \"Afghanistan\": 1, \"Netherlands Antilles\": 1, \"Albania\": 1, \"Algeria\": 1, \"Andorra\": 1, \"Angola\": 1, \"Antigua and Barbuda\": 1, \"Australasia\": 1, \"Argentina\": 1}",
+            "samples": [
+                "Rwanda",
+                "Turkmenistan",
+                "American Samoa",
+                "West Germany",
+                "Burundi",
+                "Malta"
+            ]
+        },
+        {
+            "reference_to": [
+                "address.country_id->country.country_id"
+            ],
+            "database_name": "books",
+            "columns": [
+                "address_id",
+                "street_number",
+                "street_name",
+                "city",
+                "country_id"
+            ],
+            "column_count": 5,
+            "foreign_key": "country_id",
+            "name": "address",
+            "primary_key": "address_id",
+            "referenced_by": [
+                "customer_address.address_id->address.address_id",
+                "cust_order.dest_address_id->address.address_id"
+            ],
+            "row_count": 1000
+        },
+        {
+            "column_description": "the unique identifier of the address",
+            "is_distinct": true,
+            "name": "address_id",
+            "data_type": "INTEGER",
+            "sample_count": 1000,
+            "samples": [
+                777,
+                746,
+                965,
+                314,
+                819,
+                333
+            ],
+            "numeric_range": [
+                1,
+                1000
+            ],
+            "referenced_by": [
+                "customer_address.address_id",
+                "cust_order.dest_address_id"
+            ]
+        },
+        {
+            "average_char_length": 2.948,
+            "column_description": "the street number of the address",
+            "is_distinct": false,
+            "name": "street_number",
+            "data_type": "TEXT",
+            "sample_count": 1000,
+            "word_frequency": "{\"5\": 27, \"1\": 26, \"4\": 23, \"0\": 23, \"2\": 22, \"9\": 22, \"3\": 20, \"6\": 19, \"7\": 18, \"8\": 17}",
+            "value_description": "commonsense evidence:\nThe street number is typically used to identify a specific building or residence on a street, with higher numbers generally indicating a location further down the street from the starting point. For example, if a street starts at number 1 and goes up to number 100, a building with the number 50 would be closer to the starting point than a building with the number 75.",
+            "samples": [
+                "56111",
+                "3",
+                "660",
+                "43",
+                "582",
+                "98"
+            ]
+        },
+        {
+            "average_char_length": 13.659,
+            "column_description": "the street name",
+            "is_distinct": false,
+            "name": "street_name",
+            "data_type": "TEXT",
+            "sample_count": 1000,
+            "word_frequency": "{\"John Wall Crossing\": 3, \"Sauthoff Court\": 3, \"Nancy Junction\": 2, \"Macpherson Point\": 2, \"Dryden Alley\": 2, \"Reinke Park\": 2, \"Jay Park\": 2, \"Trailsway Place\": 2, \"Ludington Trail\": 2, \"Hallows Drive\": 2}",
+            "samples": [
+                "Helena Way",
+                "Roxbury Trail",
+                "Florence Place",
+                "Arrowood Lane",
+                "Golf Course Center",
+                "Hanson Park"
+            ]
+        },
+        {
+            "average_char_length": 8.47,
+            "column_description": "the city where the address belongs",
+            "is_distinct": false,
+            "name": "city",
+            "data_type": "TEXT",
+            "sample_count": 1000,
+            "word_frequency": "{\"Dallas\": 3, \"Chengguan\": 3, \"V\u00e4ster\u00e5s\": 3, \"Tij\u00e3o\": 2, \"Puerto Rico\": 2, \"San Francisco\": 2, \"Lazaro Cardenas\": 2, \"Cijayana\": 2, \"Xinhua\": 2, \"Serednye Vodyane\": 2}",
+            "samples": [
+                "Nanyue",
+                "Banana Village",
+                "Serednye Vodyane",
+                "Blimbing",
+                "Tartu",
+                "Laliki"
+            ]
+        },
+        {
+            "referenced_to": [
+                "country.country_id"
+            ],
+            "column_description": "the id of the country where the address belongs ",
+            "is_distinct": false,
+            "name": "country_id",
+            "data_type": "INTEGER",
+            "sample_count": 1000,
+            "value_description": "commonsense evidence:\nMaps to the country (country id). The full address of the customer is 'No.street_number street_name, city, country'",
+            "samples": [
+                194,
+                172,
+                158,
+                42,
+                30,
+                42
+            ],
+            "numeric_range": [
+                1,
+                232
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "customer_id",
+                "first_name",
+                "last_name",
+                "email"
+            ],
+            "column_count": 4,
+            "name": "customer",
+            "primary_key": "customer_id",
+            "referenced_by": [
+                "customer_address.customer_id->customer.customer_id",
+                "cust_order.customer_id->customer.customer_id"
+            ],
+            "row_count": 2000
+        },
+        {
+            "column_description": "the unique identifier of the customer",
+            "is_distinct": true,
+            "name": "customer_id",
+            "data_type": "INTEGER",
+            "sample_count": 2000,
+            "samples": [
+                1023,
+                1998,
+                1556,
+                339,
+                380,
+                425
+            ],
+            "numeric_range": [
+                1,
+                2000
+            ],
+            "referenced_by": [
+                "customer_address.customer_id",
+                "cust_order.customer_id"
+            ]
+        },
+        {
+            "average_char_length": 5.975,
+            "column_description": "the first name of the customer",
+            "is_distinct": false,
+            "name": "first_name",
+            "data_type": "TEXT",
+            "sample_count": 2000,
+            "word_frequency": "{\"Ardeen\": 4, \"Lynette\": 3, \"Dolf\": 3, \"Isak\": 3, \"Dulci\": 3, \"Jeramie\": 3, \"Jane\": 3, \"Winifield\": 3, \"Donia\": 3, \"Robinson\": 3}",
+            "samples": [
+                "Fancy",
+                "Ardella",
+                "Kordula",
+                "Nessy",
+                "Jenna",
+                "Ermin"
+            ]
+        },
+        {
+            "average_char_length": 6.972,
+            "column_description": "the last name of the customer",
+            "is_distinct": false,
+            "name": "last_name",
+            "data_type": "TEXT",
+            "sample_count": 2000,
+            "word_frequency": "{\"Adamec\": 3, \"Kupis\": 2, \"Saull\": 2, \"Sanderson\": 2, \"Dymoke\": 2, \"Abelovitz\": 2, \"Theurer\": 2, \"Full\": 2, \"Goodredge\": 2, \"Revie\": 2}",
+            "value_description": "commonsense evidence:\nA person's full name is the first name, middle name (if applicable), and last name. ",
+            "samples": [
+                "Vowels",
+                "Putton",
+                "Lindroos",
+                "Klaessen",
+                "Gason",
+                "Gumme"
+            ]
+        },
+        {
+            "average_char_length": 21.782,
+            "column_description": "the email of the customer",
+            "is_distinct": true,
+            "name": "email",
+            "data_type": "TEXT",
+            "sample_count": 2000,
+            "word_frequency": "{\"upurdy0@cdbaby.com\": 1, \"rvatini1@fema.gov\": 1, \"rturbitt2@geocities.jp\": 1, \"rkirsz3@jalbum.net\": 1, \"ckupis4@tamu.edu\": 1, \"kadamec5@weather.com\": 1, \"jgiraudeau6@elpais.com\": 1, \"nbonicelli7@examiner.com\": 1, \"pcurdell8@usa.gov\": 1, \"eguilder9@themeforest.net\": 1}",
+            "samples": [
+                "jluckcockjv@vistaprint.com",
+                "wdeareb7@google.com",
+                "jentwistle38@reverbnation.com",
+                "mtourneqa@feedburner.com",
+                "kvarranm1@blinklist.com",
+                "vmackayjp@elegantthemes.com"
+            ]
+        },
+        {
+            "reference_to": [
+                "customer_address.customer_id->customer.customer_id",
+                "customer_address.address_id->address.address_id"
+            ],
+            "database_name": "books",
+            "columns": [
+                "customer_id",
+                "address_id",
+                "status_id"
+            ],
+            "column_count": 3,
+            "foreign_key": [
+                "customer_id",
+                "address_id"
+            ],
+            "name": "customer_address",
+            "primary_key": [
+                "customer_id",
+                "address_id"
+            ],
+            "row_count": 3350
+        },
+        {
+            "referenced_to": [
+                "customer.customer_id"
+            ],
+            "column_description": "the id of the customer\nMaps to customer(customer_id)",
+            "is_distinct": false,
+            "name": "customer_id",
+            "data_type": "INTEGER",
+            "sample_count": 3350,
+            "samples": [
+                360,
+                1849,
+                1865,
+                539,
+                271,
+                1053
+            ],
+            "numeric_range": [
+                1,
+                2000
+            ]
+        },
+        {
+            "referenced_to": [
+                "address.address_id"
+            ],
+            "column_description": "the id of the address\nMaps to address(address_id)",
+            "is_distinct": false,
+            "name": "address_id",
+            "data_type": "INTEGER",
+            "sample_count": 3350,
+            "samples": [
+                282,
+                309,
+                4,
+                726,
+                568,
+                258
+            ],
+            "numeric_range": [
+                1,
+                1000
+            ]
+        },
+        {
+            "column_description": "the id of the address status",
+            "is_distinct": false,
+            "name": "status_id",
+            "data_type": "INTEGER",
+            "sample_count": 3350,
+            "value_description": "commonsense evidence:\nA customer may have several addresses. If a customer has several addresses, the address that the status_id = 1 is the customer's current address that is in use. The other addresses with 2 as status_id is abandoned addresses. ",
+            "samples": [
+                1,
+                2,
+                1,
+                1,
+                1,
+                1
+            ],
+            "numeric_range": [
+                1,
+                2
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "status_id",
+                "status_value"
+            ],
+            "column_count": 2,
+            "name": "order_status",
+            "primary_key": "status_id",
+            "referenced_by": [
+                "order_history.status_id->order_status.status_id"
+            ],
+            "row_count": 6
+        },
+        {
+            "column_description": "the unique identifier of the order status",
+            "is_distinct": true,
+            "name": "status_id",
+            "data_type": "INTEGER",
+            "sample_count": 6,
+            "samples": [
+                2,
+                5,
+                4,
+                3,
+                6,
+                1
+            ],
+            "numeric_range": [
+                1,
+                6
+            ],
+            "referenced_by": [
+                "order_history.status_id"
+            ]
+        },
+        {
+            "average_char_length": 12.666666666666666,
+            "column_description": "the status value",
+            "is_distinct": true,
+            "name": "status_value",
+            "data_type": "TEXT",
+            "sample_count": 6,
+            "word_frequency": "{\"Order Received\": 1, \"Pending Delivery\": 1, \"Delivery In Progress\": 1, \"Delivered\": 1, \"Cancelled\": 1, \"Returned\": 1}",
+            "category_categories": [
+                "Returned",
+                "Cancelled",
+                "Delivered",
+                "Delivery In Progress",
+                "Order Received",
+                "Pending Delivery"
+            ],
+            "value_description": "commonsense evidence:\nThe order statuses include order received, pending delivery, delivery in progress, delivered, canceled, and returned. ",
+            "samples": [
+                "Pending Delivery",
+                "Delivered",
+                "Order Received",
+                "Cancelled",
+                "Delivery In Progress",
+                "Returned"
+            ]
+        },
+        {
+            "database_name": "books",
+            "columns": [
+                "publisher_id",
+                "publisher_name"
+            ],
+            "column_count": 2,
+            "name": "publisher",
+            "primary_key": "publisher_id",
+            "referenced_by": [
+                "book.publisher_id->publisher.publisher_id"
+            ],
+            "row_count": 2264
+        },
+        {
+            "column_description": "the unique identifier of the publisher",
+            "is_distinct": true,
+            "name": "publisher_id",
+            "data_type": "INTEGER",
+            "sample_count": 2264,
+            "samples": [
+                1898,
+                893,
+                921,
+                284,
+                591,
+                264
+            ],
+            "numeric_range": [
+                1,
+                2264
+            ],
+            "referenced_by": [
+                "book.publisher_id"
+            ]
+        },
+        {
+            "average_char_length": 17.651501766784452,
+            "column_description": "the name of the publisher",
+            "is_distinct": false,
+            "name": "publisher_name",
+            "data_type": "TEXT",
+            "sample_count": 2264,
+            "word_frequency": "{\"Farrar Straus and Giroux\": 2, \"Harcourt Brace Jovanovich\": 2, \"Ivan R. Dee Publisher\": 2, \"Little Brown\": 2, \"Little Brown and Company\": 2, \"Random House for Young Readers\": 2, \"Random House Inc.\": 2, \"Scholastic Inc.\": 2, \"Simon Schuster\": 2, \"10/18\": 1}",
+            "samples": [
+                "Dodo Press",
+                "Soundings",
+                "Forge",
+                "Pocket Books",
+                "MacMillan Children's Books",
+                "Random House UK Distribution"
+            ]
+        },
+        {
+            "reference_to": [
+                "book.publisher_id->publisher.publisher_id",
+                "book.language_id->book_language.language_id"
+            ],
+            "database_name": "books",
+            "columns": [
+                "book_id",
+                "title",
+                "isbn13",
+                "language_id",
+                "num_pages",
+                "publication_date",
+                "publisher_id"
+            ],
+            "column_count": 7,
+            "foreign_key": [
+                "publisher_id",
+                "language_id"
+            ],
+            "name": "book",
+            "primary_key": "book_id",
+            "referenced_by": [
+                "book_author.book_id->book.book_id",
+                "order_line.book_id->book.book_id"
+            ],
+            "row_count": 11127
+        },
+        {
+            "column_description": "the unique identifier of the book",
+            "is_distinct": true,
+            "name": "book_id",
+            "data_type": "INTEGER",
+            "sample_count": 11127,
+            "samples": [
+                6387,
+                6286,
+                7938,
+                3832,
+                10678,
+                5718
+            ],
+            "numeric_range": [
+                1,
+                11127
+            ],
+            "referenced_by": [
+                "book_author.book_id",
+                "order_line.book_id"
+            ]
+        },
+        {
+            "average_char_length": 35.74826997393727,
+            "column_description": "the title of the book ",
+            "is_distinct": false,
+            "name": "title",
+            "data_type": "TEXT",
+            "sample_count": 11127,
+            "word_frequency": "{\"The Brothers Karamazov\": 9, \"The Iliad\": 9, \"The Odyssey\": 8, \"Anna Karenina\": 8, \"Gulliver's Travels\": 8, \"Salem's Lot\": 8, \"A Midsummer Night's Dream\": 7, \"The Picture of Dorian Gray\": 7, \"The Great Gatsby\": 6, \"Collected Stories\": 6}",
+            "samples": [
+                "Memoirs of a Geisha",
+                "The Hobbit: Or There and Back Again",
+                "Secrets  Lies and Democracy",
+                "Hellsing  Vol. 04 (Hellsing  #4)",
+                "Hamlet",
+                "National Geographic Field Guide to the Birds of North America"
+            ]
+        },
+        {
+            "average_char_length": 12.996674755100207,
+            "column_description": "the International Standard Book Number of the book",
+            "is_distinct": true,
+            "name": "isbn13",
+            "data_type": "TEXT",
+            "sample_count": 11127,
+            "word_frequency": "{\"8987059752\": 1, \"20049130001\": 1, \"23755004321\": 1, \"34406054602\": 1, \"49086007763\": 1, \"73999140774\": 1, \"73999254907\": 1, \"73999768442\": 1, \"73999960822\": 1, \"76092025986\": 1}",
+            "value_description": "commonsense evidence:\nAn ISBN is a unique 13-digit number assigned to each book to identify it internationally. The ISBN13 of a book is the specific version of the ISBN that uses 13 digits. It is typically displayed on the back cover of a book, along with the barcode and other information.",
+            "samples": [
+                "9780070488205",
+                "9780898702620",
+                "9782264017697",
+                "9780425214923",
+                "9780804717113",
+                "9780787107123"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relation_type": "primary_and_foreign_key"
+        },
+        {
+            "relation_type": "primary_and_foreign_key"
+        },
+        {
+            "to_table": "author",
+            "from_column": "author_id",
+            "reference_path": "book_author.author_id->author.author_id",
+            "to_column": "author_id",
+            "from_table": "book_author"
+        },
+        {
+            "to_table": "book",
+            "from_column": "book_id",
+            "reference_path": "book_author.book_id->book.book_id",
+            "to_column": "book_id",
+            "from_table": "book_author"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "to_table": "shipping_method",
+            "from_column": "shipping_method_id",
+            "reference_path": "cust_order.shipping_method_id->shipping_method.method_id",
+            "to_column": "method_id",
+            "from_table": "cust_order"
+        },
+        {
+            "to_table": "address",
+            "from_column": "dest_address_id",
+            "reference_path": "cust_order.dest_address_id->address.address_id",
+            "to_column": "address_id",
+            "from_table": "cust_order"
+        },
+        {
+            "to_table": "customer",
+            "from_column": "customer_id",
+            "reference_path": "cust_order.customer_id->customer.customer_id",
+            "to_column": "customer_id",
+            "from_table": "cust_order"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "to_table": "cust_order",
+            "from_column": "order_id",
+            "reference_path": "order_history.order_id->cust_order.order_id",
+            "to_column": "order_id",
+            "from_table": "order_history"
+        },
+        {
+            "to_table": "order_status",
+            "from_column": "status_id",
+            "reference_path": "order_history.status_id->order_status.status_id",
+            "to_column": "status_id",
+            "from_table": "order_history"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "to_table": "cust_order",
+            "from_column": "order_id",
+            "reference_path": "order_line.order_id->cust_order.order_id",
+            "to_column": "order_id",
+            "from_table": "order_line"
+        },
+        {
+            "to_table": "book",
+            "from_column": "book_id",
+            "reference_path": "order_line.book_id->book.book_id",
+            "to_column": "book_id",
+            "from_table": "order_line"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "to_table": "country",
+            "from_column": "country_id",
+            "reference_path": "address.country_id->country.country_id",
+            "to_column": "country_id",
+            "from_table": "address"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "primary_and_foreign_key"
+        },
+        {
+            "relation_type": "primary_and_foreign_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "to_table": "address",
+            "from_column": "address_id",
+            "reference_path": "customer_address.address_id->address.address_id",
+            "to_column": "address_id",
+            "from_table": "customer_address"
+        },
+        {
+            "to_table": "customer",
+            "from_column": "customer_id",
+            "reference_path": "customer_address.customer_id->customer.customer_id",
+            "to_column": "customer_id",
+            "from_table": "customer_address"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "foreign_key"
+        },
+        {
+            "relation_type": "primary_key"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "relation_type": "normal_column"
+        },
+        {
+            "to_table": "book_language",
+            "from_column": "language_id",
+            "reference_path": "book.language_id->book_language.language_id",
+            "to_column": "language_id",
+            "from_table": "book"
+        },
+        {
+            "to_table": "publisher",
+            "from_column": "publisher_id",
+            "reference_path": "book.publisher_id->publisher.publisher_id",
+            "to_column": "publisher_id",
+            "from_table": "book"
+        }
+    ]
+}

@@ -85,7 +85,7 @@ if __name__ == "__main__":
     driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
 
     # 这里可以替换成任意你想要分析的包含SQL语句的JSON文件路径
-    json_file_path = '../data/bird/books.json'
-    # json_file_path = '../data/bird/shakespeare.json'
+    # json_file_path = '../data/bird/books.json'
+    json_file_path = '../data/bird/shakespeare.json'
     analyze_json_sql_data(json_file_path, driver)
     driver.close()

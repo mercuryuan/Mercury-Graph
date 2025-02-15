@@ -72,62 +72,11 @@ def convert_date_string(date_str):
             return dt
         except ValueError:
             continue
-    print(f"无法将日期字符串 {date_str} 转换为有效的日期时间格式，请检查数据格式！(大概率是问题数据，建议跳过)")
+    # print(f"无法将日期字符串 {date_str} 转换为有效的日期时间格式，请检查数据格式！(大概率是问题数据，建议跳过)")
     return None
 
 
-def calculate_time_attributes(values):
-    """
-    计算给定时间数据列表中的最早时间和最晚时间属性，根据不同时间数据类型进行针对性处理。
 
-    参数:
-    values (list): 包含时间数据的列表，时间数据格式可能多样，例如 '2025-01-01'（date类型）、'2025-01-01 12:30:00'（datetime类型）、
-                   '1983-12-29T00:00:00'（类似timestamp格式等）等。
-
-    返回:
-    dict: 包含最早时间（'earliest_time'）和最晚时间（'latest_time'）属性的字典，如果输入列表为空则对应属性值为 None。
-    """
-    parsed_values = []
-    for v in values:
-        if isinstance(v, str):
-            if "T" in v:
-                # 处理类似timestamp格式
-                try:
-                    parsed = parser.isoparse(v)
-                except ValueError:
-                    parsed = None
-            else:
-                # 处理普通日期时间格式
-                parsed = convert_date_string(v)
-        elif isinstance(v, datetime):
-            parsed = v
-        elif isinstance(v, date):
-            parsed = v  # 保留 date 对象
-        else:
-            parsed = None
-
-        if parsed:
-            parsed_values.append(parsed)
-
-    if parsed_values:
-        # 根据类型决定格式化方式
-        def format_value(value):
-            if isinstance(value, date) and not isinstance(value, datetime):
-                return value.strftime('%Y-%m-%d')  # 只格式化日期部分
-            else:
-                return value.strftime('%Y-%m-%d %H:%M:%S')  # 格式化日期和时间部分
-
-        time_attributes = {
-            'earliest_time': format_value(min(parsed_values)),
-            'latest_time': format_value(max(parsed_values))
-        }
-    else:
-        time_attributes = {
-            'earliest_time': None,
-            'latest_time': None
-        }
-
-    return time_attributes
 
 def quote_identifier(identifier):
     """
@@ -204,6 +153,8 @@ class SchemaParser:
                     # 在Neo4j中创建列节点，并与对应的表节点建立关系
                     self._create_column_node_and_relation_in_neo4j(table_name, column_name, data_type, samples,
                                                                    additional_attributes)
+            for table in tables:
+                table_name = table[0]
                 # 获取表的外键关系（如果有）
                 cursor.execute(f"PRAGMA foreign_key_list({quote_identifier(table_name)})")
                 foreign_keys = cursor.fetchall()
@@ -387,7 +338,7 @@ class SchemaParser:
                 print(f"读取文件时发生错误，尝试动态编码检测后仍失败: {e}")
                 return []
         except FileNotFoundError:
-            print(f"未找到表 {table_name} 对应的列描述文件 {file_path}")
+            # print(f"未找到表 {table_name} 对应的列描述文件 {file_path}")
             return []
 
     def _create_column_node_and_relation_in_neo4j(self, table_name, column_name, data_type, samples,
@@ -455,16 +406,12 @@ class SchemaParser:
                 # relation_type = "——"
 
             session.run(f"""
-                MATCH (t:Table {{name: ${'table_name'}}})
-                CREATE (c:Column {{ {property_str} }})
-                CREATE (t)-[r:HAS_COLUMN {{relation_type: '{relation_type}'}}]->(c)
-            """, table_name=table_name, **props, relation_type=relation_type)
+                            MATCH (t:Table {{name: ${'table_name'}}})
+                            CREATE (c:Column {{ {property_str} }})
+                            CREATE (t)-[r:HAS_COLUMN {{relation_type: '{relation_type}'}}]->(c)
+                        """, table_name=table_name, **props, relation_type=relation_type)
 
     def _create_foreign_key_relations_in_neo4j(self, from_table, from_column, to_table, to_column):
-        """
-        在Neo4j图数据库中创建外键关系对应的节点和关系。
-        对于每条外键关系，更新相关节点和列的属性，确保多外键关系场景下的完整性。
-        """
         # 如果未指定目标列，则获取目标表的主键列
         if to_column is None:
             with sqlite3.connect(self.database_file) as conn:
@@ -482,6 +429,17 @@ class SchemaParser:
         reference_path = f"{from_table}.{from_column}->{to_table}.{to_column}"
 
         with self.neo4j_driver.session() as session:
+            # result = session.run("""
+            #     MATCH (from_table:Table {name: $from_table})
+            #     MATCH (to_table:Table {name: $to_table})
+            #     RETURN from_table, to_table
+            # """, from_table=from_table, to_table=to_table)
+            #
+            # records = result.data()
+            # if not records:
+            #     print(f"未找到表节点: {from_table} 或 {to_table}，无法创建外键关系。")
+            #     return
+
             session.run("""
                 MATCH (from_table:Table {name: $from_table})
                 MATCH (to_table:Table {name: $to_table})
@@ -535,7 +493,6 @@ class SchemaParser:
 
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
-            # try:
             # 查询列数据
             if sample_size is not None:
                 # 如果指定了抽样个数，则限制查询结果
@@ -544,30 +501,39 @@ class SchemaParser:
                 # 否则查询全部数据
                 query = f"SELECT {quote_identifier(column_name)} FROM {quote_identifier(table_name)} LIMIT 100 ;"
 
-            # 打印即将执行的 SQL 语句
-            # print(f"即将执行的 SQL 语句: {query}")
-
             cursor.execute(query)
             rows = cursor.fetchall()
-            values = [row[0] for row in rows if row[0] is not None]
+            all_values = [row[0] for row in rows]
+
+            # 过滤空值（包括 None、空字符串和仅含空格的字符串）
+            def is_empty(value):
+                return value is None or (isinstance(value, str) and value.strip() == "")
+
+            non_null_values = [v for v in all_values if not is_empty(v)]
+
+            # 数据完整性统计
+            null_count = len(all_values) - len(non_null_values)
+            additional_attributes['null_count'] = null_count
+            additional_attributes['data_integrity'] = len(non_null_values) / len(all_values) if all_values else 1
+
+            # if null_count > 0:
+            #     print(f"过滤掉了 {table_name} 中 {column_name} 的 {null_count} 个空值数据")
 
             # 获取随机样本，最多取6条（如果数据量小于等于5则取全部）
-            samples = random.sample(values, min(len(values), 6))
+            samples = random.sample(non_null_values, min(len(non_null_values), 6))
 
-            # 1. 为所有类型列节点添加抽样个数属性
-            additional_attributes['sample_count'] = len(values) if values else 0
+            # 为所有类型列节点添加抽样个数属性
+            additional_attributes['sample_count'] = len(non_null_values) if non_null_values else 0
 
             # 查询列是否可为空
             is_nullable = self._is_column_nullable(table_name, column_name)
             additional_attributes['is_nullable'] = is_nullable
-
 
             # 查询列是否为主键
             is_primary_key = self._is_primary_key(table_name, column_name)
             # 查询列是否为外键
             is_foreign_key = self._is_foreign_key(table_name, column_name)
 
-            # 2. 根据数据类型处理不同类型列的附加属性
             numeric_types = [
                 "INTEGER", "INT", "SMALLINT", "BIGINT", "TINYINT", "MEDIUMINT",  # 整数类型
                 "REAL", "FLOAT", "DOUBLE",  # 浮点数类型
@@ -579,47 +545,65 @@ class SchemaParser:
                 "CLOB", "TINYTEXT", "MEDIUMTEXT", "LONGTEXT",  # 大文本类型
                 "JSON", "XML"  # 结构化文本类型
             ]
+
             if base_data_type in numeric_types:
-                additional_attributes['numeric_range'] = [min(values), max(values)] if values else None
-                is_id_column = "id" in column_name.lower()
-                if not is_id_column:
-                    additional_attributes['numeric_mode'] = self._get_mode(values)
-                    if values:
-                        # 处理高精度数值
-                        if base_data_type in ["DECIMAL", "NUMERIC"]:
-                            additional_attributes['numeric_mean'] = float(
-                                np.mean([float(Decimal(str(v))) for v in values]))
-                        # 处理布尔类型
-                        elif base_data_type == "BOOLEAN":
-                            additional_attributes['numeric_mean'] = np.mean([int(v) for v in values])
+                # 过滤掉非数值型数据
+                valid_values = [v for v in non_null_values if isinstance(v, (int, float)) and v != '']
+                filtered_count = len(non_null_values) - len(valid_values)
+                if filtered_count > 0:
+                    print(f"过滤掉了 {table_name} 中 {column_name} 的 {filtered_count} 个非数值数据")
+
+                try:
+                    # 计算数值范围
+                    additional_attributes['numeric_range'] = [min(valid_values),
+                                                              max(valid_values)] if valid_values else None
+
+                    is_id_column = "id" in column_name.lower()
+                    if not is_id_column:
+                        # 计算众数
+                        additional_attributes['numeric_mode'] = self._get_mode(valid_values)
+
+                        # 计算平均值
+                        if valid_values:
+                            try:
+                                if base_data_type in ["DECIMAL", "NUMERIC"]:
+                                    additional_attributes['numeric_mean'] = float(
+                                        np.mean([float(Decimal(str(v))) for v in valid_values]))
+                                elif base_data_type == "BOOLEAN":
+                                    additional_attributes['numeric_mean'] = float(
+                                        np.mean([int(v) for v in valid_values]))
+                                else:
+                                    additional_attributes['numeric_mean'] = float(np.mean(valid_values))
+                            except Exception as e:
+                                print(f"计算平均值时出错: {e}")
+                                print(f"表名: {table_name}, 列名: {column_name}")
+                                additional_attributes['numeric_mean'] = None
                         else:
-                            additional_attributes['numeric_mean'] = np.mean(values)
-                    else:
-                        additional_attributes['numeric_mean'] = None
-                else:
-                    # 对于id主键字段，可根据需求添加其他合适属性
-                    pass
+                            additional_attributes['numeric_mean'] = None
+                except Exception as e:
+                    print(f"计算数值范围时出错: {e}")
+                    print(f"表名: {table_name}, 列名: {column_name}")
+                    additional_attributes['numeric_range'] = None
 
             elif base_data_type in text_types:
                 # 如果唯一值数量小于等于 6，将其视为类别型数据
-                if len(set(values)) <= 6:
-                    additional_attributes['category_categories'] = list(set(values))
+                if len(set(non_null_values)) <= 6:
+                    additional_attributes['category_categories'] = list(set(non_null_values))
 
                 # 计算平均字符长度
                 additional_attributes['average_char_length'] = self._get_average_char_length(
-                    values) if values else 0
+                    non_null_values) if non_null_values else 0
 
                 # 计算词频属性，并转换为 JSON 字符串
-                # 在 _get_column_samples_and_attributes 中使用
-                word_frequency_dict = self._get_word_frequency(values) if values else {}
+                word_frequency_dict = self._get_word_frequency(non_null_values) if non_null_values else {}
                 additional_attributes['word_frequency'] = json.dumps(word_frequency_dict, ensure_ascii=False)
 
             elif base_data_type in ["DATE", "DATETIME", "TIMESTAMP"]:
-                additional_attributes['time_span'] = self._get_time_span(values) if values else None
-                time_attributes = calculate_time_attributes(values)
+                additional_attributes['time_span'] = self._get_time_span(non_null_values) if non_null_values else None
+                time_attributes = self.calculate_time_attributes(non_null_values)
                 additional_attributes.update(time_attributes)
 
-            # 3. 根据主键或外键查询结果添加key_type属性（仅针对主键或外键列）
+            # 根据主键或外键查询结果添加key_type属性（仅针对主键或外键列）
             key_type = []
             if is_primary_key:
                 key_type.append("primary_key")
@@ -627,9 +611,6 @@ class SchemaParser:
                 key_type.append("foreign_key")
             if key_type:
                 additional_attributes['key_type'] = key_type
-
-            # except Exception as e:
-            #     print(f"Error processing column {column_name} in table {table_name}: {e}")
 
         return samples, additional_attributes
 
@@ -784,6 +765,59 @@ class SchemaParser:
                 return f"{time_diff.days} days"
         return None
 
+    def calculate_time_attributes(self,values):
+        """
+        计算给定时间数据列表中的最早时间和最晚时间属性，根据不同时间数据类型进行针对性处理。
+
+        参数:
+        values (list): 包含时间数据的列表，时间数据格式可能多样，例如 '2025-01-01'（date类型）、'2025-01-01 12:30:00'（datetime类型）、
+                       '1983-12-29T00:00:00'（类似timestamp格式等）等。
+
+        返回:
+        dict: 包含最早时间（'earliest_time'）和最晚时间（'latest_time'）属性的字典，如果输入列表为空则对应属性值为 None。
+        """
+        parsed_values = []
+        for v in values:
+            if isinstance(v, str):
+                if "T" in v:
+                    # 处理类似timestamp格式
+                    try:
+                        parsed = parser.isoparse(v)
+                    except ValueError:
+                        parsed = None
+                else:
+                    # 处理普通日期时间格式
+                    parsed = convert_date_string(v)
+            elif isinstance(v, datetime):
+                parsed = v
+            elif isinstance(v, date):
+                parsed = v  # 保留 date 对象
+            else:
+                parsed = None
+
+            if parsed:
+                parsed_values.append(parsed)
+
+        if parsed_values:
+            # 根据类型决定格式化方式
+            def format_value(value):
+                if isinstance(value, date) and not isinstance(value, datetime):
+                    return value.strftime('%Y-%m-%d')  # 只格式化日期部分
+                else:
+                    return value.strftime('%Y-%m-%d %H:%M:%S')  # 格式化日期和时间部分
+
+            time_attributes = {
+                'earliest_time': format_value(min(parsed_values)),
+                'latest_time': format_value(max(parsed_values))
+            }
+        else:
+            time_attributes = {
+                'earliest_time': None,
+                'latest_time': None
+            }
+
+        return time_attributes
+
 
     def extract_database_name(self,database_file):
         """
@@ -806,7 +840,9 @@ if __name__ == "__main__":
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
     # database_file = "../data/bird/books/books.sqlite"
-    # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
+    database_file = "../data/bird/shakespeare/shakespeare.sqlite"
+    # database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
+    # database_file = "E:/spider/database/book_2/book_2.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
     # database_file = "../data/spider/medicine_enzyme_interaction/medicine_enzyme_interaction.sqlite"
@@ -814,16 +850,16 @@ if __name__ == "__main__":
     # database_file = "E:/BIRD_train/train/train_databases/bike_share_1/bike_share_1.sqlite" # 百万级数据，对生成有效率上的挑战
     # database_file = "E:/BIRD_train/train/train_databases/car_retails/car_retails.sqlite"  # 自引用情况
     # database_file = "E:/BIRD_train/train/train_databases/donor/donor.sqlite" # 百万级数据，论文表有长文本
-    database_file = "E:/BIRD_train/train/train_databases/talkingdata/talkingdata.sqlite" # DATETIME类型有问题数据的
+    # database_file = "E:/BIRD_train/train/train_databases/talkingdata/talkingdata.sqlite" # DATETIME类型有问题数据的
     # database_file = "E:/BIRD_train/train/train_databases/mondial_geo/mondial_geo.sqlite"
     # database_file = "E:/BIRD_train/train/train_databases/ice_hockey_draft/ice_hockey_draft.sqlite"
     # 创建 Neo4j 驱动连接
     neo4j_driver = get_driver()
     parser = SchemaParser(neo4j_driver, database_file)
-    try:
-        parser.parse_and_store_schema()
-        print("Schema parsing and storing completed successfully.")
-    except Exception as e:
-        print("Error occurred during schema parsing and storing:", e)
+    # try:
+    parser.parse_and_store_schema()
+    print("Schema parsing and storing completed successfully.")
+    # except Exception as e:
+    #     print("Error occurred during schema parsing and storing:", e)
     parser.close_connections()
     # print(parser.extract_database_name(database_file))
