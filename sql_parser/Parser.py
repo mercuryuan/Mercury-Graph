@@ -70,11 +70,14 @@ def analyze_json_sql_data(json_file_path, driver):
         with driver.session() as session:
             for index, entry in enumerate(data, start=1):
                 print(f"开始处理第 {index} /{len(data)}条记录...")
-                if analyze_single_sql_in_entry(entry, session, driver):
-                    passed_count += 1
+                try:
+                    if analyze_single_sql_in_entry(entry, session, driver):
+                        passed_count += 1
+                except Exception as e:
+                    pass
                 print('-' * 120)
     finally:
-        print(f"通过Neo4j验证的SQL语句条数为: {passed_count}/{len(data)}")
+        print(f"通过Neo4j语法验证的SQL语句条数为: {passed_count}/{len(data)}")
 
 
 if __name__ == "__main__":

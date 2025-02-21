@@ -17,8 +17,8 @@ from src.neo4j_connector import get_driver
 from datetime import datetime
 from dateutil import parser
 
-
 from datetime import date, datetime
+
 
 def convert_date_string(date_str):
     """
@@ -76,8 +76,6 @@ def convert_date_string(date_str):
     return None
 
 
-
-
 def quote_identifier(identifier):
     """
     引用标识符（表名或列名），防止包含空格或特殊字符时出错。
@@ -86,6 +84,7 @@ def quote_identifier(identifier):
     :return: 引用后的标识符
     """
     return f'"{identifier}"'  # 使用双引号引用
+
 
 class SchemaParser:
     def __init__(self, driver, database_file):
@@ -138,15 +137,17 @@ class SchemaParser:
                 for column in columns:
                     column_name = column[1]
                     data_type = column[2]
-                        # 如果表的行数小于等于100,000
+                    # 如果表的行数小于等于100,000
                     if row_count <= 100000:
                         # 对列进行抽样，并计算列的附加属性
-                        samples, additional_attributes = self._get_column_samples_and_attributes(table_name, column_name,
+                        samples, additional_attributes = self._get_column_samples_and_attributes(table_name,
+                                                                                                 column_name,
                                                                                                  data_type)
                     # 如果表的行数大于100,000
                     else:
                         # 对列进行抽样，但抽样数量限制为100,000
-                        samples, additional_attributes = self._get_column_samples_and_attributes(table_name, column_name,
+                        samples, additional_attributes = self._get_column_samples_and_attributes(table_name,
+                                                                                                 column_name,
                                                                                                  data_type, 100000)
 
                     schema[table_name]['columns'].append((column_name, data_type, samples, additional_attributes))
@@ -260,7 +261,7 @@ class SchemaParser:
                 columns_info = cursor.fetchall()
                 primary_key_columns = []
                 for column_info in columns_info:
-                    if column_info[5]!= 0:  # 假设第 6 个元素（索引为 5）表示是否为主键，1 为主键，0 为非主键，不同数据库该位置可能不同
+                    if column_info[5] != 0:  # 假设第 6 个元素（索引为 5）表示是否为主键，1 为主键，0 为非主键，不同数据库该位置可能不同
                         primary_key_columns.append(column_info[1])  # 第 2 个元素（索引为 1）是列名
                 return primary_key_columns
         except sqlite3.Error as e:
@@ -287,9 +288,6 @@ class SchemaParser:
             print(f"Error occurred while executing SQL statement: {sql_statement}")
             print(f"Error message: {e}")
             return []
-
-
-
 
     def read_column_description_csv(self, table_name):
         """
@@ -338,7 +336,8 @@ class SchemaParser:
                 print(f"读取文件时发生错误，尝试动态编码检测后仍失败: {e}")
                 return []
         except FileNotFoundError:
-            # print(f"未找到表 {table_name} 对应的列描述文件 {file_path}")
+            # 先注释掉
+            print(f"未找到表 {table_name} 对应的列描述文件 {file_path}")
             return []
 
     def _create_column_node_and_relation_in_neo4j(self, table_name, column_name, data_type, samples,
@@ -371,7 +370,6 @@ class SchemaParser:
             except KeyError:
                 print(f"字典中缺少original_column_name键，对应数据可能有问题，当前字典为：{desc}")
                 continue
-
 
         with self.neo4j_driver.session() as session:
             props = {
@@ -473,7 +471,7 @@ class SchemaParser:
     import numpy as np
     from decimal import Decimal
 
-    def _get_column_samples_and_attributes(self, table_name, column_name, data_type,sample_size=None):
+    def _get_column_samples_and_attributes(self, table_name, column_name, data_type, sample_size=None):
         """
         随机抽样获取列的数据样本，并计算附加属性（范围或类别等多种属性）。
         实现为所有类型的列节点添加数据条数属性，对于非id主键的数值型数据添加平均数等相关属性，
@@ -614,7 +612,6 @@ class SchemaParser:
 
         return samples, additional_attributes
 
-
     def _is_column_nullable(self, table_name, column_name):
         """
         判断列是否可为空。
@@ -632,8 +629,6 @@ class SchemaParser:
                     notnull = column_info[3]  # 第4个元素（索引为3）表示是否允许为空，0 表示允许为空，1 表示不允许为空
                     return not notnull  # 当 notnull 为 0 时返回 True，为 1 时返回 False
         return None
-
-
 
     def _is_primary_key(self, table_name, column_name):
         """
@@ -747,8 +742,6 @@ class SchemaParser:
 
         return top_k_words
 
-
-
     def _get_time_span(self, values):
         """
         计算时间类型数据的时间跨度，兼容多种日期时间格式的数据。
@@ -765,7 +758,7 @@ class SchemaParser:
                 return f"{time_diff.days} days"
         return None
 
-    def calculate_time_attributes(self,values):
+    def calculate_time_attributes(self, values):
         """
         计算给定时间数据列表中的最早时间和最晚时间属性，根据不同时间数据类型进行针对性处理。
 
@@ -818,8 +811,14 @@ class SchemaParser:
 
         return time_attributes
 
+    def extract_dataset_name(self, database_file):
+        possible_datasets = ['bird', 'spider','BIRD']
+        for dataset_name in possible_datasets:
+            if dataset_name in database_file:
+                return dataset_name
+        return None
 
-    def extract_database_name(self,database_file):
+    def extract_database_name(self, database_file):
         """
         从给定的数据库文件路径中提取数据库名称。
 
@@ -833,14 +832,13 @@ class SchemaParser:
         return database_name
 
 
-
 if __name__ == "__main__":
     # Neo4j数据库连接配置
     neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    # database_file = "../data/bird/books/books.sqlite"
-    database_file = "../data/bird/shakespeare/shakespeare.sqlite"
+    database_file = "../data/bird/books/books.sqlite"
+    # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
     # database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
     # database_file = "E:/spider/database/book_2/book_2.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
