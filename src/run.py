@@ -1,4 +1,6 @@
 import os
+
+from graph_construction.neo4j_data_migration import export_all
 from graph_construction.schema_parser import SchemaParser
 from src.neo4j_connector import get_driver
 
@@ -21,10 +23,16 @@ def traverse_folders(root_folder):
 def run(sqlite_path):
     parser = SchemaParser(neo4j_driver, sqlite_path)
     try:
-        parser.parse_and_store_schema()
+        # parser.parse_and_store_schema()
         print("Schema parsing and storing completed successfully.")
+        # 导出存储schema graph
+        exp_path = os.path.join("..\graphs_repo", os.path.join(parser.extract_dataset_name(sqlite_path),
+                                                               parser.extract_database_name(sqlite_path)))
+        export_all(exp_path)
+        print("成功导出！")
     except Exception as e:
         print("Error occurred during schema parsing and storing:", e)
+        print("失败！！！！！！！！！！！！！！！！！！！！！！！！！！")
     parser.close_connections()
 
 
