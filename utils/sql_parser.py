@@ -417,13 +417,18 @@ class SqlParserTool:
                                 column_relationship_count += 1
                             elif value.type == 'FOREIGN_KEY':
                                 foreign_key_relationship_count += 1
-
+                # 检查实体总数是否为 0
+                if node_count == 0 or relationship_count == 0:
+                    raise ValueError("查询到的实体总数为 0，请检查数据是否正确导入。")
                 # 输出查询验证结果
                 print(
                     f"Cypher查询验证结果：验证通过 | 总节点数: {node_count} | 总关系数: {relationship_count} | 表节点数: {table_count} | 列节点数: {column_count} | HAS_COLUMN数: {column_relationship_count} | FOREIGN_KEY数: {foreign_key_relationship_count}")
-
+        except ValueError as ve:
+            print(f"Cypher查询验证失败，错误信息：{ve}")
+            raise  # 关键修改：重新抛出异常！
         except Exception as e:
             print(f"Cypher查询验证失败，错误信息：{e}")
+            raise  # 关键修改：重新抛出异常！
 
 
 if __name__ == '__main__':
