@@ -497,7 +497,7 @@ class SchemaParser:
                 query = f"SELECT {quote_identifier(column_name)} FROM {quote_identifier(table_name)} LIMIT {sample_size};"
             else:
                 # 否则查询全部数据
-                query = f"SELECT {quote_identifier(column_name)} FROM {quote_identifier(table_name)} LIMIT 100 ;"
+                query = f"SELECT {quote_identifier(column_name)} FROM {quote_identifier(table_name)} ;"
 
             cursor.execute(query)
             rows = cursor.fetchall()
@@ -721,18 +721,23 @@ class SchemaParser:
         """
         统计文本型数据的词频，支持按词语或整个值为单位统计，并返回前 top_k 个高频词。
 
-        :param values: 文本数据列表
-        :param top_k: 返回的高频词数量，默认为 10
-        :param by_word: 是否以词语为单位统计词频，默认为 True；如果为 False，则以整个值为单位统计
-        :return: 词频字典，格式为{"word": frequency}，包含前 top_k 个高频词且按频率排序
+        :param values: 文本数据列表，函数将对该列表中的文本数据进行词频统计。若列表为空，则直接返回空字典。
+        :param top_k: 返回的高频词数量，默认值为 10。在统计完成后，函数将按照词频从高到低排序，尝试取前 top_k 个高频词作为结果。
+        :param by_word: 是否以词语为单位统计词频，默认值为 False。
+            - 若为 True，则会将文本数据拆分为单个词语，以每个词语为单位统计词频。
+            - 若为 False，则以整个文本值为单位统计词频。
+        :return: 词频字典，格式为 {"word": frequency}，包含前 top_k 个高频词且按频率从高到低排序。
+            特殊情况：从第一个频率为 1 的词开始，最多保留三个频率为 1 的词，且词频为 1 的词长度不能超过 20。
         """
+        # 检查输入的文本数据列表是否为空
         if not values:
             return {}
 
         # 统计词频
         if by_word:
             # 以词语为单位统计
-            all_words = " ".join(values).split()  # 将文本拆分为单词
+            # 将文本数据列表中的所有文本连接成一个长字符串，再按空格拆分为单个单词
+            all_words = " ".join(values).split()
             word_count_dict = Counter(all_words)
         else:
             # 以整个值为单位统计
@@ -743,10 +748,23 @@ class SchemaParser:
             sorted(word_count_dict.items(), key=operator.itemgetter(1), reverse=True)
         )
 
-        # 取前 top_k 个高频词
-        top_k_words = dict(list(sorted_word_count_dict.items())[:top_k])
+        result = {}
+        one_freq_count = 0
+        found_one_freq = False
 
-        return top_k_words
+        for word, freq in sorted_word_count_dict.items():
+            if len(result) >= top_k:
+                break
+            if freq == 1:
+                found_one_freq = True
+                if len(word) <= 20 and one_freq_count < 3:
+                    result[word] = freq
+                    one_freq_count += 1
+            else:
+                if not found_one_freq:
+                    result[word] = freq
+
+        return result
 
     def _get_time_span(self, values):
         """
@@ -843,8 +861,8 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    database_file = "../data/bird/books/books.sqlite"
-    # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
+    # database_file = "../data/bird/books/books.sqlite"
+    database_file = "../data/bird/shakespeare/shakespeare.sqlite"
     # database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
     # database_file = "E:/spider/database/book_2/book_2.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
