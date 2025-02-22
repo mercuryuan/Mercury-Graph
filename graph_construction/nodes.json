@@ -1,0 +1,2816 @@
+[
+    {
+        "old_id": 436,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "first_name",
+            "word_frequency": "{\"Miller\": 2, \"Sanchez\": 2, \"Young\": 1, \"Begich\": 1, \"Murkowski\": 1, \"Byrne\": 1, \"Roby\": 1, \"Rogers\": 1, \"Aderholt\": 1, \"Brooks\": 1}",
+            "samples": [
+                "Lee",
+                "Barber",
+                "Eshoo",
+                "Thompson",
+                "Becerra",
+                "McNerney"
+            ],
+            "average_char_length": 6.55,
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 437,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "city",
+            "word_frequency": "{\"Ponce\": 8, \"Aguadilla\": 3, \"Arecibo\": 3, \"Mayaguez\": 3, \"Caguas\": 3, \"Holtsville\": 2, \"Vega Baja\": 2, \"Cayey\": 2, \"Adjuntas\": 1, \"Aguada\": 1}",
+            "samples": [
+                "Barceloneta",
+                "Aibonito",
+                "Gurabo",
+                "Castaner",
+                "Rincon",
+                "Guayanilla"
+            ],
+            "average_char_length": 7.8,
+            "column_description": "the city where the postal point locates",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 438,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 2.2653,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "persons_per_household",
+            "numeric_range": [
+                0.0,
+                3.1
+            ],
+            "numeric_mode": [
+                0.0
+            ],
+            "samples": [
+                2.73,
+                2.68,
+                2.79,
+                2.52,
+                2.75,
+                2.77
+            ],
+            "column_description": "the number of persons per household residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 439,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "cognress_rep_id",
+            "referenced_by": [
+                "zip_congress.district"
+            ],
+            "key_type": [
+                "primary_key"
+            ],
+            "word_frequency": "{\"AK\": 1, \"AK-S1\": 1, \"AK-S2\": 1, \"AL-1\": 1, \"AL-2\": 1, \"AL-3\": 1, \"AL-4\": 1, \"AL-5\": 1, \"AL-6\": 1, \"AL-7\": 1}",
+            "samples": [
+                "CA-9",
+                "AR-3",
+                "CA-47",
+                "AZ-S1",
+                "AZ-6",
+                "AK"
+            ],
+            "average_char_length": 4.53,
+            "column_description": "the representative id of congress representatives",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 440,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 14634.63,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "avg_income_per_household",
+            "numeric_range": [
+                0,
+                33763
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                15206,
+                12915,
+                14146,
+                19139,
+                17231,
+                17622
+            ],
+            "column_description": "the average income per household in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 441,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "over_65",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of people whose age is over 65 in the residential area",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 442,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 838.6,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "area_code",
+            "numeric_range": [
+                631,
+                939
+            ],
+            "key_type": [
+                "primary_key"
+            ],
+            "numeric_mode": [
+                787
+            ],
+            "samples": [
+                939,
+                939,
+                787,
+                787,
+                631,
+                787
+            ],
+            "column_description": "the code of the area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 443,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "foreign_key": "zip_code",
+            "name": "avoid",
+            "columns": [
+                "zip_code",
+                "bad_alias"
+            ],
+            "primary_key": [
+                "zip_code",
+                "bad_alias"
+            ],
+            "row_count": 24114,
+            "reference_to": [
+                "avoid.zip_code->zip_data.zip_code"
+            ],
+            "column_count": 2
+        }
+    },
+    {
+        "old_id": 444,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "sample_count": 100,
+            "is_nullable": true,
+            "numeric_range": [
+                501,
+                612
+            ],
+            "samples": [
+                603,
+                603,
+                612,
+                612,
+                603,
+                603
+            ],
+            "numeric_mean": 605.69,
+            "referenced_to": [
+                "zip_data.zip_code"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "name": "zip_code",
+            "key_type": [
+                "primary_key",
+                "foreign_key"
+            ],
+            "numeric_mode": [
+                612
+            ],
+            "null_count": 0,
+            "column_description": "the zip code of the bad alias"
+        }
+    },
+    {
+        "old_id": 445,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "bad_alias",
+            "key_type": [
+                "primary_key"
+            ],
+            "word_frequency": "{\"Internal Revenue Service\": 2, \"Colinas Del Gigante\": 1, \"Jard De Adjuntas\": 1, \"URB San Joaquin\": 1, \"Alts De Aguada\": 1, \"Bo Guaniquilla\": 1, \"Comunidad Las Flores\": 1, \"Ext Los Robles\": 1, \"Sect Juan Ramirez\": 1, \"Sect La Ceiba\": 1}",
+            "samples": [
+                "Paseo De La Reina",
+                "Hacienda Toledo",
+                "Jard De Borinquen",
+                "Est De Arecibo",
+                "URB Costas Del Atlantico",
+                "Ext Marisol"
+            ],
+            "average_char_length": 14.58,
+            "column_description": "the bad alias",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 446,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "foreign_key": [
+                "state",
+                "zip_code"
+            ],
+            "name": "country",
+            "columns": [
+                "zip_code",
+                "county",
+                "state"
+            ],
+            "primary_key": [
+                "zip_code",
+                "county"
+            ],
+            "row_count": 51001,
+            "reference_to": [
+                "country.state->state.abbreviation",
+                "country.zip_code->zip_data.zip_code"
+            ],
+            "column_count": 3
+        }
+    },
+    {
+        "old_id": 453,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "value_description": "commonsense evidence: no. of over_65 can refer to elders. Higher means more elders\nif the ratio: over_65 / children is higher: the aging is more serious.",
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "monthly_benefits_all",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "all benefit payments by month ",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 454,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "value_description": "usd",
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "monthly_benefits_retired_workers",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "monthly benefit payments for retired workers",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 455,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 0.99,
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "monthly_benefits_widowed",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "monthly benefit payments for retired workers",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 456,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "sample_count": 97,
+            "is_nullable": true,
+            "numeric_range": [
+                10380,
+                49500
+            ],
+            "samples": [
+                41980,
+                11640,
+                38660,
+                35620,
+                10380,
+                41980
+            ],
+            "numeric_mean": 32703.092783505155,
+            "referenced_to": [
+                "CBSA.CBSA"
+            ],
+            "data_integrity": 0.97,
+            "data_type": "INTEGER",
+            "name": "CBSA",
+            "key_type": [
+                "foreign_key"
+            ],
+            "numeric_mode": [
+                41980
+            ],
+            "null_count": 3,
+            "column_description": "the code of the cbsa officer"
+        }
+    },
+    {
+        "old_id": 457,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "foreign_key": "zip_code",
+            "name": "alias",
+            "columns": [
+                "zip_code",
+                "alias"
+            ],
+            "primary_key": "zip_code",
+            "row_count": 41701,
+            "reference_to": [
+                "alias.zip_code->zip_data.zip_code"
+            ],
+            "column_count": 2
+        }
+    },
+    {
+        "old_id": 458,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 688.8,
+            "referenced_to": [
+                "zip_data.zip_code"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "zip_code",
+            "numeric_range": [
+                501,
+                780
+            ],
+            "key_type": [
+                "primary_key",
+                "foreign_key"
+            ],
+            "samples": [
+                739,
+                617,
+                603,
+                744,
+                627,
+                714
+            ],
+            "column_description": "the zip code of the alias",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 459,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "alias",
+            "word_frequency": "{\"Ponce\": 8, \"Aguadilla\": 3, \"Arecibo\": 3, \"Mayaguez\": 3, \"Caguas\": 3, \"Holtsville\": 2, \"Vega Baja\": 2, \"Cayey\": 2, \"Adjuntas\": 1, \"Aguada\": 1}",
+            "samples": [
+                "Caguas",
+                "Ceiba",
+                "Camuy",
+                "Ponce",
+                "Maricao",
+                "Luquillo"
+            ],
+            "average_char_length": 7.8,
+            "column_description": "the alias of the city",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 460,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "foreign_key": "zip_code",
+            "name": "area_code",
+            "columns": [
+                "zip_code",
+                "area_code"
+            ],
+            "primary_key": [
+                "zip_code",
+                "area_code"
+            ],
+            "row_count": 53796,
+            "reference_to": [
+                "area_code.zip_code->zip_data.zip_code"
+            ],
+            "column_count": 2
+        }
+    },
+    {
+        "old_id": 461,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "sample_count": 100,
+            "is_nullable": true,
+            "numeric_range": [
+                501,
+                720
+            ],
+            "samples": [
+                704,
+                662,
+                650,
+                715,
+                685,
+                501
+            ],
+            "numeric_mean": 658.16,
+            "referenced_to": [
+                "zip_data.zip_code"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "name": "zip_code",
+            "key_type": [
+                "primary_key",
+                "foreign_key"
+            ],
+            "numeric_mode": [
+                601,
+                602,
+                606,
+                610,
+                611,
+                612,
+                617,
+                623,
+                624,
+                627,
+                636,
+                641,
+                647,
+                650,
+                653,
+                660,
+                662,
+                667,
+                670,
+                674,
+                677,
+                678,
+                680,
+                681,
+                682,
+                683,
+                685,
+                687,
+                692,
+                698,
+                707,
+                714,
+                716,
+                717,
+                718,
+                719
+            ],
+            "null_count": 0,
+            "column_description": "the zip code of the area"
+        }
+    },
+    {
+        "old_id": 462,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "foreign_key": [
+                "zip_code",
+                "district"
+            ],
+            "name": "zip_congress",
+            "columns": [
+                "zip_code",
+                "district"
+            ],
+            "primary_key": [
+                "zip_code",
+                "district"
+            ],
+            "row_count": 45231,
+            "reference_to": [
+                "zip_congress.zip_code->zip_data.zip_code",
+                "zip_congress.district->congress.cognress_rep_id"
+            ],
+            "column_count": 2
+        }
+    },
+    {
+        "old_id": 463,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 691.18,
+            "referenced_to": [
+                "zip_data.zip_code"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "zip_code",
+            "numeric_range": [
+                501,
+                782
+            ],
+            "key_type": [
+                "primary_key",
+                "foreign_key"
+            ],
+            "samples": [
+                683,
+                765,
+                742,
+                782,
+                688,
+                769
+            ],
+            "column_description": "the zip code of the district",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 464,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "PR",
+                "NY-1"
+            ],
+            "sample_count": 100,
+            "is_nullable": true,
+            "samples": [
+                "PR",
+                "PR",
+                "PR",
+                "PR",
+                "PR",
+                "PR"
+            ],
+            "referenced_to": [
+                "congress.cognress_rep_id"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "name": "district",
+            "key_type": [
+                "primary_key",
+                "foreign_key"
+            ],
+            "word_frequency": "{\"PR\": 99, \"NY-1\": 1}",
+            "null_count": 0,
+            "average_char_length": 2.02,
+            "column_description": "the district"
+        }
+    },
+    {
+        "old_id": 469,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 0.99,
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "parents_and_widowed",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of parents and widowed in the residential area",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 482,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "sample_count": 100,
+            "is_nullable": true,
+            "numeric_range": [
+                501,
+                773
+            ],
+            "samples": [
+                773,
+                601,
+                604,
+                737,
+                734,
+                723
+            ],
+            "numeric_mean": 686.34,
+            "referenced_to": [
+                "zip_data.zip_code"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "name": "zip_code",
+            "key_type": [
+                "primary_key",
+                "foreign_key"
+            ],
+            "numeric_mode": [
+                745
+            ],
+            "null_count": 0,
+            "column_description": "the zip code of the state in the country"
+        }
+    },
+    {
+        "old_id": 528,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "children",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of children in the residential area",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 532,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "name": "CBSA",
+            "columns": [
+                "CBSA",
+                "CBSA_name",
+                "CBSA_type"
+            ],
+            "referenced_by": [
+                "zip_data.CBSA->CBSA.CBSA"
+            ],
+            "primary_key": "CBSA",
+            "row_count": 465,
+            "column_count": 3
+        }
+    },
+    {
+        "old_id": 533,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 13902.6,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "CBSA",
+            "numeric_range": [
+                10300,
+                17740
+            ],
+            "referenced_by": [
+                "zip_data.CBSA"
+            ],
+            "key_type": [
+                "primary_key"
+            ],
+            "samples": [
+                17300,
+                11640,
+                16820,
+                17740,
+                15660,
+                12060
+            ],
+            "column_description": "the code of the cbsa officer",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 534,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "CBSA_name",
+            "word_frequency": "{\"Adrian, MI\": 1, \"Aguadilla-Isabela, PR\": 1, \"Akron, OH\": 1, \"Albany, GA\": 1, \"Albany-Schenectady-Troy, NY\": 1, \"Albemarle, NC\": 1, \"Albertville, AL\": 1, \"Alexander City, AL\": 1, \"Allentown-Bethlehem-Easton, PA-NJ\": 1, \"Alma, MI\": 1}",
+            "samples": [
+                "Central City, KY",
+                "Chambersburg-Waynesboro, PA",
+                "Cambridge, MD",
+                "Coco, PR",
+                "Augusta-Waterville, ME",
+                "Altoona, PA"
+            ],
+            "average_char_length": 16.56,
+            "column_description": "the name and the position of the cbsa officer ",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 535,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Metro",
+                "Micro"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "CBSA_type",
+            "word_frequency": "{\"Micro\": 52, \"Metro\": 48}",
+            "samples": [
+                "Micro",
+                "Metro",
+                "Metro",
+                "Micro",
+                "Micro",
+                "Micro"
+            ],
+            "average_char_length": 5.0,
+            "column_description": "the office type of the officer",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 536,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "name": "state",
+            "columns": [
+                "abbreviation",
+                "name"
+            ],
+            "referenced_by": [
+                "congress.abbreviation->state.abbreviation",
+                "zip_data.state->state.abbreviation",
+                "country.state->state.abbreviation"
+            ],
+            "primary_key": "abbreviation",
+            "row_count": 62,
+            "column_count": 2
+        }
+    },
+    {
+        "old_id": 537,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 62,
+            "is_nullable": true,
+            "name": "abbreviation",
+            "referenced_by": [
+                "congress.abbreviation",
+                "zip_data.state",
+                "country.state"
+            ],
+            "key_type": [
+                "primary_key"
+            ],
+            "word_frequency": "{\"AA\": 1, \"AE\": 1, \"AK\": 1, \"AL\": 1, \"AP\": 1, \"AR\": 1, \"AS\": 1, \"AZ\": 1, \"CA\": 1, \"CO\": 1}",
+            "samples": [
+                "GA",
+                "OH",
+                "NV",
+                "MT",
+                "MP",
+                "MD"
+            ],
+            "average_char_length": 2.0,
+            "column_description": "the abbreviation of the state name",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 538,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 62,
+            "is_nullable": true,
+            "name": "name",
+            "word_frequency": "{\"Armed Forces Americas\": 1, \"Armed Forces Europe\": 1, \"Alaska\": 1, \"Alabama\": 1, \"Armed Forces Pacific\": 1, \"Arkansas\": 1, \"American Samoa\": 1, \"Arizona\": 1, \"California\": 1, \"Colorado\": 1}",
+            "samples": [
+                "Florida",
+                "Puerto Rico",
+                "Texas",
+                "Vermont",
+                "Virgin Islands",
+                "Pennsylvania"
+            ],
+            "average_char_length": 10.0,
+            "column_description": "the state name",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 539,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "foreign_key": "abbreviation",
+            "name": "congress",
+            "columns": [
+                "cognress_rep_id",
+                "first_name",
+                "last_name",
+                "CID",
+                "party",
+                "state",
+                "abbreviation",
+                "House",
+                "District",
+                "land_area"
+            ],
+            "referenced_by": [
+                "zip_congress.district->congress.cognress_rep_id"
+            ],
+            "primary_key": "cognress_rep_id",
+            "row_count": 540,
+            "reference_to": [
+                "congress.abbreviation->state.abbreviation"
+            ],
+            "column_count": 10
+        }
+    },
+    {
+        "old_id": 1143,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "CID",
+            "word_frequency": "{\"N00008091\": 1, \"N00009585\": 1, \"N00033101\": 1, \"N00031938\": 1, \"N00031177\": 1, \"N00030980\": 1, \"N00035451\": 1, \"N00009888\": 1, \"N00003028\": 1, \"N00027493\": 1}",
+            "samples": [
+                "N00006460",
+                "N00002674",
+                "N00026106",
+                "N00002713",
+                "N00006692",
+                "N00033373"
+            ],
+            "average_char_length": 9.0,
+            "column_description": "the unique identifier for the congress representative",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1144,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Republican",
+                "Democrat"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "party",
+            "word_frequency": "{\"Democrat\": 60, \"Republican\": 40}",
+            "samples": [
+                "Democrat",
+                "Democrat",
+                "Democrat",
+                "Democrat",
+                "Democrat",
+                "Republican"
+            ],
+            "average_char_length": 8.8,
+            "column_description": "the party of the representative",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1145,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "state",
+            "word_frequency": "{\"California\": 55, \"Arizona\": 11, \"Alabama\": 9, \"Colorado\": 9, \"Arkansas\": 6, \"Connecticut\": 6, \"Alaska\": 3, \"American Samoa\": 1}",
+            "samples": [
+                "Colorado",
+                "Arizona",
+                "Alabama",
+                "California",
+                "California",
+                "Arkansas"
+            ],
+            "average_char_length": 9.08,
+            "column_description": "the state that the representative is from",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1146,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "referenced_to": [
+                "state.abbreviation"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "abbreviation",
+            "key_type": [
+                "foreign_key"
+            ],
+            "word_frequency": "{\"CA\": 55, \"AZ\": 11, \"AL\": 9, \"CO\": 9, \"AR\": 6, \"CT\": 6, \"AK\": 3, \"AS\": 1}",
+            "samples": [
+                "CA",
+                "CA",
+                "CA",
+                "CA",
+                "CA",
+                "CA"
+            ],
+            "average_char_length": 2.0,
+            "column_description": "the abbreviation of the state",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1147,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "House of Repsentatives",
+                "Senate"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "House",
+            "word_frequency": "{\"House of Repsentatives\": 87, \"Senate\": 13}",
+            "samples": [
+                "Senate",
+                "Senate",
+                "House of Repsentatives",
+                "House of Repsentatives",
+                "House of Repsentatives",
+                "House of Repsentatives"
+            ],
+            "average_char_length": 19.92,
+            "column_description": "the house that the representative is from",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1148,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 18.31764705882353,
+            "data_integrity": 0.85,
+            "value_description": "commonsense evidence: The state is divided into different districts. The districts under the same state will be numbered uniformly. \n'NA' means that the state is not divided into districts. ",
+            "data_type": "INTEGER",
+            "sample_count": 85,
+            "is_nullable": true,
+            "name": "District",
+            "numeric_range": [
+                1,
+                53
+            ],
+            "numeric_mode": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "samples": [
+                47,
+                4,
+                13,
+                2,
+                11,
+                5
+            ],
+            "column_description": "the id of the district that the representative represents ",
+            "null_count": 15
+        }
+    },
+    {
+        "old_id": 1149,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 32149.347599999997,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "land_area",
+            "numeric_range": [
+                38.97,
+                571951.26
+            ],
+            "numeric_mode": [
+                570641.0,
+                50750.0,
+                52075.0,
+                113642.0,
+                155973.0,
+                103730.0
+            ],
+            "samples": [
+                2839.51,
+                293.47,
+                1818.79,
+                1987.68,
+                548.65,
+                7265.72
+            ],
+            "column_description": "the land area of the district",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1150,
+        "labels": [
+            "Table"
+        ],
+        "properties": {
+            "database_name": "address",
+            "foreign_key": [
+                "CBSA",
+                "state"
+            ],
+            "name": "zip_data",
+            "columns": [
+                "zip_code",
+                "city",
+                "state",
+                "multi_county",
+                "type",
+                "organization",
+                "time_zone",
+                "daylight_savings",
+                "latitude",
+                "longitude",
+                "elevation",
+                "state_fips",
+                "county_fips",
+                "region",
+                "division",
+                "population_2020",
+                "population_2010",
+                "households",
+                "avg_house_value",
+                "avg_income_per_household",
+                "persons_per_household",
+                "white_population",
+                "black_population",
+                "hispanic_population",
+                "asian_population",
+                "american_indian_population",
+                "hawaiian_population",
+                "other_population",
+                "male_population",
+                "female_population",
+                "median_age",
+                "male_median_age",
+                "female_median_age",
+                "residential_mailboxes",
+                "business_mailboxes",
+                "total_delivery_receptacles",
+                "businesses",
+                "1st_quarter_payroll",
+                "annual_payroll",
+                "employees",
+                "water_area",
+                "land_area",
+                "single_family_delivery_units",
+                "multi_family_delivery_units",
+                "total_beneficiaries",
+                "retired_workers",
+                "disabled_workers",
+                "parents_and_widowed",
+                "spouses",
+                "children",
+                "over_65",
+                "monthly_benefits_all",
+                "monthly_benefits_retired_workers",
+                "monthly_benefits_widowed",
+                "CBSA"
+            ],
+            "referenced_by": [
+                "alias.zip_code->zip_data.zip_code",
+                "area_code.zip_code->zip_data.zip_code",
+                "avoid.zip_code->zip_data.zip_code",
+                "country.zip_code->zip_data.zip_code",
+                "zip_congress.zip_code->zip_data.zip_code"
+            ],
+            "primary_key": "zip_code",
+            "row_count": 41563,
+            "reference_to": [
+                "zip_data.CBSA->CBSA.CBSA",
+                "zip_data.state->state.abbreviation"
+            ],
+            "column_count": 55
+        }
+    },
+    {
+        "old_id": 1151,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 688.8,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "zip_code",
+            "numeric_range": [
+                501,
+                780
+            ],
+            "referenced_by": [
+                "alias.zip_code",
+                "area_code.zip_code",
+                "avoid.zip_code",
+                "country.zip_code",
+                "zip_congress.zip_code"
+            ],
+            "key_type": [
+                "primary_key"
+            ],
+            "samples": [
+                623,
+                732,
+                681,
+                616,
+                726,
+                683
+            ],
+            "column_description": "the zip code of the postal point",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1191,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "PR",
+                "NY"
+            ],
+            "sample_count": 100,
+            "is_nullable": true,
+            "samples": [
+                "PR",
+                "PR",
+                "PR",
+                "PR",
+                "PR",
+                "PR"
+            ],
+            "referenced_to": [
+                "state.abbreviation"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "name": "state",
+            "key_type": [
+                "foreign_key"
+            ],
+            "word_frequency": "{\"PR\": 98, \"NY\": 2}",
+            "null_count": 0,
+            "average_char_length": 2.0,
+            "column_description": "the state of the city"
+        }
+    },
+    {
+        "old_id": 1192,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Yes",
+                "No"
+            ],
+            "data_integrity": 1.0,
+            "value_description": "commonsense evidence: The meaning of multi_country is consisting of or involving multiple countries.",
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "multi_county",
+            "word_frequency": "{\"No\": 96, \"Yes\": 4}",
+            "samples": [
+                "No",
+                "No",
+                "No",
+                "No",
+                "No",
+                "No"
+            ],
+            "average_char_length": 2.04,
+            "column_description": "whether the country that the city belongs to is multi_country",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1193,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Branch",
+                "P.O. Box Only",
+                "Unique Post Office",
+                "Post Office"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "type",
+            "word_frequency": "{\"Post Office\": 80, \"P.O. Box Only\": 17, \"Unique Post Office\": 2, \"Branch\": 1}",
+            "samples": [
+                "Unique Post Office",
+                "Post Office",
+                "P.O. Box Only",
+                "Post Office",
+                "Post Office",
+                "P.O. Box Only"
+            ],
+            "average_char_length": 11.43,
+            "column_description": "the type of the postal point",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1194,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "I R S Service Center",
+                "Irs Service Center"
+            ],
+            "data_integrity": 0.02,
+            "data_type": "TEXT",
+            "sample_count": 2,
+            "is_nullable": true,
+            "name": "organization",
+            "word_frequency": "{\"I R S Service Center\": 1, \"Irs Service Center\": 1}",
+            "samples": [
+                "I R S Service Center",
+                "Irs Service Center"
+            ],
+            "average_char_length": 19.0,
+            "null_count": 98
+        }
+    },
+    {
+        "old_id": 1195,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Atlantic",
+                "Eastern"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "time_zone",
+            "word_frequency": "{\"Atlantic\": 98, \"Eastern\": 2}",
+            "samples": [
+                "Atlantic",
+                "Atlantic",
+                "Atlantic",
+                "Atlantic",
+                "Atlantic",
+                "Atlantic"
+            ],
+            "average_char_length": 7.98,
+            "column_description": "the time zone of the postal point location",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1196,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Yes",
+                "No"
+            ],
+            "data_integrity": 1.0,
+            "value_description": "commonsense evidence: Daylight saving is the practice of advancing clocks (typically by one hour) during warmer months so that darkness falls at a later clock time. As a result, there is one 23-hour day in late winter or early spring and one 25-hour day in autumn.",
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "daylight_savings",
+            "word_frequency": "{\"No\": 98, \"Yes\": 2}",
+            "samples": [
+                "No",
+                "No",
+                "No",
+                "No",
+                "No",
+                "No"
+            ],
+            "average_char_length": 2.02,
+            "column_description": "whether the location implements daylight savings",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1197,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 18.67374717,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "latitude",
+            "numeric_range": [
+                17.97252,
+                40.817923
+            ],
+            "numeric_mode": [
+                18.0133
+            ],
+            "samples": [
+                18.220812,
+                18.16462,
+                18.291418,
+                18.20454,
+                18.322194,
+                18.210309
+            ],
+            "column_description": "the latitude of the postal point location",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1198,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": -66.62667174,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "longitude",
+            "numeric_range": [
+                -73.045317,
+                -65.294233
+            ],
+            "numeric_mode": [
+                -66.867756
+            ],
+            "samples": [
+                -66.939232,
+                -66.248617,
+                -66.796287,
+                -66.939233,
+                -66.218868,
+                -65.974986
+            ],
+            "column_description": "the longitude of the postal point location",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1199,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.5,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "elevation",
+            "numeric_range": [
+                0,
+                25
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the elevation of the postal point location",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1200,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 71.28,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "state_fips",
+            "numeric_range": [
+                36,
+                72
+            ],
+            "numeric_mode": [
+                72
+            ],
+            "samples": [
+                72,
+                72,
+                72,
+                72,
+                72,
+                72
+            ],
+            "column_description": "state-level FIPS code",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1201,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 76.43,
+            "data_integrity": 1.0,
+            "value_description": "commonsense evidence: FIPS codes are numbers that uniquely identify geographic areas. The number of digits in FIPS codes varies depending on the level of geography.",
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "county_fips",
+            "numeric_range": [
+                1,
+                153
+            ],
+            "numeric_mode": [
+                113
+            ],
+            "samples": [
+                115,
+                49,
+                63,
+                99,
+                103,
+                73
+            ],
+            "column_description": "country-level FIPS code",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1202,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Northeast"
+            ],
+            "data_integrity": 0.02,
+            "data_type": "TEXT",
+            "sample_count": 2,
+            "is_nullable": true,
+            "name": "region",
+            "word_frequency": "{\"Northeast\": 2}",
+            "samples": [
+                "Northeast",
+                "Northeast"
+            ],
+            "average_char_length": 9.0,
+            "column_description": "the region where the postal point locates ",
+            "null_count": 98
+        }
+    },
+    {
+        "old_id": 1203,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "Middle Atlantic"
+            ],
+            "data_integrity": 0.02,
+            "data_type": "TEXT",
+            "sample_count": 2,
+            "is_nullable": true,
+            "name": "division",
+            "word_frequency": "{\"Middle Atlantic\": 2}",
+            "samples": [
+                "Middle Atlantic",
+                "Middle Atlantic"
+            ],
+            "average_char_length": 15.0,
+            "column_description": "the division of the organization ",
+            "null_count": 98
+        }
+    },
+    {
+        "old_id": 1204,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 16085.22,
+            "data_integrity": 1.0,
+            "value_description": "commonsense evidence: 'No data' means that the postal point is not affiliated with any organization. Or the organization has no division. ",
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "population_2020",
+            "numeric_range": [
+                0,
+                69418
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                4553,
+                5505,
+                20100,
+                0,
+                40361,
+                0
+            ],
+            "column_description": "the population of the residential area in 2020",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1205,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 23490.18,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "population_2010",
+            "numeric_range": [
+                0,
+                89374
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                33772,
+                26488,
+                43282,
+                0,
+                41520,
+                0
+            ],
+            "column_description": "the population of the residential area in 2010",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1206,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 8544.54,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "households",
+            "numeric_range": [
+                0,
+                33724
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                14431,
+                13148,
+                0,
+                0,
+                21244
+            ],
+            "column_description": "the number of the households in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1207,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 82018.0,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "avg_house_value",
+            "numeric_range": [
+                0,
+                144000
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                97500,
+                92100,
+                88100,
+                114200,
+                0,
+                114500
+            ],
+            "column_description": "the average house value in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1208,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 3028.71,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "black_population",
+            "numeric_range": [
+                0,
+                17743
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                8995,
+                6901,
+                672,
+                421,
+                888,
+                0
+            ],
+            "column_description": "the population of black people in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1210,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 18980.8,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "white_population",
+            "numeric_range": [
+                0,
+                70743
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                58332,
+                22456,
+                2648,
+                42328,
+                9487,
+                14987
+            ],
+            "column_description": "the population of white people in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1211,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "last_name",
+            "word_frequency": "{\"Mark\": 4, \"John\": 4, \"Jeff\": 3, \"Ed\": 3, \"Mike\": 3, \"Tom\": 2, \"Paul\": 2, \"David\": 2, \"Barbara\": 2, \"Jim\": 2}",
+            "samples": [
+                "Jerry",
+                "Scott",
+                "Buck",
+                "Tom",
+                "Mike",
+                "Lucille"
+            ],
+            "average_char_length": 4.82,
+            "column_description": "the last name of the congress representative",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1212,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 23294.56,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "hispanic_population",
+            "numeric_range": [
+                0,
+                88559
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                12132,
+                42538,
+                18876,
+                21376,
+                53330,
+                14912
+            ],
+            "column_description": "the population of Hispanic people in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1213,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 48.4,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "asian_population",
+            "numeric_range": [
+                0,
+                232
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                232,
+                63,
+                8,
+                2,
+                29
+            ],
+            "column_description": "the population of Asian people in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1214,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 201.01,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "american_indian_population",
+            "numeric_range": [
+                0,
+                971
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                63,
+                180,
+                163,
+                32,
+                0,
+                99
+            ],
+            "column_description": "the population of American Indian people in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1215,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 16.53,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "hawaiian_population",
+            "numeric_range": [
+                0,
+                74
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                32,
+                1,
+                0,
+                21,
+                2,
+                14
+            ],
+            "column_description": "the population of Hawaiian people in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1216,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 2037.97,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "other_population",
+            "numeric_range": [
+                0,
+                7982
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                3484,
+                0,
+                0,
+                743,
+                1175,
+                1745
+            ],
+            "column_description": "the population of other races in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1217,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 11358.81,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "male_population",
+            "numeric_range": [
+                0,
+                41904
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                2314,
+                6493,
+                6039,
+                0,
+                21028,
+                3268
+            ],
+            "column_description": "the population of males in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1218,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 12131.37,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "female_population",
+            "numeric_range": [
+                0,
+                47470
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                12141,
+                17425,
+                3144,
+                0,
+                16365,
+                23265
+            ],
+            "column_description": "the population of females in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1219,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 30.587000000000003,
+            "data_integrity": 1.0,
+            "value_description": "commonsense evidence: gender ratio in the residential area = male_population / female_population if female_population != 0",
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "median_age",
+            "numeric_range": [
+                0.0,
+                44.4
+            ],
+            "numeric_mode": [
+                0.0
+            ],
+            "samples": [
+                0.0,
+                35.9,
+                36.5,
+                0.0,
+                37.1,
+                38.6
+            ],
+            "column_description": "the median age of the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1220,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 29.417,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "male_median_age",
+            "numeric_range": [
+                0.0,
+                43.7
+            ],
+            "numeric_mode": [
+                0.0
+            ],
+            "samples": [
+                33.8,
+                0.0,
+                37.9,
+                31.8,
+                31.9,
+                34.4
+            ],
+            "column_description": "the male median age in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1221,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 31.680000000000003,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "female_median_age",
+            "numeric_range": [
+                0.0,
+                45.3
+            ],
+            "numeric_mode": [
+                0.0
+            ],
+            "samples": [
+                40.1,
+                41.4,
+                35.0,
+                37.9,
+                39.7,
+                0.0
+            ],
+            "column_description": "the female median age in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1222,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "residential_mailboxes",
+            "numeric_range": [
+                0,
+                26395
+            ],
+            "samples": [
+                2838,
+                10917,
+                6098,
+                922,
+                5599,
+                0
+            ],
+            "column_description": "the number of residential mailboxes in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1223,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 289.53,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "business_mailboxes",
+            "numeric_range": [
+                0,
+                2161
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                790,
+                321,
+                0,
+                0,
+                120,
+                621
+            ],
+            "column_description": "the number of business mailboxes in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1224,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 8314.21,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "total_delivery_receptacles",
+            "numeric_range": [
+                0,
+                29957
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                6685,
+                16419,
+                14329,
+                11302,
+                7691,
+                10598
+            ],
+            "column_description": "the total number of delivery receptacles",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1225,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.02,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "businesses",
+            "numeric_range": [
+                0,
+                2
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of businesses in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1226,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "1st_quarter_payroll",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the total wages reported in the 1st quarter payroll report of the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1227,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "annual_payroll",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the total wages reported in the annual payroll report of the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1228,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 1.0,
+            "value_description": "commonsense evidence: Employers must submit periodic payroll reports to the Internal Revenue Service and state taxing authority. The report is used by employers to report wage information.",
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "employees",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of employees in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1229,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 1.5065500000000003,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "water_area",
+            "numeric_range": [
+                0.0,
+                30.352
+            ],
+            "numeric_mode": [
+                0.0
+            ],
+            "samples": [
+                0.0,
+                0.0,
+                0.795,
+                0.058,
+                3.057,
+                0.711
+            ],
+            "column_description": "the water area of the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1230,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 27.792640000000006,
+            "data_integrity": 1.0,
+            "data_type": "REAL",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "land_area",
+            "numeric_range": [
+                0.0,
+                93.531
+            ],
+            "numeric_mode": [
+                0.0
+            ],
+            "samples": [
+                6.515,
+                26.581,
+                28.993,
+                0.0,
+                28.003,
+                0.426
+            ],
+            "column_description": "the land area of the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1231,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 3523.69,
+            "data_integrity": 1.0,
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "single_family_delivery_units",
+            "numeric_range": [
+                0,
+                17563
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                1683,
+                5737,
+                4892,
+                4245,
+                3771,
+                11153
+            ],
+            "column_description": "the number of single-family delivery units in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1232,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 1457.36,
+            "data_integrity": 1.0,
+            "value_description": "commonsense evidence: A single-family unit can be described as a single unit that accommodates only one family or tenant at a time on rent.\n",
+            "data_type": "INTEGER",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "multi_family_delivery_units",
+            "numeric_range": [
+                0,
+                7224
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                454,
+                1598,
+                0,
+                937,
+                2173,
+                827
+            ],
+            "column_description": "the number of single-family delivery units in the residential area",
+            "null_count": 0
+        }
+    },
+    {
+        "old_id": 1233,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "value_description": "commonsense evidence: multi-family units are usually under a greater surface area with the capacity to accommodate more than one tenant or multiple families on rent at the same time",
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "total_beneficiaries",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the total number of beneficiaries of the postal service",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 1234,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "retired_workers",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of retired workers in the residential area",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 1236,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "disabled_workers",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of disabled workers in the residential area",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 1237,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "category_categories": [
+                "PR",
+                "NY"
+            ],
+            "sample_count": 100,
+            "is_nullable": true,
+            "samples": [
+                "PR",
+                "PR",
+                "PR",
+                "PR",
+                "PR",
+                "PR"
+            ],
+            "referenced_to": [
+                "state.abbreviation"
+            ],
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "name": "state",
+            "key_type": [
+                "foreign_key"
+            ],
+            "word_frequency": "{\"PR\": 98, \"NY\": 2}",
+            "null_count": 0,
+            "average_char_length": 2.0,
+            "column_description": "the state of the country"
+        }
+    },
+    {
+        "old_id": 1243,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "numeric_mean": 0.0,
+            "data_integrity": 0.99,
+            "data_type": "INTEGER",
+            "sample_count": 99,
+            "is_nullable": true,
+            "name": "spouses",
+            "numeric_range": [
+                0,
+                0
+            ],
+            "numeric_mode": [
+                0
+            ],
+            "samples": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "column_description": "the number of spouses in the residential area",
+            "null_count": 1
+        }
+    },
+    {
+        "old_id": 1248,
+        "labels": [
+            "Column"
+        ],
+        "properties": {
+            "data_integrity": 1.0,
+            "data_type": "TEXT",
+            "sample_count": 100,
+            "is_nullable": true,
+            "name": "county",
+            "key_type": [
+                "primary_key"
+            ],
+            "word_frequency": "{\"PONCE\": 9, \"ARECIBO\": 6, \"AGUADILLA\": 4, \"MAYAGUEZ\": 3, \"CAGUAS\": 3, \"SUFFOLK\": 2, \"UTUADO\": 2, \"CABO ROJO\": 2, \"CAMUY\": 2, \"LARES\": 2}",
+            "samples": [
+                "AIBONITO",
+                "ARROYO",
+                "SALINAS",
+                "PONCE",
+                "CAMUY",
+                "SABANA GRANDE"
+            ],
+            "average_char_length": 7.35,
+            "column_description": "the country ",
+            "null_count": 0
+        }
+    }
+]

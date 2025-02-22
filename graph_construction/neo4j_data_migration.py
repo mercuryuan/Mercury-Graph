@@ -1,7 +1,8 @@
 import json
 import os
 
-from neo4j import GraphDatabase
+
+from graph_construction.schema_parser import SchemaParser
 from src.neo4j_connector import get_driver
 
 driver = get_driver()
@@ -45,13 +46,14 @@ def export_all(exp_path=None):
             json.dump(relationships, f, indent=4)
 
 
-def import_all():
+def import_all(imp_path=None):
     # 导入节点并建立 ID 映射
     id_map = {}  # {旧ID: 新ID}
 
     with driver.session() as session:
         # 导入节点
-        with open("nodes.json", "r") as f:
+        nodes_file_path = os.path.join(imp_path, "nodes.json")
+        with open(nodes_file_path, "r") as f:
             nodes = json.load(f)
             for node in nodes:
                 labels = ":".join(node["labels"])
@@ -61,7 +63,10 @@ def import_all():
                 id_map[node["old_id"]] = new_id  # 记录旧ID到新ID的映射
 
         # 导入关系
-        with open("relationships.json", "r") as f:
+        # 拼接关系文件的完整路径
+        relationships_file_path = os.path.join(imp_path, "relationships.json")
+
+        with open(relationships_file_path, "r") as f:
             relationships = json.load(f)
             for rel in relationships:
                 start_new_id = id_map.get(rel["start_old_id"])
@@ -77,9 +82,28 @@ def import_all():
                     "SET r = $props"
                 )
                 session.run(query, props=rel["properties"])
+        print(f"成功导入 {os.path.basename(imp_path)}")
 
 
 if __name__ == '__main__':
-    # export_all()
-    import_all()
+    # 定义导入路径，指向要导入的图数据所在的目录
+    db_path = "../graphs_repo/BIRD/books"
+    # 导出图数据
+    export_all(db_path)
+
+    # 创建一个 SchemaParser 类的实例，传入 Neo4j 驱动程序
+    parser = SchemaParser(driver)
+
+    # 调用 SchemaParser 实例的 clear_neo4j_database 方法，清空 Neo4j 数据库中的所有数据
+    parser.clear_neo4j_database()
+    # 调用 import_all 函数，将指定路径下的图数据导入到 Neo4j 数据库中
+
+
+
+    import_all(db_path)
+
+
+
+    # 关闭 Neo4j 驱动程序，释放资源
     driver.close()
+

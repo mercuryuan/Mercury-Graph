@@ -7,7 +7,7 @@ import os
 RELATION_DESCRIPTION_FILE = "relation_descriptions.json"
 
 class GraphEnricher:
-    def __init__(self, neo4j_uri, neo4j_user, neo4j_password,api_key):
+    def __init__(self, neo4j_uri, neo4j_user, neo4j_password, api_key):
         """
         初始化GraphEnricher类，建立与Neo4j数据库的连接，并创建ChatGPT API包装类的实例。
 
@@ -118,7 +118,7 @@ class GraphEnricher:
         :return: 关系描述（字符串形式），如果文件不存在或节点对描述不存在则返回None
         """
         if os.path.exists(RELATION_DESCRIPTION_FILE):
-            with open(RELATION_DESCRIPTION_FILE, 'r',encoding="UTF-8") as file:
+            with open(RELATION_DESCRIPTION_FILE, 'r', encoding="UTF-8") as file:
                 relation_descriptions = json.load(file)
                 return relation_descriptions.get(node_pair_key)
         return None
@@ -132,13 +132,14 @@ class GraphEnricher:
         """
         relation_descriptions = {}
         if os.path.exists(RELATION_DESCRIPTION_FILE):
-            with open(RELATION_DESCRIPTION_FILE, 'r',encoding="UTF-8") as file:
+            with open(RELATION_DESCRIPTION_FILE, 'r', encoding="UTF-8") as file:
                 relation_descriptions = json.load(file)
 
         relation_descriptions[node_pair_key] = relation_description
 
         with open(RELATION_DESCRIPTION_FILE, 'w') as file:
             json.dump(relation_descriptions, file, indent=4)
+
 
 if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7687"

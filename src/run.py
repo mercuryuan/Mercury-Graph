@@ -23,7 +23,7 @@ def traverse_folders(root_folder):
 def run(sqlite_path):
     parser = SchemaParser(neo4j_driver, sqlite_path)
     try:
-        # parser.parse_and_store_schema()
+        parser.parse_and_store_schema()
         print("Schema parsing and storing completed successfully.")
         # 导出存储schema graph
         exp_path = os.path.join("..\graphs_repo", os.path.join(parser.extract_dataset_name(sqlite_path),
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
         # 请将 'root_folder' 替换为你想要遍历的文件夹的实际路径
         # BIRD 训练集路径
-        root_folder = 'E:/BIRD_train/train/train_databases'
+        # root_folder = 'E:/BIRD_train/train/train_databases'
         # SPIDER 训练集路径
-        # root_folder = 'E:/spider/database'
+        root_folder = 'E:/spider/database'
         traverse_folders(root_folder)

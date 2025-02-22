@@ -87,7 +87,7 @@ def quote_identifier(identifier):
 
 
 class SchemaParser:
-    def __init__(self, driver, database_file):
+    def __init__(self, driver, database_file=None):
         """
         初始化SchemaParser类，建立与Neo4j和SQLite数据库的连接。
 
@@ -106,7 +106,7 @@ class SchemaParser:
         """
         self.neo4j_driver.close()
 
-    def _clear_neo4j_database(self):
+    def clear_neo4j_database(self):
         """
         清空Neo4j数据库中的所有节点和关系。
         """
@@ -119,7 +119,7 @@ class SchemaParser:
         每次运行清空Neo4j数据库中的所有节点和关系。
         :return: 解析后的schema信息（以字典形式表示，包含表、列、外键关系等）
         """
-        self._clear_neo4j_database()
+        self.clear_neo4j_database()
         schema = defaultdict(lambda: defaultdict(list))
         with sqlite3.connect(self.database_file) as conn:
             cursor = conn.cursor()
@@ -384,7 +384,7 @@ class SchemaParser:
             # 根据列描述信息添加相应属性（当描述不为空时添加）
             if column_desc:
                 if column_desc["column_description"]:
-                    props["column_description"] = column_desc["column_description"]
+                    props["column_description"] = column_desc["column_description"].replace('\n', '') # 去掉换行符
                 if column_desc["value_description"]:
                     props["value_description"] = column_desc["value_description"]
 
@@ -512,7 +512,9 @@ class SchemaParser:
             # 数据完整性统计
             null_count = len(all_values) - len(non_null_values)
             additional_attributes['null_count'] = null_count
-            additional_attributes['data_integrity'] = len(non_null_values) / len(all_values) if all_values else 1
+            # 计算数据完整性并以百分比形式存储
+            additional_attributes['data_integrity'] = "{:.0f}%".format(
+                len(non_null_values) / len(all_values) * 100) if all_values else "100%"
 
             # if null_count > 0:
             #     print(f"过滤掉了 {table_name} 中 {column_name} 的 {null_count} 个空值数据")
@@ -559,7 +561,10 @@ class SchemaParser:
                     is_id_column = "id" in column_name.lower()
                     if not is_id_column:
                         # 计算众数
-                        additional_attributes['numeric_mode'] = self._get_mode(valid_values)
+                        mode = self._get_mode(valid_values)
+                        # 若次数大于1次的众数存在，则将其添加到附加属性中
+                        if mode:
+                            additional_attributes['numeric_mode'] = mode
 
                         # 计算平均值
                         if valid_values:
@@ -586,7 +591,7 @@ class SchemaParser:
             elif base_data_type in text_types:
                 # 如果唯一值数量小于等于 6，将其视为类别型数据
                 if len(set(non_null_values)) <= 6:
-                    additional_attributes['category_categories'] = list(set(non_null_values))
+                    additional_attributes['text_categories'] = list(set(non_null_values))
 
                 # 计算平均字符长度
                 additional_attributes['average_char_length'] = self._get_average_char_length(
@@ -688,7 +693,8 @@ class SchemaParser:
         # 使用 Counter 统计每个元素出现的次数
         count_dict = Counter(values)
         max_count = max(count_dict.values())
-
+        if max_count <= 1:
+            return []
         # 找出所有出现次数等于最大次数的元素，即众数
         modes = [k for k, v in count_dict.items() if v == max_count]
 
@@ -812,7 +818,7 @@ class SchemaParser:
         return time_attributes
 
     def extract_dataset_name(self, database_file):
-        possible_datasets = ['bird', 'spider','BIRD']
+        possible_datasets = ['bird', 'spider', 'BIRD']
         for dataset_name in possible_datasets:
             if dataset_name in database_file:
                 return dataset_name
@@ -851,6 +857,7 @@ if __name__ == "__main__":
     # database_file = "E:/BIRD_train/train/train_databases/talkingdata/talkingdata.sqlite" # DATETIME类型有问题数据的
     # database_file = "E:/BIRD_train/train/train_databases/mondial_geo/mondial_geo.sqlite"
     # database_file = "E:/BIRD_train/train/train_databases/ice_hockey_draft/ice_hockey_draft.sqlite"
+    # database_file = "E:/BIRD_train/train/train_databases/address/address.sqlite"
     # 创建 Neo4j 驱动连接
     neo4j_driver = get_driver()
     parser = SchemaParser(neo4j_driver, database_file)
