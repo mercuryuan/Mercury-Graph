@@ -1,13 +1,8 @@
 import json
 import os.path
 
-
-def generate_numeric_column_schema(column_node):
-    properties = column_node['properties']
-    column_name = properties['name']
-    data_type = properties['data_type']
-    prop_type = data_type.upper()
-
+# 提取重复的信息生成逻辑
+def generate_common_info(properties):
     key_info = []
     if 'key_type' in properties:
         if 'primary_key' in properties['key_type']:
@@ -27,188 +22,143 @@ def generate_numeric_column_schema(column_node):
         data_integrity = properties.get('data_integrity')
         null_count = properties.get('null_count')
         if data_integrity is not None:
-            additional_info.append(f"data integrity: {data_integrity}")
+            additional_info.append(f"DataIntegrity: {data_integrity}")
             if null_count and null_count != 0:
-                additional_info.append(f"null count: {null_count}")
-    if 'numeric_range' in properties:
-        additional_info.append(f"numeric range: {properties['numeric_range']}")
-    if 'referenced_by' in properties:
-        additional_info.append(f"referenced by: {', '.join(properties['referenced_by'])}")
-    if 'numeric_mean' in properties:
-        additional_info.append(f"numeric mean: {properties['numeric_mean']}")
-    if 'numeric_mode' in properties:
-        additional_info.append(f"numeric mode: {properties['numeric_mode']}")
+                additional_info.append(f"NullCount: {null_count}")
 
-    additional_info_str = ', '.join(additional_info)
+    return key_info_str, examples_str, nullable_str, additional_info
 
-    column_desc = properties.get('column_description')
-    schema_str = f"({column_name}:{prop_type}"
-    if column_desc:
-        schema_str += f", {column_desc}"
-    if key_info_str:
-        schema_str += f", {key_info_str}"
-    schema_str += f", Examples: [{examples_str}]"
-    schema_str += f", {nullable_str}"
-    if additional_info_str:
-        schema_str += f", {additional_info_str}"
-    schema_str += ")"
+# 定义策略接口
+class ColumnSchemaGenerator:
+    def generate_schema(self, column_node):
+        pass
 
-    value_desc = properties.get('value_description')
-    return schema_str, value_desc
+# 数值型列策略类
+class NumericColumnSchemaGenerator(ColumnSchemaGenerator):
+    def generate_schema(self, column_node):
+        properties = column_node['properties']
+        column_name = properties['name']
+        data_type = properties['data_type']
+        prop_type = data_type.upper()
 
+        key_info_str, examples_str, nullable_str, additional_info = generate_common_info(properties)
 
+        if 'numeric_range' in properties:
+            additional_info.append(f"Range: {properties['numeric_range']}")
+        if 'referenced_by' in properties:
+            additional_info.append(f"ReferencedBy: {', '.join(properties['referenced_by'])}")
+        if 'numeric_mean' in properties:
+            additional_info.append(f"Mean: {properties['numeric_mean']}")
+        if 'numeric_mode' in properties:
+            additional_info.append(f"Mode: {properties['numeric_mode']}")
 
+        additional_info_str = ', '.join(additional_info)
 
-def generate_text_column_schema(column_node):
-    """
-    生成文本类型列的 M - Schema
-    :param column_node: 列节点信息
-    :return: M - Schema 格式的字符串和 value description
-    """
-    properties = column_node['properties']
-    column_name = properties['name']
-    data_type = properties['data_type']
-    prop_type = data_type.upper()
-    column_desc = properties.get('column_description')
+        column_desc = properties.get('column_description')
+        schema_str = f"({column_name}:{prop_type}"
+        if column_desc:
+            schema_str += f", {column_desc}"
+        if key_info_str:
+            schema_str += f", {key_info_str}"
+        schema_str += f", examples: [{examples_str}]"
+        schema_str += f", {nullable_str}"
+        if additional_info_str:
+            schema_str += f", {additional_info_str}"
+        schema_str += ")"
 
-    # 基本信息
-    schema_str = f"({column_name}:{prop_type}"
-    if column_desc:
-        schema_str += f", {column_desc}"
+        value_desc = properties.get('value_description')
+        return schema_str, value_desc
 
-    # 键信息
-    key_info = []
-    if 'key_type' in properties:
-        if 'primary_key' in properties['key_type']:
-            key_info.append('Primary Key')
-        if 'foreign_key' in properties['key_type']:
-            key_info.append('Foreign Key')
-    key_info_str = ', '.join(key_info)
-    if key_info_str:
-        schema_str += f", {key_info_str}"
+# 文本型列策略类
+class TextColumnSchemaGenerator(ColumnSchemaGenerator):
+    def generate_schema(self, column_node):
+        properties = column_node['properties']
+        column_name = properties['name']
+        data_type = properties['data_type']
+        prop_type = data_type.upper()
 
-    # 示例值
-    samples = properties.get('samples', [])
-    examples_str = ', '.join(map(str, samples))
-    schema_str += f", Examples: [{examples_str}]"
+        key_info_str, examples_str, nullable_str, additional_info = generate_common_info(properties)
 
-    # 可空性
-    is_nullable = properties.get('is_nullable', False)
-    nullable_str = "Nullable" if is_nullable else "Not Nullable"
-    schema_str += f", {nullable_str}"
+        if 'referenced_to' in properties:
+            additional_info.append(f"ReferencedTo: {', '.join(properties['referenced_to'])}")
+        if 'word_frequency' in properties:
+            word_freq = json.loads(properties['word_frequency'])
+            additional_info.append(f"WordFrequency: {word_freq}")
+        if 'average_char_length' in properties:
+            additional_info.append(f"AverageLength: {properties['average_char_length']}")
+        if 'category_categories' in properties:
+            additional_info.append(f"Categories: {properties['category_categories']}")
 
-    # 统计信息（当可空时）
-    if is_nullable:
-        data_integrity = properties.get('data_integrity')
-        null_count = properties.get('null_count')
-        if data_integrity is not None:
-            schema_str += f", data integrity: {data_integrity}"
-            if data_integrity != 1.0 and null_count is not None and null_count != 0:
-                schema_str += f", null count: {null_count}"
+        additional_info_str = ', '.join(additional_info)
 
-    # 其他统计信息
-    additional_info = []
-    if 'referenced_to' in properties:
-        additional_info.append(f"referenced to: {', '.join(properties['referenced_to'])}")
-    if 'word_frequency' in properties:
-        word_freq = json.loads(properties['word_frequency'])
-        additional_info.append(f"word frequency: {word_freq}")
-    if 'average_char_length' in properties:
-        additional_info.append(f"average char length: {properties['average_char_length']}")
-    if 'category_categories' in properties:
-        additional_info.append(f"category categories: {properties['category_categories']}")
+        column_desc = properties.get('column_description')
+        schema_str = f"({column_name}:{prop_type}"
+        if column_desc:
+            schema_str += f", {column_desc}"
+        if key_info_str:
+            schema_str += f", {key_info_str}"
+        schema_str += f", examples: [{examples_str}]"
+        schema_str += f", {nullable_str}"
+        if additional_info_str:
+            schema_str += f", {additional_info_str}"
+        schema_str += ")"
 
-    additional_info_str = ', '.join(additional_info)
-    if additional_info_str:
-        schema_str += f", {additional_info_str}"
+        value_desc = properties.get('value_description')
+        return schema_str, value_desc
 
-    schema_str += ")"
+# 时间型列策略类
+class TimeColumnSchemaGenerator(ColumnSchemaGenerator):
+    def generate_schema(self, column_node):
+        properties = column_node['properties']
+        column_name = properties['name']
+        data_type = properties['data_type']
+        prop_type = data_type.upper()
 
-    value_desc = properties.get('value_description')
-    return schema_str, value_desc
+        key_info_str, examples_str, nullable_str, additional_info = generate_common_info(properties)
 
+        if 'time_span' in properties:
+            additional_info.append(f"TimeSpan: {properties['time_span']}")
+        if 'earliest_time' in properties:
+            additional_info.append(f"EarliestTime: {properties['earliest_time']}")
+        if 'latest_time' in properties:
+            additional_info.append(f"LatestTime: {properties['latest_time']}")
 
-def generate_time_column_schema(column_node):
-    """
-    生成时间类型列的 M - Schema
-    :param column_node: 列节点信息
-    :return: M - Schema 格式的字符串和 value description
-    """
-    properties = column_node['properties']
-    column_name = properties['name']
-    data_type = properties['data_type']
-    prop_type = data_type.upper()
+        additional_info_str = ', '.join(additional_info)
 
-    # 基本信息
-    schema_str = f"({column_name}:{prop_type}"
+        column_desc = properties.get('column_description')
+        schema_str = f"({column_name}:{prop_type}"
+        if column_desc:
+            schema_str += f", {column_desc}"
+        if key_info_str:
+            schema_str += f", {key_info_str}"
+        schema_str += f", examples: [{examples_str}]"
+        schema_str += f", {nullable_str}"
+        if additional_info_str:
+            schema_str += f", {additional_info_str}"
+        schema_str += ")"
 
-    # 列描述信息
-    column_desc = properties.get('column_description')
-    if column_desc:
-        schema_str += f", {column_desc}"
+        value_desc = properties.get('value_description')
+        return schema_str, value_desc
 
-    # 键信息
-    key_info = []
-    if 'key_type' in properties:
-        if 'primary_key' in properties['key_type']:
-            key_info.append('Primary Key')
-        if 'foreign_key' in properties['key_type']:
-            key_info.append('Foreign Key')
-    key_info_str = ', '.join(key_info)
-    if key_info_str:
-        schema_str += f", {key_info_str}"
+# 上下文类
+class ColumnSchemaContext:
+    def __init__(self, strategy):
+        self.strategy = strategy
 
-    # 示例值
-    samples = properties.get('samples', [])
-    examples_str = ', '.join(map(str, samples))
-    schema_str += f", Examples: [{examples_str}]"
+    def generate_column_schema(self, column_node):
+        return self.strategy.generate_schema(column_node)
 
-    # 可空性
-    is_nullable = properties.get('is_nullable', False)
-    nullable_str = "Nullable" if is_nullable else "Not Nullable"
-    schema_str += f", {nullable_str}"
-
-    # 统计信息（当可空时）
-    if is_nullable:
-        data_integrity = properties.get('data_integrity')
-        null_count = properties.get('null_count')
-        if data_integrity is not None:
-            schema_str += f", data integrity: {data_integrity}"
-            if data_integrity != 1.0 and null_count is not None and null_count != 0:
-                schema_str += f", null count: {null_count}"
-
-    # 其他统计信息
-    additional_info = []
-    # 可添加时间类型列特有的属性处理逻辑，如 time_span、earliest_time、latest_time 等
-    if 'time_span' in properties:
-        additional_info.append(f"time span: {properties['time_span']}")
-    if 'earliest_time' in properties:
-        additional_info.append(f"earliest time: {properties['earliest_time']}")
-    if 'latest_time' in properties:
-        additional_info.append(f"latest time: {properties['latest_time']}")
-
-    additional_info_str = ', '.join(additional_info)
-    if additional_info_str:
-        schema_str += f", {additional_info_str}"
-
-    schema_str += ")"
-
-    # 获取 value description
-    value_desc = properties.get('value_description')
-    return schema_str, value_desc
-
-
-# 根据列的数据类型调用相应的处理函数生成 M - Schema
-def generate_column_schema(column_node):
-    data_type = column_node['properties']['data_type'].upper()
+# 根据列的数据类型选择合适的策略类
+def get_column_schema_strategy(data_type):
+    data_type = data_type.upper()
     if data_type in ['INTEGER', 'INT', 'SMALLINT', 'BIGINT', 'TINYINT', 'MEDIUMINT', 'REAL', 'FLOAT', 'DOUBLE', 'DECIMAL', 'NUMERIC', 'BOOLEAN']:
-        return generate_numeric_column_schema(column_node)
+        return NumericColumnSchemaGenerator()
     elif data_type in ['TEXT', 'VARCHAR', 'CHAR', 'NCHAR', 'NVARCHAR', 'NTEXT', 'CLOB', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'JSON', 'XML']:
-        return generate_text_column_schema(column_node)
+        return TextColumnSchemaGenerator()
     elif data_type in ['DATE', 'DATETIME', 'TIMESTAMP']:
-        return generate_time_column_schema(column_node)
+        return TimeColumnSchemaGenerator()
     else:
-        return generate_text_column_schema(column_node)
+        return TextColumnSchemaGenerator()
 
 # 生成表节点 Schema 的函数
 def generate_table_schema(nodes, relationships):
@@ -279,7 +229,10 @@ def generate_table_schema(nodes, relationships):
         column_schemas = []
         columns = table_column_mapping.get(table_name, [])
         for column in columns:
-            column_schema, value_desc = generate_column_schema(column)
+            data_type = column['properties']['data_type']
+            strategy = get_column_schema_strategy(data_type)
+            context = ColumnSchemaContext(strategy)
+            column_schema, value_desc = context.generate_column_schema(column)
             column_schemas.append(column_schema)
             if value_desc:
                 column_name = column['properties']['name']
@@ -298,13 +251,22 @@ def generate_table_schema(nodes, relationships):
 
     return m_schema
 
-db_path = "../graphs_repo/BIRD/books"
-# 读取 node.json 和 relationship.json 文件
-with open(os.path.join(db_path, 'nodes.json'), 'r') as f:
-    nodes = json.load(f)
-with open(os.path.join(db_path, 'relationships.json'), 'r') as f:
-    relationships = json.load(f)
+def main(db_path):
+    try:
+        # 读取 node.json 和 relationship.json 文件
+        with open(os.path.join(db_path, 'nodes.json'), 'r') as f:
+            nodes = json.load(f)
+        with open(os.path.join(db_path, 'relationships.json'), 'r') as f:
+            relationships = json.load(f)
 
-# 生成 M - Schema
-m_schema = generate_table_schema(nodes, relationships)
-print(m_schema)
+        # 生成 M - Schema
+        m_schema = generate_table_schema(nodes, relationships)
+        print(m_schema)
+    except FileNotFoundError:
+        print(f"Error: One or both of the files (nodes.json, relationships.json) were not found in {db_path}.")
+    except json.JSONDecodeError:
+        print(f"Error: There was an issue decoding the JSON files in {db_path}.")
+
+if __name__ == "__main__":
+    db_path = "../graphs_repo/BIRD/books"
+    main(db_path)
