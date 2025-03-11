@@ -13,7 +13,7 @@ class ChatGPTAPIWrapper:
         else:
             print("未从环境变量中获取到OpenAI API密钥，请确保设置了环境变量 'OPENAI_API_KEY' 或者手动设置API密钥。")
 
-    def generate_response(self, messages, model="gpt-3.5-turbo", temperature=0.7):
+    def generate_response(self, messages, model="gpt-3.5-turbo", temperature=0.5):
         """
         调用ChatGPT API生成回复。
 

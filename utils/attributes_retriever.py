@@ -127,7 +127,7 @@ if __name__ == '__main__':
     try:
         # 通过表名获取表节点及其所有列节点属性
         # result = handler.get_table_and_all_column_nodes_by_table_name("Orders")
-        result = handler.get_table_and_all_column_nodes_by_table_name("works")
+        result = handler.get_table_and_all_column_nodes_by_table_name("hall_of_fame")
         if result:
             for node_props in result:
                 print(node_props)

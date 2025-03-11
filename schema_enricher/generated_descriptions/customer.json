@@ -1,0 +1,13 @@
+{
+    "customer": [
+        {
+            "description": "The customer table contains essential information about individuals who are customers, including their unique identifiers and personal details.",
+            "columns": {
+                "customer_id": "The unique identifier assigned to each customer.",
+                "first_name": "The given name of the customer, typically the name they are called by in social contexts.",
+                "last_name": "The family name or surname of the customer, used to identify their lineage.",
+                "email": "The email address of the customer, used for communication and account recovery."
+            }
+        }
+    ]
+}

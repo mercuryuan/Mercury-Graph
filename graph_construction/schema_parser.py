@@ -862,8 +862,8 @@ if __name__ == "__main__":
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
     # database_file = "../data/bird/books/books.sqlite"
-    database_file = "../data/bird/shakespeare/shakespeare.sqlite"
-    # database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
+    # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
+    database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
     # database_file = "E:/spider/database/book_2/book_2.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
@@ -876,6 +876,10 @@ if __name__ == "__main__":
     # database_file = "E:/BIRD_train/train/train_databases/mondial_geo/mondial_geo.sqlite"
     # database_file = "E:/BIRD_train/train/train_databases/ice_hockey_draft/ice_hockey_draft.sqlite"
     # database_file = "E:/BIRD_train/train/train_databases/address/address.sqlite"
+    # spider2
+    # database_file = "E:/spider2.0-lite/California_Traffic_Collision.sqlite"
+    # database_file = "E:/spider2.0-lite/Baseball.sqlite"
+    # database_file = "E:/spider2.0-lite/IPL.sqlite"
     # 创建 Neo4j 驱动连接
     neo4j_driver = get_driver()
     parser = SchemaParser(neo4j_driver, database_file)
