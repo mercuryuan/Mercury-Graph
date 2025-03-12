@@ -1,5 +1,17 @@
-from neo4j import GraphDatabase
+"""
+此模块定义了 GraphSearch 类，用于在 Neo4j 图数据库中查找两个节点之间的最短路径。
+它提供了节点 ID 查询、路径查找和路径解析等功能，最终将路径信息以清晰的英文描述输出。
 
+依赖库:
+- neo4j: 用于与 Neo4j 数据库进行交互。
+- src.neo4j_connector: 提供获取 Neo4j 数据库驱动的功能。
+
+使用方法:
+    1. 导入 GraphSearch 类。
+    2. 创建 GraphSearch 类的实例。
+    3. 调用 find_shortest_path_between_nodes 方法查找两个节点之间的最短路径。
+    4. 调用 close_connections 方法关闭数据库连接。
+"""
 from src.neo4j_connector import get_driver
 
 
@@ -139,20 +151,13 @@ class GraphSearch:
 
 
 if __name__ == "__main__":
-    neo4j_uri = "bolt://localhost:7687"
-    neo4j_user = "neo4j"
-    neo4j_password = "12345678"
-
     graph_search = GraphSearch()
-
-    node1_name = "book_language.language_id"
-    node2_name = "customer"
-
+    node1_name = "domain_publication"
+    node2_name = "conference"
     shortest_path = graph_search.find_shortest_path_between_nodes(node1_name, node2_name)
     if shortest_path:
         print(f"{node1_name} 和 {node2_name} 之间的路径：")
         print(shortest_path)
     else:
         print(f"未找到 {node1_name} 和 {node2_name} 之间的路径。")
-
     graph_search.close_connections()
