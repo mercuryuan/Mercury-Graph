@@ -3,6 +3,8 @@ from neo4j.graph import Relationship, Node
 from sqlglot.expressions import Table, Column, Join, Where
 from neo4j import GraphDatabase
 
+from src.neo4j_connector import get_driver
+
 
 class SqlParserTool:
     """
@@ -189,8 +191,21 @@ class SqlParserTool:
     def parse_and_display(self, sql, question=None, db_id=None):
         """
         解析输入的SQL语句，并展示解析后的表、列等相关信息以及它们之间的关系信息。
+        同时，根据解析结果生成对应的Neo4j子图查询语句，并对该查询语句进行验证。
+
         参数:
             sql (str): 要解析和展示信息的SQL语句字符串。
+            question (str, optional): 与SQL查询相关的问题描述，默认为None。
+            db_id (str, optional): 数据库的ID，默认为None。
+
+        输出:
+            1. 打印数据库ID和问题描述（如果提供）。
+            2. 打印原始的SQL语句。
+            3. 打印解析后的实体信息（表和列）。
+            4. 打印解析后的关系信息（连接和条件）。
+            5. 按表为单位格式化输出实体信息。
+            6. 打印生成的Neo4j子图查询语句。
+            7. 验证并输出Cypher查询语句的验证结果。
         """
         entities, relationships = self.extract_entities_and_relationships(sql)
         if question:
@@ -205,7 +220,7 @@ class SqlParserTool:
         print()
         self.print_entities_by_table(entities)
         print("\n对应子图查询语句：")
-        cypher_query = self.sql2subgraph(entities,relationships)
+        cypher_query = self.sql2subgraph(entities, relationships)
         print(cypher_query)
         print()
         self.validate_cypher_query(cypher_query)  # 验证Cypher查询语句，仅做测试，不在正式版本中使用
@@ -433,11 +448,7 @@ class SqlParserTool:
 
 if __name__ == '__main__':
     # Neo4j数据库连接配置
-    neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
-    neo4j_user = "neo4j"  # 根据实际情况修改
-    neo4j_password = "12345678"  # 根据实际情况修改
-
-    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+    driver = get_driver()
     try:
         # 示例 SQL 查询
         sql = """
@@ -447,9 +458,14 @@ if __name__ == '__main__':
         INNER JOIN book_language AS T3 ON T3.language_id = T2.language_id 
         WHERE T1.price * 100 < (SELECT AVG(price) FROM order_line) * 20
         """
+        # 实例化 SqlParserTool 类
         tool = SqlParserTool(driver)
-        entities, relationships = tool.extract_entities_and_relationships(sql)
+        # 解析并展示结果
         tool.parse_and_display(sql)
+
+        # 仅返回子图查询的cypher语句的用法
+        # e,r = tool.extract_entities_and_relationships(sql)
+        # print(tool.sql2subgraph(e,r))
+
     finally:
-        tool.close_neo4j_connection()
         driver.close()
