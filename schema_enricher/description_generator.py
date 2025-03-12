@@ -16,7 +16,7 @@ class TableSchemaDescriber:
         """
         self.db_path = db_path
         self.llm = ChatOpenAI(model=model_name)
-        self.output_dir = "./generated_descriptions"
+        self.output_dir = "generated_descriptions"
         os.makedirs(self.output_dir, exist_ok=True)
         self.log_file = "./Database_Description_Process.log"
 
@@ -26,7 +26,7 @@ class TableSchemaDescriber:
         :param table_name: 需要描述的表名（可选）。
         :return: (db_name, table_list, table_name, table_schema)
         """
-        return get_table_schema(self.db_path, table_name, show_tables=True)
+        return get_table_schema(self.db_path, table_name, show_tables=False)
 
     def generate_prompt(self, table_name: str, table_schema: str) -> str:
         """
@@ -139,16 +139,22 @@ Please output the result in the following JSON format:
             f.write(message + "\n")
         print(message)
 
+    import time
+    from tqdm import tqdm
+    import json
+
     def describe_database(self):
         """
         遍历数据库中的所有表，并为每个表生成描述。
         使用进度条显示处理进度，并对失败的表进行最多 3 次重试。
         """
         db_name, table_list, _, _ = self.get_schema()
+        start_time = time.time()  # 记录开始时间
+        start_timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(start_time))
 
-        self.log(f"开始处理数据库: {db_name}, 包含 {len(table_list)} 张表")
+        self.log(f"[{start_timestamp}] 🚀 开始处理数据库: {db_name}, 包含 {len(table_list)} 张表")
 
-        for table_name in tqdm(table_list, desc="Processing Tables"):
+        for table_name in tqdm(table_list, desc=f"Processing {db_name} Tables"):
             attempt = 0
             success = False
 
@@ -158,22 +164,28 @@ Please output the result in the following JSON format:
                     prompt = self.generate_prompt(table_name, table_schema)
                     description = self.call_llm(prompt)
                     self.save_description(db_name, table_name, description)
-                    self.log(f"成功处理表: {table_name}")
+                    self.log(f"✅ 成功处理表: {table_name}")
                     success = True
                 except json.JSONDecodeError as e:
-                    self.log(f"解析 JSON 失败: {table_name}, 尝试 {attempt + 1}/3, 错误: {e}")
+                    self.log(f"❌ 解析 JSON 失败: {table_name}, 尝试 {attempt + 1}/3, 错误: {e}")
                 except Exception as e:
-                    self.log(f"处理表失败: {table_name}, 尝试 {attempt + 1}/3, 错误: {e}")
+                    self.log(f"❌ 处理表失败: {table_name}, 尝试 {attempt + 1}/3, 错误: {e}")
                 finally:
                     attempt += 1
                     time.sleep(1)  # 避免短时间内频繁调用
 
-        self.log("数据库描述任务完成")
+        end_time = time.time()  # 记录结束时间
+        end_timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(end_time))
+        elapsed_time = end_time - start_time
+
+        self.log(f"[{end_timestamp}] 🎉 数据库 {db_name} 处理完成！耗时: {elapsed_time:.2f} 秒")
 
 
 # 示例调用
 if __name__ == "__main__":
     db_path = "../graphs_repo/spider/activity_1"
     describer = TableSchemaDescriber(db_path)
-    # describer.describe_database()
-    describer.describe_table("Student")
+    # 处理单表
+    # describer.describe_table("Student")
+    # 处理当前TableSchemaDescriber所在的数据库
+    describer.describe_database()

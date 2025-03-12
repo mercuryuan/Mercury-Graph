@@ -26,7 +26,7 @@ def run(sqlite_path):
         parser.parse_and_store_schema()
         print("Schema parsing and storing completed successfully.")
         # 导出存储schema graph
-        exp_path = os.path.join("..\graphs_repo", os.path.join(parser.extract_dataset_name(sqlite_path),
+        exp_path = os.path.join("../graphs_repo", os.path.join(parser.extract_dataset_name(sqlite_path),
                                                                parser.extract_database_name(sqlite_path)))
         export_all(exp_path)
         print("成功导出！")
