@@ -1,8 +1,12 @@
 import os
-import json
 import time
 
-from description_generator import TableSchemaDescriber
+from tqdm import tqdm
+
+from graph_construction.neo4j_data_migration import load_graph_to_neo4j
+from schema_enricher.utils.description_generator import TableSchemaDescriber
+from schema_enricher.utils.description_injector import inject_descriptions
+
 
 class Enricher:
     """
@@ -11,16 +15,24 @@ class Enricher:
     2. 在外键连接不全的情况下，基于业务逻辑推断可能的外键关系。
     """
 
-    def __init__(self, ds_path: str, log_file: str = "./Enrich_Process.log"):
+    def __init__(self, ds_root: str = "../graphs_repo/", log_file: str = "./Enrich_Process.log"):
         """
         初始化 Enricher。
 
-        :param ds_path: 数据集的根目录，包含多个数据库文件夹。
-        :param log_file: 日志文件路径，记录 enrich 过程。
+        :param ds_root: 数据集根目录
+        :param log_file: 处理日志存储路径。
         """
-        self.ds_path = ds_path
+        self.ds_root = ds_root
         self.log_file = log_file
-        os.makedirs(os.path.dirname(log_file), exist_ok=True)  # 确保日志文件目录存在
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)  # 确保日志文件夹存在
+
+    def log(self, message: str):
+        """ 记录日志信息到文件并打印到控制台 """
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        log_msg = f"[{timestamp}] {message}"
+        with open(self.log_file, "a", encoding="utf-8") as log:
+            log.write(log_msg + "\n")
+        print(log_msg)
 
     def enrich_description(self, db_path: str):
         """
@@ -28,30 +40,23 @@ class Enricher:
 
         :param db_path: 数据库文件夹路径。
         """
-        describer = TableSchemaDescriber(db_path)
         db_name = os.path.basename(db_path)  # 数据库名称
         description_file = f"./generated_descriptions/{db_name}.json"
-        start_time = time.strftime("%Y-%m-%d %H:%M:%S")  # 记录开始时间
 
-        with open(self.log_file, "a", encoding="utf-8") as log:  # 追加模式
-            # 1. 检查是否已存在描述文件
-            if os.path.exists(description_file):
-                log.write(f"[{start_time}] ⏩ 跳过 {db_path}，描述文件已存在。\n")
-                print(f"[{start_time}] ⏩ 跳过 {db_path}，描述文件已存在。")
-                return
+        # 1. 检查是否已存在描述文件
+        if os.path.exists(description_file):
+            self.log(f"⏩ 跳过 {db_name}，描述文件已存在。")
+            return
 
-            log.write(f"[{start_time}] 🚀 开始处理数据库: {db_path}\n")
-            print(f"[{start_time}] 🚀 开始处理数据库: {db_path}")
+        self.log(f"🚀 开始处理数据库: {db_name}")
 
-            try:
-                describer.describe_database()
-                end_time = time.strftime("%Y-%m-%d %H:%M:%S")  # 记录结束时间
-                log.write(f"[{end_time}] ✅ {db_path} 处理完成！\n")
-                print(f"[{end_time}] ✅ {db_path} 处理完成！")
-            except Exception as e:
-                error_msg = f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] ❌ 处理 {db_path} 时发生错误: {e}\n"
-                log.write(error_msg)
-                print(error_msg)
+        describer = TableSchemaDescriber(db_path)
+
+        try:
+            describer.describe_database()
+            self.log(f"✅ {db_name} 处理完成！")
+        except Exception as e:
+            self.log(f"❌ 处理 {db_name} 时发生错误: {e}")
 
     def infer_foreign_keys(self):
         """
@@ -59,29 +64,43 @@ class Enricher:
         """
         print("🔍 外键推断功能待实现...")
 
-    def enrich_schema(self):
+    def enrich_schema(self, dataset_name: str):
         """
-        遍历数据集根目录，对每个数据库文件夹执行 enrich_description()。
+        遍历数据集目录，对所有数据库执行 enrich_description。
+
+        :param dataset_name: 数据集名称，必须是 'spider' 或 'bird'。
         """
-        if not os.path.exists(self.ds_path):
-            print(f"❌ 数据集目录 {self.ds_path} 不存在！")
-            return
+        if dataset_name not in {"spider", "bird"}:
+            raise ValueError("dataset_name 必须是 'spider' 或 'bird'")
 
-        with open(self.log_file, "a", encoding="utf-8") as log:  # 追加模式
-            log.write(f"📂 开始处理数据集目录: {self.ds_path}\n")
+        ds_path = os.path.join(self.ds_root, dataset_name)
 
-        for db_name in os.listdir(self.ds_path):
-            db_path = os.path.join(self.ds_path, db_name)
+        if not os.path.exists(ds_path):
+            raise FileNotFoundError(f"❌ 数据集目录不存在: {ds_path}")
 
-            if os.path.isdir(db_path):  # 只处理文件夹（数据库目录）
-                self.enrich_description(db_path)
+        self.log(f"📂 开始处理数据集: {dataset_name}，路径: {ds_path}")
 
-        with open(self.log_file, "a", encoding="utf-8") as log:
-            log.write("🏁 数据集处理完成！\n")
-        print("🏁 数据集处理完成！")
+        db_folders = [os.path.join(ds_path, db) for db in os.listdir(ds_path) if
+                      os.path.isdir(os.path.join(ds_path, db))]
 
-if __name__ == '__main__':
-    ds_path = '../graphs_repo/spider'
-    # 遍历数据集目录，对每个数据库执行 enrich_description()
-    enricher = Enricher(ds_path)
-    enricher.enrich_schema()
+        for db_path in tqdm(db_folders, desc=f"Processing {dataset_name} databases"):
+            # # 1. 对每个数据库执行 description生成，已完成可注释
+            # self.enrich_description(db_path)
+            # # 2. 对每个数据库执行 description注入
+            db_name = os.path.basename(db_path)
+            inject_descriptions(dataset_name,db_name)
+            pass
+
+        self.log(f"🎉 数据集 {dataset_name} 处理完成！")
+
+
+if __name__ == "__main__":
+    enricher = Enricher(ds_root="../graphs_repo/")
+    """
+    所有步骤写在enrich_schema函数中，调用一次就自动完成enrich的所有步骤,只需传入数据集名称即可。
+    """
+    # enricher.enrich_schema("spider")  # 处理 spider 数据集
+    # enricher.enrich_schema("bird")    # 处理 bird 数据集
+
+    #查看neo4j。动态测试效果
+    load_graph_to_neo4j("spider", "academic")

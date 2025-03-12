@@ -275,9 +275,9 @@ def get_table_schema(db_path, table_name=None, show_tables=False):
     table_list = None
     try:
         # 读取 node.json 和 relationship.json 文件
-        with open(os.path.join(db_path, 'nodes.json'), 'r') as f:
+        with open(os.path.join(db_path, 'nodes.json'), 'r', encoding="utf-8") as f:
             nodes = json.load(f)
-        with open(os.path.join(db_path, 'relationships.json'), 'r') as f:
+        with open(os.path.join(db_path, 'relationships.json'), 'r', encoding="utf-8") as f:
             relationships = json.load(f)
 
         # 生成 M - Schema
@@ -308,9 +308,9 @@ def get_table_schema(db_path, table_name=None, show_tables=False):
 def main(db_path):
     try:
         # 读取 node.json 和 relationship.json 文件
-        with open(os.path.join(db_path, 'nodes.json'), 'r') as f:
+        with open(os.path.join(db_path, 'nodes.json'), 'r', encoding="utf-8") as f:
             nodes = json.load(f)
-        with open(os.path.join(db_path, 'relationships.json'), 'r') as f:
+        with open(os.path.join(db_path, 'relationships.json'), 'r', encoding="utf-8") as f:
             relationships = json.load(f)
 
         # 生成 M - Schema

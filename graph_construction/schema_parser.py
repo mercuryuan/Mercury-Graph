@@ -861,9 +861,9 @@ if __name__ == "__main__":
     neo4j_uri = "bolt://localhost:7689"  # 根据实际情况修改
     neo4j_user = "neo4j"  # 根据实际情况修改
     neo4j_password = "12345678"  # 根据实际情况修改
-    # database_file = "../data/bird/books/books.sqlite"
+    database_file = "../data/bird/books/books.sqlite"
     # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
-    database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
+    # database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
     # database_file = "E:/spider/database/book_2/book_2.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"

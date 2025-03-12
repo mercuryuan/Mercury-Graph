@@ -1,16 +1,14 @@
 from neo4j import GraphDatabase
 
+from src.neo4j_connector import get_driver
+
 
 class GraphSearch:
-    def __init__(self, neo4j_uri, neo4j_user, neo4j_password):
+    def __init__(self):
         """
         初始化GraphSearch类，建立与Neo4j数据库的连接。
-
-        :param neo4j_uri: Neo4j数据库的连接地址
-        :param neo4j_user: Neo4j数据库的用户名
-        :param neo4j_password: Neo4j数据库的密码
         """
-        self.neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+        self.neo4j_driver = get_driver()
 
     def close_connections(self):
         """
@@ -145,7 +143,7 @@ if __name__ == "__main__":
     neo4j_user = "neo4j"
     neo4j_password = "12345678"
 
-    graph_search = GraphSearch(neo4j_uri, neo4j_user, neo4j_password)
+    graph_search = GraphSearch()
 
     node1_name = "book_language.language_id"
     node2_name = "customer"

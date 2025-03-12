@@ -16,9 +16,9 @@ class TableSchemaDescriber:
         """
         self.db_path = db_path
         self.llm = ChatOpenAI(model=model_name)
-        self.output_dir = "generated_descriptions"
+        self.output_dir = "../generated_descriptions"
         os.makedirs(self.output_dir, exist_ok=True)
-        self.log_file = "./Database_Description_Process.log"
+        self.log_file = "../Database_Description_Process.log"
 
     def get_schema(self, table_name: str = None):
         """
@@ -183,7 +183,7 @@ Please output the result in the following JSON format:
 
 # 示例调用
 if __name__ == "__main__":
-    db_path = "../graphs_repo/spider/activity_1"
+    db_path = "../../graphs_repo/spider/activity_1"
     describer = TableSchemaDescriber(db_path)
     # 处理单表
     # describer.describe_table("Student")

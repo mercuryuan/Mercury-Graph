@@ -1,7 +1,7 @@
 import json
 import os
 
-
+from config import GRAPHS_REPO
 from graph_construction.schema_parser import SchemaParser
 from src.neo4j_connector import get_driver
 
@@ -25,7 +25,7 @@ def export_all(exp_path=None):
             })
         # 拼接节点文件的完整路径
         nodes_file_path = os.path.join(exp_path, "nodes.json")
-        with open(nodes_file_path, "w") as f:
+        with open(nodes_file_path, "w", encoding="utf-8") as f:
             json.dump(nodes, f, indent=4)
 
     # 导出关系（记录旧节点ID）
@@ -42,18 +42,19 @@ def export_all(exp_path=None):
             })
         # 拼接关系文件的完整路径
         relationships_file_path = os.path.join(exp_path, "relationships.json")
-        with open(relationships_file_path, "w") as f:
+        with open(relationships_file_path, "w", encoding="utf-8") as f:
             json.dump(relationships, f, indent=4)
 
 
 def import_all(imp_path=None):
-    # 导入节点并建立 ID 映射
+    # 导入节点并建立 ID 映射,加载到Neo4j中
     id_map = {}  # {旧ID: 新ID}
-
     with driver.session() as session:
+        # 清空Neo4j数据库中的所有节点和关系。
+        session.run("MATCH (n) DETACH DELETE n")
         # 导入节点
         nodes_file_path = os.path.join(imp_path, "nodes.json")
-        with open(nodes_file_path, "r") as f:
+        with open(nodes_file_path, "r", encoding="utf-8") as f:
             nodes = json.load(f)
             for node in nodes:
                 labels = ":".join(node["labels"])
@@ -66,7 +67,7 @@ def import_all(imp_path=None):
         # 拼接关系文件的完整路径
         relationships_file_path = os.path.join(imp_path, "relationships.json")
 
-        with open(relationships_file_path, "r") as f:
+        with open(relationships_file_path, "r", encoding="utf-8") as f:
             relationships = json.load(f)
             for rel in relationships:
                 start_new_id = id_map.get(rel["start_old_id"])
@@ -82,7 +83,17 @@ def import_all(imp_path=None):
                     "SET r = $props"
                 )
                 session.run(query, props=rel["properties"])
-        print(f"成功导入 {os.path.basename(imp_path)}")
+        print(f"成功加载 {os.path.basename(imp_path)}到Neo4j数据库")
+
+
+def load_graph_to_neo4j(dataset_name, db_name):
+    # 根据全局变量 GRAPHS_REPO、数据集名称和数据库名称构造数据路径，
+    # 该路径指向包含当前数据库图数据（节点和关系）的目录
+    path = os.path.join(GRAPHS_REPO, dataset_name, db_name)
+
+    # 调用 import_all 函数，将指定路径下的数据加载并导入到 Neo4j 中，
+    # 以便在 Neo4j 上进行后续验证和查询
+    import_all(path)
 
 
 if __name__ == '__main__':
@@ -98,12 +109,7 @@ if __name__ == '__main__':
     parser.clear_neo4j_database()
     # 调用 import_all 函数，将指定路径下的图数据导入到 Neo4j 数据库中
 
-
-
     import_all(db_path)
-
-
 
     # 关闭 Neo4j 驱动程序，释放资源
     driver.close()
-
