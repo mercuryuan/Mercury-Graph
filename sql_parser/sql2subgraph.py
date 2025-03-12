@@ -1,4 +1,4 @@
-from utils.sql_parser import SqlParserTool
+from utils.sql_parse_tools import SqlParserTool
 
 
 sql = """
