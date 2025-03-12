@@ -1,0 +1,101 @@
+import json
+from config import SPIDER_TRAIN_JSON, SPIDER_DEV_JSON, SPIDER_TRAIN_OTHER_JSON, BIRD_TRAIN_JSON
+
+
+class DataLoader:
+    """通用数据加载器，支持 SPIDER 和 BIRD 数据集"""
+
+    DATASETS = {
+        "spider_train": SPIDER_TRAIN_JSON,
+        "spider_dev": SPIDER_DEV_JSON,
+        "spider_other": SPIDER_TRAIN_OTHER_JSON,
+        "bird_train": BIRD_TRAIN_JSON,
+    }
+
+    def __init__(self, dataset_name):
+        """初始化时加载指定数据集"""
+        if dataset_name not in self.DATASETS:
+            raise ValueError(f"未知数据集: {dataset_name}，支持的选项: {list(self.DATASETS.keys())}")
+
+        self.dataset_name = dataset_name
+        self.data = self._load_data(self.DATASETS[dataset_name])
+
+    def _load_data(self, file_path):
+        """从 JSON 文件加载数据"""
+        with open(file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    def filter_data(self, db_id=None, fields=None, show_count=False):
+        """
+        过滤数据，支持按数据库筛选，并提取指定字段
+        :param db_id: 需要查询的数据库名（可选，默认全部）
+        :param fields: 需要提取的字段列表（可选，默认全部）
+        :param show_count: 是否显示筛选后数据条数（默认 False）
+        :return: 过滤后的数据
+        """
+        if db_id:
+            filtered = [item for item in self.data if item["db_id"] == db_id]
+        else:
+            filtered = self.data  # 默认返回所有数据
+
+        if show_count:
+            print(f"筛选出的数据条数: {len(filtered)}")
+
+        if fields:
+            return [{k: v for k, v in item.items() if k in fields} for item in filtered]
+
+        return filtered
+
+    def show_json_structure(self):
+        """展示 JSON 结构"""
+        if not self.data:
+            print("数据为空！")
+            return
+
+        sample = self.data[0]  # 取第一条数据作为示例
+        print(f"数据集: {self.dataset_name} 的 JSON 结构如下：")
+        self._print_structure(sample)
+
+    def _print_structure(self, item, indent=0):
+        """递归解析 JSON 结构"""
+        for key, value in item.items():
+            prefix = " " * indent
+            if isinstance(value, dict):
+                print(f"{prefix}- {key}: dict")
+                self._print_structure(value, indent + 4)
+            elif isinstance(value, list):
+                if len(value) > 0 and isinstance(value[0], dict):
+                    print(f"{prefix}- {key}: list of dict")
+                    self._print_structure(value[0], indent + 4)
+                else:
+                    print(f"{prefix}- {key}: list ({type(value[0]).__name__ if value else 'empty'})")
+            else:
+                print(f"{prefix}- {key}: {type(value).__name__}")
+
+    def list_dbname(self):
+        """获取数据集中所有唯一的 db_id"""
+        db_list = {d["db_id"] for d in self.filter_data(fields=["db_id"]) if "db_id" in d}
+
+        db_list = sorted(db_list)  # 排序，方便查看
+        print(f"数据库列表 ({len(db_list)} 个): "+ "\n".join(db_list) )
+
+        return db_list  # 返回数据库名列表
+
+
+if __name__ == '__main__':
+    # 加载 SPIDER 训练集
+    spider_loader = DataLoader("spider_train")
+
+    # 显示 JSON 结构
+    # loader.show_json_structure()
+
+    # 过滤查询并显示条数
+    filtered_queries = spider_loader.filter_data(db_id="department_management", fields=["query", "question"], show_count=True)
+    print(filtered_queries)
+
+    # 读取 BIRD 数据集
+    bird_loader = DataLoader("bird_train")
+    all_bird_data = bird_loader.filter_data(show_count=True)
+
+    spider_loader.list_dbname()
+    bird_loader.list_dbname()
