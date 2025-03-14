@@ -12,6 +12,7 @@ BIRD_TRAIN_JSON = "E:/BIRD_train/train/train.json"
 BIRD_DEV_JSON = "E:/BIRD/dev_20240627/dev.json"
 SPIDER = "your combination of train and other"
 SPIDER_DEV_JSON = "E:/spider/dev.json"
+SPIDER_DATABASES_PATH = "E:/spider/test_database/"
 SPIDER_TRAIN_JSON = "E:/spider/train_spider.json"
 SPIDER_TRAIN_OTHER_JSON = "E:/spider/train_others.json"
 

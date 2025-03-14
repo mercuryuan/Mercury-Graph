@@ -116,12 +116,13 @@ class DataLoader:
             else:
                 print(f"{prefix}- {key}: {type(value).__name__}")
 
-    def list_dbname(self):
+    def list_dbname(self,show = True):
         """获取数据集中所有唯一的 db_id"""
         db_list = {d.get("db_id") for d in self.filter_data(fields=["db_id"]) if "db_id" in d}
 
         db_list = sorted(db_list)  # 排序，方便查看
-        print(f"数据库列表 ({len(db_list)} 个): " + "\n".join(db_list))
+        if show:
+            print(f"数据库列表 ({len(db_list)} 个): " + "\n".join(db_list))
 
         return db_list  # 返回数据库名列表
 

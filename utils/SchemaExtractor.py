@@ -75,6 +75,8 @@ class BigQuerySchemaExtractor(SchemaExtractor):
 class SnowflakeSchemaExtractor(SchemaExtractor):
     """Snowflake 的模式提取器，待实现。"""
     pass
+
+
 def quote_identifier(identifier):
     """
     引用标识符（表名或列名），防止包含空格或特殊字符时出错。
@@ -84,7 +86,8 @@ def quote_identifier(identifier):
     """
     return f'"{identifier}"'  # 使用双引号引用
 
+
 if __name__ == "__main__":
     extractor = SQLiteSchemaExtractor("bird")
-    schema = extractor.extract_schema("airline")
+    schema = extractor.extract_schema("books")
     print(schema)
