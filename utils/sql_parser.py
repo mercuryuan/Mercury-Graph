@@ -27,7 +27,8 @@ class SqlParserTool:
         self.db_name = db_name
         extractor = SQLiteSchemaExtractor(dataset_name)
         self.schema = extractor.extract_schema(db_name)
-        self.log_file = os.path.join(config.PROJECT_ROOT, "sql_parser", f"{dataset_name}_analysis/{db_name}.log")
+        self.log_file = os.path.join(config.PROJECT_ROOT, "sql_parser",
+                                     f"{dataset_name}_analysis_without_correction/{db_name}.log")
 
     def close_neo4j_connection(self):
         """
@@ -199,61 +200,26 @@ class SqlParserTool:
 
         return "\n".join(result)
 
-    def parse_and_display(self, sql, question=None, db_id=None):
-        """
-        解析输入的SQL语句，并展示解析后的表、列等相关信息以及它们之间的关系信息。
-        同时，根据解析结果生成对应的Neo4j子图查询语句，并对该查询语句进行验证。
-
-        参数:
-            sql (str): 要解析和展示信息的SQL语句字符串。
-            question (str, optional): 与SQL查询相关的问题描述，默认为None。
-            db_id (str, optional): 数据库的ID，默认为None。
-
-        输出:
-            1. 打印数据库ID和问题描述（如果提供）。
-            2. 打印原始的SQL语句。
-            3. 打印解析后的实体信息（表和列）。
-            4. 打印解析后的关系信息（连接和条件）。
-            5. 按表为单位格式化输出实体信息。
-            6. 打印生成的Neo4j子图查询语句。
-            7. 验证并输出Cypher查询语句的验证结果。
-        """
-        entities, relationships = self.extract_entities_and_relationships(sql)
-        if question:
-            print(f"Database:{db_id}")
-        if db_id:
-            print(f"Question:{question}")
-        print(sql)
-        print("\nEntities (Tables and Columns):")
-        print(entities)
-        print("\nRelationships (Joins and Conditions):")
-        print(relationships)
-        print()
-        formated_entities = self.format_entities_by_table(entities)
-        print(formated_entities)
-        print("\n对应子图查询语句：")
-        cypher_query = self.sql2subgraph(entities, relationships)
-        print(cypher_query)
-        print()
-        self.validate_cypher_query(cypher_query)  # 验证Cypher查询语句
-
     def sql2subgraph(self, entities, relationships, name_correction=True):
         """
-    将 SQL 查询解析的数据库实体和关系信息转化为 Neo4j 子图查询语句。
+        将 SQL 查询解析的数据库实体和关系信息转化为 Neo4j 子图查询语句。
 
-    此函数主要完成以下任务：
-    1. 将数据库的表和列建模为图数据库的节点和关系。
-    2. 使用 `HAS_COLUMN` 关系描述表和其列之间的从属关系。
-    3. 使用 `FOREIGN_KEY` 关系描述表与表之间的外键关联。
-    4. 自动为关系（从属关系和外键关系）命名唯一的别名，并在查询语句中返回所有节点和关系。
-    """
+        此函数主要完成以下任务：
+        1. 将数据库的表和列建模为图数据库的节点和关系。
+        2. 使用 `HAS_COLUMN` 关系描述表和其列之间的从属关系。
+        3. 使用 `FOREIGN_KEY` 关系描述表与表之间的外键关联。
+        4. 自动为关系（从属关系和外键关系）命名唯一的别名，并在查询语句中返回所有节点和关系。
+        """
         # 提取表和列信息
         tables = entities['tables']
         columns = entities['columns']
         joins = relationships['joins']
         # 是否进行表名和列名的修正
         if name_correction:
-            tables, columns, joins = align_case(tables, columns, joins, self.schema)
+            tables, columns, joins, modified = align_case(tables, columns, joins, self.schema)
+            if modified:
+                print("名称差异修正🐞")
+                self.log("名称差异修正🐞")
 
         match_clauses = []
         return_table_clauses = []
@@ -269,7 +235,7 @@ class SqlParserTool:
         for table_name, alias in tables:
             table_alias = alias if alias else table_name
             table_alias_map[table_name] = table_alias
-            table_column_counters[table_alias] = 1  # 初始化该表的列计数器啊？
+            table_column_counters[table_alias] = 1  # 初始化该表的列计数器
 
             # 表的 MATCH 子句
             match_clauses.append(f"(t{table_alias}:Table {{name: '{table_name}'}})")
@@ -357,6 +323,7 @@ class SqlParserTool:
                 if node_count == 0 or relationship_count == 0:
                     message = "Cypher查询验证失败❌：查询到的实体总数为 0，请检查数据是否正确导入。"
                     self.log(message)
+                    print(message)
                     return False
 
                 # 记录成功日志
@@ -364,6 +331,7 @@ class SqlParserTool:
                            f"表节点数: {table_count} | 列节点数: {column_count} | "
                            f"HAS_COLUMN数: {column_relationship_count} | FOREIGN_KEY数: {foreign_key_relationship_count}")
                 self.log(message)
+                print(message)
                 return True
         except Exception as e:
             message = f"Cypher查询验证失败❌，错误信息：{e}"
@@ -371,7 +339,7 @@ class SqlParserTool:
             return False
 
     def log(self, message: str, log_file=None):
-        """ 记录日志信息到指定文件并打印到控制台 """
+        """ 记录日志信息到指定文件，不再打印到控制台 """
         if log_file is None:
             log_file = self.log_file
         # 创建日志文件所在的目录
@@ -379,12 +347,99 @@ class SqlParserTool:
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
 
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        log_msg = f"[{timestamp}] {message}"
         with open(log_file, "a", encoding="utf-8") as log:
-            log.write(log_msg + "\n")
-        print(log_msg)
+            log.write(message + "\n")
 
+    def display_parsing_result(self, sql, question=None, db_id=None, output_mode="full_output", name_correction=True):
+        """
+        集中处理解析结果的输出和日志记录，支持三种不同的输出模式。
+
+        参数:
+            sql (str): 待解析的 SQL 语句。
+            question (str, 可选): 与 SQL 查询相关的问题描述，默认为 None。
+            db_id (str, 可选): 数据库的 ID，默认为 None。
+            output_mode (str, 可选): 输出模式，支持以下三种：
+                - "full_output": 按原来的方式全部输出和记录解析结果。
+                - "pass_basic_fail_full": 仅输出和记录 validate_cypher_query 不通过的全量信息，
+                                          对于通过的只输出和记录基本信息。
+                - "pass_silent_fail_full": 通过的不输出和记录信息，对于不通过的输出和记录全量信息。
+        """
+        # 提取 SQL 语句中的实体和关系信息
+        entities, relationships = self.extract_entities_and_relationships(sql)
+
+        # 定义函数用于输出和记录基本信息
+        def print_and_log_basic_info():
+            """
+            输出并记录基本信息，包括数据库 ID、问题描述和 SQL 语句。
+            """
+            if question:
+                print(f"Database: {db_id}")
+            if db_id:
+                print(f"Question: {question}")
+            print(f"SQL: {sql}\n")
+
+            # 构建基本信息的日志内容
+            basic_info_log = ""
+            if question:
+                basic_info_log += f"Database: {db_id}\n"
+            if db_id:
+                basic_info_log += f"Question: {question}\n"
+            basic_info_log += f"SQL: {sql}\n"
+
+            # 调用日志记录函数
+            self.log(basic_info_log)
+
+        # 定义函数用于输出和记录全量信息
+        def print_and_log_full_info():
+            """
+            输出并记录全量信息，包括基本信息、实体信息、关系信息、
+            格式化的实体信息和子图查询语句。
+            """
+            # 输出并记录基本信息
+            print_and_log_basic_info()
+
+            # # 输出实体信息
+            # print("\nEntities (Tables and Columns):")
+            # print(entities)
+            # self.log("Entities (Tables and Columns): " + str(entities))
+            #
+            # # 输出关系信息
+            # print("\nRelationships (Joins and Conditions):")
+            # print(relationships)
+            # self.log("Relationships (Joins and Conditions): " + str(relationships))
+
+            # 输出格式化的实体信息
+            formated_entities = self.format_entities_by_table(entities)
+            print("\n" + formated_entities)
+            self.log(formated_entities)
+
+            # 输出子图查询语句
+            print("\n对应子图查询语句：")
+            cypher_query = self.sql2subgraph(entities, relationships, name_correction)
+            print(cypher_query)
+            self.log("对应子图查询语句：\n" + cypher_query)
+
+        # 生成 Cypher 查询语句
+        cypher_query = self.sql2subgraph(entities, relationships, name_correction)
+        # 验证 Cypher 查询语句
+        is_valid = self.validate_cypher_query(cypher_query)
+
+        # 根据不同的输出模式进行相应的输出和记录操作
+        if output_mode == "full_output":
+            # 全量输出模式：输出并记录所有信息
+            print_and_log_full_info()
+        elif output_mode == "pass_basic_fail_full":
+            if is_valid:
+                # 验证通过，只输出和记录基本信息
+                print_and_log_basic_info()
+            else:
+                # 验证不通过，输出和记录全量信息
+                print_and_log_full_info()
+        elif output_mode == "pass_silent_fail_full":
+            if not is_valid:
+                # 验证不通过，输出和记录全量信息
+                print_and_log_full_info()
+        return is_valid
 
 
 if __name__ == '__main__':
@@ -392,14 +447,11 @@ if __name__ == '__main__':
     tool = SqlParserTool("bird", "books")
     try:
         # 示例 SQL 查询
-        sql = """
-        SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'The Illuminati'"""
-        # 解析并展示结果
-        tool.parse_and_display(sql)
-
-        # 仅返回子图查询的cypher语句的用法
-        # e,r = tool.extract_entities_and_relationships(sql)
-        # print(tool.sql2subgraph(e,r))
+        sql = """SELECT T2.publisher_name FROM book AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.publisher_id WHERE T1.title = 'The Illuminati'"""
+        # 解析并展示结果，使用不同的输出模式
+        # tool.display_parsing_result(sql, output_mode="full_output")
+        tool.display_parsing_result(sql, output_mode="pass_basic_fail_full", name_correction=True)
+        # tool.display_parsing_result(sql, output_mode="pass_silent_fail_full")
 
     finally:
-        tool.neo4j_driver.close()
+        tool.close_neo4j_connection()

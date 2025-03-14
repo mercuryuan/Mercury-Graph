@@ -1,18 +1,25 @@
 def align_case(tables, columns, joins, schema):
     """
     对齐 SQL 解析出的表、列以及 join 条件中的表名和列名，
-    使其大小写与数据库 schema 中的名称一致。
+    使其大小写与数据库 schema 中的名称一致，同时返回一个标识是否进行了修改的布尔值。
 
-    :param tables: set(tuple(str, str))  例如 {('book', 'T1'), ('publisher', 'T2')}
-    :param columns: set(tuple(str, str))  例如 {('book', 'title'), ('publisher', 'publisher_name'), ...}
-    :param joins: list(dict)  例如 [{'join_type': 'INNER', 'on': 'book.publisher_id = publisher.publisher_id'}]
+    :param tables: set(tuple(str, str))
+                   例如 {('book', 'T1'), ('publisher', 'T2')}
+    :param columns: set(tuple(str, str))
+                   例如 {('book', 'title'), ('publisher', 'publisher_name'), ...}
+    :param joins: list(dict)
+                   例如 [{'join_type': 'INNER', 'on': 'book.publisher_id = publisher.publisher_id'}]
     :param schema: dict  数据库模式，如
          {
              'publisher': ['publisher_id', 'publisher_name'],
              'book': ['book_id', 'title', 'isbn13', 'language_id', 'num_pages', 'publication_date', 'publisher_id'],
              ...
          }
-    :return: (aligned_tables, aligned_columns, aligned_joins)
+    :return: (aligned_tables, aligned_columns, aligned_joins, modified)
+             aligned_tables: 对齐后的表集合
+             aligned_columns: 对齐后的列集合
+             aligned_joins: 对齐后的 join 关系列表
+             modified: 布尔值，True 表示至少有一处进行了大小写的修改，False 表示无修改。
     """
 
     # 构建表名映射：小写表名 -> 正确大小写表名
@@ -59,12 +66,22 @@ def align_case(tables, columns, joins, schema):
             "on": aligned_on
         })
 
-    return aligned_tables, aligned_columns, aligned_joins
+    # 判断是否进行了修改
+    table_modified = any(table_name_map.get(tbl.lower(), tbl) != tbl for tbl, alias in tables)
+    column_modified = any(
+        table_name_map.get(tbl.lower(), tbl) != tbl or column_name_map.get((tbl.lower(), col.lower()), col) != col
+        for tbl, col in columns
+    )
+    join_modified = any(align_join_condition(j["on"]) != j["on"] for j in joins)
+    modified = table_modified or column_modified or join_modified
+
+    return aligned_tables, aligned_columns, aligned_joins, modified
+
 
 if __name__ == '__main__':
-
     tables = {("BOok", "T1"), ("PUBlisher", "T2")}
-    columns = {("BOok", "title"), ("publisher", "publisher_name"), ("boOK", "publisher_id"), ("publisher", "publisher_id")}
+    columns = {("BOok", "title"), ("publisher", "publisher_name"), ("boOK", "publisher_id"),
+               ("publisher", "publisher_id")}
     joins = [{"join_type": "INNER", "on": "BOOK.publisher_id = publisher.Publisher_id"}]
 
     schema = {
@@ -85,8 +102,9 @@ if __name__ == '__main__':
         "order_line": ["line_id", "order_id", "book_id", "price"]
     }
 
-    aligned_tables, aligned_columns, aligned_joins = align_case(tables, columns, joins, schema)
+    aligned_tables, aligned_columns, aligned_joins, modified = align_case(tables, columns, joins, schema)
 
     print("Aligned Tables:", aligned_tables)
     print("Aligned Columns:", aligned_columns)
     print("Aligned Joins:", aligned_joins)
+    print("是否经历了修改:", modified)
