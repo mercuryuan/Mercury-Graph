@@ -44,5 +44,5 @@ if __name__ == "__main__":
         # BIRD 训练集路径
         # root_folder = 'E:/BIRD_train/train/train_databases'
         # SPIDER 训练集路径
-        root_folder = 'E:/spider/database'
+        root_folder = 'E:/spider/test_database'
         traverse_folders(root_folder)

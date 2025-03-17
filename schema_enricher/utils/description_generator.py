@@ -183,7 +183,7 @@ Please output the result in the following JSON format:
 
 # 示例调用
 if __name__ == "__main__":
-    db_path = "../../graphs_repo/spider/activity_1"
+    db_path = "../../graphs_repo/spider/bike_1"
     describer = TableSchemaDescriber(db_path)
     # 处理单表
     # describer.describe_table("Student")

@@ -184,7 +184,7 @@ def inject_descriptions(dataset_name, db_name):
 if __name__ == '__main__':
     # 设置数据集名称和数据库名称
     dataset_name = "spider"
-    db_name = "academic"
+    db_name = "bike_1"
 
     # 调用 inject_descriptions 函数，将 description.json 中的描述信息注入到 node.json 中
     # 并将更新后的 node.json 文件保存，确保后续数据加载使用的是最新数据

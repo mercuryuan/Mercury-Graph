@@ -1,0 +1,41 @@
+{
+    "battle": [
+        {
+            "columns": {
+                "id": "A unique identifier for each battle entry.",
+                "name": "The official name of the battle.",
+                "date": "The date on which the battle occurred.",
+                "bulgarian_commander": "The name of the Bulgarian commander leading the forces during the battle.",
+                "latin_commander": "The name of the Latin commander opposing the Bulgarian forces in the battle.",
+                "result": "The outcome of the battle, indicating which side was victorious or if a truce was established."
+            },
+            "table_description": "This table contains information about various battles, including their names, dates, commanding leaders on both sides, and the results of these engagements."
+        }
+    ],
+    "ship": [
+        {
+            "columns": {
+                "lost_in_battle": "References the battle in which the ship was lost.",
+                "id": "Unique identifier for each ship in the table.",
+                "name": "The name of the ship.",
+                "tonnage": "The weight of the ship's cargo capacity, measured in tons.",
+                "ship_type": "The classification or type of the ship.",
+                "location": "The geographical area where the ship was located at the time of loss.",
+                "disposition_of_ship": "The final status of the ship after the battle, such as whether it was captured, scuttled, sank, or wrecked."
+            },
+            "table_description": "This table provides information about ships lost in battles, detailing their identification, names, types, locations of loss, and their ultimate dispositions."
+        }
+    ],
+    "death": [
+        {
+            "columns": {
+                "caused_by_ship_id": "Identifies the ship responsible for the associated deaths and injuries.",
+                "id": "Unique identifier for each record of death and injury.",
+                "note": "Provides additional context or location related to the incident.",
+                "killed": "Number of individuals who were killed in the incident.",
+                "injured": "Number of individuals who sustained injuries in the incident."
+            },
+            "table_description": "The 'death' table records incidents of casualties related to specific ships, capturing details such as the ship's identity, the number of individuals killed and injured, and contextual information about each incident."
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "Scientists": [
+        {
+            "columns": {
+                "SSN": "A unique identifier for each scientist, represented by their Social Security Number.",
+                "Name": "The full name of the scientist, consisting of both first and last names."
+            },
+            "table_description": "The Scientists table stores information about individual scientists, identified by their SSNs and accompanied by their names."
+        }
+    ],
+    "Projects": [
+        {
+            "columns": {
+                "Code": "A unique identifier for each project, used to distinguish between different projects within the database.",
+                "Name": "The title or description of the project, providing insight into its focus or purpose.",
+                "Hours": "The total amount of time, measured in hours, allocated to the project, indicating its scale or resource investment."
+            },
+            "table_description": "The Projects table maintains a collection of research projects, each defined by a unique code, a descriptive name, and the total hours dedicated to its execution."
+        }
+    ],
+    "AssignedTo": [
+        {
+            "columns": {
+                "Scientist": "This column identifies a unique scientist assigned to a specific project.",
+                "Project": "This column identifies the unique code of a project to which the scientist is assigned."
+            },
+            "table_description": "The AssignedTo table captures the relationships between scientists and projects, indicating which scientist is assigned to which project."
+        }
+    ]
+}

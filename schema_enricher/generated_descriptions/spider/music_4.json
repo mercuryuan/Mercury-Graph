@@ -1,0 +1,40 @@
+{
+    "volume": [
+        {
+            "columns": {
+                "Volume_ID": "A unique identifier for each volume entry in the music database.",
+                "Volume_Issue": "Represents the specific issue or edition of the volume, often denoting a particular range or number.",
+                "Issue_Date": "The date or range of dates during which the volume issue was published.",
+                "Weeks_on_Top": "The number of weeks a particular song has remained at the top position in the music rankings.",
+                "Song": "The title of the song featured in the volume issue.",
+                "Artist_ID": "A reference to the unique identifier of the artist associated with the song listed in the volume."
+            },
+            "table_description": "The volume table is designed to catalog music volume issues, detailing the performance of songs over time with relevant metadata about the songs and their respective artists."
+        }
+    ],
+    "music_festival": [
+        {
+            "columns": {
+                "ID": "Unique identifier for each music festival entry.",
+                "Music_Festival": "The name of the music festival being recorded.",
+                "Date_of_ceremony": "The date on which the awards ceremony took place.",
+                "Category": "The specific category of the award for which nominations are made.",
+                "Volume": "The identifier that links to a related volume of awards.",
+                "Result": "The outcome of the nomination, indicating whether the entry was awarded or merely nominated."
+            },
+            "table_description": "The music_festival table records various entries related to music festival awards, capturing important details such as the festival name, ceremony date, award category, associated volume, and the results of nominations."
+        }
+    ],
+    "artist": [
+        {
+            "columns": {
+                "Artist_ID": "A unique identifier assigned to each artist.",
+                "Artist": "The name of the artist.",
+                "Age": "The age of the artist at the time the data was recorded.",
+                "Famous_Title": "The title of the artist's most well-known work.",
+                "Famous_Release_date": "The release date of the artist's famous title."
+            },
+            "table_description": "The artist table contains information about various music artists, including their unique identifiers, names, ages, notable works, and corresponding release dates."
+        }
+    ]
+}

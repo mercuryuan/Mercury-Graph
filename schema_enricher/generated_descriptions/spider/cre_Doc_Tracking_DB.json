@@ -1,0 +1,91 @@
+{
+    "All_Documents": [
+        {
+            "columns": {
+                "Document_ID": "A unique identifier for each document stored in the database.",
+                "Date_Stored": "The date and time when the document was stored in the system.",
+                "Document_Type_Code": "A code representing the type of document, linking to a predefined set of document types.",
+                "Document_Name": "The name or title of the document for easy identification.",
+                "Document_Description": "A brief description of the document's content or purpose.",
+                "Other_Details": "Additional information about the document that may be relevant."
+            },
+            "table_description": "The All_Documents table is designed to store and manage metadata for various documents, including their identifiers, storage dates, types, titles, descriptions, and any additional details relevant to the documents."
+        }
+    ],
+    "Employees": [
+        {
+            "columns": {
+                "Employee_ID": "A unique identifier assigned to each employee.",
+                "Role_Code": "The code representing the role or position of the employee within the organization.",
+                "Employee_Name": "The full name of the employee.",
+                "Gender_MFU": "A character representing the gender of the employee, where multiple values may be encoded as '1' for male, '2' for female, etc.",
+                "Date_of_Birth": "The birth date and time of the employee.",
+                "Other_Details": "Any additional information pertaining to the employee that does not fall into the other specified categories."
+            },
+            "table_description": "The Employees table holds crucial information about employees, including their unique identifiers, role codes, names, gender, date of birth, and other relevant details. This information is essential for tracking employee roles and facilitating document management within the organization."
+        }
+    ],
+    "Document_Locations": [
+        {
+            "columns": {
+                "Document_ID": "A unique identifier for each document, associating it with its location history.",
+                "Location_Code": "A code representing a specific location where the document is stored or can be found.",
+                "Date_in_Location_From": "The date and time when the document arrived at the specified location.",
+                "Date_in_Locaton_To": "The date and time when the document was removed from the specified location or the latest known time it was stored there."
+            },
+            "table_description": "The Document_Locations table tracks the historical movements of documents, recording their storage locations and the timeframes of their presence in each location."
+        }
+    ],
+    "Documents_to_be_Destroyed": [
+        {
+            "columns": {
+                "Document_ID": "A unique identifier for each document scheduled for destruction.",
+                "Destruction_Authorised_by_Employee_ID": "The identifier of the employee who authorized the destruction of the document.",
+                "Destroyed_by_Employee_ID": "The identifier of the employee responsible for carrying out the destruction of the document.",
+                "Planned_Destruction_Date": "The date and time when the destruction of the document is planned to occur.",
+                "Actual_Destruction_Date": "The date and time when the document was actually destroyed.",
+                "Other_Details": "Additional information or notes regarding the document that may be relevant to its destruction."
+            },
+            "table_description": "The Documents_to_be_Destroyed table maintains records of documents that have been scheduled for destruction, detailing the document's ID, the employees involved in the authorization and destruction processes, as well as the planned and actual dates of destruction."
+        }
+    ],
+    "Ref_Calendar": [
+        {
+            "columns": {
+                "Calendar_Date": "Represents specific dates and times used for tracking various document-related events.",
+                "Day_Number": "Indicates the day of the month represented by the Calendar_Date, ranging from 1 to 9."
+            },
+            "table_description": "The Ref_Calendar table serves as a reference for storing and managing calendar dates related to document tracking activities within the database."
+        }
+    ],
+    "Roles": [
+        {
+            "columns": {
+                "Role_Code": "A unique identifier for each role within the organization, essential for tracking and managing roles.",
+                "Role_Name": "The name assigned to each role, providing a clear label that represents the function or position.",
+                "Role_Description": "A brief explanation of the duties and responsibilities associated with each role, offering insight into what the role entails."
+            },
+            "table_description": "The Roles table serves to define various roles within the organization, providing a unique code, a descriptive name, and an explanation of each role's responsibilities."
+        }
+    ],
+    "Ref_Document_Types": [
+        {
+            "columns": {
+                "Document_Type_Code": "A unique code that identifies each type of document.",
+                "Document_Type_Name": "The name or title associated with each type of document.",
+                "Document_Type_Description": "A detailed description providing additional context about each document type."
+            },
+            "table_description": "The Ref_Document_Types table categorizes various types of documents, providing a unique code, name, and description for each type, facilitating better document management within the database."
+        }
+    ],
+    "Ref_Locations": [
+        {
+            "columns": {
+                "Location_Code": "A unique code that identifies each location within the database.",
+                "Location_Name": "The name of the geographical location represented by the Location_Code.",
+                "Location_Description": "A textual description providing additional information about the location."
+            },
+            "table_description": "The Ref_Locations table serves as a reference for various geographical locations, linking unique codes to their names and providing optional descriptions for clarity."
+        }
+    ]
+}

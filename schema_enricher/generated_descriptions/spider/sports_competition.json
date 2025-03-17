@@ -1,0 +1,63 @@
+{
+    "club": [
+        {
+            "columns": {
+                "Club_ID": "A unique identifier assigned to each club in the database.",
+                "name": "The name of the sports club.",
+                "Region": "The geographical area where the club is located.",
+                "Start_year": "The year in which the club was established."
+            },
+            "table_description": "The 'club' table contains records of various sports clubs, including their unique identifiers, names, geographical regions, and start years."
+        }
+    ],
+    "club_rank": [
+        {
+            "columns": {
+                "Rank": "This column represents the ranking position of the club within the competition, indicating its performance relative to other clubs.",
+                "Club_ID": "This column uniquely identifies each club participating in the competition and links to the corresponding club details.",
+                "Gold": "This column indicates the number of gold medals won by the club in the competition.",
+                "Silver": "This column denotes the number of silver medals earned by the club during the competition.",
+                "Bronze": "This column reflects the number of bronze medals achieved by the club in the competition.",
+                "Total": "This column shows the total number of medals (gold, silver, and bronze) accumulated by the club."
+            },
+            "table_description": "The club_rank table captures the performance metrics of clubs in a sports competition, detailing their rankings and medal achievements."
+        }
+    ],
+    "player": [
+        {
+            "columns": {
+                "Player_ID": "A unique identifier for each player in the database.",
+                "name": "The full name of the player.",
+                "Position": "The position played by the player on the team.",
+                "Club_ID": "An identifier referencing the club to which the player belongs.",
+                "Apps": "The number of appearances the player has made in matches.",
+                "Tries": "The number of tries scored by the player during their appearances.",
+                "Goals": "The goals scored by the player, represented either as a total number or in terms of conversions.",
+                "Points": "The total points accumulated by the player through scoring tries and goals."
+            },
+            "table_description": "The player table records detailed statistics for each player in a sports competition, including their identity, performance metrics, and association with clubs."
+        }
+    ],
+    "competition": [
+        {
+            "columns": {
+                "Competition_ID": "A unique identifier for each competition record.",
+                "Year": "The year in which the competition took place.",
+                "Competition_type": "The category of the competition, such as whether it was a tournament or a friendly match.",
+                "Country": "The nation where the competition was held."
+            },
+            "table_description": "The competition table stores essential details regarding various sports competitions, including unique identifiers, the years they occurred, the types of competitions, and their respective hosting countries."
+        }
+    ],
+    "competition_result": [
+        {
+            "columns": {
+                "Competition_ID": "A unique identifier for each competition.",
+                "Club_ID_1": "The identifier for the first club participating in the competition.",
+                "Club_ID_2": "The identifier for the second club participating in the competition.",
+                "Score": "The recorded score of the competition represented in a format that indicates the performance of both clubs."
+            },
+            "table_description": "The competition_result table captures the outcomes of sports competitions between two clubs, detailing their respective identifiers and the final score achieved."
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "tweets": [
+        {
+            "columns": {
+                "id": "A unique identifier for each tweet entry, allowing for efficient retrieval and reference.",
+                "uid": "A reference to the unique identifier of the user who posted the tweet, linking it to the user_profiles table.",
+                "text": "The content of the tweet, which contains the user's message or statement, limited to a specific length.",
+                "createdate": "The date and time when the tweet was created, providing context for when the message was shared."
+            },
+            "table_description": "The tweets table stores individual tweets posted by users, along with relevant information such as the user ID, tweet content, and creation timestamp."
+        }
+    ],
+    "follows": [
+        {
+            "columns": {
+                "f2": "This column represents the user ID of the follower in the relationship.",
+                "f1": "This column represents the user ID of the user being followed."
+            },
+            "table_description": "The follows table captures the relationships between users on the platform, indicating who follows whom."
+        }
+    ],
+    "user_profiles": [
+        {
+            "columns": {
+                "uid": "A unique identifier for each user profile in the database.",
+                "name": "The full name of the user associated with the profile.",
+                "email": "The email address linked to the user's account.",
+                "partitionid": "An identifier used to partition the user data across various segments.",
+                "followers": "The total number of followers the user has accumulated on the platform."
+            },
+            "table_description": "The user_profiles table contains detailed information about each user's profile, including unique identification, name, email contact, data partitioning, and follower count."
+        }
+    ]
+}

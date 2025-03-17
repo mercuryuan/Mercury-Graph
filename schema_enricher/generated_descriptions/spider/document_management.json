@@ -1,0 +1,96 @@
+{
+    "Roles": [
+        {
+            "columns": {
+                "role_code": "A unique identifier for each role within the document management system.",
+                "role_description": "A brief explanation of the responsibilities and functions associated with the role."
+            },
+            "table_description": "The Roles table is designed to store distinct roles utilized within the document management system, each characterized by a unique code and a descriptive text that outlines the role's purpose."
+        }
+    ],
+    "Users": [
+        {
+            "columns": {
+                "user_id": "A unique identifier for each user in the system.",
+                "role_code": "A reference code representing the role assigned to the user, linked to the Roles table.",
+                "user_name": "The full name or username of the user.",
+                "user_login": "A binary value indicating the user's login status, typically representing a flag for access.",
+                "password": "A hashed representation of the user's password for authentication purposes."
+            },
+            "table_description": "The Users table contains information about the individuals who have access to the document management system, including their unique identifiers, roles, names, login status, and passwords for secure access."
+        }
+    ],
+    "Document_Structures": [
+        {
+            "columns": {
+                "document_structure_code": "A unique identifier for each document structure.",
+                "parent_document_structure_code": "An identifier representing the parent document structure, enabling a hierarchical organization of document structures.",
+                "document_structure_description": "A textual description providing details about the document structure, indicating its purpose or content type."
+            },
+            "table_description": "The Document_Structures table provides a schema for organizing different types of document structures, allowing for hierarchical relationships and descriptions of various sections within documents."
+        }
+    ],
+    "Functional_Areas": [
+        {
+            "columns": {
+                "functional_area_code": "A unique identifier assigned to each functional area within the document management system.",
+                "parent_functional_area_code": "The functional area code of the parent area, indicating a hierarchical relationship between functional areas.",
+                "functional_area_description": "A brief description of the functional area, providing clarity on its purpose or activity."
+            },
+            "table_description": "The Functional_Areas table organizes and defines various functional areas within the document management system, establishing hierarchical relationships and providing detailed descriptions for each area."
+        }
+    ],
+    "Images": [
+        {
+            "columns": {
+                "image_id": "A unique identifier for each image in the table.",
+                "image_alt_text": "Alternative text that describes the content of the image, useful for accessibility.",
+                "image_name": "A user-friendly name given to the image, often used for identification.",
+                "image_url": "The web address where the image is stored and can be accessed."
+            },
+            "table_description": "The Images table stores information about images used in the document management system, including identifiers, descriptions for accessibility, user-friendly names, and their respective URLs for access."
+        }
+    ],
+    "Documents": [
+        {
+            "columns": {
+                "document_code": "A unique identifier assigned to each document in the table.",
+                "document_structure_code": "A code that references the specific structure type of the document.",
+                "document_type_code": "A code that classifies the type of document, such as advertisement, book, or paper.",
+                "access_count": "The number of times the document has been accessed or viewed.",
+                "document_name": "The title or name of the document."
+            },
+            "table_description": "The Documents table serves as a repository for document records, providing essential details such as unique identifiers, structural classifications, types, access frequency, and titles."
+        }
+    ],
+    "Document_Functional_Areas": [
+        {
+            "columns": {
+                "document_code": "A unique identifier for each document within the document management system.",
+                "functional_area_code": "A unique identifier representing the specific functional area associated with the document."
+            },
+            "table_description": "The Document_Functional_Areas table serves to establish a many-to-many relationship between documents and their corresponding functional areas, enabling efficient categorization and retrieval based on functional criteria."
+        }
+    ],
+    "Document_Sections": [
+        {
+            "columns": {
+                "section_id": "A unique identifier for each section within a document.",
+                "document_code": "A code that links the section to its corresponding document.",
+                "section_sequence": "An integer representing the order or position of the section within the document.",
+                "section_code": "A code assigned to each section for identification purposes.",
+                "section_title": "The title or name of the section, providing a brief overview of its content."
+            },
+            "table_description": "The Document_Sections table is designed to store information about various sections of documents, including their order, codes, and titles, facilitating the organization and retrieval of document content."
+        }
+    ],
+    "Document_Sections_Images": [
+        {
+            "columns": {
+                "section_id": "This column represents the unique identifier for a section of a document.",
+                "image_id": "This column represents the unique identifier for an image associated with a specific document section."
+            },
+            "table_description": "The Document_Sections_Images table facilitates the mapping of images to their corresponding sections in a document, establishing a relationship between document sections and the images that enhance or illustrate them."
+        }
+    ]
+}

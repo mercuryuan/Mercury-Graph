@@ -1,0 +1,227 @@
+{
+    "Ref_Payment_Methods": [
+        {
+            "columns": {
+                "payment_method_code": "A unique identifier for each payment method used in transactions.",
+                "payment_method_description": "A textual description of the payment method, providing information on its type."
+            },
+            "table_description": "The Ref_Payment_Methods table serves as a reference for different payment methods available for processing transactions, linking them to related invoice records."
+        }
+    ],
+    "Addresses": [
+        {
+            "columns": {
+                "Address_ID": "A unique identifier for each address in the table.",
+                "Line_1": "The primary line of the address, typically including the street address.",
+                "Line_2": "An optional secondary line for the address, often used for apartment or suite numbers.",
+                "City_Town": "The name of the city or town where the address is located.",
+                "State_County": "The state or county associated with the address.",
+                "Other_Details": "Additional information related to the address that may provide further context."
+            },
+            "table_description": "The Addresses table stores detailed information about various addresses, providing essential information for clients, performers, and other entities requiring location-specific data."
+        }
+    ],
+    "Products": [
+        {
+            "columns": {
+                "Product_ID": "A unique identifier for each product in the table.",
+                "Product_Name": "The name of the product, which provides a concise reference.",
+                "Product_Price": "The price associated with the product, represented in a monetary format.",
+                "Product_Description": "A detailed explanation of the product, providing additional context or features.",
+                "Other_Product_Service_Details": "Any supplementary details regarding the product or related services that may not fall under the standard descriptions."
+            },
+            "table_description": "The Products table serves to catalog different products offered, including their unique identifiers, names, prices, descriptions, and any additional service details that may enhance the product offerings."
+        }
+    ],
+    "Performers_in_Bookings": [
+        {
+            "columns": {
+                "Order_ID": "Unique identifier for each booking order in the database.",
+                "Performer_ID": "Unique identifier for each performer associated with a booking."
+            },
+            "table_description": "The Performers_in_Bookings table serves to link performers to their respective booking orders, allowing for a structured representation of which performers are involved in each booking."
+        }
+    ],
+    "Marketing_Regions": [
+        {
+            "columns": {
+                "Marketing_Region_Code": "A unique identifier for each marketing region.",
+                "Marketing_Region_Name": "The name of the marketing region.",
+                "Marketing_Region_Descriptrion": "A brief description of the significance or characteristics of the marketing region.",
+                "Other_Details": "Additional details relevant to the marketing region, which may include specific notes or observations."
+            },
+            "table_description": "The Marketing_Regions table stores information about various marketing regions, including unique codes, names, descriptions, and additional details pertinent to marketing strategies."
+        }
+    ],
+    "Clients": [
+        {
+            "columns": {
+                "Client_ID": "A unique identifier for each client in the database.",
+                "Address_ID": "An identifier that links each client to their corresponding address.",
+                "Customer_Email_Address": "The email address associated with the client for communication purposes.",
+                "Customer_Name": "The full name of the client as recorded in the database.",
+                "Customer_Phone": "The contact phone number for the client, which may include various formatting styles.",
+                "Other_Details": "Additional information about the client, such as membership status or other relevant notes."
+            },
+            "table_description": "The Clients table stores information about clients participating in the drama workshop groups, including their contact details and other relevant attributes."
+        }
+    ],
+    "Customer_Orders": [
+        {
+            "columns": {
+                "Order_ID": "A unique identifier for each customer order.",
+                "Customer_ID": "The identifier for the customer who placed the order.",
+                "Store_ID": "The identifier for the store where the order was made.",
+                "Order_Date": "The date and time when the order was placed.",
+                "Planned_Delivery_Date": "The scheduled date and time for delivering the order.",
+                "Actual_Delivery_Date": "The actual date and time when the order was delivered.",
+                "Other_Order_Details": "Additional details related to the order, if any."
+            },
+            "table_description": "The Customer_Orders table records the orders made by customers, tracking essential information such as customer and store identifiers, order dates, and delivery dates."
+        }
+    ],
+    "Drama_Workshop_Groups": [
+        {
+            "columns": {
+                "Workshop_Group_ID": "A unique identifier for each workshop group.",
+                "Address_ID": "A foreign key linking to the address associated with the workshop group.",
+                "Currency_Code": "The currency used for transactions related to the workshop group.",
+                "Marketing_Region_Code": "A code representing the geographical marketing region of the workshop group.",
+                "Store_Name": "The name of the store or workshop associated with the group.",
+                "Store_Phone": "The contact phone number for the store or workshop.",
+                "Store_Email_Address": "The email address for contacting the store or workshop.",
+                "Other_Details": "Additional information or notes relevant to the workshop group."
+            },
+            "table_description": "The Drama_Workshop_Groups table stores information pertaining to workshop groups, including identification, location, contact details, and additional notes."
+        }
+    ],
+    "Performers": [
+        {
+            "columns": {
+                "Performer_ID": "A unique identifier for each performer in the database.",
+                "Address_ID": "A reference to the address associated with the performer.",
+                "Customer_Name": "The name of the customer associated with the performer.",
+                "Customer_Phone": "The phone number of the customer.",
+                "Customer_Email_Address": "The email address of the customer.",
+                "Other_Details": "Any additional details or notes related to the customer or performer."
+            },
+            "table_description": "The Performers table stores information about performers and their associated customers, including contact details and additional notes."
+        }
+    ],
+    "Order_Items": [
+        {
+            "columns": {
+                "Order_Item_ID": "A unique identifier for each order item within the order items table.",
+                "Order_ID": "The identifier for the specific order to which the item belongs.",
+                "Product_ID": "The identifier for the product associated with the order item.",
+                "Order_Quantity": "The quantity of the product ordered, reflecting how many units are included in the order.",
+                "Other_Item_Details": "Additional information or notes related to the order item, if applicable."
+            },
+            "table_description": "The Order_Items table maintains a record of items included in customer orders, linking products to specific orders and detailing the quantities of each item ordered."
+        }
+    ],
+    "Invoices": [
+        {
+            "columns": {
+                "Invoice_ID": "A unique identifier for each invoice in the system.",
+                "Order_ID": "Identifies the specific order associated with the invoice.",
+                "payment_method_code": "Denotes the payment method used for the transaction, linking to a reference table for payment types.",
+                "Product_ID": "Specifies the identifier for the product related to the invoice.",
+                "Order_Quantity": "Indicates the quantity of products ordered, which may vary based on the purchase.",
+                "Other_Item_Details": "Provides additional information regarding items in the invoice, if applicable.",
+                "Order_Item_ID": "A unique identifier for the specific item within the order related to the invoice."
+            },
+            "table_description": "The Invoices table serves to document billing details for the transactions, linking each invoice to its corresponding order, products, and payment methods while tracking item quantities."
+        }
+    ],
+    "Services": [
+        {
+            "columns": {
+                "Service_ID": "A unique identifier for each service offered, ensuring that no two services have the same ID.",
+                "Service_Type_Code": "A code that categorizes the type of service, linking it to the predefined service categories.",
+                "Workshop_Group_ID": "An identifier representing the specific workshop group associated with the service.",
+                "Product_Description": "A detailed description of the product or service being offered; currently, it has no entries.",
+                "Product_Name": "The name of the product or service, which provides a quick reference for what is being offered.",
+                "Product_Price": "The monetary cost of the product or service, indicating how much customers will need to pay.",
+                "Other_Product_Service_Details": "Any additional details or specifications regarding the product or service; currently, it has no entries."
+            },
+            "table_description": "The Services table contains information about various services offered, including their type, associations with workshop groups, product names, and pricing, enabling effective management of service offerings within the drama workshop groups."
+        }
+    ],
+    "Bookings_Services": [
+        {
+            "columns": {
+                "Order_ID": "A unique identifier for each booking order in the system.",
+                "Product_ID": "A unique identifier for each service or product associated with the booking."
+            },
+            "table_description": "The Bookings_Services table facilitates the association of services with specific booking orders, enabling tracking and management of the services provided for each order."
+        }
+    ],
+    "Invoice_Items": [
+        {
+            "columns": {
+                "Invoice_Item_ID": "A unique identifier for each item listed in the invoice.",
+                "Invoice_ID": "The identifier for the invoice to which this item belongs.",
+                "Order_ID": "The identifier for the associated order from which this invoice item is derived.",
+                "Order_Item_ID": "The identifier for the specific item within the order.",
+                "Product_ID": "The identifier for the product associated with this invoice item.",
+                "Order_Quantity": "The quantity of the product being billed on the invoice.",
+                "Other_Item_Details": "Additional details regarding the item, such as descriptions or comments."
+            },
+            "table_description": "The Invoice_Items table serves to link specific products and quantities to their respective invoices, providing a detailed record of sales transactions."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "Customer_ID": "A unique identifier for each customer in the table.",
+                "Address_ID": "An identifier that links to the customer's address in the Addresses table.",
+                "Customer_Name": "The name of the customer.",
+                "Customer_Phone": "The contact phone number for the customer.",
+                "Customer_Email_Address": "The email address of the customer.",
+                "Other_Details": "Additional information or special notes regarding the customer."
+            },
+            "table_description": "The Customers table captures essential details about customers, including their unique identification, contact information, and any relevant remarks."
+        }
+    ],
+    "Stores": [
+        {
+            "columns": {
+                "Store_ID": "A unique identifier for each store in the system.",
+                "Address_ID": "An identifier that references the address associated with the store.",
+                "Marketing_Region_Code": "A code representing the marketing region where the store is located.",
+                "Store_Name": "The name of the store as it is commonly known.",
+                "Store_Phone": "The contact phone number for the store.",
+                "Store_Email_Address": "The email address used for communications with the store.",
+                "Other_Details": "Additional information about the store, which may include ratings or special notes."
+            },
+            "table_description": "The Stores table contains information about various stores, including unique identifiers, contact details, and attributes related to their location and marketing region."
+        }
+    ],
+    "Ref_Service_Types": [
+        {
+            "columns": {
+                "Service_Type_Code": "A unique identifier for each type of service offered.",
+                "Service_Type_Description": "A detailed description of the service type, explaining what the service entails.",
+                "Parent_Service_Type_Code": "An identifier linking the service type to a broader category or parent service type, indicating hierarchical relationships between service types."
+            },
+            "table_description": "The Ref_Service_Types table serves to categorize different types of services provided, establishing a structure that allows for parent-child relationships between service types, thereby enhancing organization and clarity in service offerings."
+        }
+    ],
+    "Bookings": [
+        {
+            "columns": {
+                "Booking_ID": "A unique identifier for each booking made.",
+                "Customer_ID": "The identifier for the customer who made the booking.",
+                "Workshop_Group_ID": "The identifier for the workshop group associated with the booking.",
+                "Status_Code": "The current status of the booking, indicating its progress or state.",
+                "Store_ID": "The identifier for the store where the booking was made.",
+                "Order_Date": "The date and time when the booking was placed.",
+                "Planned_Delivery_Date": "The anticipated date for the delivery of the services or products related to the booking.",
+                "Actual_Delivery_Date": "The actual date and time when the services or products were delivered.",
+                "Other_Order_Details": "Any additional details related to the booking that are not covered by other fields."
+            },
+            "table_description": "The Bookings table contains information about bookings made by customers for various workshop groups, detailing the status, dates, and related identifiers."
+        }
+    ]
+}

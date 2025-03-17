@@ -1,0 +1,35 @@
+{
+    "manufacturer": [
+        {
+            "columns": {
+                "Manufacturer_ID": "A unique identifier assigned to each manufacturer.",
+                "Open_Year": "The year in which the manufacturer was established.",
+                "Name": "The name of the manufacturer.",
+                "Num_of_Factories": "The total number of factories operated by the manufacturer.",
+                "Num_of_Shops": "The total number of retail shops operated by the manufacturer."
+            },
+            "table_description": "The manufacturer table contains information about different manufacturers, including their unique IDs, establishment years, names, and the number of factories and shops they operate."
+        }
+    ],
+    "furniture": [
+        {
+            "columns": {
+                "Furniture_ID": "A unique identifier assigned to each piece of furniture in the table.",
+                "Name": "The descriptive name of the furniture item.",
+                "Num_of_Component": "The total number of components that make up the furniture item.",
+                "Market_Rate": "The current market price of the furniture item, expressed in a monetary value."
+            },
+            "table_description": "The furniture table catalogs various furniture items, including their unique identifiers, names, the number of components, and current market rates."
+        }
+    ],
+    "furniture_manufacte": [
+        {
+            "columns": {
+                "Manufacturer_ID": "A unique identifier for each manufacturer, representing the entity that produces the furniture.",
+                "Furniture_ID": "A unique identifier for each type of furniture produced by the manufacturers.",
+                "Price_in_Dollar": "The retail price of the furniture item, expressed in US dollars."
+            },
+            "table_description": "The furniture_manufacte table serves to associate manufacturers with their respective furniture products and their prices, providing a structure for understanding the relationship between furniture items and their manufacturers."
+        }
+    ]
+}

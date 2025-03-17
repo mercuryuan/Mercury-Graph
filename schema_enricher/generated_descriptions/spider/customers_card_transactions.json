@@ -1,0 +1,57 @@
+{
+    "Financial_Transactions": [
+        {
+            "columns": {
+                "transaction_id": "A unique identifier for each financial transaction.",
+                "previous_transaction_id": "The identifier of the transaction that occurred directly before the current transaction, if applicable.",
+                "account_id": "The identifier of the account associated with the transaction.",
+                "card_id": "The identifier of the card used for the transaction.",
+                "transaction_type": "The type of transaction, such as 'Payment' or 'Refund', indicating whether the transaction was money going out or coming back.",
+                "transaction_date": "The date and time when the transaction was executed.",
+                "transaction_amount": "The total amount of money involved in the transaction.",
+                "transaction_comment": "Comments or notes associated with the transaction, if any.",
+                "other_transaction_details": "Additional details regarding the transaction that may not fit into other fields."
+            },
+            "table_description": "The Financial_Transactions table records various financial transactions associated with customer accounts and cards, detailing the nature of each transaction, the amounts involved, and relevant metadata."
+        }
+    ],
+    "Accounts": [
+        {
+            "columns": {
+                "account_id": "A unique identifier for each account in the database.",
+                "customer_id": "A unique identifier that links the account to a specific customer.",
+                "account_name": "The name associated with the account, which may represent a specific designation or identifier.",
+                "other_account_details": "Additional information related to the account, providing context such as account type or status."
+            },
+            "table_description": "The Accounts table holds information about customer accounts, providing unique identifiers and descriptive details that facilitate transactions and account management."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "A unique identifier assigned to each customer in the table.",
+                "customer_first_name": "The first name of the customer.",
+                "customer_last_name": "The last name of the customer.",
+                "customer_address": "The residential or business address of the customer.",
+                "customer_phone": "The contact phone number of the customer.",
+                "customer_email": "The email address of the customer.",
+                "other_customer_details": "Additional information about the customer, if available."
+            },
+            "table_description": "The Customers table stores detailed records of individual customers, including their personal information such as name, address, phone number, email, and any additional details."
+        }
+    ],
+    "Customers_Cards": [
+        {
+            "columns": {
+                "card_id": "A unique identifier for each card in the database.",
+                "customer_id": "A reference to the specific customer who owns the card.",
+                "card_type_code": "The classification of the card, indicating whether it is a debit or credit card.",
+                "card_number": "The actual number associated with the card, used for transactions.",
+                "date_valid_from": "The date and time when the card becomes valid for usage.",
+                "date_valid_to": "The date and time when the card will no longer be valid for usage.",
+                "other_card_details": "Additional information related to the card that may not fit into other attributes."
+            },
+            "table_description": "The Customers_Cards table stores details about customer cards, including their types, validity periods, and associated customer information."
+        }
+    ]
+}

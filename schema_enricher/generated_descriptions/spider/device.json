@@ -1,0 +1,37 @@
+{
+    "device": [
+        {
+            "columns": {
+                "Device_ID": "A unique identifier for each device in the table.",
+                "Device": "The name of the device brand or model.",
+                "Carrier": "The name of the mobile carrier associated with the device.",
+                "Package_Version": "The version number of the software package installed on the device.",
+                "Applications": "The version numbers of applications currently installed on the device.",
+                "Software_Platform": "The operating system that the device runs on, such as Android or iOS."
+            },
+            "table_description": "The 'device' table stores comprehensive information about various devices, including unique identifiers, brand names, mobile carriers, software package versions, installed applications, and the software platform on which the devices operate."
+        }
+    ],
+    "shop": [
+        {
+            "columns": {
+                "Shop_ID": "A unique identifier for each shop, used to distinguish between different records.",
+                "Shop_Name": "The name of the shop, which identifies the business to customers.",
+                "Location": "The specific geographical place where the shop is situated.",
+                "Open_Date": "The date on which the shop was opened for business.",
+                "Open_Year": "The year in which the shop commenced operations."
+            },
+            "table_description": "The 'shop' table contains information about various retail outlets, including their unique identifiers, names, locations, and opening dates, facilitating easy reference and management of shop-related data."
+        }
+    ],
+    "stock": [
+        {
+            "columns": {
+                "Shop_ID": "Identifies the shop where the devices are located.",
+                "Device_ID": "Identifies the specific device in stock.",
+                "Quantity": "Represents the number of units available for each device at the shop."
+            },
+            "table_description": "The stock table maintains records of the quantity of various devices available at different shops."
+        }
+    ]
+}

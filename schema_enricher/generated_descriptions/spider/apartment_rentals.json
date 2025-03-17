@@ -1,0 +1,75 @@
+{
+    "Apartment_Facilities": [
+        {
+            "columns": {
+                "apt_id": "Unique identifier for each apartment, representing the specific unit associated with various facilities.",
+                "facility_code": "Code representing the type of facility available to the apartment, indicating amenities such as broadband, gym, etc."
+            },
+            "table_description": "The Apartment_Facilities table associates specific apartments with their available facilities, enabling tracking of amenities offered in different rental units."
+        }
+    ],
+    "Guests": [
+        {
+            "columns": {
+                "guest_id": "A unique identifier for each guest in the database.",
+                "gender_code": "A code representing the gender of the guest, which may include values for female, male, or unknown.",
+                "guest_first_name": "The first name of the guest.",
+                "guest_last_name": "The last name of the guest.",
+                "date_of_birth": "The birth date and time of the guest."
+            },
+            "table_description": "The Guests table contains information about individuals renting apartments, including their unique ID, gender, full name, and date of birth."
+        }
+    ],
+    "Apartment_Bookings": [
+        {
+            "columns": {
+                "apt_booking_id": "A unique identifier for each booking transaction.",
+                "apt_id": "The identifier for the apartment being booked.",
+                "guest_id": "The identifier for the guest making the booking.",
+                "booking_status_code": "A code indicating the current status of the booking, such as confirmed or provisional.",
+                "booking_start_date": "The date and time when the booking starts.",
+                "booking_end_date": "The date and time when the booking ends."
+            },
+            "table_description": "The Apartment_Bookings table records details about bookings made by guests for specific apartments, including the status of the bookings and their respective timeframes."
+        }
+    ],
+    "View_Unit_Status": [
+        {
+            "columns": {
+                "apt_id": "This column represents the unique identifier for each apartment listed in the database.",
+                "apt_booking_id": "This column represents the unique identifier for each booking made for the apartments.",
+                "status_date": "This column indicates the specific date and time when the status of the apartment's availability was recorded.",
+                "available_yn": "This column indicates whether the apartment is available for booking, with a binary value representing 'yes' or 'no'."
+            },
+            "table_description": "The View_Unit_Status table tracks the availability status of apartments over time, linking each status entry to specific apartments and bookings."
+        }
+    ],
+    "Apartments": [
+        {
+            "columns": {
+                "apt_id": "A unique identifier for each apartment unit in the table.",
+                "building_id": "A reference identifier linking the apartment to its respective building.",
+                "apt_type_code": "A code representing the type of apartment, such as Flat, Studio, or Duplex.",
+                "apt_number": "The designated number or label for the apartment unit within the building.",
+                "bathroom_count": "The total number of bathrooms present in the apartment unit.",
+                "bedroom_count": "The total number of bedrooms available in the apartment unit.",
+                "room_count": "The overall count of rooms in the apartment, including bedrooms, bathrooms, and living areas."
+            },
+            "table_description": "The Apartments table provides a comprehensive record of various apartment units, detailing their unique identifiers, type classifications, and room counts, as well as their associated building references."
+        }
+    ],
+    "Apartment_Buildings": [
+        {
+            "columns": {
+                "building_id": "A unique identifier for each apartment building.",
+                "building_short_name": "A concise name used for quick reference of the building.",
+                "building_full_name": "The complete official name of the apartment building.",
+                "building_description": "A brief description of the type or characteristics of the building.",
+                "building_address": "The full mailing address of the apartment building.",
+                "building_manager": "The name of the individual responsible for managing the building.",
+                "building_phone": "The contact phone number for the building manager or the building itself."
+            },
+            "table_description": "The Apartment_Buildings table stores essential information about various apartment buildings, including their identifiers, names, descriptions, addresses, management details, and contact information."
+        }
+    ]
+}

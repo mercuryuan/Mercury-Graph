@@ -1,0 +1,71 @@
+{
+    "Sales": [
+        {
+            "columns": {
+                "sales_transaction_id": "A unique identifier for each sales transaction recorded in the database.",
+                "sales_details": "A brief description or identifier associated with the sales transaction."
+            },
+            "table_description": "The Sales table is designed to track individual sales transactions by storing unique transaction identifiers alongside their corresponding details."
+        }
+    ],
+    "Purchases": [
+        {
+            "columns": {
+                "purchase_transaction_id": "This column uniquely identifies each purchase transaction recorded in the database.",
+                "purchase_details": "This column contains a summary or description of the purchase made within the transaction."
+            },
+            "table_description": "The Purchases table tracks individual purchase transactions, linking each entry to a specific transaction through its unique identifier and detailing the nature of the purchase."
+        }
+    ],
+    "Ref_Transaction_Types": [
+        {
+            "columns": {
+                "transaction_type_code": "A unique identifier for the type of transaction.",
+                "transaction_type_description": "A brief description of the transaction type represented by the transaction type code."
+            },
+            "table_description": "The Ref_Transaction_Types table stores the various types of transactions that can occur within the tracking share transactions system, providing a mapping between transaction codes and their respective descriptions."
+        }
+    ],
+    "Transactions": [
+        {
+            "columns": {
+                "transaction_id": "A unique identifier for each transaction recorded in the table.",
+                "investor_id": "The identifier for the investor associated with the transaction, linking to the Investors table.",
+                "transaction_type_code": "A code representing the type of transaction, such as purchase or sale, linked to the Reference Transaction Types.",
+                "date_of_transaction": "The date and time when the transaction took place.",
+                "amount_of_transaction": "The monetary value associated with the transaction.",
+                "share_count": "The number of shares involved in the transaction.",
+                "other_details": "Additional information regarding the transaction, if any, though currently empty for all entries."
+            },
+            "table_description": "The Transactions table records the details of individual investment transactions, including the investor, transaction type, date, monetary amount, share count, and any relevant additional details."
+        }
+    ],
+    "Transactions_Lots": [
+        {
+            "columns": {
+                "lot_id": "Identifies the specific lot of shares involved in the transaction.",
+                "transaction_id": "Identifies the transaction associated with the lot of shares."
+            },
+            "table_description": "The Transactions_Lots table establishes a relationship between transactions and lots of shares, linking specific transactions to the corresponding share lots."
+        }
+    ],
+    "Investors": [
+        {
+            "columns": {
+                "investor_id": "A unique identifier for each investor in the database.",
+                "Investor_details": "Information related to the investor, which may include names or codes."
+            },
+            "table_description": "The Investors table is designed to store and manage essential data about investors, including unique identifiers and their respective details."
+        }
+    ],
+    "Lots": [
+        {
+            "columns": {
+                "lot_id": "A unique identifier for each lot in the database.",
+                "investor_id": "A reference identifier that links each lot to a specific investor.",
+                "lot_details": "A text field providing additional information or specifications about the lot."
+            },
+            "table_description": "The Lots table serves to track individual lots associated with investors, providing details specific to each lot and linking them to investor records."
+        }
+    ]
+}

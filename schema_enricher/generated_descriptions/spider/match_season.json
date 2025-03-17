@@ -1,0 +1,51 @@
+{
+    "country": [
+        {
+            "columns": {
+                "Country_id": "A unique identifier for each country in the table.",
+                "Country_name": "The name of the country.",
+                "Capital": "The capital city of the country.",
+                "Official_native_language": "The language that is officially recognized and spoken in the country."
+            },
+            "table_description": "The country table holds essential information about countries, including their unique IDs, names, capitals, and official languages."
+        }
+    ],
+    "team": [
+        {
+            "columns": {
+                "Team_id": "A unique identifier for each team in the database.",
+                "Name": "The name of the team as recognized in competitions."
+            },
+            "table_description": "The team table stores information about various sports teams, each identified by a unique ID and accompanied by their respective names."
+        }
+    ],
+    "match_season": [
+        {
+            "columns": {
+                "Season": "Represents the specific year of the match season.",
+                "Player": "The name of the player associated with the match season.",
+                "Position": "Indicates the playing position of the player.",
+                "Country": "Refers to the country code representing the player's nationality.",
+                "Team": "Identifies the team code to which the player belongs during the match season.",
+                "Draft_Pick_Number": "Denotes the player's selection number during the draft process.",
+                "Draft_Class": "Specifies the draft year and event associated with the player's selection.",
+                "College": "Captures the name of the college or university the player attended before being drafted."
+            },
+            "table_description": "The match_season table catalogs player information for various match seasons, including their names, positions, nationalities, team affiliations, draft details, and educational backgrounds."
+        }
+    ],
+    "player": [
+        {
+            "columns": {
+                "Player_ID": "A unique identifier for each player.",
+                "Player": "The name of the player, including any associated identifiers.",
+                "Years_Played": "The years during which the player has participated in matches, represented in a specific time range format.",
+                "Total_WL": "Total wins and losses for the player across all matches played.",
+                "Singles_WL": "Wins and losses specifically for singles matches played by the player.",
+                "Doubles_WL": "Wins and losses specifically for doubles matches played by the player.",
+                "Team": "The identifier for the team that the player is part of."
+            },
+            "table_description": "The player table contains detailed information about individual players, including their performance metrics, participation duration, and team affiliation."
+        }
+    ]
+}

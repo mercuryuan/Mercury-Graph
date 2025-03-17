@@ -98,7 +98,7 @@ def load_graph_to_neo4j(dataset_name, db_name):
 
 if __name__ == '__main__':
     # 定义导入路径，指向要导入的图数据所在的目录
-    db_path = "../graphs_repo/BIRD/books"
+    db_path = "../graphs_repo/spider/bike_1"
     # 导出图数据
     export_all(db_path)
 

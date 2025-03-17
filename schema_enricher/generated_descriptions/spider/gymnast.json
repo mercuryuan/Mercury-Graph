@@ -1,0 +1,29 @@
+{
+    "gymnast": [
+        {
+            "columns": {
+                "Gymnast_ID": "A unique identifier for each gymnast, linking their performance records to their respective profiles.",
+                "Floor_Exercise_Points": "The score awarded to the gymnast for their performance on the floor exercise apparatus.",
+                "Pommel_Horse_Points": "The score awarded to the gymnast for their performance on the pommel horse apparatus.",
+                "Rings_Points": "The score awarded to the gymnast for their performance on the rings apparatus.",
+                "Vault_Points": "The score awarded to the gymnast for their performance on the vault apparatus.",
+                "Parallel_Bars_Points": "The score awarded to the gymnast for their performance on the parallel bars apparatus.",
+                "Horizontal_Bar_Points": "The score awarded to the gymnast for their performance on the horizontal bar apparatus.",
+                "Total_Points": "The cumulative score of all individual apparatus performances for the gymnast."
+            },
+            "table_description": "The gymnast table records individual performance scores across various gymnastic apparatus for each gymnast, providing a comprehensive view of their scoring in competitions."
+        }
+    ],
+    "people": [
+        {
+            "columns": {
+                "People_ID": "A unique identifier assigned to each individual in the table.",
+                "Name": "The full name of the individual.",
+                "Age": "The age of the individual in years.",
+                "Height": "The height of the individual measured in meters.",
+                "Hometown": "The city or town where the individual is from."
+            },
+            "table_description": "The 'people' table contains information about individuals, including their unique ID, name, age, height, and hometown, serving as a reference for related data in the gymnast database."
+        }
+    ]
+}

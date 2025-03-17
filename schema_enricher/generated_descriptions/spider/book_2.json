@@ -1,0 +1,25 @@
+{
+    "publication": [
+        {
+            "columns": {
+                "Publication_ID": "A unique identifier for each publication record.",
+                "Book_ID": "A reference identifier linking to the associated book.",
+                "Publisher": "The name of the publisher responsible for the publication.",
+                "Publication_Date": "The date when the publication was released.",
+                "Price": "The retail price of the publication."
+            },
+            "table_description": "The publication table stores details about various publications, including unique identifiers, associated books, publishers, publication dates, and pricing information."
+        }
+    ],
+    "book": [
+        {
+            "columns": {
+                "Book_ID": "A unique identifier for each book in the table.",
+                "Title": "The title of the book, which represents its name.",
+                "Issues": "The number of issues or editions available for the book.",
+                "Writer": "The name of the author who wrote the book."
+            },
+            "table_description": "The book table serves as a catalog of books, detailing their unique identifiers, titles, available issues, and corresponding writers."
+        }
+    ]
+}

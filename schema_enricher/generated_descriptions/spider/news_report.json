@@ -1,0 +1,36 @@
+{
+    "event": [
+        {
+            "columns": {
+                "Event_ID": "A unique identifier for each event.",
+                "Date": "The date on which the event takes place.",
+                "Venue": "The location where the event is held.",
+                "Name": "The official title or name of the event.",
+                "Event_Attendance": "The number of participants or attendees at the event."
+            },
+            "table_description": "The event table contains information about various events, including their unique identifiers, dates, venues, names, and attendance figures."
+        }
+    ],
+    "journalist": [
+        {
+            "columns": {
+                "journalist_ID": "A unique identifier for each journalist in the database.",
+                "Name": "The full name of the journalist.",
+                "Nationality": "The country of citizenship or origin of the journalist.",
+                "Age": "The current age of the journalist.",
+                "Years_working": "The number of years the journalist has been actively working in the field."
+            },
+            "table_description": "The journalist table stores information about journalists, including their unique IDs, names, nationalities, ages, and the number of years they have been employed in journalism."
+        }
+    ],
+    "news_report": [
+        {
+            "columns": {
+                "journalist_ID": "This column represents the unique identifier for each journalist involved in reporting events.",
+                "Event_ID": "This column signifies the unique identifier for each event that is reported on.",
+                "Work_Type": "This column describes the type of work or activity the journalist is engaged in for the respective event."
+            },
+            "table_description": "The news_report table captures the relationship between journalists and events they report on, detailing the specific type of work each journalist performs for various events."
+        }
+    ]
+}

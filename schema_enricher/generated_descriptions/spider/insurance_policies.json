@@ -1,0 +1,62 @@
+{
+    "Payments": [
+        {
+            "columns": {
+                "Payment_ID": "A unique identifier for each payment record in the table.",
+                "Settlement_ID": "An identifier that links the payment to a specific settlement record.",
+                "Payment_Method_Code": "The method used for the payment, such as credit card types or other payment options.",
+                "Date_Payment_Made": "The date on which the payment was made.",
+                "Amount_Payment": "The total amount of money that was paid."
+            },
+            "table_description": "The Payments table records details of payment transactions related to insurance settlements, including the payment amount, date, method, and associated settlement."
+        }
+    ],
+    "Settlements": [
+        {
+            "columns": {
+                "Settlement_ID": "A unique identifier for each settlement record in the table.",
+                "Claim_ID": "An identifier linking the settlement to a specific insurance claim.",
+                "Date_Claim_Made": "The date when the insurance claim was initially filed.",
+                "Date_Claim_Settled": "The date when the claim was resolved and the settlement was complete.",
+                "Amount_Claimed": "The total amount requested by the claimant as part of the insurance claim.",
+                "Amount_Settled": "The final amount that was agreed upon and paid out to the claimant.",
+                "Customer_Policy_ID": "An identifier that ties the settlement to the customer's insurance policy."
+            },
+            "table_description": "The Settlements table captures the details of insurance settlements, including identifiers for settlements and claims, relevant dates, amounts claimed and settled, and links to customer policies."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "Customer_ID": "A unique identifier assigned to each customer in the database.",
+                "Customer_Details": "Contains the name and possibly additional identifying information about the customer."
+            },
+            "table_description": "The Customers table holds information about individuals who have engaged with the insurance provider, with each entry representing a distinct customer."
+        }
+    ],
+    "Customer_Policies": [
+        {
+            "columns": {
+                "Policy_ID": "A unique identifier for each insurance policy, ensuring that each entry in the table can be distinctly identified.",
+                "Customer_ID": "The identifier for the customer associated with the insurance policy, linking the policy to the customer's details.",
+                "Policy_Type_Code": "A code that specifies the type of insurance policy, such as Property, Travel, Car, etc.",
+                "Start_Date": "The date on which the insurance policy becomes effective, marking the beginning of the coverage period.",
+                "End_Date": "The date on which the insurance policy expires, indicating the end of the coverage duration."
+            },
+            "table_description": "The Customer_Policies table records the insurance policies held by customers, including details such as policy identifiers, the customers who own them, and their coverage periods."
+        }
+    ],
+    "Claims": [
+        {
+            "columns": {
+                "Claim_ID": "A unique identifier for each insurance claim submitted.",
+                "Policy_ID": "An identifier that links the claim to a specific insurance policy.",
+                "Date_Claim_Made": "The date when the claim was originally reported to the insurance company.",
+                "Date_Claim_Settled": "The date when the claim was resolved and payment was made to the claimant.",
+                "Amount_Claimed": "The total amount of money requested by the claimant in the insurance claim.",
+                "Amount_Settled": "The final amount of money that was paid out by the insurance company to settle the claim."
+            },
+            "table_description": "The Claims table stores detailed information regarding insurance claims made by policyholders, including identifiers for claims and policies, relevant dates, and monetary amounts associated with each claim."
+        }
+    ]
+}

@@ -1,0 +1,121 @@
+{
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "A unique identifier for each customer.",
+                "customer_first_name": "The first name of the customer.",
+                "customer_middle_initial": "The middle initial of the customer.",
+                "customer_last_name": "The last name of the customer.",
+                "gender": "The gender of the customer, represented as a single character.",
+                "email_address": "The email address of the customer for communication and account purposes.",
+                "login_name": "The username chosen by the customer for logging into their account.",
+                "login_password": "The hashed password associated with the customer's account for secure access.",
+                "phone_number": "The contact phone number of the customer.",
+                "town_city": "The town or city where the customer resides.",
+                "state_county_province": "The state, county, or province of the customer's address.",
+                "country": "The country where the customer is located."
+            },
+            "table_description": "The Customers table contains vital information about customers, including personal details, contact information, and account credentials, which are essential for managing customer relationships and transactions."
+        }
+    ],
+    "Orders": [
+        {
+            "columns": {
+                "order_id": "A unique identifier for each order placed in the system.",
+                "customer_id": "A reference identifier that links the order to a specific customer.",
+                "date_order_placed": "The date and time when the order was placed.",
+                "order_details": "Details about the items or information related to the order; currently not populated."
+            },
+            "table_description": "The Orders table stores information regarding customer orders, including unique identifiers, timestamps of when the orders were placed, and associations to specific customers."
+        }
+    ],
+    "Invoices": [
+        {
+            "columns": {
+                "invoice_number": "A unique identifier for each invoice.",
+                "order_id": "The identifier for the associated order, linking to the Orders table.",
+                "invoice_date": "The date and time when the invoice was created."
+            },
+            "table_description": "The Invoices table stores records of invoices generated for customer orders, detailing unique invoice identifiers, associated order identifiers, and the dates when the invoices were issued."
+        }
+    ],
+    "Accounts": [
+        {
+            "columns": {
+                "account_id": "A unique identifier for each account.",
+                "customer_id": "An identifier linking the account to a specific customer.",
+                "date_account_opened": "The date and time when the account was created.",
+                "account_name": "The name associated with the account.",
+                "other_account_details": "Additional details regarding the account type or status."
+            },
+            "table_description": "The Accounts table stores information about customer accounts, including their identifiers, creation dates, names, and additional details related to each account."
+        }
+    ],
+    "Product_Categories": [
+        {
+            "columns": {
+                "production_type_code": "A unique identifier for each category of product, representing the type of production such as Food, DVDs, Electronics, or Books.",
+                "product_type_description": "A detailed description of the product type associated with the production type code, providing clarity about what each category entails.",
+                "vat_rating": "The value-added tax rating applicable to the products in the category, expressed as a decimal value."
+            },
+            "table_description": "The Product_Categories table categorizes various types of products, providing a unique code, a descriptive label, and applicable VAT rates for each category."
+        }
+    ],
+    "Products": [
+        {
+            "columns": {
+                "product_id": "A unique identifier assigned to each product in the inventory.",
+                "parent_product_id": "An identifier that links the product to a parent product, indicating product hierarchies or variations.",
+                "production_type_code": "A code that classifies the product under a specific category, such as Electronics or Books.",
+                "unit_price": "The selling price of the product, represented in monetary value.",
+                "product_name": "The name of the product, which serves as its primary identifier in listings.",
+                "product_color": "The primary color of the product, providing information about its visual attributes.",
+                "product_size": "The size designation of the product, indicating its dimensions or capacity."
+            },
+            "table_description": "The Products table stores detailed information about each product available in the system, including its unique identifiers, category classifications, pricing, and physical attributes."
+        }
+    ],
+    "Financial_Transactions": [
+        {
+            "columns": {
+                "transaction_id": "A unique identifier for each financial transaction.",
+                "account_id": "The identifier for the account associated with the transaction.",
+                "invoice_number": "The identifier for the related invoice, if applicable.",
+                "transaction_type": "The type of the transaction, indicating whether it is a payment or refund.",
+                "transaction_date": "The date and time when the transaction occurred.",
+                "transaction_amount": "The amount of money involved in the transaction.",
+                "transaction_comment": "Additional comments or notes related to the transaction.",
+                "other_transaction_details": "Further details about the transaction that may not be covered by other columns."
+            },
+            "table_description": "The Financial_Transactions table records all monetary transactions associated with accounts and invoices, detailing their types, amounts, dates, and any relevant comments or additional information."
+        }
+    ],
+    "Order_Items": [
+        {
+            "columns": {
+                "order_item_id": "A unique identifier for each order item entry, ensuring distinct records within the table.",
+                "order_id": "The identifier for the order to which the item belongs, linking it to a specific customer order.",
+                "product_id": "The unique identifier for the product being ordered, enabling reference to detailed product information.",
+                "product_quantity": "The amount of the product included in the order item, indicating how many units of the product were ordered.",
+                "other_order_item_details": "Additional details related to the order item, which may provide extra context or specifications."
+            },
+            "table_description": "The Order_Items table serves to detail individual products included in customer orders, capturing essential information about each order item, its quantity, and associated order and product identifiers."
+        }
+    ],
+    "Invoice_Line_Items": [
+        {
+            "columns": {
+                "order_item_id": "A unique identifier for each order item in the invoice.",
+                "invoice_number": "Identifies the invoice to which the line item belongs.",
+                "product_id": "A unique identifier for the product associated with the line item.",
+                "product_title": "The title or name of the product included in the invoice line item.",
+                "product_quantity": "The quantity of the product being purchased in this line item.",
+                "product_price": "The price of a single unit of the product before any derived charges.",
+                "derived_product_cost": "The derived cost associated with the product, potentially factoring in discounts or other adjustments.",
+                "derived_vat_payable": "The value-added tax that is payable on the line item, currently stored as null for all records.",
+                "derived_total_cost": "The total cost for the line item, including product price, derived product cost, and VAT."
+            },
+            "table_description": "The Invoice_Line_Items table records detailed information about products included in invoices, capturing essential line item data such as identifiers, product details, pricing, and calculated costs."
+        }
+    ]
+}

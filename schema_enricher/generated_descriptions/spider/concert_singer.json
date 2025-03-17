@@ -1,0 +1,51 @@
+{
+    "stadium": [
+        {
+            "columns": {
+                "Stadium_ID": "A unique identifier for each stadium in the database.",
+                "Location": "The geographical area where the stadium is situated.",
+                "Name": "The official name of the stadium.",
+                "Capacity": "The maximum number of spectators that the stadium can accommodate.",
+                "Highest": "The highest recorded attendance at the stadium.",
+                "Lowest": "The lowest recorded attendance at the stadium.",
+                "Average": "The average attendance at the stadium over a specified period."
+            },
+            "table_description": "The stadium table stores information about various stadiums, including their identifiers, locations, names, attendance capacities, and historical attendance records."
+        }
+    ],
+    "singer": [
+        {
+            "columns": {
+                "Singer_ID": "A unique identifier for each singer in the database.",
+                "Name": "The name of the singer.",
+                "Country": "The country where the singer is from.",
+                "Song_Name": "The title of the song associated with the singer.",
+                "Song_release_year": "The year in which the song was released.",
+                "Age": "The age of the singer.",
+                "Is_male": "A boolean indicating whether the singer is male (True) or not (False)."
+            },
+            "table_description": "The singer table contains information about various singers, including their identity, nationality, song details, demographics, and gender."
+        }
+    ],
+    "concert": [
+        {
+            "columns": {
+                "concert_ID": "A unique identifier for each concert entry in the database.",
+                "concert_Name": "The title or name of the concert event.",
+                "Theme": "The specific theme or concept that the concert is based around.",
+                "Stadium_ID": "A reference identifier indicating the stadium where the concert is held.",
+                "Year": "The year in which the concert takes place."
+            },
+            "table_description": "The concert table contains information about various concert events, including their identifiers, names, themes, locations, and the years they occur."
+        }
+    ],
+    "singer_in_concert": [
+        {
+            "columns": {
+                "concert_ID": "This column represents the unique identifier for each concert in which a singer performs.",
+                "Singer_ID": "This column represents the unique identifier for each singer participating in the concerts."
+            },
+            "table_description": "The singer_in_concert table captures the relationship between singers and the concerts they are associated with, identifying each concert and the respective singers performing in them."
+        }
+    ]
+}

@@ -1,0 +1,49 @@
+{
+    "shop": [
+        {
+            "columns": {
+                "Shop_ID": "A unique identifier for each coffee shop, used to distinguish between different entries.",
+                "Address": "The physical location of the coffee shop, detailing the street and number.",
+                "Num_of_staff": "The total count of employees working at the coffee shop.",
+                "Score": "A numerical rating representing the quality or popularity of the coffee shop, typically based on customer reviews.",
+                "Open_Year": "The year when the coffee shop was established and began its operations."
+            },
+            "table_description": "The shop table contains information about various coffee shops, including their unique identifiers, locations, staffing levels, customer ratings, and years of establishment."
+        }
+    ],
+    "member": [
+        {
+            "columns": {
+                "Member_ID": "A unique identifier for each member in the coffee shop.",
+                "Name": "The full name of the member.",
+                "Membership_card": "The type of membership card held by the member, indicating their level of benefits.",
+                "Age": "The age of the member.",
+                "Time_of_purchase": "The time of purchase recorded for the member's transactions.",
+                "Level_of_membership": "An integer representing the member's level of membership, which may determine their privileges.",
+                "Address": "The residential address of the member."
+            },
+            "table_description": "The 'member' table contains information about individuals who are members of the coffee shop, including their identification, personal details, membership status, and contact information."
+        }
+    ],
+    "happy_hour": [
+        {
+            "columns": {
+                "HH_ID": "A unique identifier for each happy hour event.",
+                "Shop_ID": "The identifier for the coffee shop where the happy hour takes place.",
+                "Month": "The month during which the happy hour is held.",
+                "Num_of_shaff_in_charge": "The number of staff members overseeing the happy hour event."
+            },
+            "table_description": "The happy_hour table records information about happy hour events at various coffee shops, including unique identifiers for these events, associated coffee shops, the month of occurrence, and the number of staff in charge."
+        }
+    ],
+    "happy_hour_member": [
+        {
+            "columns": {
+                "HH_ID": "This column represents a unique identifier for each happy hour session within the database.",
+                "Member_ID": "This column signifies the unique identifier associated with each member participating in the happy hour promotion.",
+                "Total_amount": "This column indicates the total amount spent by the member during the happy hour session."
+            },
+            "table_description": "The happy_hour_member table records the participation of members in happy hour sessions, tracking both their unique identifiers and the total amounts they have spent."
+        }
+    ]
+}

@@ -1,0 +1,166 @@
+{
+    "Ref_Hotel_Star_Ratings": [
+        {
+            "columns": {
+                "star_rating_code": "Unique code representing the star rating of hotels.",
+                "star_rating_description": "Text description of the star rating classification."
+            },
+            "table_description": "This table provides a reference for hotel star ratings, linking each rating code to its corresponding descriptive classification."
+        }
+    ],
+    "Locations": [
+        {
+            "columns": {
+                "Location_ID": "A unique identifier for each location within the theme park, serving as the primary key.",
+                "Location_Name": "The name of the location, which helps identify attractions and areas within the theme park.",
+                "Address": "The physical address of the location, providing details on where it can be found.",
+                "Other_Details": "Additional information related to the location, although this column is currently not utilized."
+            },
+            "table_description": "The Locations table serves to store essential information about various locations within the theme park, including their identifiers, names, physical addresses, and any additional relevant details."
+        }
+    ],
+    "Ref_Attraction_Types": [
+        {
+            "columns": {
+                "Attraction_Type_Code": "A unique identifier for each type of attraction within the theme park.",
+                "Attraction_Type_Description": "A textual description that provides details about the type of attraction, such as 'gallery', 'garden', 'museum', 'adventure', or 'park'."
+            },
+            "table_description": "The Ref_Attraction_Types table serves to categorize different kinds of attractions in a theme park setting, mapping unique codes to descriptive labels that define the nature of each attraction."
+        }
+    ],
+    "Visitors": [
+        {
+            "columns": {
+                "Tourist_ID": "A unique identifier assigned to each tourist visiting the theme park.",
+                "Tourist_Details": "Contains the name or identifying information of the tourist."
+            },
+            "table_description": "The Visitors table stores information about tourists who visit the theme park, providing a unique ID for each visitor along with their corresponding details."
+        }
+    ],
+    "Features": [
+        {
+            "columns": {
+                "Feature_ID": "A unique identifier assigned to each feature in the theme park.",
+                "Feature_Details": "A description of the specific feature available within the theme park."
+            },
+            "table_description": "The Features table contains information on various amenities and attractions offered in the theme park, identified uniquely by their Feature_ID and described in terms of their Feature_Details."
+        }
+    ],
+    "Hotels": [
+        {
+            "columns": {
+                "hotel_id": "A unique identifier for each hotel in the database.",
+                "star_rating_code": "A code representing the star rating assigned to a hotel, linked to a reference table.",
+                "pets_allowed_yn": "Indicates whether pets are allowed at the hotel, represented in a binary format.",
+                "price_range": "The estimated price range for staying at the hotel, reflecting market rates.",
+                "other_hotel_details": "Additional details about the hotel that may include features or amenities."
+            },
+            "table_description": "The Hotels table stores information about various hotels, including unique identifiers, star ratings, pet policies, pricing, and additional details."
+        }
+    ],
+    "Tourist_Attractions": [
+        {
+            "columns": {
+                "Tourist_Attraction_ID": "A unique identifier for each tourist attraction.",
+                "Attraction_Type_Code": "A code representing the type of the tourist attraction, linking to a reference table of attraction types.",
+                "Location_ID": "An identifier indicating the location of the tourist attraction, linking to a reference table of locations.",
+                "How_to_Get_There": "Instructions or guidance on how to reach the attraction, including transportation options.",
+                "Name": "The official name of the tourist attraction.",
+                "Description": "A brief overview or details about the tourist attraction.",
+                "Opening_Hours": "The hours during which the tourist attraction is open to visitors.",
+                "Other_Details": "Additional information or specifications about the tourist attraction."
+            },
+            "table_description": "The Tourist_Attractions table contains essential details about various tourist attractions, including their identification, location, types, accessibility, and operational information."
+        }
+    ],
+    "Street_Markets": [
+        {
+            "columns": {
+                "Market_ID": "A unique identifier assigned to each market, used for distinguishing between different entries in the table.",
+                "Market_Details": "A brief description or name of the market which provides insights into the type or theme of the market."
+            },
+            "table_description": "The Street_Markets table captures information about various street markets within the theme park, linking them to related tourist attractions."
+        }
+    ],
+    "Shops": [
+        {
+            "columns": {
+                "Shop_ID": "A unique identifier for each shop, used to reference the shop within the database and maintain relationships with other tables.",
+                "Shop_Details": "A brief description of the shop, providing insight into the type of products or services offered."
+            },
+            "table_description": "The Shops table holds information about various shops within the theme park, linking their unique identifiers with a description of their offerings."
+        }
+    ],
+    "Museums": [
+        {
+            "columns": {
+                "Museum_ID": "A unique identifier for each museum in the database.",
+                "Museum_Details": "A brief description or name of the museum."
+            },
+            "table_description": "The Museums table contains information about various museums, including unique identifiers and their respective details."
+        }
+    ],
+    "Royal_Family": [
+        {
+            "columns": {
+                "Royal_Family_ID": "A unique identifier for each royal family entry in the table.",
+                "Royal_Family_Details": "A textual description providing additional information about the royal family."
+            },
+            "table_description": "The Royal_Family table stores information about royal families, including their unique identifiers and descriptive details."
+        }
+    ],
+    "Theme_Parks": [
+        {
+            "columns": {
+                "Theme_Park_ID": "A unique identifier for each theme park listed in the database.",
+                "Theme_Park_Details": "A descriptive name of the theme park, providing information about the specific park."
+            },
+            "table_description": "The Theme_Parks table holds information about various theme parks, including their unique identifiers and descriptive names."
+        }
+    ],
+    "Visits": [
+        {
+            "columns": {
+                "Visit_ID": "A unique identifier for each visit record.",
+                "Tourist_Attraction_ID": "The identifier of the tourist attraction being visited.",
+                "Tourist_ID": "The identifier of the tourist who made the visit.",
+                "Visit_Date": "The date and time when the visit occurred.",
+                "Visit_Details": "Additional information about the visit, if any."
+            },
+            "table_description": "The Visits table records details of visits made by tourists to various attractions, including the unique identifiers for each visit, the tourist and the attraction involved, as well as the time of the visit and any relevant details."
+        }
+    ],
+    "Photos": [
+        {
+            "columns": {
+                "Photo_ID": "A unique identifier for each photo entry in the table.",
+                "Tourist_Attraction_ID": "A reference identifier that links the photo to a specific tourist attraction.",
+                "Name": "A brief title or label for the photo that summarizes its content.",
+                "Description": "A text field intended to provide additional context or information about the photo; currently not in use.",
+                "Filename": "The name of the file associated with the photo, which may include its storage path.",
+                "Other_Details": "This column is intended for any miscellaneous information related to the photo but is currently not utilized."
+            },
+            "table_description": "The Photos table holds information about various photos related to tourist attractions, including unique identifiers and names, while having provisions for descriptive content that has not been populated."
+        }
+    ],
+    "Staff": [
+        {
+            "columns": {
+                "Staff_ID": "A unique identifier for each staff member in the table.",
+                "Tourist_Attraction_ID": "An identifier that links the staff member to a specific tourist attraction.",
+                "Name": "The name of the staff member.",
+                "Other_Details": "Additional information related to the staff member, currently not populated."
+            },
+            "table_description": "The Staff table holds information about employees associated with various tourist attractions, linking each staff member to their respective attraction while providing space for their names and additional details."
+        }
+    ],
+    "Tourist_Attraction_Features": [
+        {
+            "columns": {
+                "Tourist_Attraction_ID": "Identifies the specific tourist attraction to which the feature belongs.",
+                "Feature_ID": "Identifies the specific feature associated with the tourist attraction."
+            },
+            "table_description": "The Tourist_Attraction_Features table establishes a many-to-many relationship between tourist attractions and their respective features, allowing the database to effectively manage and link various characteristics to each attraction."
+        }
+    ]
+}

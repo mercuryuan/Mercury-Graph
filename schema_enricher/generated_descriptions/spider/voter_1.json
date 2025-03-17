@@ -1,0 +1,32 @@
+{
+    "AREA_CODE_STATE": [
+        {
+            "columns": {
+                "area_code": "A unique numeric identifier used to represent a specific geographic area for telephone services within a state.",
+                "state": "A two-letter abbreviation representing the U.S. state corresponding to the given area code."
+            },
+            "table_description": "The AREA_CODE_STATE table maps unique area codes to their respective U.S. states, facilitating the association of area codes with geographic locations."
+        }
+    ],
+    "CONTESTANTS": [
+        {
+            "columns": {
+                "contestant_number": "A unique identifier assigned to each contestant in the competition.",
+                "contestant_name": "The full name of the contestant participating in the contest."
+            },
+            "table_description": "The CONTESTANTS table holds information about individuals who are contestants in a competition, enabling the tracking and identification of each participant."
+        }
+    ],
+    "VOTES": [
+        {
+            "columns": {
+                "vote_id": "A unique identifier for each vote recorded in the database.",
+                "phone_number": "The phone number of the voter who cast the vote.",
+                "state": "The two-letter abbreviation representing the state where the vote was cast.",
+                "contestant_number": "The identifier for the contestant that received the vote.",
+                "created": "The timestamp marking when the vote was recorded."
+            },
+            "table_description": "The VOTES table captures information about votes cast by individuals, including identifiers for the votes, voters, and the contestants they support, along with the state in which the voting occurred and the timestamp of the voting event."
+        }
+    ]
+}

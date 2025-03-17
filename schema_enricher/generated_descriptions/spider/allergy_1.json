@@ -1,0 +1,35 @@
+{
+    "Has_Allergy": [
+        {
+            "columns": {
+                "StuID": "A unique identifier for each student in the database.",
+                "Allergy": "The specific type of allergy associated with the student."
+            },
+            "table_description": "The Has_Allergy table captures the relationship between students and their recorded allergies, linking students to their specific allergic reactions through foreign keys."
+        }
+    ],
+    "Student": [
+        {
+            "columns": {
+                "StuID": "A unique identifier assigned to each student.",
+                "LName": "The last name of the student.",
+                "Fname": "The first name of the student.",
+                "Age": "The age of the student, indicating their current age in years.",
+                "Sex": "The gender of the student, represented by a single character.",
+                "Major": "The code representing the student's major field of study.",
+                "Advisor": "The identifier for the academic advisor assigned to the student.",
+                "city_code": "A code representing the city of the student's residence."
+            },
+            "table_description": "The Student table captures essential information about students including their unique identifier, names, age, gender, academic major, advisor details, and city of residence."
+        }
+    ],
+    "Allergy_Type": [
+        {
+            "columns": {
+                "Allergy": "This column represents the specific type of allergy that an individual may have, such as Rodent, Nuts, or Bee Stings.",
+                "AllergyType": "This column categorizes the allergies into broader groups, such as environmental, animal, or food."
+            },
+            "table_description": "The Allergy_Type table serves to categorize various specific allergies alongside their general types, aiding in the understanding and management of allergic reactions."
+        }
+    ]
+}

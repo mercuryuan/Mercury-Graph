@@ -1,0 +1,30 @@
+{
+    "Highschooler": [
+        {
+            "columns": {
+                "ID": "A unique identifier for each student in the high school.",
+                "name": "The name of the high school student.",
+                "grade": "The current grade level of the student, ranging from 9 to 12."
+            },
+            "table_description": "The Highschooler table stores information about students in a high school, including their unique ID, name, and current grade level."
+        }
+    ],
+    "Friend": [
+        {
+            "columns": {
+                "friend_id": "This column represents the unique identifier of a friend associated with a student, establishing a link to another student.",
+                "student_id": "This column denotes the unique identifier of a student who has the specified friend."
+            },
+            "table_description": "The Friend table captures the relationships between students, identifying pairs of friends through their unique identifiers."
+        }
+    ],
+    "Likes": [
+        {
+            "columns": {
+                "student_id": "An identifier for the student who is expressing a like.",
+                "liked_id": "An identifier for the student who is being liked."
+            },
+            "table_description": "The Likes table records relationships between students based on the likes they express towards each other."
+        }
+    ]
+}

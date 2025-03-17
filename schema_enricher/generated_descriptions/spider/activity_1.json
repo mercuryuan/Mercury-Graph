@@ -1,0 +1,59 @@
+{
+    "Activity": [
+        {
+            "columns": {
+                "actid": "A unique identifier assigned to each activity in the table.",
+                "activity_name": "The name of the activity being described, such as sports or recreational events."
+            },
+            "table_description": "The Activity table stores information about various activities, each identified by a unique actid, along with their descriptive names."
+        }
+    ],
+    "Participates_in": [
+        {
+            "columns": {
+                "stuid": "This column represents the unique identifier for a student participating in an activity.",
+                "actid": "This column denotes the unique identifier for an activity in which students are participating."
+            },
+            "table_description": "The Participates_in table serves to establish the relationship between students and the activities they are involved in."
+        }
+    ],
+    "Student": [
+        {
+            "columns": {
+                "StuID": "A unique identifier assigned to each student in the database.",
+                "LName": "The last name of the student.",
+                "Fname": "The first name of the student.",
+                "Age": "The age of the student at the time of data entry.",
+                "Sex": "The gender of the student, represented by a single character.",
+                "Major": "The identifier representing the major field of study the student is enrolled in.",
+                "Advisor": "The identifier of the academic advisor assigned to the student.",
+                "city_code": "The code representing the city of the student's residence."
+            },
+            "table_description": "The Student table contains detailed information about students enrolled in the institution, including their personal details, academic major, assigned advisors, and residence information."
+        }
+    ],
+    "Faculty": [
+        {
+            "columns": {
+                "FacID": "The unique identifier for each faculty member.",
+                "Lname": "The last name of the faculty member.",
+                "Fname": "The first name of the faculty member.",
+                "Rank": "The academic rank or title of the faculty member, indicating their position within the institution.",
+                "Sex": "The gender of the faculty member, represented by a single character.",
+                "Phone": "The internal phone extension number assigned to the faculty member.",
+                "Room": "The room number where the faculty member's office is located.",
+                "Building": "The name of the building in which the faculty member's office is situated."
+            },
+            "table_description": "The Faculty table stores information about faculty members at the institution, including their unique identifiers, names, academic ranks, gender, contact details, and physical office locations."
+        }
+    ],
+    "Faculty_Participates_in": [
+        {
+            "columns": {
+                "FacID": "This column represents the unique identifier for each faculty member participating in an activity.",
+                "actid": "This column indicates the unique identifier for each activity in which the faculty member is involved."
+            },
+            "table_description": "The Faculty_Participates_in table tracks the relationships between faculty members and the activities they participate in, linking faculty identifiers to activity identifiers."
+        }
+    ]
+}

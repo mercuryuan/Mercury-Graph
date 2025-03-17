@@ -1,0 +1,57 @@
+{
+    "city": [
+        {
+            "columns": {
+                "City_ID": "A unique identifier assigned to each city in the database.",
+                "City": "The name of the city in English.",
+                "Hanzi": "The name of the city represented in Chinese characters.",
+                "Hanyu_Pinyin": "The phonetic transcription of the city's name in Mandarin using Pinyin.",
+                "Regional_Population": "The total number of inhabitants living in the region where the city is located.",
+                "GDP": "The total economic output of the city, measured in millions of currency units."
+            },
+            "table_description": "The city table provides a comprehensive record of various cities, detailing their names in English and Chinese, phonetic pronunciations, regional population statistics, and their economic output."
+        }
+    ],
+    "match": [
+        {
+            "columns": {
+                "Match_ID": "A unique identifier for each match recorded in the table.",
+                "Date": "The date on which the match took place.",
+                "Venue": "The location where the match was held.",
+                "Score": "The final score of the match at its conclusion.",
+                "Result": "The outcome of the match represented by the score of each team.",
+                "Competition": "The name of the tournament or event in which the match was held."
+            },
+            "table_description": "This table records information about various matches, including identification, date, venue, score, outcome, and the competition in which they occurred."
+        }
+    ],
+    "temperature": [
+        {
+            "columns": {
+                "City_ID": "This column represents a unique identifier for each city in the records.",
+                "Jan": "This column indicates the average temperature recorded in January for each city.",
+                "Feb": "This column indicates the average temperature recorded in February for each city.",
+                "Mar": "This column indicates the average temperature recorded in March for each city.",
+                "Apr": "This column indicates the average temperature recorded in April for each city.",
+                "Jun": "This column indicates the average temperature recorded in June for each city.",
+                "Jul": "This column indicates the average temperature recorded in July for each city.",
+                "Aug": "This column indicates the average temperature recorded in August for each city.",
+                "Sep": "This column indicates the average temperature recorded in September for each city.",
+                "Oct": "This column indicates the average temperature recorded in October for each city.",
+                "Nov": "This column indicates the average temperature recorded in November for each city.",
+                "Dec": "This column indicates the average temperature recorded in December for each city."
+            },
+            "table_description": "The 'temperature' table stores the average monthly temperatures for various cities, identified by unique City_ID values."
+        }
+    ],
+    "hosting_city": [
+        {
+            "columns": {
+                "Year": "Indicates the year in which the match took place.",
+                "Match_ID": "Identifies the specific match associated with the hosting city.",
+                "Host_City": "Represents the city that hosted the match."
+            },
+            "table_description": "The hosting_city table records the relationship between match years, specific matches, and the cities that hosted those matches."
+        }
+    ]
+}

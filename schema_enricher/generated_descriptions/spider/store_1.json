@@ -1,0 +1,143 @@
+{
+    "artists": [
+        {
+            "columns": {
+                "id": "A unique identifier assigned to each artist in the database.",
+                "name": "The name of the artist as recognized in the music industry."
+            },
+            "table_description": "The artists table stores information about individual artists, including a unique identifier and their names."
+        }
+    ],
+    "albums": [
+        {
+            "columns": {
+                "id": "The unique identifier for each album in the database.",
+                "title": "The name of the album, which serves as its primary title and is used for reference in the catalog.",
+                "artist_id": "The identifier that links to the artist who created the album, facilitating a connection between albums and artists."
+            },
+            "table_description": "The albums table contains information about music albums, including their unique identifiers, titles, and associated artists."
+        }
+    ],
+    "employees": [
+        {
+            "columns": {
+                "id": "A unique identifier for each employee.",
+                "last_name": "The surname of the employee.",
+                "first_name": "The given name of the employee.",
+                "title": "The job title or position of the employee within the organization.",
+                "reports_to": "The identifier of the employee's supervisor or manager.",
+                "birth_date": "The date of birth of the employee.",
+                "hire_date": "The date when the employee was hired.",
+                "address": "The street address where the employee resides.",
+                "city": "The city where the employee lives.",
+                "state": "The state or province where the employee lives.",
+                "country": "The country where the employee resides.",
+                "postal_code": "The postal code for the employee's address.",
+                "phone": "The primary telephone number for contacting the employee.",
+                "fax": "The fax number for the employee, if applicable.",
+                "email": "The email address used by the employee for communication."
+            },
+            "table_description": "The employees table contains information about each employee, including personal details such as names, contact information, job title, reporting structure, and demographic data."
+        }
+    ],
+    "customers": [
+        {
+            "columns": {
+                "id": "A unique identifier for each customer in the database.",
+                "first_name": "The first name of the customer.",
+                "last_name": "The last name of the customer.",
+                "company": "The name of the company that the customer is associated with, if applicable.",
+                "address": "The street address where the customer resides.",
+                "city": "The city where the customer is located.",
+                "state": "The state or region where the customer is located.",
+                "country": "The country where the customer resides.",
+                "postal_code": "The postal code for the customer's address.",
+                "phone": "The primary phone number for contacting the customer.",
+                "fax": "The fax number for contacting the customer, if available.",
+                "email": "The email address of the customer.",
+                "support_rep_id": "The identifier for the support representative assigned to assist the customer."
+            },
+            "table_description": "The customers table contains detailed information about each customer, including their contact details, address, and the assigned support representative."
+        }
+    ],
+    "genres": [
+        {
+            "columns": {
+                "id": "A unique identifier for each genre in the database.",
+                "name": "The name of the musical genre, representing its classification."
+            },
+            "table_description": "The genres table stores a list of musical genres, each associated with a unique identifier for reference in other related tables."
+        }
+    ],
+    "invoices": [
+        {
+            "columns": {
+                "id": "Unique identifier for each invoice.",
+                "customer_id": "Identifier for the customer associated with the invoice.",
+                "invoice_date": "The date and time when the invoice was generated.",
+                "billing_address": "The street address to which the invoice is billed.",
+                "billing_city": "The city where the billing address is located.",
+                "billing_state": "The state or province associated with the billing address.",
+                "billing_country": "The country related to the billing address.",
+                "billing_postal_code": "The postal or ZIP code for the billing address.",
+                "total": "The total amount due on the invoice."
+            },
+            "table_description": "The invoices table contains records of transactions made by customers, capturing the details of each invoice, including customer identification, billing information, and the total amount due."
+        }
+    ],
+    "media_types": [
+        {
+            "columns": {
+                "id": "A unique identifier for each media type in the database.",
+                "name": "The name or description of the media type, indicating its format or nature."
+            },
+            "table_description": "The media_types table holds various types of media formats available in the store, associating each type with a unique identifier for easy reference."
+        }
+    ],
+    "tracks": [
+        {
+            "columns": {
+                "id": "A unique identifier for each track in the database.",
+                "name": "The title of the track, representing its official name.",
+                "album_id": "A reference to the album that the track belongs to.",
+                "media_type_id": "A reference indicating the type of media the track is presented in.",
+                "genre_id": "A reference to the genre classification of the track.",
+                "composer": "The name of the person or group who composed the track.",
+                "milliseconds": "The duration of the track measured in milliseconds.",
+                "bytes": "The size of the track file in bytes.",
+                "unit_price": "The price of the track for sale."
+            },
+            "table_description": "The tracks table contains information about music tracks available in the store, including their titles, durations, composers, file sizes, and pricing, along with references to their respective albums, media types, and genres."
+        }
+    ],
+    "invoice_lines": [
+        {
+            "columns": {
+                "id": "A unique identifier for each invoice line entry.",
+                "invoice_id": "References the specific invoice associated with this line item.",
+                "track_id": "References the specific track (or music item) being sold in this line item.",
+                "unit_price": "The price per unit of the track being sold.",
+                "quantity": "The number of units (tracks) being sold in this line item."
+            },
+            "table_description": "The invoice_lines table captures details of individual items sold within invoices, linking each item to its corresponding invoice and track, while detailing the sales price and quantity of each item."
+        }
+    ],
+    "playlists": [
+        {
+            "columns": {
+                "id": "A unique identifier for each playlist in the database.",
+                "name": "The title or name of the playlist that describes its content or theme."
+            },
+            "table_description": "The playlists table stores information about various playlists available in the database, each with a unique identifier and a descriptive name."
+        }
+    ],
+    "playlist_tracks": [
+        {
+            "columns": {
+                "track_id": "The unique identifier for a track in the database, linking to the tracks table.",
+                "playlist_id": "The unique identifier for a playlist in the database, linking to the playlists table."
+            },
+            "table_description": "The playlist_tracks table serves as a junction table that associates tracks with playlists, enabling the management of which tracks belong to which playlists in the store_1 database."
+        }
+    ]
+}

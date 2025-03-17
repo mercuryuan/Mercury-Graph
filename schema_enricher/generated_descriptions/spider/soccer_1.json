@@ -1,0 +1,128 @@
+{
+    "League": [
+        {
+            "columns": {
+                "id": "A unique identifier for each league within the database.",
+                "country_id": "A reference to the country associated with the league, linking it to the Country table.",
+                "name": "The official name of the league as recognized in its respective country."
+            },
+            "table_description": "The League table contains information about various soccer leagues, including their unique identifiers, corresponding countries, and official names."
+        }
+    ],
+    "Player": [
+        {
+            "columns": {
+                "id": "A unique identifier for each player in the database.",
+                "player_api_id": "An identifier that links the player to external APIs.",
+                "player_name": "The full name of the player.",
+                "player_fifa_api_id": "An identifier that links the player to the FIFA database.",
+                "birthday": "The player's date of birth.",
+                "height": "The height of the player in centimeters.",
+                "weight": "The weight of the player in kilograms."
+            },
+            "table_description": "The Player table contains detailed information about soccer players, including personal identifiers, physical attributes, and biographical details."
+        }
+    ],
+    "Country": [
+        {
+            "columns": {
+                "id": "A unique identifier assigned to each country in the table.",
+                "name": "The common name of the country."
+            },
+            "table_description": "The Country table contains information on different countries participating in soccer, identified by a unique ID and their respective names."
+        }
+    ],
+    "Team": [
+        {
+            "columns": {
+                "id": "A unique identifier for each team in the database.",
+                "team_api_id": "An identifier used to reference the team in API requests.",
+                "team_fifa_api_id": "The FIFA assigned identifier for the team, used in official FIFA data.",
+                "team_long_name": "The complete name of the team, often more descriptive.",
+                "team_short_name": "An abbreviated or shortened version of the team's name, used for brevity."
+            },
+            "table_description": "The Team table contains details about soccer teams, including unique identifiers, full names, and shortened name representations."
+        }
+    ],
+    "Team_Attributes": [
+        {
+            "columns": {
+                "id": "A unique identifier for each record in the table.",
+                "team_fifa_api_id": "A foreign key that references the FIFA API identifier for the team.",
+                "team_api_id": "A foreign key linking to the team's API id.",
+                "date": "The date when the team attributes were recorded or last updated.",
+                "buildUpPlaySpeed": "A metric indicating the speed at which the team builds up play.",
+                "buildUpPlaySpeedClass": "A classification for the build-up play speed, indicating whether it is fast, balanced, or slow.",
+                "buildUpPlayDribbling": "A metric representing the effectiveness of the team's dribbling during build-up play.",
+                "buildUpPlayDribblingClass": "A classification of the build-up play dribbling, indicating whether it is assessed as little, normal, or lots.",
+                "buildUpPlayPassing": "A metric indicating the efficacy of passing in the team's build-up play.",
+                "buildUpPlayPassingClass": "A classification for the build-up play passing style, indicating whether it is mixed, short, or long.",
+                "buildUpPlayPositioningClass": "A classification of the team's positioning during build-up play, indicating whether it is organised or based on free form.",
+                "chanceCreationPassing": "A metric indicating the effectiveness of passing in creating goal-scoring opportunities.",
+                "chanceCreationPassingClass": "A classification of the passing effectiveness in chance creation, categorized as normal or risky.",
+                "chanceCreationCrossing": "A metric assessing how well the team executes crossing plays to create chances.",
+                "chanceCreationCrossingClass": "A classification for crossing effectiveness in generating chances, indicating whether it is normal, lots, or little.",
+                "chanceCreationShooting": "A metric representing the team's shooting capability when creating opportunities.",
+                "chanceCreationShootingClass": "A classification for shooting effectiveness in chance creation, categorized into lots, normal, or little.",
+                "chanceCreationPositioningClass": "A classification of the team's positioning when creating chances, indicating whether it is organised or free form.",
+                "defencePressure": "A metric representing the level of defensive pressure applied by the team.",
+                "defencePressureClass": "A classification of the defensive pressure level, defined as medium, high, or deep.",
+                "defenceAggression": "A metric assessing the aggressiveness of the team's defense.",
+                "defenceAggressionClass": "A classification for the aggression level of the defense, indicating whether the approach is press, double, or contain.",
+                "defenceTeamWidth": "A metric indicating the width of the team's defensive setup.",
+                "defenceTeamWidthClass": "A classification of the team's defensive width, indicating whether it is normal, wide, or narrow.",
+                "defenceDefenderLineClass": "A classification for the positioning of the defensive line, indicating whether it is cover or uses an offside trap."
+            },
+            "table_description": "The Team_Attributes table collects various metrics and classifications related to the attributes of soccer teams, including their play styles, offensive and defensive capabilities, and organization during games."
+        }
+    ],
+    "Player_Attributes": [
+        {
+            "columns": {
+                "id": "A unique identifier for each player attribute record.",
+                "player_fifa_api_id": "An identifier linking to the corresponding player's FIFA API record.",
+                "player_api_id": "An identifier linking to the corresponding player's API data record.",
+                "date": "The date on which the player attributes were recorded.",
+                "overall_rating": "The overall performance rating of the player, combining various skill attributes.",
+                "potential": "The player's potential rating, indicative of future performance capability.",
+                "preferred_foot": "The player's dominant foot, indicating whether they play primarily with their left or right foot.",
+                "attacking_work_rate": "The player's attacking effort level, categorized as high, medium, or low.",
+                "defensive_work_rate": "The player's defensive effort level, categorized as high, medium, or low.",
+                "crossing": "The player's skill level in delivering accurate crosses to teammates.",
+                "finishing": "The player's proficiency in successfully converting scoring opportunities.",
+                "heading_accuracy": "The player's ability to accurately head the ball during play.",
+                "short_passing": "The player's effectiveness in making short passes to teammates.",
+                "volleys": "The player's skill level in executing volleys.",
+                "dribbling": "The player's ability to maneuver the ball past defenders.",
+                "curve": "The player's proficiency in putting spin on the ball.",
+                "free_kick_accuracy": "The player's skill in successfully executing free kicks.",
+                "long_passing": "The player's ability in making long passes to teammates.",
+                "ball_control": "The player's ability to control the ball under various circumstances.",
+                "acceleration": "The player's quickness in reaching top speed.",
+                "sprint_speed": "The player's maximum running speed over short distances.",
+                "agility": "The player's ability to change direction quickly and effectively.",
+                "reactions": "The player's quickness in responding to in-game situations.",
+                "balance": "The player's stability while in motion, affecting their ability to stay upright.",
+                "shot_power": "The strength of the player's shot when attempting to score.",
+                "jumping": "The player's ability to jump, often impacting heading and aerial duels.",
+                "stamina": "The player's ability to sustain performance throughout the duration of a match.",
+                "strength": "The player's physical strength in challenges and duels.",
+                "long_shots": "The player's ability to score from distances beyond the penalty area.",
+                "aggression": "The player's tendency to engage opponents aggressively.",
+                "interceptions": "The player's ability to intercept passes and disrupt opponent plays.",
+                "positioning": "The player's awareness and positioning in relation to the game.",
+                "vision": "The player's ability to see plays and anticipate teammate positions.",
+                "penalties": "The player's skill and accuracy in converting penalty kicks.",
+                "marking": "The player's effectiveness in keeping opponents under control defensively.",
+                "standing_tackle": "The player's ability to tackle opponents while standing.",
+                "sliding_tackle": "The player's skill at executing tackles from a sliding position.",
+                "gk_diving": "The goalkeeper's ability to dive and reach the ball.",
+                "gk_handling": "The goalkeeper's proficiency in catching the ball.",
+                "gk_kicking": "The goalkeeper's ability to kick the ball accurately over distances.",
+                "gk_positioning": "The goalkeeper's placement in relation to the goal and players.",
+                "gk_reflexes": "The goalkeeper's quickness and responsiveness to shots on goal."
+            },
+            "table_description": "The Player_Attributes table contains detailed performance attributes for soccer players, including their skills, ratings, and physical characteristics, helping to analyze their capabilities and potential contributions to the game."
+        }
+    ]
+}

@@ -1,0 +1,43 @@
+{
+    "airport": [
+        {
+            "columns": {
+                "id": "A unique identifier for each airport in the database.",
+                "City": "The name of the city where the airport is located.",
+                "Country": "The name of the country where the airport operates.",
+                "IATA": "The three-letter International Air Transport Association code that uniquely identifies the airport.",
+                "ICAO": "The four-letter International Civil Aviation Organization code used for airport identification.",
+                "name": "The full name of the airport, typically including the city or region."
+            },
+            "table_description": "The airport table contains information about various airports, including their identification codes, locations, and full names."
+        }
+    ],
+    "operate_company": [
+        {
+            "columns": {
+                "id": "A unique identifier for each operating company in the database.",
+                "name": "The official name of the operating company.",
+                "Type": "The category that classifies the operational structure of the company, such as subsidiary or joint venture.",
+                "Principal_activities": "The main business operations performed by the company.",
+                "Incorporated_in": "The country where the company is legally incorporated.",
+                "Group_Equity_Shareholding": "The percentage of equity ownership held by the parent group or holding company."
+            },
+            "table_description": "The operate_company table contains detailed information about various operating companies, including their names, classification types, main activities, incorporation locations, and equity shareholding percentages."
+        }
+    ],
+    "flight": [
+        {
+            "columns": {
+                "id": "A unique identifier for each flight record in the database.",
+                "Vehicle_Flight_number": "A designated alphanumeric code representing a specific flight.",
+                "Date": "The date on which the flight took place.",
+                "Pilot": "The name of the pilot who operated the flight.",
+                "Velocity": "The speed at which the aircraft was traveling during the flight.",
+                "Altitude": "The height above sea level at which the flight was conducted.",
+                "airport_id": "An identifier linking to the airport from which the flight departed.",
+                "company_id": "An identifier linking to the airline company operating the flight."
+            },
+            "table_description": "The flight table contains detailed information about various flights, including identifiers, flight details, pilot information, and relationships to specific airlines and airports."
+        }
+    ]
+}

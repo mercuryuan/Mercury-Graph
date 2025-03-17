@@ -1,0 +1,78 @@
+{
+    "Shipments": [
+        {
+            "columns": {
+                "shipment_id": "A unique identifier for each shipment.",
+                "order_id": "The identifier for the order associated with the shipment.",
+                "invoice_number": "The invoice number linked to the shipment.",
+                "shipment_tracking_number": "A unique number used to track the shipment's progress.",
+                "shipment_date": "The date and time when the shipment was processed.",
+                "other_shipment_details": "Any additional details related to the shipment."
+            },
+            "table_description": "The Shipments table records information about each shipment, including details such as shipment identifiers, associated order and invoice numbers, tracking numbers, shipment dates, and any additional information relevant to the shipment process."
+        }
+    ],
+    "Shipment_Items": [
+        {
+            "columns": {
+                "shipment_id": "The unique identifier for a shipment, linking to the relevant shipment record.",
+                "order_item_id": "The unique identifier for an order item, linking to the specific order item associated with the shipment."
+            },
+            "table_description": "The Shipment_Items table serves as a junction table that associates order items with their respective shipments, facilitating tracking and management of items within the shipping process."
+        }
+    ],
+    "Orders": [
+        {
+            "columns": {
+                "order_id": "Unique identifier for each order placed in the database.",
+                "customer_id": "Identifier for the customer who placed the order.",
+                "order_status": "Current status of the order, indicating its processing stage.",
+                "date_order_placed": "Timestamp of when the order was placed by the customer.",
+                "order_details": "Additional information regarding the specifics of the order."
+            },
+            "table_description": "The Orders table tracks individual customer orders, including their unique identifiers, statuses, placement dates, and additional details."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "A unique identifier assigned to each customer.",
+                "customer_name": "The name of the customer.",
+                "customer_details": "Additional information or notes about the customer."
+            },
+            "table_description": "The Customers table stores information about individual customers, including their unique identification, names, and any relevant details that may assist in managing customer relationships."
+        }
+    ],
+    "Products": [
+        {
+            "columns": {
+                "product_id": "A unique identifier for each product in the table.",
+                "product_name": "The name or title of the product, used for identification and display purposes.",
+                "product_details": "Detailed information regarding the product, which is currently not provided."
+            },
+            "table_description": "The Products table stores information about various products available for tracking, including their unique identifiers, names, and details."
+        }
+    ],
+    "Order_Items": [
+        {
+            "columns": {
+                "order_item_id": "This column uniquely identifies each order item in the table.",
+                "product_id": "This column references the unique identifier of the product associated with the order item.",
+                "order_id": "This column references the unique identifier of the order to which the order item belongs.",
+                "order_item_status": "This column indicates the current status of the order item, such as whether it has been paid or canceled.",
+                "order_item_details": "This column is intended for additional details related to the order item; currently, no details are recorded."
+            },
+            "table_description": "The Order_Items table tracks individual items within customer orders, capturing their unique identifiers, related products and orders, their current status, and any supplementary details."
+        }
+    ],
+    "Invoices": [
+        {
+            "columns": {
+                "invoice_number": "A unique identifier assigned to each invoice.",
+                "invoice_date": "The date and time when the invoice was generated.",
+                "invoice_details": "A textual description providing additional information about the contents or purpose of the invoice."
+            },
+            "table_description": "The Invoices table stores information related to individual invoices, including a unique identifier, the date of issuance, and detailed descriptions of each invoice."
+        }
+    ]
+}

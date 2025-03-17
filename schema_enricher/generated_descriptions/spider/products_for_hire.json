@@ -1,0 +1,96 @@
+{
+    "Products_Booked": [
+        {
+            "columns": {
+                "booking_id": "A unique identifier for each booking in the system.",
+                "product_id": "A unique identifier for each product that can be booked.",
+                "returned_yn": "Indicates whether the product has been returned (1 for yes, 0 for no).",
+                "returned_late_yn": "Indicates whether the product was returned late (1 for yes, 0 for no).",
+                "booked_count": "The number of times the product has been booked in this transaction.",
+                "booked_amount": "The total monetary amount charged for the booked product."
+            },
+            "table_description": "The Products_Booked table captures the details of product bookings, including identifiers for bookings and products, return statuses, booking counts, and amounts."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "Unique identifier for each customer in the database.",
+                "coupon_id": "Identifier for a coupon associated with the customer, linking to the discount coupons table.",
+                "good_or_bad_customer": "Indicates whether the customer is classified as good or bad based on their hiring behavior.",
+                "first_name": "The first name of the customer.",
+                "last_name": "The last name of the customer.",
+                "gender_mf": "Gender of the customer, represented as a single character (e.g., '0' for female, '1' for male).",
+                "date_became_customer": "Date and time when the customer started their relationship with the service.",
+                "date_last_hire": "Date and time of the last hire made by the customer."
+            },
+            "table_description": "The Customers table stores detailed information about each customer including identification, personal details, their hiring behavior, and coupon usage."
+        }
+    ],
+    "Payments": [
+        {
+            "columns": {
+                "payment_id": "A unique identifier for each payment recorded in the system.",
+                "booking_id": "The identifier for the related booking associated with the payment.",
+                "customer_id": "The identifier for the customer who made the payment.",
+                "payment_type_code": "The method of payment used for the transaction, such as cash or credit card.",
+                "amount_paid_in_full_yn": "Indicates whether the payment made covers the total amount due (1 for yes, 0 for no).",
+                "payment_date": "The date and time when the payment was made.",
+                "amount_due": "The total amount that was due for the payment at the time of the transaction.",
+                "amount_paid": "The actual amount that was paid by the customer."
+            },
+            "table_description": "The Payments table records payment transactions associated with bookings made by customers, detailing payment amounts, methods, and dates."
+        }
+    ],
+    "View_Product_Availability": [
+        {
+            "columns": {
+                "product_id": "A unique identifier for the product being evaluated for availability.",
+                "booking_id": "A unique identifier for the booking associated with the product.",
+                "status_date": "The date and time when the availability status of the product is recorded.",
+                "available_yn": "Indicates whether the product is available for booking, represented as '1' for yes and '0' for no."
+            },
+            "table_description": "The View_Product_Availability table captures the availability status of products for hire over specified dates, linking product identifiers with their associated bookings."
+        }
+    ],
+    "Discount_Coupons": [
+        {
+            "columns": {
+                "coupon_id": "A unique identifier for each discount coupon.",
+                "date_issued": "The date and time when the discount coupon was issued.",
+                "coupon_amount": "The monetary value of the discount provided by the coupon."
+            },
+            "table_description": "The Discount_Coupons table stores information about discount coupons, including their unique identifiers, issuance dates, and associated amounts."
+        }
+    ],
+    "Bookings": [
+        {
+            "columns": {
+                "booking_id": "A unique identifier for each booking made in the system.",
+                "customer_id": "The identifier of the customer who made the booking.",
+                "booking_status_code": "Indicates the current status of the booking, such as provisional or confirmed.",
+                "returned_damaged_yn": "Indicates whether the hired product was returned damaged (1 for yes, 0 for no).",
+                "booking_start_date": "The date and time when the booking period begins.",
+                "booking_end_date": "The date and time when the booking period ends.",
+                "count_hired": "The total number of items hired in this booking.",
+                "amount_payable": "The total amount that is to be paid for the booking.",
+                "amount_of_discount": "The amount of discount applied to the booking.",
+                "amount_outstanding": "The amount that remains to be paid after considering discounts and any payments made.",
+                "amount_of_refund": "The total amount that may be refunded to the customer for the booking."
+            },
+            "table_description": "The Bookings table records details of each booking made by customers, including the status, dates, amounts payable, and any details regarding discounts and refunds."
+        }
+    ],
+    "Products_for_Hire": [
+        {
+            "columns": {
+                "product_id": "A unique identifier for each product available for hire.",
+                "product_type_code": "A code that categorizes the type of product, such as cutlery or din plates.",
+                "daily_hire_cost": "The cost associated with hiring the product on a daily basis.",
+                "product_name": "The name of the product available for hire.",
+                "product_description": "A brief description that provides details about the product."
+            },
+            "table_description": "The Products_for_Hire table contains information about various items available for hire, including their identification, type, cost, name, and description, facilitating effective inventory management and customer selection."
+        }
+    ]
+}
