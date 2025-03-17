@@ -170,6 +170,7 @@ class SqlParserTool:
         返回:
             tuple: 包含表和列信息的字典以及关系信息的字典的元组。
         """
+        sql = sql.replace("`", '"')
         expression = self.parse_sql(sql)
         alias_to_table, tables = self.extract_table_info(expression)
         columns = self.extract_column_info(expression, alias_to_table)
@@ -414,6 +415,12 @@ class SqlParserTool:
                 print(relationships)
                 self.log("Relationships (Joins and Conditions): " + str(relationships))
 
+                # 输出外键连接
+                print("\n外键连接：")
+                for j in relationships['joins']:
+                    print(j["on"])
+                    self.log(str(j["on"]))
+
                 # 输出格式化的实体信息
                 formated_entities = self.format_entities_by_table(entities)
                 print("\n" + formated_entities)
@@ -461,11 +468,12 @@ class SqlParserTool:
 
 if __name__ == '__main__':
     # 实例化 SqlParserTool 类
-    tool = SqlParserTool("bird", "books", name_correction=False)
+    tool = SqlParserTool("bird", "superstore", name_correction=True)
     try:
         # 示例 SQL 查询
-        sql = """SELECT COUNT(COUNTCUSID) FROM ( SELECT COUNT(T1.cust_id) AS COUNTCUSID FROM customer AS T1 INNER JOIN shipment AS T2 ON T1.cust_id = T2.cust_id WHERE STRFTIME('%Y', T2.ship_date) = '2017' AND T1.annual_revenue > 30000000 GROUP BY T1.cust_id HAVING COUNT(T2.ship_id) >= 1 ) T3"""
-        # tool.display_parsing_result(sql, output_mode="full_output")
+        sql = """
+            SELECT CAST(SUM(CASE  WHEN T2.Discount = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM people AS T1 INNER JOIN central_superstore AS T2 ON T1.`Customer ID` = T2.`Customer ID` WHERE T2.Region = 'Central' AND T1.State = 'Indiana'
+      """
         tool.display_parsing_result(sql, output_mode="full_output")
         # tool.display_parsing_result(sql, output_mode="pass_silent_fail_full")
 

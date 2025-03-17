@@ -54,6 +54,8 @@ def align_case(tables, columns, joins, schema):
             part = part.strip()
             if '.' in part:
                 table_part, col_part = part.split('.', 1)
+                table_part = table_part.strip(" '\"")
+                col_part = col_part.strip(" '\"")
                 correct_table = table_name_map.get(table_part.lower())
                 correct_col = column_name_map.get((table_part.lower(), col_part.lower()))
                 if correct_table and correct_col:
@@ -107,9 +109,10 @@ if __name__ == '__main__':
     from sql_parser import SqlParserTool
     from schema_extractor import SQLiteSchemaExtractor
     dataset_name = "bird"
-    db_name = "shipping"
+    db_name = "superstore"
     tool  = SqlParserTool(dataset_name, db_name,False)
-    sql = """SELECT COUNT(COUNTCUSID) FROM ( SELECT COUNT(T1.cust_id) AS COUNTCUSID FROM customer AS T1 INNER JOIN shipment AS T2 ON T1.cust_id = T2.cust_id WHERE STRFTIME('%Y', T2.ship_date) = '2017' AND T1.annual_revenue > 30000000 GROUP BY T1.cust_id HAVING COUNT(T2.ship_id) >= 1 ) T3"""
+    sql = """SELECT CAST(SUM(CASE  WHEN T2.Discount = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM people AS T1 INNER JOIN central_superstore AS T2 ON T1.`Customer ID` = T2.`Customer ID` WHERE T2.Region = 'Central' AND T1.State = 'Indiana'
+ """
     entities, relationships = tool.extract_entities_and_relationships(sql)
     # 提取表和列信息
     tables = entities['tables']
