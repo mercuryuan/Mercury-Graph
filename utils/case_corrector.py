@@ -32,28 +32,34 @@ def align_case(tables, columns, joins, schema):
         for col in cols
     }
 
-    # 1. 对齐表名（只对表名部分，不变动别名）
-    aligned_tables = {(table_name_map.get(tbl.lower(), tbl), alias) for tbl, alias in tables}
+    # 1. 过滤掉 schema 中不存在的表，并对齐大小写
+    aligned_tables = {
+        (table_name_map[tbl.lower()], alias)
+        for tbl, alias in tables
+        if tbl and tbl.lower() in table_name_map  # 确保 tbl 不是 None 且在 schema 中
+    }
 
-    # 2. 对齐列名（同时替换表名和列名，确保 (表,列) 信息正确）
+    # 2. 过滤掉 schema 中不存在的列，并对齐大小写
     aligned_columns = {
-        (table_name_map.get(tbl.lower(), tbl), column_name_map.get((tbl.lower(), col.lower()), col))
+        (table_name_map[tbl.lower()], column_name_map[(tbl.lower(), col.lower())])
         for tbl, col in columns
+        if tbl and col and (tbl.lower(), col.lower()) in column_name_map  # 确保表和列都存在
     }
 
     # 3. 对齐 join 条件中的表名和列名
     def align_join_condition(condition):
-        # 假设 condition 总是标准格式 "table.column = table.column"
-        # 先按 "=" 拆分为左右两侧，再分别处理
         parts = condition.split('=')
         aligned_parts = []
         for part in parts:
             part = part.strip()
             if '.' in part:
                 table_part, col_part = part.split('.', 1)
-                correct_table = table_name_map.get(table_part.lower(), table_part)
-                correct_col = column_name_map.get((table_part.lower(), col_part.lower()), col_part)
-                aligned_parts.append(f"{correct_table}.{correct_col}")
+                correct_table = table_name_map.get(table_part.lower())
+                correct_col = column_name_map.get((table_part.lower(), col_part.lower()))
+                if correct_table and correct_col:
+                    aligned_parts.append(f"{correct_table}.{correct_col}")
+                else:
+                    return None  # 如果 join 语句有错误的表或列，则丢弃
             else:
                 aligned_parts.append(part)
         return " = ".join(aligned_parts)
@@ -61,50 +67,72 @@ def align_case(tables, columns, joins, schema):
     aligned_joins = []
     for j in joins:
         aligned_on = align_join_condition(j["on"])
-        aligned_joins.append({
-            "join_type": j["join_type"],
-            "on": aligned_on
-        })
+        if aligned_on:  # 只有当 join 语句有效时才加入
+            aligned_joins.append({"join_type": j["join_type"], "on": aligned_on})
 
-    # 判断是否进行了修改
-    table_modified = any(table_name_map.get(tbl.lower(), tbl) != tbl for tbl, alias in tables)
-    column_modified = any(
-        table_name_map.get(tbl.lower(), tbl) != tbl or column_name_map.get((tbl.lower(), col.lower()), col) != col
-        for tbl, col in columns
-    )
-    join_modified = any(align_join_condition(j["on"]) != j["on"] for j in joins)
-    modified = table_modified or column_modified or join_modified
+    # 4. 判断是否有修改
+    modified = (aligned_tables != tables) or (aligned_columns != columns) or (aligned_joins != joins)
 
     return aligned_tables, aligned_columns, aligned_joins, modified
 
 
+
 if __name__ == '__main__':
-    tables = {("BOok", "T1"), ("PUBlisher", "T2")}
-    columns = {("BOok", "title"), ("publisher", "publisher_name"), ("boOK", "publisher_id"),
-               ("publisher", "publisher_id")}
-    joins = [{"join_type": "INNER", "on": "BOOK.publisher_id = publisher.Publisher_id"}]
+    # tables = {("BOok", "T1"), ("PUBlisher", "T2")}
+    # columns = {("BOok", "title"), ("publisher", "publisher_name"), ("boOK", "publisher_id"),
+    #            ("publisher", "publisher_id")}
+    # joins = [{"join_type": "INNER", "on": "BOOK.publisher_id = publisher.Publisher_id"}]
+    #
+    # schema = {
+    #     "address_status": ["status_id", "address_status"],
+    #     "author": ["author_id", "author_name"],
+    #     "book_language": ["language_id", "language_code", "language_name"],
+    #     "country": ["country_id", "country_name"],
+    #     "address": ["address_id", "street_number", "street_name", "city", "country_id"],
+    #     "customer": ["customer_id", "first_name", "last_name", "email"],
+    #     "customer_address": ["customer_id", "address_id", "status_id"],
+    #     "order_status": ["status_id", "status_value"],
+    #     "publisher": ["publisher_id", "publisher_name"],
+    #     "book": ["book_id", "title", "isbn13", "language_id", "num_pages", "publication_date", "publisher_id"],
+    #     "book_author": ["book_id", "author_id"],
+    #     "shipping_method": ["method_id", "method_name", "cost"],
+    #     "cust_order": ["order_id", "order_date", "customer_id", "shipping_method_id", "dest_address_id"],
+    #     "order_history": ["history_id", "order_id", "status_id", "status_date"],
+    #     "order_line": ["line_id", "order_id", "book_id", "price"]
+    # }
+    #
+    # aligned_tables, aligned_columns, aligned_joins, modified = align_case(tables, columns, joins, schema)
 
-    schema = {
-        "address_status": ["status_id", "address_status"],
-        "author": ["author_id", "author_name"],
-        "book_language": ["language_id", "language_code", "language_name"],
-        "country": ["country_id", "country_name"],
-        "address": ["address_id", "street_number", "street_name", "city", "country_id"],
-        "customer": ["customer_id", "first_name", "last_name", "email"],
-        "customer_address": ["customer_id", "address_id", "status_id"],
-        "order_status": ["status_id", "status_value"],
-        "publisher": ["publisher_id", "publisher_name"],
-        "book": ["book_id", "title", "isbn13", "language_id", "num_pages", "publication_date", "publisher_id"],
-        "book_author": ["book_id", "author_id"],
-        "shipping_method": ["method_id", "method_name", "cost"],
-        "cust_order": ["order_id", "order_date", "customer_id", "shipping_method_id", "dest_address_id"],
-        "order_history": ["history_id", "order_id", "status_id", "status_date"],
-        "order_line": ["line_id", "order_id", "book_id", "price"]
-    }
+    # 实际调用
+    from sql_parser import SqlParserTool
+    from schema_extractor import SQLiteSchemaExtractor
+    dataset_name = "bird"
+    db_name = "shipping"
+    tool  = SqlParserTool(dataset_name, db_name,False)
+    sql = """SELECT COUNT(COUNTCUSID) FROM ( SELECT COUNT(T1.cust_id) AS COUNTCUSID FROM customer AS T1 INNER JOIN shipment AS T2 ON T1.cust_id = T2.cust_id WHERE STRFTIME('%Y', T2.ship_date) = '2017' AND T1.annual_revenue > 30000000 GROUP BY T1.cust_id HAVING COUNT(T2.ship_id) >= 1 ) T3"""
+    entities, relationships = tool.extract_entities_and_relationships(sql)
+    # 提取表和列信息
+    tables = entities['tables']
+    columns = entities['columns']
+    joins = relationships['joins']
+    # 数据库模式获取
+    schema_extractor = SQLiteSchemaExtractor(dataset_name)
+    schema = schema_extractor.extract_schema(db_name)
 
+    print(tables)
+    print(columns)
+    print(joins)
+    print(schema)
+
+    # 是否进行表名和列名的修正
     aligned_tables, aligned_columns, aligned_joins, modified = align_case(tables, columns, joins, schema)
+    print(modified)
+    print(aligned_tables)
+    print(aligned_columns)
+    print(aligned_joins)
 
-    print("Aligned Tables:", aligned_tables)
-    print("Aligned Columns:", aligned_columns)
-    print("Aligned Joins:", aligned_joins)
-    print("是否经历了修改:", modified)
+
+    # print("Aligned Tables:", aligned_tables)
+    # print("Aligned Columns:", aligned_columns)
+    # print("Aligned Joins:", aligned_joins)
+    # print("是否经历了修改:", modified)
