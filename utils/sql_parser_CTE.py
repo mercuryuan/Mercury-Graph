@@ -1,9 +1,14 @@
 import os.path
+import re
 import time
 
 import sqlglot
 from neo4j.graph import Relationship, Node
 from sqlglot.expressions import Table, Column, Join, Where
+from sqlglot import parse_one, exp
+from sqlglot.optimizer import build_scope
+from sqlglot.optimizer.qualify import qualify
+
 from src.neo4j_connector import get_driver
 from utils.schema_extractor import SQLiteSchemaExtractor
 from utils.case_corrector import align_case
@@ -15,7 +20,7 @@ class SqlParserTool:
     SqlParserTool类用于解析SQL语句，并提取其中的表、列、连接关系等相关信息，同时提供了展示这些信息的功能。
     """
 
-    def __init__(self, dataset_name, db_name, name_correction=True):
+    def __init__(self, dataset_name, db_name, name_correction=True,dialect = "mysql"):
         """
         初始化SqlParserTool类，传入已建立的Neo4j数据库连接对象。
 
@@ -25,6 +30,7 @@ class SqlParserTool:
         self.neo4j_driver = get_driver()
         self.dataset_name = dataset_name
         self.db_name = db_name
+        self.dialect = dialect
         self.name_correction = name_correction  # 将name_correction作为类属性
         extractor = SQLiteSchemaExtractor(dataset_name)
         self.schema = extractor.extract_schema(db_name)
@@ -41,128 +47,162 @@ class SqlParserTool:
         """
         self.neo4j_driver.close()
 
-    def parse_sql(self, sql):
-        """
-        解析SQL查询，返回解析后的表达式对象。
-        参数:
-            sql (str): 要解析的SQL语句字符串。
-        返回:
-            sqlglot.Expression: 解析后的SQL表达式对象。
-        """
-        # sql处理双引号为单引号
-        sql = sql.replace('"', "'")
-        return sqlglot.parse_one(sql)
+    from sqlglot import parse_one, exp
+    from sqlglot.optimizer.qualify import qualify
+    from sqlglot.optimizer.scope import build_scope
 
-    def extract_table_info(self, expression):
+    def extract_table_info(self,expression):
         """
-        从解析后的表达式中提取表信息，返回表名与别名的映射字典以及表定义集合。
-        确保unique_tables中每个表记录唯一，遵循有别名则用别名，无别名则用表名自身的原则。
+        提取 SQL 查询中的表信息和别名映射，确保 unique_tables 记录唯一表信息。
+        规则：如果表有别名，则使用别名；如果没有，则使用表名本身。
+
         参数:
-            expression (sqlglot.Expression): 解析后的SQL表达式对象。
+            expression (sqlglot.Expression): 解析后的 SQL AST。
+
         返回:
-            tuple: 包含表名与别名的映射字典和表定义集合的元组。
+            tuple: (别名到表名的映射字典, 仅包含唯一表定义的集合)
         """
-        alias_to_table = {}
-        tables = set()
-        for table in expression.find_all(Table):
+        # 进行列限定，确保列名带上表前缀
+        qualify(expression)
+
+        # 构建作用域树，提取作用域中的表和别名信息
+        scope_tree = build_scope(expression)
+
+        # 提取别名映射
+        alias_to_table = {
+            alias: source.name
+            for scope in scope_tree.traverse()
+            for alias, (_, source) in scope.selected_sources.items()
+            if isinstance(source, exp.Table)
+        }
+
+        # 提取唯一表信息
+        unique_tables = set()
+        for table in expression.find_all(exp.Table):
             table_name = table.name
-            alias = table.alias_or_name  # 直接使用alias_or_name获取别名，如果没有别名则返回表名本身
-            if alias != table_name:  # 只有当别名和表名不同的时候，才记录别名与表名的映射关系
-                alias_to_table[alias] = table_name
-            tables.add((table_name, alias))
+            alias = table.alias_or_name
+            unique_tables.add((table_name, alias))
 
-        unique_tables = {}
-        for table, alias in tables:
-            # 如果表还没记录过或者当前记录的是表名（无别名情况）但新出现了别名，则更新记录
-            if table not in unique_tables or (unique_tables[table] == table and alias != table):
-                if alias is not None:
-                    unique_tables[table] = alias
-                else:
-                    unique_tables[table] = table
-        return alias_to_table, set(unique_tables.items())
+        return alias_to_table, unique_tables
 
-    def extract_column_info(self, expression, alias_to_table):
+    def extract_column_info(self,expression, alias_to_table):
         """
-        从解析后的表达式中提取列信息，基于表名与别名的映射字典，返回列信息集合。
+        提取 SQL 查询中的列信息，并基于表别名映射字典进行转换。
+
         参数:
-            expression (sqlglot.Expression): 解析后的SQL表达式对象。
+            expression (sqlglot.Expression): 解析后的 SQL AST。
             alias_to_table (dict): 表名与别名的映射字典。
+
         返回:
-            set: 包含列信息（表名，列名）元组的集合。
+            set: 包含 (表名, 列名) 的元组集合。
         """
+        # 确保列名前缀带上表名
+        qualify(expression)
+
+        # 解析作用域
+        scope_tree = build_scope(expression)
+
         columns = set()
-        for column in expression.find_all(Column):
-            table_name = None
-            if column.table:
-                table_name = alias_to_table.get(column.table, column.table)
-            else:
-                from_clause = expression.find(sqlglot.expressions.From)
-                if from_clause:
-                    table_expr = from_clause.this
-                    if isinstance(table_expr, Table):
-                        table_name = table_expr.name
+
+        for column in expression.find_all(exp.Column):
+            table_name = column.table
             column_name = column.name
-            columns.add((table_name, column_name))
+
+            # 解析表别名
+            table_name = alias_to_table.get(table_name, table_name)
+
+            # 仅记录确定的 (表名, 列名) 组合
+            if table_name and column_name:
+                columns.add((table_name, column_name))
+
         return columns
 
-    def extract_join_relationships(self, expression, alias_to_table):
+    def extract_join_relationships(self,expression, alias_to_table):
         """
-        从解析后的表达式中提取JOIN关系信息，基于表名与别名的映射字典，返回JOIN关系列表。
-        重点获取连接类型，并将JOIN关系中的on条件里的别名替换为对应的表名。
+        提取 SQL 查询中的 JOIN 关系，并格式化 ON 条件，去除不必要的反引号。
+
         参数:
-            expression (sqlglot.Expression): 解析后的SQL表达式对象。
+            expression (sqlglot.Expression): 解析后的 SQL AST。
             alias_to_table (dict): 表名与别名的映射字典。
+
         返回:
-            list: 包含JOIN关系信息字典的列表，每个字典包含连接类型、连接条件等信息。
+            list: 包含 JOIN 关系信息字典的列表，每个字典包含连接类型、连接表、连接条件等信息。
         """
         joins = []
-        for join in expression.find_all(Join):
-            join_type = join.kind  # 获取连接类型，例如INNER、LEFT等
+
+        for join in expression.find_all(exp.Join):
+            join_type = join.kind  # INNER, LEFT, RIGHT, FULL 等
+
+            # 获取左表和右表
+            left_table = alias_to_table.get(join.this.alias_or_name, join.this.name)
+            right_expr = join.args.get("this")
+            right_table = alias_to_table.get(right_expr.alias_or_name, right_expr.name) if right_expr else None
+
+            # 处理 ON 条件
             on_condition = join.args.get("on")
-            if on_condition:
-                # 将on条件中的别名替换为表名
-                on_condition_str = self.format_condition(on_condition)
+            on_condition_str = self.format_condition(on_condition) if on_condition else None
+
+            # 替换 ON 条件中的别名，并去掉反引号
+            if on_condition_str:
                 for alias, table_name in alias_to_table.items():
-                    on_condition_str = on_condition_str.replace(alias, table_name)
-                on_condition = on_condition_str
+                    on_condition_str = re.sub(rf"`?{alias}`?\.", f"{table_name}.", on_condition_str)
+
             joins.append({
                 "join_type": join_type,
-                "on": on_condition
+                "left_table": left_table,
+                "right_table": right_table,
+                "on": on_condition_str
             })
+
         return joins
 
-    def format_condition(self, condition):
+    def format_condition(self,condition):
         """
-        辅助函数，用于格式化JOIN中的条件，使其可读性更好。
-        参数:
-            condition (sqlglot.expressions.Expression 或其他类型): JOIN条件表达式或者其他类型的条件值。
-        返回:
-            str: 格式化后的条件字符串，如果传入的不是Expression类型则直接返回原条件值。
-        """
-        if isinstance(condition, sqlglot.expressions.Expression):
-            return str(condition)
-        return condition
+        格式化 SQL JOIN 的 ON 条件，使其更具可读性。
 
-    def extract_where_conditions(self, expression):
-        """
-        从解析后的表达式中提取WHERE条件信息，返回WHERE条件列表。
-        将WHERE条件字符串里的别名都替换为对应的表名。
         参数:
-            expression (sqlglot.Expression): 解析后的SQL表达式对象。
+            condition (sqlglot.Expression 或其他类型): JOIN 条件表达式。
+
         返回:
-            list: 包含WHERE条件字符串的列表。
+            str: 格式化后的条件字符串，如果不是 Expression 类型则直接返回字符串。
+        """
+        if isinstance(condition, exp.Expression):
+            return condition.sql(dialect=self.dialect)  # 这里可以换成你需要的 SQL 方言
+        else:
+            sql_str = str(condition)
+
+            # 去除所有反引号
+        sql_str = re.sub(r"`", "", sql_str)
+
+        return sql_str
+
+    def extract_where_conditions(self,expression, alias_to_table):
+        """
+        提取 SQL 查询中的 WHERE 条件，并替换别名为表名。
+
+        参数:
+            expression (sqlglot.Expression): 解析后的 SQL AST。
+            alias_to_table (dict): 表名与别名的映射字典。
+
+        返回:
+            list: 包含 WHERE 条件 SQL 字符串的列表。
         """
         conditions = []
-        where_clause = expression.find(Where)
+
+        where_clause = expression.find(exp.Where)
         if where_clause:
-            condition_str = self.format_condition(where_clause.this)
-            alias_to_table, _ = self.extract_table_info(expression)
+            condition_str = where_clause.this.sql(dialect="mysql")
+
+            # 替换别名为表名
             for alias, table_name in alias_to_table.items():
-                condition_str = condition_str.replace(alias, table_name)
+                condition_str = condition_str.replace(f"{alias}.", f"{table_name}.")
+
             conditions.append(condition_str)
+
         return conditions
 
     def extract_entities_and_relationships(self, sql):
+
         """
         主函数，整合各部分信息提取功能，返回表和列信息以及关系信息。
         参数:
@@ -170,11 +210,13 @@ class SqlParserTool:
         返回:
             tuple: 包含表和列信息的字典以及关系信息的字典的元组。
         """
-        expression = self.parse_sql(sql)
+        # sql处理双引号为单引号
+        sql = sql.replace('"', "'")
+        expression = sqlglot.parse_one(sql)
         alias_to_table, tables = self.extract_table_info(expression)
         columns = self.extract_column_info(expression, alias_to_table)
         joins = self.extract_join_relationships(expression, alias_to_table)
-        conditions = self.extract_where_conditions(expression)
+        conditions = self.extract_where_conditions(expression,alias_to_table)
 
         entities = {"tables": tables, "columns": columns}
         relationships = {"joins": joins, "conditions": conditions}
@@ -447,10 +489,7 @@ class SqlParserTool:
                     print_and_log_full_info()
             return is_valid
         except Exception as e:
-            if question:
-                info = question + "\n" + sql + "\n"
-            else:
-                info = sql + "\n"
+            info = question + "\n" + sql + "\n"
             self.log(info)
             print(info)
             message = f"在解析 SQL 语句时发生异常❌: {e}"
@@ -464,7 +503,8 @@ if __name__ == '__main__':
     tool = SqlParserTool("bird", "books", name_correction=False)
     try:
         # 示例 SQL 查询
-        sql = """SELECT COUNT(COUNTCUSID) FROM ( SELECT COUNT(T1.cust_id) AS COUNTCUSID FROM customer AS T1 INNER JOIN shipment AS T2 ON T1.cust_id = T2.cust_id WHERE STRFTIME('%Y', T2.ship_date) = '2017' AND T1.annual_revenue > 30000000 GROUP BY T1.cust_id HAVING COUNT(T2.ship_id) >= 1 ) T3"""
+        sql = """SELECT T2.weight FROM truck AS T1 INNER JOIN shipment AS T2 ON T1.truck_id = T2.truck_id WHERE make = 'Peterbilt'
+        """
         sql = """WITH MatchDetails AS (
             SELECT
                 b.name AS titles,
@@ -513,7 +553,9 @@ if __name__ == '__main__':
         Rank1
         ORDER BY match_duration
         LIMIT 1
-        """        # tool.display_parsing_result(sql, output_mode="full_output")
+        """
+        # 解析并展示结果，使用不同的输出模式
+        # tool.display_parsing_result(sql, output_mode="full_output")
         tool.display_parsing_result(sql, output_mode="full_output")
         # tool.display_parsing_result(sql, output_mode="pass_silent_fail_full")
 
