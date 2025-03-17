@@ -36,7 +36,7 @@ class GraphLoader:
 
 
 if __name__ == '__main__':
-    dataset_name = "bird"
-    db_name = "shipping"
+    dataset_name = "spider"
+    db_name = "sports_competition"
     loader = GraphLoader()
     loader.load_graph(dataset_name, db_name)

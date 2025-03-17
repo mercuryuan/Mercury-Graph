@@ -326,8 +326,8 @@ class SqlParserTool:
                                 foreign_key_relationship_count += 1
 
                 # 检查查询结果
-                if node_count == 0 or relationship_count == 0:
-                    message = "Cypher查询验证失败❌：查询到的实体总数为 0，请检查数据是否正确导入。"
+                if table_count == 0:
+                    message = "Cypher查询验证失败❌：查询到的实体表总数为 0，请检查数据是否正确导入。"
                     self.log(message)
                     print(message)
                     return False
@@ -468,12 +468,12 @@ class SqlParserTool:
 
 if __name__ == '__main__':
     # 实例化 SqlParserTool 类
-    tool = SqlParserTool("bird", "superstore", name_correction=True)
+    tool = SqlParserTool("spider", "scholar", name_correction=True)
     try:
         # 示例 SQL 查询
         sql = """
-            SELECT CAST(SUM(CASE  WHEN T2.Discount = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM people AS T1 INNER JOIN central_superstore AS T2 ON T1.`Customer ID` = T2.`Customer ID` WHERE T2.Region = 'Central' AND T1.State = 'Indiana'
-      """
+            SELECT DISTINCT t3.paperid FROM writes AS t3 JOIN author AS t2 ON t3.authorid  =  t2.authorid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t2.authorname  =  "Peter Mertens" AND t1.authorname  =  "Dina Barbian";
+     """
         tool.display_parsing_result(sql, output_mode="full_output")
         # tool.display_parsing_result(sql, output_mode="pass_silent_fail_full")
 

@@ -79,13 +79,13 @@ class SQLAnalyzer:
 
 if __name__ == "__main__":
     # 分析单个数据库
-    analyzer = SQLAnalyzer("bird", "superstore")
+    analyzer = SQLAnalyzer("spider", "music_2")
     analyzer.analyze_sql_by_database(output_mode="full_output")
     # # 分析单个数据库,不开启名称矫正
     # analyzer = SQLAnalyzer("bird", "shipping",False)
     # analyzer.analyze_sql_by_database(output_mode="full_output")
 
-    # 遍历分析spider所有数据库
+    # # 遍历分析spider所有数据库
     # dataset = "spider"
     # for database in DataLoader(dataset).list_dbname(show=False):
     #     analyzer = SQLAnalyzer(dataset, database, name_correction=True)  # 传递 name_correction 参数
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     #     # "pass_basic_fail_full": 仅对通过的全量输出和记录
     #     # "pass_silent_fail_full": 仅对于不通过的输出和记录全量信息。
     #     analyzer.analyze_sql_by_database(output_mode="full_output")
-
+    #
     # # 遍历分析 bird 所有数据库
     # dataset = "bird"
     # for database in DataLoader(dataset).list_dbname(show=False):
