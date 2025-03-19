@@ -7,6 +7,7 @@ from sqlglot.expressions import Table, Column, Join, Where
 from src.neo4j_connector import get_driver
 from utils.schema_extractor import SQLiteSchemaExtractor
 from utils.case_corrector import align_case
+from schema_enricher.utils.fk_compare import compare_foreign_keys
 import config
 
 
@@ -420,7 +421,15 @@ class SqlParserTool:
                 for j in relationships['joins']:
                     print(j["on"])
                     self.log(str(j["on"]))
-
+                # 比较外键，输出缺失外键
+                result = compare_foreign_keys(self.dataset_name, self.db_name, sql)
+                if result['missing_fks'] != set():
+                    print("missing_fks🦴⛔:\n", result['missing_fks'])
+                    self.log(f"missing_fks🦴⛔:\n, {result['missing_fks']}")
+                    self.log(
+                        f"{self.dataset_name}\n{self.db_name}\n{sql}\nmissing_fks🦴⛔:\n,{result['missing_fks']}",
+                        log_file=os.path.join(config.PROJECT_ROOT, "sql_parser",
+                                              "missing_fk.log"))
                 # 输出格式化的实体信息
                 formated_entities = self.format_entities_by_table(entities)
                 print("\n" + formated_entities)

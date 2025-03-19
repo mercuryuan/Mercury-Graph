@@ -135,13 +135,14 @@ if __name__ == '__main__':
     # loader.show_json_structure()
 
     # 过滤查询并显示条数
-    filtered_queries = spider_loader.filter_data(fields=["db_id", "sql", "question"],
-                                                 show_count=True)
-    print(filtered_queries[:10])
+    # filtered_queries = spider_loader.filter_data(fields=["db_id", "sql", "question"],
+    #                                              show_count=True)
+    # print(filtered_queries[:10])
 
     # 读取 BIRD 数据集
     bird_loader = DataLoader("bird")
-    # all_bird_data = bird_loader.filter_data(show_count=True)
+    all_bird_data = bird_loader.filter_data(db_id="superstore",fields=["db_id", "sql", "question"],show_count=True)
+    print(all_bird_data)
 
-    spider_loader.list_dbname()
+    # spider_loader.list_dbname()
     # bird_loader.list_dbname()

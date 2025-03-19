@@ -1,6 +1,6 @@
 import json
 import os.path
-
+import config
 
 # 提取重复的信息生成逻辑
 def generate_common_info(properties):
@@ -305,6 +305,7 @@ def get_table_schema(db_path, table_name=None, show_tables=False):
         return db_name, table_list, None, None
 
 
+
 def main(db_path):
     try:
         # 读取 node.json 和 relationship.json 文件
@@ -325,13 +326,39 @@ def main(db_path):
     except json.JSONDecodeError:
         print(f"Error: There was an issue decoding the JSON files in {db_path}.")
 
+def get_full_database_schema(db_path):
+    try:
+        # 读取 node.json 和 relationship.json 文件
+        with open(os.path.join(db_path, 'nodes.json'), 'r', encoding="utf-8") as f:
+            nodes = json.load(f)
+        with open(os.path.join(db_path, 'relationships.json'), 'r', encoding="utf-8") as f:
+            relationships = json.load(f)
+
+        # 生成 M - Schema
+        table_schema_dict = generate_table_schema_dict(nodes, relationships)
+
+        # 按照表名排序输出
+        full_schema = "\n".join([table_schema_dict[table] for table in sorted(table_schema_dict.keys())])
+
+        return full_schema
+    except FileNotFoundError:
+        print(f"错误：在 {db_path} 中未找到 nodes.json 或 relationships.json 文件。")
+        return None
+    except json.JSONDecodeError:
+        print(f"错误：在 {db_path} 中解码 JSON 文件时出现问题。")
+        return None
+
+
 
 if __name__ == "__main__":
-    db_path = "../graphs_repo/BIRD/books"
+    db_path = os.path.join(config.GRAPHS_REPO, "BIRD", "world_development_indicators")
     # db_path = "../graphs_repo/spider/activity_1"
     # main(db_path)
-    db_path, table_list,table_name, schema = get_table_schema(db_path, "cust_order")
-    print(db_path)
-    print(table_list)
-    print(table_name)
-    print(schema)
+    # db_path, table_list,table_name, schema = get_table_schema(db_path, "cust_order")
+    # print(db_path)
+    # print(table_list)
+    # print(table_name)
+    # print(schema)
+    full_schema = get_full_database_schema(db_path)
+    if full_schema:
+        print(full_schema)
