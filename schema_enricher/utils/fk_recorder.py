@@ -59,25 +59,59 @@ class FKRecorder:
         except Exception as e:
             print(f"保存数据时出现错误: {e}")
 
-    def load_missing_fks(self,missing_fk_dict_file):
-        """从 JSON 读取数据并恢复为原始格式"""
+    import json
+
+    def load_missing_fks(self, missing_fk_dict_file):
+        """从 JSON 读取数据并恢复为原始格式，返回嵌套字典格式"""
         try:
             with open(missing_fk_dict_file, 'r') as f:
                 self.missing_fk_dict = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             print("文件不存在或解析错误，返回空数据")
-            return []
+            return {}
 
-        results = []
-        if self.dataset_name in self.missing_fk_dict and self.db_name in self.missing_fk_dict[self.dataset_name]:
-            missing_fk_sets = []
-            for fk_list in self.missing_fk_dict[self.dataset_name][self.db_name]:
-                restored_frozenset = frozenset(tuple(fk) for fk in fk_list)
-                missing_fk_sets.append(restored_frozenset)
+        results = {}
+        if self.dataset_name in self.missing_fk_dict:
+            dataset_data = self.missing_fk_dict[self.dataset_name]
+            results[self.dataset_name] = {}
 
-            if missing_fk_sets:
-                results.append({"missing_fks": missing_fk_sets})
+            if self.db_name in dataset_data:
+                missing_fk_sets = []
+                for fk_list in dataset_data[self.db_name]:
+                    restored_frozenset = frozenset(tuple(fk) for fk in fk_list)
+                    missing_fk_sets.append(restored_frozenset)
+
+                results[self.dataset_name][self.db_name] = missing_fk_sets
+
         return results
+
+    def format_missing_fks(self, missing_fk_sets):
+        """
+        格式化缺失的外键信息，将其转换为 'table1.column = table2.column' 形式的字符串列表。
+        如果外键集合只有一个表，则格式化为 'table.column = table.column'。
+
+        参数:
+            missing_fk_sets (list): 由 frozenset 组成的列表，每个 frozenset 包含一个或两个 (表名, 列名) 元组。
+
+        返回:
+            list: 格式化后的外键字符串列表，例如 ['table1.column = table2.column'] 或 ['table.column = table.column']。
+        """
+        formatted_fks = []
+
+        for fk_set in missing_fk_sets:
+            fk_list = sorted(fk_set)  # 确保顺序一致
+            if len(fk_list) == 2:
+                (table1, column1), (table2, column2) = fk_list
+                formatted_fks.append(f"{table1}.{column1} = {table2}.{column2}")
+            elif len(fk_list) == 1:
+                (table, column) = fk_list[0]
+                formatted_fks.append(f"{table}.{column} = {table}.{column}")
+            else:
+                print(f"警告：检测到无法解析的外键集合 {fk_list}，请检查数据格式。")
+
+        return formatted_fks
+
+
 if __name__ == '__main__':
     # 初始化缺失外键存储字典
     missing_fk_dict = {}
@@ -101,8 +135,10 @@ if __name__ == '__main__':
     })
 
     # 保存数据到 JSON 文件
-    recorder.save_missing_fks(missing_fk_dict)
+    recorder.save_missing_fks(missing_fk_dict, "missing_fk.json")
 
     # 重新加载数据
     restored_data = recorder.load_missing_fks("missing_fk.json")
     print("恢复的数据:", restored_data)
+    print(recorder.format_missing_fks(restored_data["dataset1"]["database1"]))
+    print("\n".join(recorder.format_missing_fks(restored_data["dataset1"]["database1"])))
