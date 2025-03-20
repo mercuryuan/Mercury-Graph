@@ -1,5 +1,6 @@
 import json
 import os.path
+import re
 import time
 
 import sqlglot
@@ -227,6 +228,10 @@ class SqlParserTool:
 
         return "\n".join(result)
 
+    def sanitize_alias(self,alias):
+        """将非法字符替换为下划线，确保 Neo4j 变量名合法"""
+        return re.sub(r"[^a-zA-Z0-9_]", "_", alias)
+
     # 优化前备份
     def sql2subgraph(self, entities, relationships):
         """
@@ -262,6 +267,7 @@ class SqlParserTool:
 
         for table_name, alias in tables:
             table_alias = alias if alias else table_name
+            table_alias = self.sanitize_alias(table_alias)
             table_alias_map[table_name] = table_alias
             table_column_counters[table_alias] = 1  # 初始化该表的列计数器
 

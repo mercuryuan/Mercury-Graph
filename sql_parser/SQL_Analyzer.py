@@ -102,7 +102,7 @@ class SQLAnalyzer:
 
 if __name__ == "__main__":
     # 分析单个数据库
-    analyzer = SQLAnalyzer("spider", "loan_1")
+    analyzer = SQLAnalyzer("bird", "regional_sales")
     analyzer.analyze_sql_by_database(output_mode="full_output")
     # # 分析单个数据库,不开启名称矫正
     # analyzer = SQLAnalyzer("bird", "shipping",False)
