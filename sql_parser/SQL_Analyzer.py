@@ -57,17 +57,31 @@ class SQLAnalyzer:
                 self.tool.log('-' * 120)
         finally:
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            # 在总结文件中输出 验证通过条数
             summary = f"[{timestamp}]通过 Neo4j 验证的 SQL 语句数: \t{passed_count}/{len(data_list)}\t{self.dataset_name}\t{self.db_name}"
-            missing_fk_info = f"验证失败中缺失外键的条数: \t{self.tool.missing_fk}/{len(data_list)-passed_count}\t{self.dataset_name}\t{self.db_name}"
             print(summary)
-            print(missing_fk_info)
             self.tool.log(summary)
             self.tool.log(summary, self.summary_log)
-            self.tool.log(missing_fk_info)
-            self.tool.log(missing_fk_info,self.summary_log)
-            self.tool.log(missing_fk_info,self.tool.missing_fk_log)
-            recorder = FKRecorder(self.dataset_name, self.db_name, self.tool.missing_fk_dict_file,missing_fk_dict=self.tool.missing_fk_dict)
-            recorder.save_missing_fks(missing_fk_dict=self.tool.missing_fk_dict,missing_fk_dict_file=self.tool.missing_fk_dict_file)
+            # 在总结文件中输出 missing fk在验证失败的示例中的占比
+            if self.tool.missing_fk > 0:
+                missing_fk_info = f"验证失败中缺失外键的条数: \t{self.tool.missing_fk}/{len(data_list) - passed_count}\t{self.dataset_name}\t{self.db_name}"
+                print(missing_fk_info)
+                self.tool.log(missing_fk_info)
+                self.tool.log(missing_fk_info, self.summary_log)
+                self.tool.log(missing_fk_info, self.tool.missing_fk_log)
+                # 记录 本数据库 缺失外键 到 "missing_fk_dict.json" 中
+                recorder = FKRecorder(self.dataset_name, self.db_name, self.tool.missing_fk_dict_file,
+                                      missing_fk_dict=self.tool.missing_fk_dict)
+                recorder.save_missing_fks(missing_fk_dict=self.tool.missing_fk_dict,
+                                          missing_fk_dict_file=self.tool.missing_fk_dict_file)
+                # 将缺失外键 去重后 展示在日志中
+                re = recorder.load_missing_fks(self.tool.missing_fk_dict_file)
+                # 获取去重后的外键信息
+                missing_fk = re[self.dataset_name][self.db_name]
+                # 格式化并存储在单数据库日志、总日志中
+                self.tool.log("\n".join(recorder.format_missing_fks(missing_fk)))
+                self.tool.log("\n".join(recorder.format_missing_fks(missing_fk)),
+                              self.summary_log)
 
     def analyze_sql_by_database(self, output_mode):
         """
@@ -88,23 +102,23 @@ class SQLAnalyzer:
 
 if __name__ == "__main__":
     # 分析单个数据库
-    # analyzer = SQLAnalyzer("spider", "activity_1")
-    # analyzer.analyze_sql_by_database(output_mode="full_output")
+    analyzer = SQLAnalyzer("spider", "tracking_grants_for_research")
+    analyzer.analyze_sql_by_database(output_mode="full_output")
     # # 分析单个数据库,不开启名称矫正
     # analyzer = SQLAnalyzer("bird", "shipping",False)
     # analyzer.analyze_sql_by_database(output_mode="full_output")
 
-    # 遍历分析spider所有数据库
-    dataset = "spider"
-    for database in DataLoader(dataset).list_dbname(show=False):
-        analyzer = SQLAnalyzer(dataset, database, name_correction=True)  # 传递 name_correction 参数
-        # "full_output": 全部输出和记录解析结果。
-        # "pass_basic_fail_full": 仅对通过的全量输出和记录
-        # "pass_silent_fail_full": 仅对于不通过的输出和记录全量信息。
-        analyzer.analyze_sql_by_database(output_mode="full_output")
-
-    # 遍历分析 bird 所有数据库
-    dataset = "bird"
-    for database in DataLoader(dataset).list_dbname(show=False):
-        analyzer = SQLAnalyzer(dataset, database, name_correction=True)  # 传递 name_correction 参数
-        analyzer.analyze_sql_by_database(output_mode="full_output")
+    # # 遍历分析spider所有数据库
+    # dataset = "spider"
+    # for database in DataLoader(dataset).list_dbname(show=False):
+    #     analyzer = SQLAnalyzer(dataset, database, name_correction=True)  # 传递 name_correction 参数
+    #     # "full_output": 全部输出和记录解析结果。
+    #     # "pass_basic_fail_full": 仅对通过的全量输出和记录
+    #     # "pass_silent_fail_full": 仅对于不通过的输出和记录全量信息。
+    #     analyzer.analyze_sql_by_database(output_mode="full_output")
+    #
+    # # 遍历分析 bird 所有数据库
+    # dataset = "bird"
+    # for database in DataLoader(dataset).list_dbname(show=False):
+    #     analyzer = SQLAnalyzer(dataset, database, name_correction=True)  # 传递 name_correction 参数
+    #     analyzer.analyze_sql_by_database(output_mode="full_output")
