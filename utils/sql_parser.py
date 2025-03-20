@@ -1,3 +1,4 @@
+import json
 import os.path
 import time
 
@@ -8,6 +9,7 @@ from src.neo4j_connector import get_driver
 from utils.schema_extractor import SQLiteSchemaExtractor
 from utils.case_corrector import align_case
 from schema_enricher.utils.fk_compare import compare_foreign_keys
+from schema_enricher.utils.fk_recorder import FKRecorder
 import config
 
 
@@ -29,12 +31,19 @@ class SqlParserTool:
         self.name_correction = name_correction  # 将name_correction作为类属性
         extractor = SQLiteSchemaExtractor(dataset_name)
         self.schema = extractor.extract_schema(db_name)
+        self.missing_fk = 0
+        self.missing_fk_dict = {}
+        self.missing_fk_dict_file = os.path.join(config.PROJECT_ROOT, "sql_parser",
+                                              "missing_fk_dict.json")
+        self.missing_fk_log = os.path.join(config.PROJECT_ROOT, "sql_parser",
+                                              "missing_fk.log")
         if self.name_correction:
             self.log_file = os.path.join(config.PROJECT_ROOT, "sql_parser",
                                          f"{dataset_name}_analysis/{db_name}.log")
         else:
             self.log_file = os.path.join(config.PROJECT_ROOT, "sql_parser",
                                          f"{dataset_name}_analysis_with_correction/{db_name}.log")
+        self.recorder = FKRecorder(self.dataset_name, self.db_name, missing_fk_dict_file=self.missing_fk_dict_file,missing_fk_dict=self.missing_fk_dict)
 
     def close_neo4j_connection(self):
         """
@@ -380,11 +389,11 @@ class SqlParserTool:
                 """
                 输出并记录基本信息，包括数据库 ID、问题描述和 SQL 语句。
                 """
-                if question:
-                    print(f"Database: {db_id}")
-                if db_id:
-                    print(f"Question: {question}")
-                print(f"SQL: {sql}\n")
+                # if question: 注释了
+                #     print(f"Database: {db_id}")
+                # if db_id:
+                #     print(f"Question: {question}")
+                # print(f"SQL: {sql}\n")
 
                 # 构建基本信息的日志内容
                 basic_info_log = ""
@@ -407,38 +416,42 @@ class SqlParserTool:
                 print_and_log_basic_info()
 
                 # 输出实体信息
-                print("\nEntities (Tables and Columns):")
-                print(entities)
+                # print("\nEntities (Tables and Columns):") 注释了
+                # print(entities)
                 self.log("Entities (Tables and Columns): " + str(entities))
 
                 # 输出关系信息
-                print("\nRelationships (Joins and Conditions):")
-                print(relationships)
+                # print("\nRelationships (Joins and Conditions):") 注释了
+                # print(relationships)
                 self.log("Relationships (Joins and Conditions): " + str(relationships))
 
                 # 输出外键连接
-                print("\n外键连接：")
+                # print("\n外键连接：")
                 for j in relationships['joins']:
-                    print(j["on"])
+                    # print(j["on"])
                     self.log(str(j["on"]))
                 # 比较外键，输出缺失外键
                 result = compare_foreign_keys(self.dataset_name, self.db_name, sql)
                 if result['missing_fks'] != set():
-                    print("missing_fks🦴⛔:\n", result['missing_fks'])
+                    self.missing_fk += 1
+                    # print("missing_fks🦴⛔:\n", result['missing_fks'])
                     self.log(f"missing_fks🦴⛔:\n, {result['missing_fks']}")
                     self.log(
-                        f"{self.dataset_name}\n{self.db_name}\n{sql}\nmissing_fks🦴⛔:\n,{result['missing_fks']}",
-                        log_file=os.path.join(config.PROJECT_ROOT, "sql_parser",
-                                              "missing_fk.log"))
+                        f"{self.dataset_name}\n{self.db_name}\n{sql}\nmissing_fks🦴⛔:\n{result['missing_fks']}",
+                        log_file=self.missing_fk_log)
+                    # 记录缺失外键
+                    self.recorder.update_missing_fks(result)
+
+
                 # 输出格式化的实体信息
                 formated_entities = self.format_entities_by_table(entities)
-                print("\n" + formated_entities)
+                # print("\n" + formated_entities)
                 self.log(formated_entities)
 
                 # 输出子图查询语句
-                print("\n对应子图查询语句：")
+                # print("\n对应子图查询语句：")
                 cypher_query = self.sql2subgraph(entities, relationships)
-                print(cypher_query)
+                # print(cypher_query)
                 self.log("对应子图查询语句：\n" + cypher_query)
 
             # 生成 Cypher 查询语句
@@ -468,10 +481,10 @@ class SqlParserTool:
             else:
                 info = sql + "\n"
             self.log(info)
-            print(info)
+            # print(info)
             message = f"在解析 SQL 语句时发生异常❌: {e}"
             self.log(message)
-            print(message)
+            # print(message)
             raise
 
 

@@ -4,6 +4,7 @@ from src.neo4j_connector import get_driver
 from utils.dataloader import DataLoader
 from utils.graphloader import GraphLoader
 from utils.sql_parser import SqlParserTool
+from schema_enricher.utils.fk_recorder import FKRecorder
 
 
 class SQLAnalyzer:
@@ -57,9 +58,16 @@ class SQLAnalyzer:
         finally:
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             summary = f"[{timestamp}]通过 Neo4j 验证的 SQL 语句数: \t{passed_count}/{len(data_list)}\t{self.dataset_name}\t{self.db_name}"
+            missing_fk_info = f"验证失败中缺失外键的条数: \t{self.tool.missing_fk}/{len(data_list)-passed_count}\t{self.dataset_name}\t{self.db_name}"
             print(summary)
+            print(missing_fk_info)
             self.tool.log(summary)
             self.tool.log(summary, self.summary_log)
+            self.tool.log(missing_fk_info)
+            self.tool.log(missing_fk_info,self.summary_log)
+            self.tool.log(missing_fk_info,self.tool.missing_fk_log)
+            recorder = FKRecorder(self.dataset_name, self.db_name, self.tool.missing_fk_dict_file,missing_fk_dict=self.tool.missing_fk_dict)
+            recorder.save_missing_fks(missing_fk_dict=self.tool.missing_fk_dict,missing_fk_dict_file=self.tool.missing_fk_dict_file)
 
     def analyze_sql_by_database(self, output_mode):
         """
@@ -79,8 +87,8 @@ class SQLAnalyzer:
 
 
 if __name__ == "__main__":
-    # # 分析单个数据库
-    # analyzer = SQLAnalyzer("spider", "music_2")
+    # 分析单个数据库
+    # analyzer = SQLAnalyzer("spider", "activity_1")
     # analyzer.analyze_sql_by_database(output_mode="full_output")
     # # 分析单个数据库,不开启名称矫正
     # analyzer = SQLAnalyzer("bird", "shipping",False)
