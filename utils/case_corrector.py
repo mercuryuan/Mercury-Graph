@@ -32,12 +32,17 @@ def align_case(tables, columns, joins, schema):
         for col in cols
     }
 
-    # 1. 过滤掉 schema 中不存在的表，并对齐大小写
-    aligned_tables = {
-        (table_name_map[tbl.lower()], alias)
-        for tbl, alias in tables
-        if tbl and tbl.lower() in table_name_map  # 确保 tbl 不是 None 且在 schema 中
-    }
+    # 1. 过滤掉 schema 中不存在的表，并对齐大小写，同时去除无别名的原名表
+    table_alias_map = {}
+    for tbl, alias in tables:
+        correct_tbl = table_name_map.get(tbl.lower())
+        if correct_tbl:
+            if alias != correct_tbl:
+                table_alias_map[correct_tbl] = alias  # 记录别名
+            elif correct_tbl not in table_alias_map:  # 只有当没有别名时才添加原名
+                table_alias_map[correct_tbl] = correct_tbl
+
+    aligned_tables = {(tbl, alias) for tbl, alias in table_alias_map.items()}
 
     # 2. 过滤掉 schema 中不存在的列，并对齐大小写
     aligned_columns = {
@@ -54,8 +59,8 @@ def align_case(tables, columns, joins, schema):
             part = part.strip()
             if '.' in part:
                 table_part, col_part = part.split('.', 1)
-                table_part = table_part.strip(" '\"")
-                col_part = col_part.strip(" '\"")
+                table_part = table_part.strip(" '")
+                col_part = col_part.strip(" '")
                 correct_table = table_name_map.get(table_part.lower())
                 correct_col = column_name_map.get((table_part.lower(), col_part.lower()))
                 if correct_table and correct_col:
@@ -78,41 +83,16 @@ def align_case(tables, columns, joins, schema):
     return aligned_tables, aligned_columns, aligned_joins, modified
 
 
-
 if __name__ == '__main__':
-    # tables = {("BOok", "T1"), ("PUBlisher", "T2")}
-    # columns = {("BOok", "title"), ("publisher", "publisher_name"), ("boOK", "publisher_id"),
-    #            ("publisher", "publisher_id")}
-    # joins = [{"join_type": "INNER", "on": "BOOK.publisher_id = publisher.Publisher_id"}]
-    #
-    # schema = {
-    #     "address_status": ["status_id", "address_status"],
-    #     "author": ["author_id", "author_name"],
-    #     "book_language": ["language_id", "language_code", "language_name"],
-    #     "country": ["country_id", "country_name"],
-    #     "address": ["address_id", "street_number", "street_name", "city", "country_id"],
-    #     "customer": ["customer_id", "first_name", "last_name", "email"],
-    #     "customer_address": ["customer_id", "address_id", "status_id"],
-    #     "order_status": ["status_id", "status_value"],
-    #     "publisher": ["publisher_id", "publisher_name"],
-    #     "book": ["book_id", "title", "isbn13", "language_id", "num_pages", "publication_date", "publisher_id"],
-    #     "book_author": ["book_id", "author_id"],
-    #     "shipping_method": ["method_id", "method_name", "cost"],
-    #     "cust_order": ["order_id", "order_date", "customer_id", "shipping_method_id", "dest_address_id"],
-    #     "order_history": ["history_id", "order_id", "status_id", "status_date"],
-    #     "order_line": ["line_id", "order_id", "book_id", "price"]
-    # }
-    #
-    # aligned_tables, aligned_columns, aligned_joins, modified = align_case(tables, columns, joins, schema)
-
     # 实际调用
     from sql_parser import SqlParserTool
     from schema_extractor import SQLiteSchemaExtractor
-    dataset_name = "bird"
-    db_name = "superstore"
-    tool  = SqlParserTool(dataset_name, db_name,False)
-    sql = """SELECT CAST(SUM(CASE  WHEN T2.Discount = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM people AS T1 INNER JOIN central_superstore AS T2 ON T1.`Customer ID` = T2.`Customer ID` WHERE T2.Region = 'Central' AND T1.State = 'Indiana'
- """
+
+    dataset_name = "spider"
+    db_name = "tracking_grants_for_research"
+    tool = SqlParserTool(dataset_name, db_name, False)
+    sql = """SELECT T1.grant_amount FROM Grants AS T1 JOIN Documents AS T2 ON T1.grant_id  =  T2.grant_id WHERE T2.sent_date  <  '1986-08-26 20:49:27' INTERSECT SELECT grant_amount FROM grants WHERE grant_end_date  >  '1989-03-16 18:27:16'
+"""
     entities, relationships = tool.extract_entities_and_relationships(sql)
     # 提取表和列信息
     tables = entities['tables']
@@ -123,19 +103,8 @@ if __name__ == '__main__':
     schema = schema_extractor.extract_schema(db_name)
 
     print(tables)
-    print(columns)
-    print(joins)
-    print(schema)
 
     # 是否进行表名和列名的修正
     aligned_tables, aligned_columns, aligned_joins, modified = align_case(tables, columns, joins, schema)
     print(modified)
     print(aligned_tables)
-    print(aligned_columns)
-    print(aligned_joins)
-
-
-    # print("Aligned Tables:", aligned_tables)
-    # print("Aligned Columns:", aligned_columns)
-    # print("Aligned Joins:", aligned_joins)
-    # print("是否经历了修改:", modified)
