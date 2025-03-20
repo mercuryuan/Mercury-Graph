@@ -1,7 +1,9 @@
 import json
 import os.path
 import config
+from utils.case_corrector import align_case
 from utils.dataloader import DataLoader
+from utils.schema_extractor import SQLiteSchemaExtractor
 
 
 def extract_foreign_keys(dataset_name, db_name):
@@ -34,12 +36,18 @@ def extract_fk_from_sql(dataset, database, sql):
     tool = SqlParserTool(dataset, database)
     try:
         entities, relationships = tool.extract_entities_and_relationships(sql)
+        tables = entities['tables']
+        columns = entities['columns']
         join_conditions = relationships['joins']
     except Exception as e:
         print(f"Error: Failed to parse SQL. {e}")
         return set()
 
     extracted_fks = set()
+    # 进行表名和列名的修正
+    schema_extractor = SQLiteSchemaExtractor(dataset)
+    schema = schema_extractor.extract_schema(database)
+    _,_, join_conditions, _ = align_case(tables, columns, join_conditions, schema)
     for join in join_conditions:
         on_clause = join["on"]
         try:
