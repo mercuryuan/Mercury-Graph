@@ -118,7 +118,7 @@ class SqlParserTool:
     def extract_join_relationships(self, expression, alias_to_table):
         """
         从解析后的表达式中提取JOIN关系信息，基于表名与别名的映射字典，返回JOIN关系列表。
-        重点获取连接类型，并将JOIN关系中的on条件里的别名替换为对应的表名。
+        重点获取连接类型，并将JOIN关系中的on条件里的别名替换为对应的表名，同时对相同的on条件进行去重。
         参数:
             expression (sqlglot.Expression): 解析后的SQL表达式对象。
             alias_to_table (dict): 表名与别名的映射字典。
@@ -126,19 +126,29 @@ class SqlParserTool:
             list: 包含JOIN关系信息字典的列表，每个字典包含连接类型、连接条件等信息。
         """
         joins = []
+        seen_conditions = set()
+
         for join in expression.find_all(Join):
             join_type = join.kind  # 获取连接类型，例如INNER、LEFT等
             on_condition = join.args.get("on")
+
             if on_condition:
                 # 将on条件中的别名替换为表名
                 on_condition_str = self.format_condition(on_condition)
                 for alias, table_name in alias_to_table.items():
                     on_condition_str = on_condition_str.replace(alias, table_name)
                 on_condition = on_condition_str
+
+            # 如果当前的on条件已经处理过，则跳过
+            if on_condition in seen_conditions:
+                continue
+
+            seen_conditions.add(on_condition)
             joins.append({
                 "join_type": join_type,
                 "on": on_condition
             })
+
         return joins
 
     def format_condition(self, condition):
@@ -490,12 +500,11 @@ class SqlParserTool:
 
 if __name__ == '__main__':
     # 实例化 SqlParserTool 类
-    tool = SqlParserTool("spider", "scholar", name_correction=True)
+    tool = SqlParserTool("spider", "voter_2", name_correction=True)
     try:
         # 示例 SQL 查询
         sql = """
-            SELECT DISTINCT t3.paperid FROM writes AS t3 JOIN author AS t2 ON t3.authorid  =  t2.authorid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t2.authorname  =  "Peter Mertens" AND t1.authorname  =  "Dina Barbian";
-     """
+            SELECT DISTINCT T1.LName FROM STUDENT AS T1 JOIN VOTING_RECORD AS T2 ON T1.StuID  =  PRESIDENT_Vote EXCEPT SELECT DISTINCT LName FROM STUDENT WHERE Advisor  =  "2192" """
         tool.display_parsing_result(sql, output_mode="full_output")
         # tool.display_parsing_result(sql, output_mode="pass_silent_fail_full")
 
