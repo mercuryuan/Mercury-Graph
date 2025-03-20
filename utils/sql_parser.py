@@ -226,6 +226,7 @@ class SqlParserTool:
 
         return "\n".join(result)
 
+    # 优化前备份
     def sql2subgraph(self, entities, relationships):
         """
         将 SQL 查询解析的数据库实体和关系信息转化为 Neo4j 子图查询语句。
