@@ -10,6 +10,7 @@ from utils.schema_extractor import SQLiteSchemaExtractor
 from utils.case_corrector import align_case
 from schema_enricher.utils.fk_compare import compare_foreign_keys
 from schema_enricher.utils.fk_recorder import FKRecorder
+from graph_construction.schema_parser import generate_fk_hash
 import config
 
 
@@ -289,9 +290,12 @@ class SqlParserTool:
 
             left_alias = table_alias_map[left_table]
             right_alias = table_alias_map[right_table]
-
+            # 生成外键关系的 唯一hash值
+            fk_hash = generate_fk_hash(left_table, left_column, right_table, right_column)
+            print(fk_hash)
             relationship_clauses.append(
-                f"(t{left_alias})-[f{foreign_key_counter}:FOREIGN_KEY]-(t{right_alias})"
+                # f"(t{left_alias})-[f{foreign_key_counter}:FOREIGN_KEY {{fk_hash: '{fk_hash}'}}]-(t{right_alias})"
+                f"(t{left_alias})-[f{foreign_key_counter}:FOREIGN_KEY ]-(t{right_alias})"
             )
             return_relationship_clauses.append(f"f{foreign_key_counter}")
             foreign_key_counter += 1
@@ -501,7 +505,7 @@ class SqlParserTool:
 
 if __name__ == '__main__':
     # 实例化 SqlParserTool 类
-    tool = SqlParserTool("spider", "voter_2", name_correction=True)
+    tool = SqlParserTool("spider", "soccer_1", name_correction=True)
     try:
         # 示例 SQL 查询
         sql = """

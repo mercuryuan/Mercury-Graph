@@ -1,4 +1,5 @@
 import csv
+import hashlib
 import json
 import operator
 import os
@@ -84,6 +85,20 @@ def quote_identifier(identifier):
     :return: 引用后的标识符
     """
     return f'"{identifier}"'  # 使用双引号引用
+
+
+def generate_fk_hash(table1, column1, table2, column2):
+    """
+    生成无序的外键ID，用于唯一标识外键关系。
+    :param table1: 源表名
+    :param column1: 源表列名
+    :param table2: 目标表名
+    :param column2: 目标表列名
+    :return: 外键ID
+    """
+    elements = sorted([f"{table1}.{column1}", f"{table2}.{column2}"])  # 排序确保无序唯一
+    unique_string = "|".join(elements)  # 连接字符串
+    return hashlib.md5(unique_string.encode()).hexdigest()  # 生成哈希值
 
 
 class SchemaParser:
@@ -337,7 +352,7 @@ class SchemaParser:
                 return []
         except FileNotFoundError:
             # 先注释掉
-            print(f"未找到表 {table_name} 对应的列描述文件 {file_path}")
+            # print(f"未找到表 {table_name} 对应的列描述文件 {file_path}")
             return []
 
     def _create_column_node_and_relation_in_neo4j(self, table_name, column_name, data_type, samples,
@@ -384,7 +399,7 @@ class SchemaParser:
             # 根据列描述信息添加相应属性（当描述不为空时添加）
             if column_desc:
                 if column_desc["column_description"]:
-                    props["column_description"] = column_desc["column_description"].replace('\n', '') # 去掉换行符
+                    props["column_description"] = column_desc["column_description"].replace('\n', '')  # 去掉换行符
                 if column_desc["value_description"]:
                     props["value_description"] = column_desc["value_description"]
 
@@ -425,18 +440,11 @@ class SchemaParser:
 
         # 构造外键引用路径
         reference_path = f"{from_table}.{from_column}->{to_table}.{to_column}"
+        # 生成唯一无序外键ID
+        fk_hash = generate_fk_hash(from_table, from_column, to_table, to_column)
+        # print(fk_hash)
 
         with self.neo4j_driver.session() as session:
-            # result = session.run("""
-            #     MATCH (from_table:Table {name: $from_table})
-            #     MATCH (to_table:Table {name: $to_table})
-            #     RETURN from_table, to_table
-            # """, from_table=from_table, to_table=to_table)
-            #
-            # records = result.data()
-            # if not records:
-            #     print(f"未找到表节点: {from_table} 或 {to_table}，无法创建外键关系。")
-            #     return
 
             session.run("""
                 MATCH (from_table:Table {name: $from_table})
@@ -447,7 +455,8 @@ class SchemaParser:
                     from_column: $from_column,
                     to_table: $to_table,
                     to_column: $to_column,
-                    reference_path: $reference_path
+                    reference_path: $reference_path,
+                    fk_hash: $fk_hash
                 }]->(to_table)
 
                 // 更新目标表的 referenced_by 属性
@@ -466,7 +475,7 @@ class SchemaParser:
                 MATCH (to_table)-[:HAS_COLUMN]->(to_column_node:Column {name: $to_column})
                 SET to_column_node.referenced_by = coalesce(to_column_node.referenced_by, []) + [$from_table + '.' + $from_column]
             """, from_table=from_table, from_column=from_column, to_table=to_table, to_column=to_column,
-                        reference_path=reference_path)
+                        reference_path=reference_path,fk_hash=fk_hash)
 
     import numpy as np
     from decimal import Decimal
@@ -499,9 +508,27 @@ class SchemaParser:
                 # 否则查询全部数据
                 query = f"SELECT {quote_identifier(column_name)} FROM {quote_identifier(table_name)} ;"
 
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            all_values = [row[0] for row in rows]
+            try:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                all_values = [row[0] for row in rows]
+            except sqlite3.OperationalError as e:
+                print(f"警告：读取 {table_name}.{column_name} 失败，尝试使用 bytes 方式处理，错误信息：{e}")
+
+                # 重新连接，并使用 text_factory=bytes
+                with sqlite3.connect(self.database_file) as conn_fallback:
+                    conn_fallback.text_factory = bytes
+                    cursor_fallback = conn_fallback.cursor()
+                    cursor_fallback.execute(query)
+                    rows = cursor_fallback.fetchall()
+
+                    # 逐行处理可能的 bytes 数据
+                    all_values = []
+                    for row in rows:
+                        value = row[0]
+                        if isinstance(value, bytes):
+                            value = value.decode('utf-8', errors='ignore')  # 忽略无法解码的字符
+                        all_values.append(value)
 
             # 过滤空值（包括 None、空字符串和仅含空格的字符串）
             def is_empty(value):
@@ -863,6 +890,7 @@ if __name__ == "__main__":
     # database_file = "E:/spider/database/book_2/book_2.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
     database_file = "E:/spider/database/bike_1/bike_1.sqlite"
+    # database_file = "E:/spider/database/wine_1/wine_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
     # database_file = "../data/spider/medicine_enzyme_interaction/medicine_enzyme_interaction.sqlite"
     # database_file = "../data/bird/app_store/app_store.sqlite" # csv描述表名对应不上
