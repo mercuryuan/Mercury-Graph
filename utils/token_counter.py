@@ -80,7 +80,7 @@ text = """
 (sprint_speed:INTEGER,The player's maximum running speed over short distances.,Examples: [57, 54, 54, 64, 68, 53],Nullable,DataIntegrity: 100%,NullCount: 413,Range: [12, 97],NumericMean: 68.21548997359093,NumericMode: [68])
 (reactions:INTEGER,The player's quickness in responding to in-game situations.,Examples: [65, 68, 59, 62, 69, 80],Nullable,DataIntegrity: 100%,NullCount: 413,Range: [20, 96],NumericMean: 66.15002962234027,NumericMode: [68])
 (balance:INTEGER,The player's stability while in motion, affecting their ability to stay upright.,Examples: [73, 62, 91, 72, 61, 64],Nullable,DataIntegrity: 99%,NullCount: 1431,Range: [12, 96],NumericMean: 65.2792967362964,NumericMode: [70])
-(jumping:INTEGER,The player's ability to jump, often impacting heading and aerial duels.,Examples: [75, 75, 72, 60, 76, 64],Nullable,DataIntegrity: 99%,NullCount: 1431,Range: [14, 96],NumericMean: 66.92548367133683,NumericMode: [72])
+(jumping:INTEGER,The player's ability to  jump, often impacting heading and aerial duels.,Examples: [75, 75, 72, 60, 76, 64],Nullable,DataIntegrity: 99%,NullCount: 1431,Range: [14, 96],NumericMean: 66.92548367133683,NumericMode: [72])
 (strength:INTEGER,The player's physical strength in challenges and duels.,Examples: [76, 67, 65, 47, 65, 68],Nullable,DataIntegrity: 100%,NullCount: 413,Range: [16, 96],NumericMean: 67.50593953025998,NumericMode: [74])
 
 """
