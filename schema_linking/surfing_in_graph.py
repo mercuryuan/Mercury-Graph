@@ -249,15 +249,25 @@ class SchemaGenerator:
     def generate_column_description(self, column_info, mode="full"):
         """
         根据 column_info 动态构造输出描述，只有存在的属性才会输出。
+
         输出顺序：
           1. 基本属性: name, data_type, column_description, samples
           2. 完整性属性: null_count, data_integrity, sample_count, is_nullable
+             （其中仅在 is_nullable 为 True 时输出 data_integrity 与 null_count，且 null_count 仅当非0时输出）
           3. 键类型属性: key_type（格式化为 Primary Key / Foreign Key）
           4. 语义属性: value_description
           5. 数值型属性（仅针对 numeric 类型）：numeric_range, numeric_mean, numeric_mode
           6. 文本型属性（仅针对 text 类型）：text_categories, average_char_length, word_frequency
           7. 时间型属性（仅针对 datetime 类型）：earliest_time, latest_time, time_span
+
+        三种模式：
+          - full：输出所有存在的属性
+          - brief：只输出基本属性（name, data_type, column_description, samples）、键类型和部分完整性信息（如 data_integrity）
+          - minimal：仅输出 name 和 data_type
         """
+        # mode字符串的限定
+        if mode not in ["full", "brief", "minimal"]:
+            raise ValueError("mode 参数必须是 'full', 'brief' 或 'minimal'")
         # 基本属性
         name = column_info.get("name", "未知列")
         data_type = column_info.get("data_type", "未知类型")
@@ -266,16 +276,16 @@ class SchemaGenerator:
         samples = column_info.get("samples", [])
         # 限制最多6个样本
         samples = samples[:6] if samples else None
-        samples_str = f"examples: [{', '.join(map(str, samples))}]" if samples else None
+        samples_str = f"Examples: [{', '.join(map(str, samples))}]" if samples else None
 
-        # 完整性属性
+        # 完整性属性（仅在 full 模式下完整展示）
         is_nullable = column_info.get("is_nullable", None)
         if is_nullable is not None:
             nullable_str = "Nullable" if is_nullable else "Not Nullable"
         else:
             nullable_str = None
 
-        # 根据参考逻辑，仅在 is_nullable 为 True 时输出 data_integrity 与 null_count（当 null_count 非 0 时）
+        # 根据参考逻辑，仅在 is_nullable 为 True 时输出 data_integrity 与 null_count（null_count 非0时）
         integrity_info = []
         if is_nullable:
             data_integrity = column_info.get("data_integrity")
@@ -296,11 +306,28 @@ class SchemaGenerator:
 
         # 语义属性
         value_description = column_info.get("value_description", None)
-        # 如果需要可以取消注释下行以输出值域说明
-        # value_description_str = f"ValueDescription: {value_description}" if value_description else None
+        value_description_str = f"ValueDescription: {value_description}" if value_description else None
 
         # 构造描述列表，只有属性存在时才添加
         details = [f"({name}:{base_data_type}"]
+
+        if mode == "minimal":
+            # 仅基本信息
+            return ",".join(details) + ")"
+
+        # brief 模式：基本属性、键类型、样本、以及简略的完整性信息（只输出 data_integrity）
+        if mode == "brief":
+            if column_description:
+                details.append(column_description)
+            if key_info_str:
+                details.append(key_info_str)
+            if samples_str:
+                details.append(samples_str)
+            if nullable_str:
+                details.append(nullable_str)
+            return ",".join(details) + ")"
+
+        # full 模式：输出所有存在的属性
         if column_description:
             details.append(column_description)
         if key_info_str:
@@ -309,15 +336,14 @@ class SchemaGenerator:
             details.append(samples_str)
         if nullable_str:
             details.append(nullable_str)
-        # 添加完整性信息，仅在 is_nullable 为 True 时输出
         if integrity_info:
             details.extend(integrity_info)
-        # 如果需要输出 sample_count，可按如下逻辑添加（目前未采纳参考代码逻辑）：\n
-        # if "sample_count" in column_info:\n
-        #     details.append(f"SampleCount: {column_info['sample_count']}")\n
-        # 语义属性（如果需要）：\n
-        # if value_description:\n
-        #     details.append(f"ValueDescription: {value_description}")
+        # # 如果有 sample_count（完整性扩展）也可输出
+        # sample_count = column_info.get("sample_count", None)
+        # if sample_count is not None:
+        #     details.append(f"SampleCount: {sample_count}")
+        # if value_description_str:
+        #     details.append(value_description_str)
 
         # 数值型特有属性
         if base_data_type in self.numeric_types:
@@ -380,9 +406,17 @@ if __name__ == "__main__":
         # print(sg.generate_table_description(tables[1]))
         # print(sg.generate_table_description(tables[12], "minimal"))
 
-        col = explorer.get_columns_for_table("customer")
+        col = explorer.get_columns_for_table("Player_Attributes")
         for record in col:
             # print(record)
             print(sg.generate_column_description(record))
+        print()
+        for record in col:
+            # print(record)
+            print(sg.generate_column_description(record, "brief"))
+        print()
+        for record in col:
+            # print(record)
+            print(sg.generate_column_description(record, "minimal"))
     finally:
         driver.close()
