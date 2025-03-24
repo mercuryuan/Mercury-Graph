@@ -3,6 +3,7 @@ import time
 
 from tqdm import tqdm
 
+import config
 from graph_construction.neo4j_data_migration import load_graph_to_neo4j
 from schema_enricher.utils.description_generator import TableSchemaDescriber
 from schema_enricher.utils.description_injector import inject_descriptions
@@ -15,16 +16,16 @@ class Enricher:
     2. 在外键连接不全的情况下，基于业务逻辑推断可能的外键关系。
     """
 
-    def __init__(self, ds_root: str = "../graphs_repo/", log_file: str = "./Enrich_Process.log"):
+    def __init__(self):
         """
         初始化 Enricher。
 
         :param ds_root: 数据集根目录
         :param log_file: 处理日志存储路径。
         """
-        self.ds_root = ds_root
-        self.log_file = log_file
-        os.makedirs(os.path.dirname(log_file), exist_ok=True)  # 确保日志文件夹存在
+        self.ds_root = config.GRAPHS_REPO
+        self.log_file = "./Enrich_Process.log"
+        os.makedirs(os.path.dirname(self.log_file), exist_ok=True)  # 确保日志文件夹存在
 
     def log(self, message: str):
         """ 记录日志信息到文件并打印到控制台 """
@@ -88,19 +89,19 @@ class Enricher:
             # self.enrich_description(db_path)
             # # 2. 对每个数据库执行 description注入
             db_name = os.path.basename(db_path)
-            inject_descriptions(dataset_name,db_name)
+            inject_descriptions(dataset_name, db_name)
             pass
 
         self.log(f"🎉 数据集 {dataset_name} 处理完成！")
 
 
 if __name__ == "__main__":
-    enricher = Enricher(ds_root="../graphs_repo/")
+    enricher = Enricher()
     """
     所有步骤写在enrich_schema函数中，调用一次就自动完成enrich的所有步骤,只需传入数据集名称即可。
     """
-    # enricher.enrich_schema("spider")  # 处理 spider 数据集
+    enricher.enrich_schema("spider")  # 处理 spider 数据集
     # enricher.enrich_schema("bird")    # 处理 bird 数据集
 
-    #查看neo4j。动态测试效果
-    load_graph_to_neo4j("spider", "academic")
+    # #查看neo4j。动态测试效果
+    # load_graph_to_neo4j("spider", "academic")

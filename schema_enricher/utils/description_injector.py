@@ -117,7 +117,7 @@ def update_node_descriptions(nodes, descriptions, table_column_mapping):
                 updated = False
                 for column_node in table_column_mapping[table_name]:
                     if column_node["properties"]["name"] == column_name:
-                        column_node["properties"]["description"] = column_desc
+                        column_node["properties"]["column_description"] = column_desc
                         updated = True
                 if not updated:
                     print(f"[Warning] 在表 {table_name} 中未找到列 '{column_name}' 的对应节点。")
