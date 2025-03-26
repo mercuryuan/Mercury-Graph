@@ -439,7 +439,7 @@ class SchemaParser:
                 to_column = primary_key_column
 
         # 构造外键引用路径
-        reference_path = f"{from_table}.{from_column}->{to_table}.{to_column}"
+        reference_path = f"{from_table}.{from_column}={to_table}.{to_column}"
         # 生成唯一无序外键ID
         fk_hash = generate_fk_hash(from_table, from_column, to_table, to_column)
         # print(fk_hash)
@@ -475,7 +475,7 @@ class SchemaParser:
                 MATCH (to_table)-[:HAS_COLUMN]->(to_column_node:Column {name: $to_column})
                 SET to_column_node.referenced_by = coalesce(to_column_node.referenced_by, []) + [$from_table + '.' + $from_column]
             """, from_table=from_table, from_column=from_column, to_table=to_table, to_column=to_column,
-                        reference_path=reference_path,fk_hash=fk_hash)
+                        reference_path=reference_path, fk_hash=fk_hash)
 
     import numpy as np
     from decimal import Decimal
