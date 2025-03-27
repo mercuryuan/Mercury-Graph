@@ -545,9 +545,27 @@ class SchemaParser:
 
             # if null_count > 0:
             #     print(f"过滤掉了 {table_name} 中 {column_name} 的 {null_count} 个空值数据")
-
+            numeric_types = [
+                "INTEGER", "INT", "SMALLINT", "BIGINT", "TINYINT", "MEDIUMINT",  # 整数类型
+                "REAL", "FLOAT", "DOUBLE",  # 浮点数类型
+                "DECIMAL", "NUMERIC",  # 高精度小数类型
+                "BOOLEAN"  # 布尔类型
+            ]
+            text_types = [
+                "TEXT", "VARCHAR", "CHAR", "NCHAR", "NVARCHAR", "NTEXT",  # 常见文本类型
+                "CLOB", "TINYTEXT", "MEDIUMTEXT", "LONGTEXT",  # 大文本类型
+                "JSON", "XML"  # 结构化文本类型
+            ]
             # 获取随机样本，最多取6条（如果数据量小于等于5则取全部）
-            samples = random.sample(non_null_values, min(len(non_null_values), 6))
+            if base_data_type in text_types:
+                samples = random.sample(non_null_values, min(len(non_null_values), 6))
+                #  文本类的采样可能过长，如果单个采样过长则截断，过长部分采用省略号替换
+                max_length = 30  # 最大长度限制
+                samples = [s[:max_length] + '...' if len(s) > max_length else s for s in samples]
+
+
+            else:
+                samples = random.sample(non_null_values, min(len(non_null_values), 6))
 
             # 为所有类型列节点添加抽样个数属性
             additional_attributes['sample_count'] = len(non_null_values) if non_null_values else 0
@@ -560,18 +578,6 @@ class SchemaParser:
             is_primary_key = self._is_primary_key(table_name, column_name)
             # 查询列是否为外键
             is_foreign_key = self._is_foreign_key(table_name, column_name)
-
-            numeric_types = [
-                "INTEGER", "INT", "SMALLINT", "BIGINT", "TINYINT", "MEDIUMINT",  # 整数类型
-                "REAL", "FLOAT", "DOUBLE",  # 浮点数类型
-                "DECIMAL", "NUMERIC",  # 高精度小数类型
-                "BOOLEAN"  # 布尔类型
-            ]
-            text_types = [
-                "TEXT", "VARCHAR", "CHAR", "NCHAR", "NVARCHAR", "NTEXT",  # 常见文本类型
-                "CLOB", "TINYTEXT", "MEDIUMTEXT", "LONGTEXT",  # 大文本类型
-                "JSON", "XML"  # 结构化文本类型
-            ]
 
             if base_data_type in numeric_types:
                 # 过滤掉非数值型数据
@@ -885,11 +891,11 @@ class SchemaParser:
 
 if __name__ == "__main__":
     # database_file = "../data/bird/books/books.sqlite"
-    # database_file = "../data/bird/shakespeare/shakespeare.sqlite"
+    database_file = "../data/bird/shakespeare/shakespeare.sqlite"
     # database_file = "E:/spider/database/baseball_1/baseball_1.sqlite"
     # database_file = "E:/spider/database/book_2/book_2.sqlite"
     # database_file = "E:/spider/database/soccer_1/soccer_1.sqlite"
-    database_file = "E:/spider/database/bike_1/bike_1.sqlite"
+    # database_file = "E:/spider/database/bike_1/bike_1.sqlite"
     # database_file = "E:/spider/database/wine_1/wine_1.sqlite"
     # database_file = "../data/spider/e_commerce.sqlite"
     # database_file = "../data/spider/medicine_enzyme_interaction/medicine_enzyme_interaction.sqlite"
