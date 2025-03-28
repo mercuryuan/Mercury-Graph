@@ -36,16 +36,17 @@ class SqlParserTool:
         self.missing_fk = 0
         self.missing_fk_dict = {}
         self.missing_fk_dict_file = os.path.join(config.PROJECT_ROOT, "sql_parser",
-                                              "missing_fk_dict.json")
+                                                 "missing_fk_dict.json")
         self.missing_fk_log = os.path.join(config.PROJECT_ROOT, "sql_parser",
-                                              "missing_fk.log")
+                                           "missing_fk.log")
         if self.name_correction:
             self.log_file = os.path.join(config.PROJECT_ROOT, "sql_parser",
                                          f"{dataset_name}_analysis/{db_name}.log")
         else:
             self.log_file = os.path.join(config.PROJECT_ROOT, "sql_parser",
                                          f"{dataset_name}_analysis_with_correction/{db_name}.log")
-        self.recorder = FKRecorder(self.dataset_name, self.db_name, missing_fk_dict_file=self.missing_fk_dict_file,missing_fk_dict=self.missing_fk_dict)
+        self.recorder = FKRecorder(self.dataset_name, self.db_name, missing_fk_dict_file=self.missing_fk_dict_file,
+                                   missing_fk_dict=self.missing_fk_dict)
 
     def close_neo4j_connection(self):
         """
@@ -199,6 +200,13 @@ class SqlParserTool:
         joins = self.extract_join_relationships(expression, alias_to_table)
         conditions = self.extract_where_conditions(expression)
 
+        # 纠正表名和列名
+        if self.name_correction:
+            tables, columns, joins, modified = align_case(tables, columns, joins, self.schema)
+            if modified:
+                print("名称差异修正🐞")
+                self.log("名称差异修正🐞")
+
         entities = {"tables": tables, "columns": columns}
         relationships = {"joins": joins, "conditions": conditions}
 
@@ -228,7 +236,7 @@ class SqlParserTool:
 
         return "\n".join(result)
 
-    def sanitize_alias(self,alias):
+    def sanitize_alias(self, alias):
         """将非法字符替换为下划线，确保 Neo4j 变量名合法"""
         return re.sub(r"[^a-zA-Z0-9_]", "_", alias)
 
@@ -247,12 +255,6 @@ class SqlParserTool:
         tables = entities['tables']
         columns = entities['columns']
         joins = relationships['joins']
-        # 是否进行表名和列名的修正
-        if self.name_correction:
-            tables, columns, joins, modified = align_case(tables, columns, joins, self.schema)
-            if modified:
-                print("名称差异修正🐞")
-                self.log("名称差异修正🐞")
 
         match_clauses = []
         return_table_clauses = []
@@ -461,7 +463,6 @@ class SqlParserTool:
                     # 记录缺失外键
                     self.recorder.update_missing_fks(result)
 
-
                 # 输出格式化的实体信息
                 formated_entities = self.format_entities_by_table(entities)
                 # print("\n" + formated_entities)
@@ -509,11 +510,13 @@ class SqlParserTool:
 
 if __name__ == '__main__':
     # 实例化 SqlParserTool 类
-    tool = SqlParserTool("spider", "loan_1", name_correction=True)
+    tool = SqlParserTool("spider", "soccer_1", name_correction=True)
     try:
         # 示例 SQL 查询
         sql = """
-            SELECT DISTINCT T1.LName FROM STUDENT AS T1 JOIN VOTING_RECORD AS T2 ON T1.StuID  =  PRESIDENT_Vote EXCEPT SELECT DISTINCT LName FROM STUDENT WHERE Advisor  =  "2192" """
+            SELECT DISTINCT T1.player_name FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T2.overall_rating  >  ( SELECT avg(overall_rating) FROM Player_Attributes )
+
+          """
         tool.display_parsing_result(sql, output_mode="full_output")
         # tool.display_parsing_result(sql, output_mode="pass_silent_fail_full")
 
