@@ -1,0 +1,36 @@
+{
+    "customer": [
+        {
+            "columns": {
+                "Customer_ID": "The unique identifier for each customer.",
+                "Name": "The full name of the customer.",
+                "Nationality": "The country of origin of the customer.",
+                "Card_Credit": "The credit value associated with the customer's card.",
+                "Level_of_Membership": "The membership level of the customer."
+            },
+            "table_description": "The table stores customer details for the restaurant's billing system."
+        }
+    ],
+    "branch": [
+        {
+            "columns": {
+                "Branch_ID": "The unique identifier for each branch.",
+                "Manager": "The name of the branch manager.",
+                "Years_opened": "The number of years the branch has been operational.",
+                "Location_of_office": "The geographical location of the branch office."
+            },
+            "table_description": "The table stores details of the restaurant's branches."
+        }
+    ],
+    "customer_order": [
+        {
+            "columns": {
+                "Customer_ID": "The unique identifier for each customer.",
+                "Branch_ID": "The unique identifier for each branch.",
+                "Dish_Name": "The name of the ordered dish.",
+                "Quantity": "The number of dishes ordered by the customer."
+            },
+            "table_description": "The table stores details of customer orders at different branches."
+        }
+    ]
+}

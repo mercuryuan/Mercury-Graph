@@ -1,0 +1,59 @@
+{
+    "district": [
+        {
+            "columns": {
+                "District_ID": "A unique identifier for each district within the store product database.",
+                "District_name": "The name of the district represented in the database.",
+                "Headquartered_City": "The city where the district's administration is based.",
+                "City_Population": "The total number of inhabitants residing in the city related to the district.",
+                "City_Area": "The total land area covered by the city in which the district is located."
+            },
+            "table_description": "The district table contains information about various districts, including their identifiers, names, the cities they are headquartered in, as well as demographic details such as population and area."
+        }
+    ],
+    "store": [
+        {
+            "columns": {
+                "Store_ID": "A unique identifier assigned to each store.",
+                "Store_Name": "The name of the store, which is used to identify it in the database.",
+                "Type": "The classification of the store, indicating the kind of retail format it operates, such as 'City Mall' or 'Village Store'.",
+                "Area_size": "The total physical area of the store, usually measured in square units.",
+                "Number_of_product_category": "The total number of distinct product categories available for sale in the store.",
+                "Ranking": "A numerical value that represents the store's status or position relative to others in terms of performance or preference."
+            },
+            "table_description": "The store table contains essential information about various retail outlets, including their identifiers, names, types, physical areas, product range, and rankings, facilitating detailed analysis and operations."
+        }
+    ],
+    "product": [
+        {
+            "columns": {
+                "product_id": "A unique identifier for each product in the table.",
+                "product": "The name of the product, specifically a type of scanner.",
+                "dimensions": "The physical dimensions of the scanner, expressed in a format of length x width x height.",
+                "dpi": "The maximum dots per inch resolution the scanner can achieve.",
+                "pages_per_minute_color": "The speed at which the scanner can process color pages, measured in pages per minute.",
+                "max_page_size": "The largest paper size that the scanner can accommodate.",
+                "interface": "The type of connection interface the scanner uses to communicate with other devices."
+            },
+            "table_description": "The product table contains detailed specifications for various scanner products, including unique identifiers, names, physical dimensions, resolution capabilities, scanning speed, paper size compatibility, and connection interfaces."
+        }
+    ],
+    "store_product": [
+        {
+            "columns": {
+                "Store_ID": "Identifies the unique store where the product is available.",
+                "Product_ID": "Identifies the unique product that is being offered in the store."
+            },
+            "table_description": "The store_product table serves as a junction table that maps the relationship between stores and products, indicating which products are available at which stores."
+        }
+    ],
+    "store_district": [
+        {
+            "columns": {
+                "Store_ID": "A unique identifier for each store within the database.",
+                "District_ID": "An identifier that links the store to a specific district."
+            },
+            "table_description": "The store_district table establishes relationships between stores and their respective districts, enabling efficient organization and management of store locations."
+        }
+    ]
+}

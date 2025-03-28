@@ -1,0 +1,73 @@
+{
+    "First_Notification_of_Loss": [
+        {
+            "columns": {
+                "FNOL_ID": "A unique identifier for the first notification of loss, ensuring each record can be distinctly referenced.",
+                "Customer_ID": "A reference to the identifier for the customer reporting the loss, linking the notification to the specific customer.",
+                "Policy_ID": "An identifier that links the loss notification to the specific insurance policy under which the claim is being made.",
+                "Service_ID": "A reference to the identifier for the service associated with the loss, indicating the type of service related to the notification."
+            },
+            "table_description": "The First_Notification_of_Loss table captures details of the initial claims reported by customers, including identifiers for the notification, customer, insurance policy, and related services."
+        }
+    ],
+    "Claims": [
+        {
+            "columns": {
+                "Claim_ID": "A unique identifier assigned to each claim in the database.",
+                "FNOL_ID": "An identifier that references the First Notification of Loss associated with the claim.",
+                "Effective_Date": "The date when the claim becomes active and effective for processing."
+            },
+            "table_description": "The Claims table stores information related to individual insurance claims, linking them to their corresponding First Notifications of Loss and tracking their effective dates for processing."
+        }
+    ],
+    "Customers_Policies": [
+        {
+            "columns": {
+                "Customer_ID": "A unique identifier for each customer associated with a policy.",
+                "Policy_ID": "A unique identifier for each insurance policy held by the customer.",
+                "Date_Opened": "The date when the insurance policy was activated.",
+                "Date_Closed": "The date when the insurance policy was terminated or expired."
+            },
+            "table_description": "The Customers_Policies table maintains the relationship between customers and their insurance policies, capturing important dates for each policy lifecycle."
+        }
+    ],
+    "Settlements": [
+        {
+            "columns": {
+                "Settlement_ID": "A unique identifier for each settlement transaction recorded in the table.",
+                "Claim_ID": "The identifier for the insurance claim associated with the settlement, linking it to the relevant claim record.",
+                "Effective_Date": "The date on which the settlement becomes effective, marking the start of its legal and financial implications.",
+                "Settlement_Amount": "The monetary value of the settlement agreed upon, representing the amount to be compensated for the claim."
+            },
+            "table_description": "The Settlements table holds details about settlement transactions related to insurance claims, including unique identifiers, associated claim references, effective dates, and settlement amounts."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "Customer_ID": "A unique identifier assigned to each customer, ensuring that each record can be distinctly recognized within the database.",
+                "Customer_name": "The full name of the customer, which may include titles and suffixes, used to identify the individual in communications and record-keeping."
+            },
+            "table_description": "The Customers table stores essential information about individuals who hold insurance policies, allowing for unique identification and retrieval of customer details."
+        }
+    ],
+    "Services": [
+        {
+            "columns": {
+                "Service_ID": "A unique identifier for each service offered, ensuring each service can be distinctly referenced.",
+                "Service_name": "The name of the service provided, which describes the action or offering related to insurance policies."
+            },
+            "table_description": "The Services table contains a list of services related to insurance, each with a unique identifier and a descriptive name. It serves as a reference for linking to other tables that require information about specific services."
+        }
+    ],
+    "Available_Policies": [
+        {
+            "columns": {
+                "Policy_ID": "A unique identifier assigned to each policy in the system.",
+                "policy_type_code": "A code representing the type of insurance policy, such as Property, Mortgage, Life, or Travel Insurance.",
+                "Customer_Phone": "The contact phone number of the customer associated with the insurance policy."
+            },
+            "table_description": "The Available_Policies table maintains records of various insurance policies available, linking them to customers through unique identifiers and categorizing them by type."
+        }
+    ]
+}

@@ -1,0 +1,143 @@
+{
+    "Ref_Address_Types": [
+        {
+            "columns": {
+                "address_type_code": "A unique identifier for the type of address, used for categorizing different address types such as residential or billing.",
+                "address_type_description": "A description that provides further details about the address type, clarifying its use, such as 'Home or Residence' for personal living spaces or 'Billing' for invoicing purposes."
+            },
+            "table_description": "The Ref_Address_Types table is designed to categorize and describe different types of addresses used within the behavior monitoring system, ensuring clear identification and understanding of their respective purposes."
+        }
+    ],
+    "Ref_Detention_Type": [
+        {
+            "columns": {
+                "detention_type_code": "A unique code representing the different types of detentions that may be enforced within the behavior monitoring system.",
+                "detention_type_description": "A detailed description of what each type of detention entails, providing context for its implementation."
+            },
+            "table_description": "The Ref_Detention_Type table serves to categorize and describe various detention types used in the behavior monitoring system, enabling clear understanding and application of detention protocols."
+        }
+    ],
+    "Ref_Incident_Type": [
+        {
+            "columns": {
+                "incident_type_code": "A unique code that identifies the type of incident.",
+                "incident_type_description": "A brief description of the incident type associated with the code."
+            },
+            "table_description": "The Ref_Incident_Type table is designed to store predefined types of incidents that can be referenced in behavior monitoring records."
+        }
+    ],
+    "Addresses": [
+        {
+            "columns": {
+                "address_id": "A unique identifier for each address entry in the database.",
+                "line_1": "The primary address line, typically containing the street address.",
+                "line_2": "An optional secondary address line for additional address information.",
+                "line_3": "An optional tertiary address line for further address details.",
+                "city": "The city where the address is located.",
+                "zip_postcode": "The postal code or ZIP code corresponding to the address.",
+                "state_province_county": "The state, province, or county in which the address is found.",
+                "country": "The country of the address.",
+                "other_address_details": "Any additional details related to the address that do not fit in other fields."
+            },
+            "table_description": "The Addresses table stores detailed information about different addresses associated with students and teachers for the behavior monitoring system."
+        }
+    ],
+    "Students": [
+        {
+            "columns": {
+                "student_id": "A unique identifier for each student in the database.",
+                "address_id": "A reference to the address associated with the student.",
+                "first_name": "The first name of the student.",
+                "middle_name": "The middle name of the student, if applicable.",
+                "last_name": "The last name or family name of the student.",
+                "cell_mobile_number": "The mobile phone number of the student for communication purposes.",
+                "email_address": "The email address of the student for official correspondence.",
+                "date_first_rental": "The date when the student first rented a property or a facility.",
+                "date_left_university": "The date when the student officially left the university.",
+                "other_student_details": "Additional details pertaining to the student, which may include academic achievements or personal notes."
+            },
+            "table_description": "The Students table stores detailed information about each student, including personal identification and contact details, as well as their academic history and other relevant notes."
+        }
+    ],
+    "Teachers": [
+        {
+            "columns": {
+                "teacher_id": "A unique identifier for each teacher in the database.",
+                "address_id": "A foreign key linking to the address information associated with the teacher.",
+                "first_name": "The given name of the teacher.",
+                "middle_name": "The middle name of the teacher, if applicable.",
+                "last_name": "The family name or surname of the teacher.",
+                "gender": "The gender of the teacher, represented as a single character.",
+                "cell_mobile_number": "The mobile phone number of the teacher for contact purposes.",
+                "email_address": "The email address of the teacher for electronic communication.",
+                "other_details": "Any additional information regarding the teacher, such as titles or roles."
+            },
+            "table_description": "The Teachers table stores information about teachers, including their personal details, contact information, and links to their addresses."
+        }
+    ],
+    "Assessment_Notes": [
+        {
+            "columns": {
+                "notes_id": "A unique identifier for each note entry in the assessment records.",
+                "student_id": "The identifier for the student associated with the assessment note.",
+                "teacher_id": "The identifier for the teacher who created the assessment note.",
+                "date_of_notes": "The date and time when the assessment note was created.",
+                "text_of_notes": "The main content of the assessment note detailing observations or evaluations.",
+                "other_details": "Additional information or context related to the assessment note."
+            },
+            "table_description": "The Assessment_Notes table records detailed notes from teachers about students' behavior or performance, capturing vital information such as who wrote the note, when it was written, and any relevant text or details."
+        }
+    ],
+    "Behavior_Incident": [
+        {
+            "columns": {
+                "incident_id": "A unique identifier for each behavior incident record.",
+                "incident_type_code": "A code representing the type of behavior incident, categorized by predefined types.",
+                "student_id": "The unique identifier for the student involved in the incident.",
+                "date_incident_start": "The date and time when the behavior incident began.",
+                "date_incident_end": "The date and time when the behavior incident concluded.",
+                "incident_summary": "A brief overview or summary of the behavior incident.",
+                "recommendations": "Suggested actions or measures to be taken following the incident.",
+                "other_details": "Additional information regarding the incident that may be pertinent."
+            },
+            "table_description": "The Behavior_Incident table captures and organizes information related to behavior incidents involving students, including details about the incidents, the students involved, and recommendations for addressing the incidents."
+        }
+    ],
+    "Detention": [
+        {
+            "columns": {
+                "detention_id": "A unique identifier for each detention record.",
+                "detention_type_code": "The code representing the type of detention assigned, such as 'LUNCH', 'BREAK', or 'AFTER'.",
+                "teacher_id": "The unique identifier for the teacher who administered the detention.",
+                "datetime_detention_start": "The date and time when the detention started.",
+                "datetime_detention_end": "The date and time when the detention ended.",
+                "detention_summary": "A brief summary of the reason or circumstances under which the detention was issued.",
+                "other_details": "Any additional information related to the detention that may be relevant."
+            },
+            "table_description": "The Detention table records information about detentions assigned to students, detailing the type, timing, and administering teacher for each instance."
+        }
+    ],
+    "Student_Addresses": [
+        {
+            "columns": {
+                "student_id": "Identifies the student associated with the address entry.",
+                "address_id": "Identifies the specific address linked to the student.",
+                "date_address_from": "Records the date when the student started residing at the specified address.",
+                "date_address_to": "Records the date when the student moved out from the specified address.",
+                "monthly_rental": "Indicates the amount of rent paid by the student for the address on a monthly basis.",
+                "other_details": "Contains additional information about the type of accommodation, such as 'house' or 'apartment'."
+            },
+            "table_description": "The Student_Addresses table maintains a record of addresses associated with students, including their rental details and duration of residence."
+        }
+    ],
+    "Students_in_Detention": [
+        {
+            "columns": {
+                "student_id": "This column represents the unique identifier for each student who has been placed in detention.",
+                "detention_id": "This column indicates the unique identifier for the specific detention session that the student is attending.",
+                "incident_id": "This column refers to the unique identifier for the behavioral incident that led to the detention."
+            },
+            "table_description": "The Students_in_Detention table records the relationship between students, their detention sessions, and the incidents that resulted in their detention, thereby aiding in behavior monitoring and management."
+        }
+    ]
+}

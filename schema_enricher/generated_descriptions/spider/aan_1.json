@@ -1,0 +1,52 @@
+{
+    "Author": [
+        {
+            "columns": {
+                "author_id": "The unique identifier for each author.",
+                "name": "The full name of the author.",
+                "email": "The email address of the author."
+            },
+            "table_description": "The Author table stores information about individual authors."
+        }
+    ],
+    "Author_list": [
+        {
+            "columns": {
+                "paper_id": "The unique identifier for each paper.",
+                "author_id": "The unique identifier for each author.",
+                "affiliation_id": "The identifier for the author's affiliation."
+            },
+            "table_description": "The Author_list table links authors to their respective papers and affiliations."
+        }
+    ],
+    "Citation": [
+        {
+            "columns": {
+                "paper_id": "The unique identifier for each cited paper.",
+                "cited_paper_id": "The unique identifier for each paper that is cited."
+            },
+            "table_description": "The Citation table tracks citations between papers."
+        }
+    ],
+    "Affiliation": [
+        {
+            "columns": {
+                "affiliation_id": "The unique identifier for each affiliation.",
+                "name": "The name of the organization or institution.",
+                "address": "The physical address of the affiliation."
+            },
+            "table_description": "The Affiliation table stores information about various organizations and their locations."
+        }
+    ],
+    "Paper": [
+        {
+            "columns": {
+                "paper_id": "The unique identifier for each paper.",
+                "title": "The title of the paper.",
+                "venue": "The conference or journal where the paper was published.",
+                "year": "The publication year of the paper."
+            },
+            "table_description": "The Paper table stores details about published research papers."
+        }
+    ]
+}

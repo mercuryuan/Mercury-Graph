@@ -1,74 +1,74 @@
 {
+    "Ref_Property_Types": [
+        {
+            "columns": {
+                "property_type_code": "The unique code for each property type.",
+                "property_type_description": "The descriptive name of the property type."
+            },
+            "table_description": "The table categorizes different types of real estate properties."
+        }
+    ],
     "Other_Available_Features": [
         {
             "columns": {
-                "feature_id": "A unique identifier for each available feature.",
-                "feature_type_code": "A code representing the type of feature, linking to a reference table for feature types.",
-                "feature_name": "The name of the feature as it is commonly recognized.",
-                "feature_description": "A brief description of the feature, providing additional context or details."
+                "feature_id": "The unique identifier for each available feature.",
+                "feature_type_code": "The code categorizing the type of feature.",
+                "feature_name": "The name of the specific feature.",
+                "feature_description": "The detailed description of the feature."
             },
-            "table_description": "The Other_Available_Features table contains information about various features that can be associated with real estate properties, including their names, descriptions, and types."
+            "table_description": "The table lists various features available in real estate properties."
         }
     ],
     "Other_Property_Features": [
         {
             "columns": {
-                "property_id": "An identifier that uniquely links each property to its features within the real estate database.",
-                "feature_id": "An identifier that connects to specific available features that can be associated with a property.",
-                "property_feature_description": "A textual description detailing the characteristics or qualities of the associated property feature."
+                "property_id": "The unique identifier for each property.",
+                "feature_id": "The unique identifier for each property feature.",
+                "property_feature_description": "The description of the specific feature for the property."
             },
-            "table_description": "The Other_Property_Features table captures the relationship between properties and their distinct features by linking property IDs and feature IDs, along with a description of each feature."
+            "table_description": "The table associates specific features with various properties."
         }
     ],
     "Properties": [
         {
             "columns": {
-                "property_id": "A unique identifier for each property listed in the database.",
-                "property_type_code": "A code that categorizes the type of property, such as apartment, house, shop, etc.",
-                "date_on_market": "The date and time when the property was first made available for sale.",
-                "date_sold": "The date and time when the property was sold.",
-                "property_name": "The name or title of the property, often a marketing name.",
-                "property_address": "The full address of the property, including street, city, state, and ZIP code.",
-                "room_count": "The total number of rooms in the property, providing an insight into its size.",
-                "vendor_requested_price": "The price that the seller initially requests for the property.",
-                "buyer_offered_price": "The price that a potential buyer offers for the property.",
-                "agreed_selling_price": "The final price agreed upon by the seller and buyer for the transaction.",
-                "apt_feature_1": "A specific feature or amenity of the property related to its apartment classification.",
-                "apt_feature_2": "An additional feature or amenity of the property related to its apartment classification.",
-                "apt_feature_3": "A further feature or amenity of the property related to its apartment classification.",
-                "fld_feature_1": "A specific feature or amenity related to the property if it is classified as a field.",
-                "fld_feature_2": "An additional feature or amenity related to the property if it is classified as a field.",
-                "fld_feature_3": "A further feature or amenity related to the property if it is classified as a field.",
-                "hse_feature_1": "A specific feature or amenity of the property related to its house classification.",
-                "hse_feature_2": "An additional feature or amenity of the property related to its house classification.",
-                "hse_feature_3": "A further feature or amenity of the property related to its house classification.",
-                "oth_feature_1": "A specific feature or amenity of the property classified under 'other'.",
-                "oth_feature_2": "An additional feature or amenity of the property classified under 'other'.",
-                "oth_feature_3": "A further feature or amenity of the property classified under 'other'.",
-                "shp_feature_1": "A specific feature or amenity of the property if it is classified as a shop.",
-                "shp_feature_2": "An additional feature or amenity of the property if it is classified as a shop.",
-                "shp_feature_3": "A further feature or amenity of the property if it is classified as a shop.",
-                "other_property_details": "Any other relevant information regarding the property that does not fit into the specified categories."
+                "property_id": "The unique identifier for each property.",
+                "property_type_code": "The code indicating the type of property.",
+                "date_on_market": "The date and time the property was listed for sale.",
+                "date_sold": "The date and time the property sale was completed.",
+                "property_name": "The name or title of the property.",
+                "property_address": "The physical location of the property.",
+                "room_count": "The total number of rooms in the property.",
+                "vendor_requested_price": "The initial price the vendor requests for the property.",
+                "buyer_offered_price": "The price offered by a potential buyer.",
+                "agreed_selling_price": "The final price agreed upon for the sale.",
+                "apt_feature_1": "The first feature specific to an apartment.",
+                "apt_feature_2": "The second feature specific to an apartment.",
+                "apt_feature_3": "The third feature specific to an apartment.",
+                "fld_feature_1": "The first feature specific to a field property.",
+                "fld_feature_2": "The second feature specific to a field property.",
+                "fld_feature_3": "The third feature specific to a field property.",
+                "hse_feature_1": "The first feature specific to a house.",
+                "hse_feature_2": "The second feature specific to a house.",
+                "hse_feature_3": "The third feature specific to a house.",
+                "oth_feature_1": "The first feature specific to other property types.",
+                "oth_feature_2": "The second feature specific to other property types.",
+                "oth_feature_3": "The third feature specific to other property types.",
+                "shp_feature_1": "The first feature specific to a shop property.",
+                "shp_feature_2": "The second feature specific to a shop property.",
+                "shp_feature_3": "The third feature specific to a shop property.",
+                "other_property_details": "Additional details about the property."
             },
-            "table_description": "The Properties table stores detailed information about real estate properties, including their identification, categorization, pricing, and specific features, enabling comprehensive property management and transactions."
+            "table_description": "The table records details about various properties for sale."
         }
     ],
     "Ref_Feature_Types": [
         {
             "columns": {
-                "feature_type_code": "A unique identifier for each feature type associated with real estate properties.",
-                "feature_type_name": "A descriptive name for each feature type, detailing the nature or category of the feature."
+                "feature_type_code": "The unique code for each type of feature.",
+                "feature_type_name": "The descriptive name of the feature type."
             },
-            "table_description": "The Ref_Feature_Types table serves to categorize various features associated with real estate properties, providing both a unique code and a descriptive name for each feature type."
-        }
-    ],
-    "Ref_Property_Types": [
-        {
-            "columns": {
-                "property_type_code": "A unique identifier for each type of property.",
-                "property_type_description": "A descriptive name for the property type, detailing the characteristics or common classifications."
-            },
-            "table_description": "The Ref_Property_Types table serves to categorize different types of properties within the real estate database, providing a clear reference for property classification."
+            "table_description": "The table categorizes available types of property features."
         }
     ]
 }

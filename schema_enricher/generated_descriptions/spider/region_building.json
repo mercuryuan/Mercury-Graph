@@ -1,0 +1,27 @@
+{
+    "building": [
+        {
+            "columns": {
+                "Building_ID": "The unique identifier for each building.",
+                "Region_ID": "The identifier linking the building to its region.",
+                "Name": "The name of the building.",
+                "Address": "The physical location of the building.",
+                "Number_of_Stories": "The total number of stories in the building.",
+                "Completed_Year": "The year the building was finished."
+            },
+            "table_description": "The table tracks building details within specific regions."
+        }
+    ],
+    "region": [
+        {
+            "columns": {
+                "Region_ID": "The unique identifier for each region.",
+                "Name": "The name of the region.",
+                "Capital": "The capital city of the region.",
+                "Area": "The total land area of the region in square units.",
+                "Population": "The total number of residents in the region."
+            },
+            "table_description": "The table provides demographic and geographic details of regions."
+        }
+    ]
+}

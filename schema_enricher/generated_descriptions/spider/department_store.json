@@ -1,156 +1,156 @@
 {
-    "Addresses": [
+    "Customers": [
         {
             "columns": {
-                "address_id": "A unique identifier for each address in the database, ensuring that every address entry is distinct.",
-                "address_details": "The complete street address information, including street name, city, state, and postal code."
+                "customer_id": "The unique identifier for each customer.",
+                "payment_method_code": "The code indicating the customer's payment method.",
+                "customer_code": "The unique alphanumeric code for the customer.",
+                "customer_name": "The full name of the customer.",
+                "customer_address": "The address where the customer resides.",
+                "customer_phone": "The phone number for contacting the customer.",
+                "customer_email": "The email address of the customer."
             },
-            "table_description": "The Addresses table serves as a repository for storing address information linked to suppliers and customers within the department store database."
+            "table_description": "The table stores customer information for the department store."
         }
     ],
     "Staff": [
         {
             "columns": {
-                "staff_id": "A unique identifier for each staff member in the department store.",
-                "staff_gender": "Denotes the gender of the staff member, represented by a single character.",
+                "staff_id": "The unique identifier for each staff member.",
+                "staff_gender": "The gender of the staff member, represented by a single character.",
                 "staff_name": "The full name of the staff member."
             },
-            "table_description": "The Staff table contains information about employees working in the department store, including their unique identifiers, gender, and names."
+            "table_description": "The table stores information about staff members in the department store."
         }
     ],
     "Suppliers": [
         {
             "columns": {
-                "supplier_id": "A unique identifier for each supplier.",
+                "supplier_id": "The unique identifier for each supplier.",
                 "supplier_name": "The name of the supplier.",
                 "supplier_phone": "The contact phone number for the supplier."
             },
-            "table_description": "The Suppliers table contains information about suppliers, including their unique identifiers, names, and contact phone numbers."
-        }
-    ],
-    "Department_Store_Chain": [
-        {
-            "columns": {
-                "dept_store_chain_id": "A unique identifier for each department store chain.",
-                "dept_store_chain_name": "The name assigned to each department store chain."
-            },
-            "table_description": "The Department_Store_Chain table stores information about various department store chains, providing a unique identifier and corresponding name for each chain."
-        }
-    ],
-    "Customers": [
-        {
-            "columns": {
-                "customer_id": "A unique identifier assigned to each customer.",
-                "payment_method_code": "The method used by the customer to make payments, such as credit card or direct debit.",
-                "customer_code": "A secondary identifier for customers, often used for internal tracking.",
-                "customer_name": "The full name of the customer.",
-                "customer_address": "The residential address of the customer, including street, city, state, and ZIP code.",
-                "customer_phone": "The contact phone number for the customer.",
-                "customer_email": "The email address of the customer for communication purposes."
-            },
-            "table_description": "The Customers table holds essential information about the customers of the department store, including their identification, contact details, and payment preferences."
-        }
-    ],
-    "Products": [
-        {
-            "columns": {
-                "product_id": "A unique identifier for each product in the database.",
-                "product_type_code": "A code representing the category or type of product, such as 'Clothes' or 'Hardware'.",
-                "product_name": "The name or description of the product offered for sale.",
-                "product_price": "The retail price of the product, specified in decimal format with four decimal places."
-            },
-            "table_description": "The Products table stores detailed information about the various items available for sale in the department store, including a unique identifier, product type, name, and pricing information."
-        }
-    ],
-    "Supplier_Addresses": [
-        {
-            "columns": {
-                "supplier_id": "Identifies the supplier associated with the address.",
-                "address_id": "Identifies the address assigned to the supplier.",
-                "date_from": "Indicates the date when the supplier began using the specified address.",
-                "date_to": "Indicates the date when the supplier stopped using the specified address."
-            },
-            "table_description": "The Supplier_Addresses table maintains a record of the relationships between suppliers and their addresses, along with the time frame during which each address was applicable."
-        }
-    ],
-    "Customer_Addresses": [
-        {
-            "columns": {
-                "customer_id": "The unique identifier for each customer.",
-                "address_id": "The unique identifier for each address.",
-                "date_from": "The date and time that the address became associated with the customer.",
-                "date_to": "The date and time that the address was no longer associated with the customer."
-            },
-            "table_description": "The Customer_Addresses table tracks the historical addresses associated with each customer, including the time period during which each address was valid."
-        }
-    ],
-    "Customer_Orders": [
-        {
-            "columns": {
-                "order_id": "A unique identifier for each order placed by a customer.",
-                "customer_id": "An identifier that links the order to the specific customer who placed it.",
-                "order_status_code": "A code representing the current status of the order, such as pending, completed, or cancelled.",
-                "order_date": "The date and time when the order was placed."
-            },
-            "table_description": "The Customer_Orders table tracks orders made by customers in the department store, associating each order with a specific customer and recording the status and date of each order."
-        }
-    ],
-    "Department_Stores": [
-        {
-            "columns": {
-                "dept_store_id": "A unique identifier for each department store.",
-                "dept_store_chain_id": "A reference to the chain the department store belongs to.",
-                "store_name": "The name of the department store.",
-                "store_address": "The physical address of the department store.",
-                "store_phone": "The contact phone number for the department store.",
-                "store_email": "The email address used for communications with the department store."
-            },
-            "table_description": "The Department_Stores table maintains information about various department stores, including their unique identifiers, associated chain identifiers, names, addresses, phone numbers, and email addresses."
+            "table_description": "The table stores information about suppliers for the department store."
         }
     ],
     "Departments": [
         {
             "columns": {
-                "department_id": "A unique identifier for each department in the store.",
-                "dept_store_id": "The identifier for the store to which the department belongs.",
-                "department_name": "The name of the department, indicating its function or area of responsibility."
+                "department_id": "The unique identifier for each department.",
+                "dept_store_id": "The identifier linking the department to its store.",
+                "department_name": "The name of the department, such as marketing or human resource."
             },
-            "table_description": "The Departments table contains information about various departments within department stores, linking each department to its respective store and providing a name for easy identification."
+            "table_description": "The table stores department information for the department store."
         }
     ],
     "Order_Items": [
         {
             "columns": {
-                "order_item_id": "A unique identifier for each item in an order, distinguishing each order item from others.",
-                "order_id": "The identifier for the order to which this item belongs, linking it to a specific customer order.",
-                "product_id": "The identifier for the product being purchased, allowing for reference to the product details in the Products table."
+                "order_item_id": "The unique identifier for each order item.",
+                "order_id": "The identifier linking the order item to its order.",
+                "product_id": "The identifier linking the order item to its product."
             },
-            "table_description": "The Order_Items table captures the items associated with each customer order, linking specific products to their respective orders through unique identifiers."
+            "table_description": "The table stores information about items in customer orders."
         }
     ],
     "Product_Suppliers": [
         {
             "columns": {
-                "product_id": "Identifies the specific product associated with the supplier.",
-                "supplier_id": "Identifies the supplier providing the product.",
-                "date_supplied_from": "Marks the starting date when the product was supplied.",
-                "date_supplied_to": "Marks the ending date when the product was supplied.",
-                "total_amount_purchased": "Indicates the total quantity of product purchased from the supplier.",
-                "total_value_purchased": "Represents the total monetary value of the products purchased from the supplier."
+                "product_id": "The unique identifier for each product supplied.",
+                "supplier_id": "The unique identifier for each supplier.",
+                "date_supplied_from": "The date when the product supply started.",
+                "date_supplied_to": "The date when the product supply ended.",
+                "total_amount_purchased": "The total amount purchased of the product.",
+                "total_value_purchased": "The total monetary value of purchased products."
             },
-            "table_description": "The Product_Suppliers table captures the relationship between products and their suppliers, detailing the supply periods and the amounts and values of products purchased."
+            "table_description": "The table tracks supply details between products and suppliers."
+        }
+    ],
+    "Products": [
+        {
+            "columns": {
+                "product_id": "The unique identifier for each product.",
+                "product_type_code": "The code indicating the type of product, like clothes or hardware.",
+                "product_name": "The name of the product, providing specific details.",
+                "product_price": "The price of the product, displayed in monetary format."
+            },
+            "table_description": "The table stores detailed information about products available for sale."
+        }
+    ],
+    "Addresses": [
+        {
+            "columns": {
+                "address_id": "The unique identifier for each address.",
+                "address_details": "The detailed description of the address, including street and location."
+            },
+            "table_description": "The table stores address information for suppliers and customers."
+        }
+    ],
+    "Department_Store_Chain": [
+        {
+            "columns": {
+                "dept_store_chain_id": "The unique identifier for each store chain.",
+                "dept_store_chain_name": "The name of the department store chain, such as North or South."
+            },
+            "table_description": "The table holds information about different department store chains."
+        }
+    ],
+    "Customer_Orders": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer placing an order.",
+                "order_id": "The unique identifier for each customer order.",
+                "order_status_code": "The current status of the order, indicating its progress.",
+                "order_date": "The date and time when the order was placed."
+            },
+            "table_description": "The table tracks orders made by customers in the department store."
+        }
+    ],
+    "Department_Stores": [
+        {
+            "columns": {
+                "dept_store_id": "The unique identifier for each department store.",
+                "dept_store_chain_id": "The identifier linking the store to its chain.",
+                "store_name": "The name of the department store.",
+                "store_address": "The address where the department store is located.",
+                "store_phone": "The phone number for contacting the department store.",
+                "store_email": "The email address for reaching the department store."
+            },
+            "table_description": "The table stores information about various department stores in the chain."
+        }
+    ],
+    "Customer_Addresses": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer associated with an address.",
+                "address_id": "The unique identifier for each address linked to a customer.",
+                "date_from": "The date when the customer started using the address.",
+                "date_to": "The date when the customer stopped using the address."
+            },
+            "table_description": "The table maintains address history for customers in the department store."
         }
     ],
     "Staff_Department_Assignments": [
         {
             "columns": {
-                "staff_id": "A unique identifier for each staff member in the organization.",
-                "department_id": "A unique identifier representing the department to which the staff member is assigned.",
-                "date_assigned_from": "The date and time when the staff member was assigned to the specified department.",
-                "job_title_code": "A code denoting the job title of the staff member within the department.",
-                "date_assigned_to": "The date and time when the staff member's assignment to the department ended or will end."
+                "staff_id": "The unique identifier for each staff member assigned to a department.",
+                "department_id": "The unique identifier for each department assigned to the staff member.",
+                "date_assigned_from": "The date when the staff was assigned to the department.",
+                "job_title_code": "The code representing the staff member's job title in the department.",
+                "date_assigned_to": "The date when the staff member's assignment ended."
             },
-            "table_description": "The Staff_Department_Assignments table records the relationship between staff members and their respective department assignments, including the dates of assignments and their job titles."
+            "table_description": "The table tracks assignments of staff members to specific departments."
+        }
+    ],
+    "Supplier_Addresses": [
+        {
+            "columns": {
+                "supplier_id": "The unique identifier for each supplier associated with an address.",
+                "address_id": "The unique identifier for each address linked to a supplier.",
+                "date_from": "The date when the supplier began using the address.",
+                "date_to": "The date when the supplier stopped using the address."
+            },
+            "table_description": "The table maintains historical addresses for each supplier."
         }
     ]
 }

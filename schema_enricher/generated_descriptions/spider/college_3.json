@@ -1,97 +1,97 @@
 {
-    "Minor_in": [
-        {
-            "columns": {
-                "DNO": "This column represents the Department Number, indicating which department the student is pursuing a minor in.",
-                "StuID": "This column represents the Student ID, which uniquely identifies a student in the database."
-            },
-            "table_description": "The Minor_in table serves to link students to their chosen minors by referencing the relevant department and student identifiers."
-        }
-    ],
-    "Enrolled_in": [
-        {
-            "columns": {
-                "StuID": "This column represents the unique identifier assigned to each student enrolled in the course.",
-                "CID": "This column denotes the unique code for the course in which the student is enrolled.",
-                "Grade": "This column indicates the letter grade received by the student for the enrolled course."
-            },
-            "table_description": "The Enrolled_in table captures the relationships between students, the courses they are enrolled in, and the grades they receive for those courses."
-        }
-    ],
-    "Gradeconversion": [
-        {
-            "columns": {
-                "lettergrade": "Represents the letter grade assigned to a student, typically used to denote academic performance.",
-                "gradepoint": "Indicates the numeric value associated with the letter grade, used for calculating GPA and academic standing."
-            },
-            "table_description": "The Gradeconversion table is used to map letter grades to their corresponding grade point values, facilitating the conversion for grading systems within the college."
-        }
-    ],
-    "Course": [
-        {
-            "columns": {
-                "CID": "A unique identifier for each course.",
-                "CName": "The name of the course.",
-                "Credits": "The number of academic credits awarded for completing the course.",
-                "Instructor": "The identifier for the instructor teaching the course.",
-                "Days": "The days of the week when the course is scheduled to occur.",
-                "Hours": "The time slots during which the course takes place.",
-                "DNO": "The department number that the course is associated with."
-            },
-            "table_description": "The Course table contains information about various academic courses, including identifiers, names, credits, instructor assignments, scheduling details, and departmental affiliations."
-        }
-    ],
-    "Member_of": [
-        {
-            "columns": {
-                "DNO": "This column represents the Department Number, serving as a unique identifier for each department within the college.",
-                "FacID": "This column signifies the Faculty ID, which uniquely identifies faculty members associated with a department.",
-                "Appt_Type": "This column indicates the type of appointment the faculty member holds, such as 'Primary' or 'Secondary'."
-            },
-            "table_description": "The Member_of table captures the relationships between faculty members and departments, detailing which faculty are affiliated with which departments and the nature of their appointments."
-        }
-    ],
     "Student": [
         {
             "columns": {
-                "StuID": "This column represents the unique identifier for each student in the college database.",
-                "LName": "This column contains the last names of the students.",
-                "Fname": "This column contains the first names of the students.",
-                "Age": "This column represents the age of each student.",
-                "Sex": "This column indicates the gender of the students using a single character.",
-                "Major": "This column represents the major field of study each student is pursuing.",
-                "Advisor": "This column contains the unique identifier for the student's academic advisor.",
-                "city_code": "This column represents a code that indicates the city where the student lives."
+                "StuID": "The unique identifier for each student.",
+                "LName": "The last name of the student.",
+                "Fname": "The first name of the student.",
+                "Age": "The age of the student in years.",
+                "Sex": "The gender of the student.",
+                "Major": "The major field of study for the student.",
+                "Advisor": "The unique identifier for the student's advisor.",
+                "city_code": "The code representing the student's city."
             },
-            "table_description": "The Student table contains essential information about students enrolled at the college, including their personal details, academic major, and advisor information."
+            "table_description": "The purpose of this table is to store student information."
         }
     ],
     "Faculty": [
         {
             "columns": {
-                "FacID": "A unique identifier assigned to each faculty member.",
+                "FacID": "The unique identifier for each faculty member.",
                 "Lname": "The last name of the faculty member.",
                 "Fname": "The first name of the faculty member.",
-                "Rank": "The academic rank or title held by the faculty member, such as Professor or Associate Professor.",
-                "Sex": "The gender of the faculty member, indicated by a single character (M for Male, F for Female).",
-                "Phone": "The internal phone extension number for the faculty member.",
-                "Room": "The office room number assigned to the faculty member within the building.",
-                "Building": "The name of the building where the faculty member's office is located."
+                "Rank": "The academic rank of the faculty member.",
+                "Sex": "The gender of the faculty member.",
+                "Phone": "The contact phone number of the faculty member.",
+                "Room": "The room number assigned to the faculty member.",
+                "Building": "The building where the faculty member's office is located."
             },
-            "table_description": "The Faculty table contains information about faculty members, including their identifying details, academic ranks, contact information, and office locations within the college."
+            "table_description": "The purpose of this table is to store faculty member information."
         }
     ],
     "Department": [
         {
             "columns": {
-                "DNO": "A unique identifier for each department, serving as the primary key.",
-                "Division": "The division to which the department belongs, typically represented by a two-letter code.",
-                "DName": "The full name of the department, indicating its academic focus or discipline.",
-                "Room": "The room number assigned to the department for office or administrative purposes.",
-                "Building": "The name of the building where the department's office is located.",
-                "DPhone": "The telephone number assigned to the department for contact purposes."
+                "DNO": "The unique identifier for each department.",
+                "Division": "The division category to which the department belongs.",
+                "DName": "The name of the department.",
+                "Room": "The room number assigned to the department.",
+                "Building": "The building where the department is located.",
+                "DPhone": "The contact phone number for the department."
             },
-            "table_description": "The Department table stores information about various academic departments within the college, including their unique identifiers, divisions, names, office locations, and contact details."
+            "table_description": "The purpose of this table is to store department information."
+        }
+    ],
+    "Member_of": [
+        {
+            "columns": {
+                "FacID": "The unique identifier for each faculty member in the department.",
+                "DNO": "The unique identifier for each department.",
+                "Appt_Type": "The type of appointment for the faculty member in the department."
+            },
+            "table_description": "The purpose of this table is to store faculty department affiliations."
+        }
+    ],
+    "Course": [
+        {
+            "columns": {
+                "CID": "The unique identifier for each course.",
+                "CName": "The name of the course as listed in the catalog.",
+                "Credits": "The number of academic credits awarded for the course.",
+                "Instructor": "The unique identifier for the course instructor.",
+                "Days": "The days of the week when the course is held.",
+                "Hours": "The scheduled hours for the course sessions.",
+                "DNO": "The unique identifier for the department offering the course."
+            },
+            "table_description": "The purpose of this table is to store course-related information."
+        }
+    ],
+    "Minor_in": [
+        {
+            "columns": {
+                "StuID": "The unique identifier for each student pursuing a minor.",
+                "DNO": "The unique identifier for the department offering the minor."
+            },
+            "table_description": "The purpose of this table is to store student minor program information."
+        }
+    ],
+    "Enrolled_in": [
+        {
+            "columns": {
+                "StuID": "The unique identifier for each student enrolled in courses.",
+                "CID": "The unique identifier for each course in which students are enrolled.",
+                "Grade": "The letter grade received by the student in the course."
+            },
+            "table_description": "The purpose of this table is to store student enrollment and grades."
+        }
+    ],
+    "Gradeconversion": [
+        {
+            "columns": {
+                "lettergrade": "The letter grade assigned to a student's performance.",
+                "gradepoint": "The numeric grade point value corresponding to the letter grade."
+            },
+            "table_description": "The purpose of this table is to store grade conversion data."
         }
     ]
 }

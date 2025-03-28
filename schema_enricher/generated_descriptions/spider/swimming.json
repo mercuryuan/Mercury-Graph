@@ -2,54 +2,54 @@
     "swimmer": [
         {
             "columns": {
-                "ID": "A unique identifier for each swimmer.",
-                "name": "The full name of the swimmer.",
-                "Nationality": "The country that the swimmer represents.",
-                "meter_100": "The swimmer's time for the 100-meter event.",
-                "meter_200": "The swimmer's time for the 200-meter event.",
-                "meter_300": "The swimmer's time for the 300-meter event.",
-                "meter_400": "The swimmer's time for the 400-meter event.",
-                "meter_500": "The swimmer's time for the 500-meter event.",
-                "meter_600": "The swimmer's time for the 600-meter event.",
-                "meter_700": "The swimmer's time for the 700-meter event.",
-                "Time": "The total time recorded for the swimmer in competitions."
+                "ID": "The unique identifier for each swimmer.",
+                "name": "The name of the swimmer.",
+                "Nationality": "The country the swimmer represents.",
+                "meter_100": "The time taken to swim 100 meters.",
+                "meter_200": "The time taken to swim 200 meters.",
+                "meter_300": "The time taken to swim 300 meters.",
+                "meter_400": "The time taken to swim 400 meters.",
+                "meter_500": "The time taken to swim 500 meters.",
+                "meter_600": "The time taken to swim 600 meters.",
+                "meter_700": "The time taken to swim 700 meters.",
+                "Time": "The total time taken for all events."
             },
-            "table_description": "The swimmer table contains details about competitive swimmers, including personal information such as their name and nationality, as well as their performance times across various swimming events."
-        }
-    ],
-    "stadium": [
-        {
-            "columns": {
-                "ID": "A unique identifier for each stadium in the database.",
-                "name": "The official name of the stadium.",
-                "Capacity": "The maximum number of spectators that the stadium can accommodate.",
-                "City": "The city where the stadium is located.",
-                "Country": "The country in which the city, and hence the stadium, is situated.",
-                "Opening_year": "The year when the stadium was officially opened for use."
-            },
-            "table_description": "The stadium table captures detailed information about various stadiums, including their unique identifiers, names, seating capacities, locations, and opening years."
+            "table_description": "The table stores information about swimmers and their event times."
         }
     ],
     "event": [
         {
             "columns": {
-                "ID": "This column uniquely identifies each event in the table.",
-                "Name": "This column contains the name of the event.",
-                "Stadium_ID": "This column references the stadium where the event is held.",
-                "Year": "This column indicates the year in which the event takes place."
+                "ID": "The unique identifier for each event.",
+                "Name": "The name of the swimming event.",
+                "Stadium_ID": "The identifier for the stadium hosting the event.",
+                "Year": "The year the event is held."
             },
-            "table_description": "The event table stores information about various swimming events, including their unique identifiers, names, associated stadiums, and the years they occurred."
+            "table_description": "The table tracks swimming events and their details."
         }
     ],
     "record": [
         {
             "columns": {
-                "ID": "A unique identifier for each record entry in the table.",
-                "Result": "Indicates the outcome of the event for the swimmer, which can be 'Win', 'Loss', or 'NC' (No Contest).",
-                "Swimmer_ID": "A reference to the unique identifier of the swimmer participating in the event.",
-                "Event_ID": "A reference to the unique identifier of the event in which the swimmer is competing."
+                "ID": "The unique identifier for each record of results.",
+                "Result": "The outcome of the swimmer in the event.",
+                "Swimmer_ID": "The identifier of the swimmer linked to the record.",
+                "Event_ID": "The identifier of the event associated with the record."
             },
-            "table_description": "The 'record' table tracks the performance results of swimmers across various events, linking each result to a specific swimmer and event through their unique identifiers."
+            "table_description": "The table tracks results for swimmers in different events."
+        }
+    ],
+    "stadium": [
+        {
+            "columns": {
+                "ID": "The unique identifier for each stadium.",
+                "name": "The name of the stadium.",
+                "Capacity": "The maximum number of spectators the stadium can hold.",
+                "City": "The city where the stadium is located.",
+                "Country": "The country where the stadium is situated.",
+                "Opening_year": "The year the stadium was opened."
+            },
+            "table_description": "The table provides details about various stadiums used in events."
         }
     ]
 }

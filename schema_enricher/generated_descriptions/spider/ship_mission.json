@@ -2,27 +2,27 @@
     "mission": [
         {
             "columns": {
-                "Mission_ID": "A unique identifier for each mission.",
-                "Ship_ID": "A reference identifier for the ship associated with the mission.",
-                "Code": "A code representing the mission, often including additional identifiers or historical context.",
-                "Launched_Year": "The year the mission was launched.",
-                "Location": "The location where the mission took place.",
-                "Speed_knots": "The speed at which the ship was traveling during the mission, measured in knots.",
-                "Fate": "The final status or outcome of the ship after the mission, detailing events like decommissioning or loss."
+                "Mission_ID": "The unique identifier for each mission.",
+                "Ship_ID": "The identifier of the associated ship.",
+                "Code": "The mission code used for reference.",
+                "Launched_Year": "The year in which the mission was launched.",
+                "Location": "The geographical location of the mission.",
+                "Speed_knots": "The speed of the ship during the mission in knots.",
+                "Fate": "The final status or outcome of the mission."
             },
-            "table_description": "The mission table records individual missions undertaken by ships, capturing essential details such as identifiers, launch year, location, speed, and the fate of the ships."
+            "table_description": "The mission table records details about various ship missions."
         }
     ],
     "ship": [
         {
             "columns": {
-                "Ship_ID": "A unique identifier for each ship in the database.",
+                "Ship_ID": "The unique identifier for each ship.",
                 "Name": "The name of the ship.",
-                "Type": "The category or classification of the ship, indicating its primary purpose.",
-                "Nationality": "The country of registration or ownership of the ship.",
-                "Tonnage": "The measure of the ship's carrying capacity, typically expressed in tons."
+                "Type": "The classification type of the ship.",
+                "Nationality": "The country of registration for the ship.",
+                "Tonnage": "The weight capacity of the ship in tons."
             },
-            "table_description": "The ship table contains information about various ships, including their identifiers, names, types, nationalities, and tonnages, facilitating the management and retrieval of ship-related data."
+            "table_description": "The ship table stores details about various ships."
         }
     ]
 }

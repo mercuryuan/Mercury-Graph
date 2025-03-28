@@ -1,0 +1,36 @@
+{
+    "vehicle": [
+        {
+            "columns": {
+                "Vehicle_ID": "The unique identifier for each vehicle in the table.",
+                "Model": "The designation or name of the vehicle model.",
+                "Build_Year": "The year when the vehicle was manufactured.",
+                "Top_Speed": "The maximum speed achieved by the vehicle.",
+                "Power": "The engine power of the vehicle measured in horsepower.",
+                "Builder": "The name of the manufacturer or builder of the vehicle.",
+                "Total_Production": "The total number of units produced for the vehicle model."
+            },
+            "table_description": "The table provides details about various vehicle models and specifications."
+        }
+    ],
+    "driver": [
+        {
+            "columns": {
+                "Driver_ID": "The unique identifier for each driver in the table.",
+                "Name": "The full name of the driver.",
+                "Citizenship": "The country of citizenship for the driver.",
+                "Racing_Series": "The name of the racing series the driver participates in."
+            },
+            "table_description": "The table provides information about drivers and their racing affiliations."
+        }
+    ],
+    "vehicle_driver": [
+        {
+            "columns": {
+                "Driver_ID": "The unique identifier for each driver associated with a vehicle.",
+                "Vehicle_ID": "The unique identifier for each vehicle associated with a driver."
+            },
+            "table_description": "The table links drivers to their corresponding vehicles in the database."
+        }
+    ]
+}

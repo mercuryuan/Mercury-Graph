@@ -1,0 +1,61 @@
+{
+    "tv_show": [
+        {
+            "columns": {
+                "tv_show_ID": "The unique identifier for each TV show.",
+                "tv_show_name": "The title of the TV show.",
+                "Sub_tittle": "The supplementary title for the TV show.",
+                "Next_show_name": "The title of the subsequent TV show.",
+                "Original_Airdate": "The date when the TV show first aired."
+            },
+            "table_description": "The table stores information about various TV shows and their details."
+        }
+    ],
+    "city_channel_radio": [
+        {
+            "columns": {
+                "City_channel_ID": "The unique identifier for each city channel.",
+                "Radio_ID": "The unique identifier for each radio station.",
+                "Is_online": "The status indicating if the radio station is online."
+            },
+            "table_description": "The table links city channels with radio stations and their online status."
+        }
+    ],
+    "city_channel_tv_show": [
+        {
+            "columns": {
+                "City_channel_ID": "The unique identifier for each city channel.",
+                "tv_show_ID": "The unique identifier for each TV show.",
+                "Is_online": "The status indicating if the TV show is available online.",
+                "Is_free": "The status indicating if the TV show is free to watch."
+            },
+            "table_description": "The table links city channels with TV shows and their availability statuses."
+        }
+    ],
+    "radio": [
+        {
+            "columns": {
+                "Radio_ID": "The unique identifier for each radio station.",
+                "Transmitter": "The name of the location for the radio transmitter.",
+                "Radio_MHz": "The frequency of the radio station in MHz.",
+                "2FM_MHz": "The frequency for the 2FM channel in MHz.",
+                "RnaG_MHz": "The frequency for the RnaG channel in MHz.",
+                "Lyric_FM_MHz": "The frequency for the Lyric FM channel in MHz.",
+                "ERP_kW": "The effective radiated power of the radio station in kilowatts."
+            },
+            "table_description": "The table stores details about various radio stations and their frequencies."
+        }
+    ],
+    "city_channel": [
+        {
+            "columns": {
+                "ID": "The unique identifier for each city channel.",
+                "City": "The name of the city where the channel is located.",
+                "Station_name": "The official name of the city channel.",
+                "Owned_Since": "The year when the channel started operating.",
+                "Affiliation": "The broadcasting network the channel is affiliated with."
+            },
+            "table_description": "The table provides information about various city channels and their details."
+        }
+    ]
+}

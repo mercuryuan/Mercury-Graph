@@ -1,122 +1,122 @@
 {
-    "Organizations": [
-        {
-            "columns": {
-                "organization_id": "A unique identifier assigned to each organization within the table.",
-                "date_formed": "The date and time when the organization was established.",
-                "organization_name": "The official name of the organization.",
-                "uk_vat_number": "The Value Added Tax (VAT) registration number for the organization in the UK."
-            },
-            "table_description": "The Organizations table contains essential information about various organizations, including their unique identifiers, formation dates, official names, and VAT registration numbers."
-        }
-    ],
-    "Individuals": [
-        {
-            "columns": {
-                "individual_id": "A unique identifier for each individual in the table.",
-                "individual_first_name": "The first name of the individual.",
-                "individual_middle_name": "The middle name of the individual, if available.",
-                "inidividual_phone": "The contact phone number of the individual.",
-                "individual_email": "The email address of the individual.",
-                "individual_address": "The residential address of the individual.",
-                "individual_last_name": "The last name of the individual."
-            },
-            "table_description": "The Individuals table stores personal information about individuals, including their names, contact details, and address, serving as a reference point within the e_government database."
-        }
-    ],
-    "Forms": [
-        {
-            "columns": {
-                "form_id": "A unique identifier for each form in the database.",
-                "form_type_code": "A code that indicates the type of form, categorizing it as either 'Complex' or 'Basic'.",
-                "service_id": "The identifier for the associated service that this form relates to.",
-                "form_number": "A numeric identifier assigned to each form for reference purposes.",
-                "form_name": "The official name of the form, which describes its main purpose.",
-                "form_description": "A brief explanation of the form, detailing its use and the information it collects."
-            },
-            "table_description": "The Forms table holds information about various forms used in e-government services, indicating their types, associated services, and descriptive details."
-        }
-    ],
-    "Organization_Contact_Individuals": [
-        {
-            "columns": {
-                "individual_id": "A unique identifier for each contact individual within the organization.",
-                "organization_id": "A unique identifier for each organization with which the individual is associated.",
-                "date_contact_from": "The date and time when contact with the individual began.",
-                "date_contact_to": "The date and time when contact with the individual ended, if applicable."
-            },
-            "table_description": "The Organization_Contact_Individuals table records associations between individuals and organizations, including the time period during which they were in contact."
-        }
-    ],
-    "Party_Addresses": [
-        {
-            "columns": {
-                "party_id": "Identifies the unique party associated with the address.",
-                "address_id": "Identifies the unique address linked to the party.",
-                "date_address_from": "Indicates the date when the party started using the specified address.",
-                "address_type_code": "Specifies the type of address (e.g., Residence, Billing, Delivery).",
-                "date_address_to": "Indicates the date when the party ceased using the specified address."
-            },
-            "table_description": "The Party_Addresses table stores the association between parties and their addresses, capturing the period of use and the type of each address."
-        }
-    ],
-    "Party_Forms": [
-        {
-            "columns": {
-                "party_id": "This column uniquely identifies the party associated with the form.",
-                "form_id": "This column uniquely identifies the form that the party is filling out.",
-                "date_completion_started": "This column indicates the date and time when the party began the completion of the form.",
-                "form_status_code": "This column reflects the current status of the form, indicating whether it has been started, completed, or is still in progress.",
-                "date_fully_completed": "This column records the date and time when the party completed the form in its entirety."
-            },
-            "table_description": "The Party_Forms table captures the relationship between parties and the forms they are required to complete, including details on the initiation and completion status of those forms."
-        }
-    ],
-    "Party_Services": [
-        {
-            "columns": {
-                "booking_id": "This column uniquely identifies each booking made for a service.",
-                "customer_id": "This column represents the unique identifier of the customer making the booking.",
-                "service_id": "This column indicates the unique identifier of the service being booked.",
-                "service_datetime": "This column denotes the specific date and time when the service is scheduled to take place.",
-                "booking_made_date": "This column records the date and time when the booking was created."
-            },
-            "table_description": "The Party_Services table tracks the bookings made by customers for various services, storing essential details such as booking IDs, customer IDs, service identifiers, and the relevant timestamps for service and booking creation."
-        }
-    ],
-    "Parties": [
-        {
-            "columns": {
-                "party_id": "A unique identifier for each party in the table.",
-                "payment_method_code": "The method of payment preferred by the party, such as credit card, cash, or cheque.",
-                "party_phone": "The contact phone number for the party, which may include different formats and extensions.",
-                "party_email": "The email address associated with the party for communication purposes."
-            },
-            "table_description": "The Parties table holds information about various parties involved in the e-government system, including unique identifiers, payment methods, and contact information."
-        }
-    ],
     "Addresses": [
         {
             "columns": {
-                "address_id": "A unique identifier for each address entry in the table.",
-                "line_1_number_building": "The primary address line that may include a street number, building name, or suite number.",
-                "town_city": "The name of the town or city where the address is located.",
-                "zip_postcode": "The postal code or ZIP code associated with the address for mail delivery.",
-                "state_province_county": "The state, province, or county where the address is situated.",
-                "country": "The country where the address is located."
+                "address_id": "The unique identifier for each address.",
+                "line_1_number_building": "The first line of the address including number and building name.",
+                "town_city": "The name of the town or city associated with the address.",
+                "zip_postcode": "The postal code for the address, aiding in location identification.",
+                "state_province_county": "The state, province, or county of the address.",
+                "country": "The name of the country where the address is located."
             },
-            "table_description": "The Addresses table is designed to store and manage address information, providing detailed location identifiers essential for various applications in the e-government system."
+            "table_description": "The table stores detailed information for each address entry."
         }
     ],
     "Services": [
         {
             "columns": {
-                "service_id": "A unique identifier for each service listed in the table.",
-                "service_type_code": "A code that classifies the type of service, such as Education, Welfare, or Health.",
-                "service_name": "The name of the service, providing a brief label for identification.",
-                "service_descriptio": "A description of the service, detailing its purpose or function."
+                "service_id": "The unique identifier for each service entry.",
+                "service_type_code": "The category code indicating the type of service offered.",
+                "service_name": "The name of the specific service provided.",
+                "service_descriptio": "The detailed description outlining the service's purpose."
             },
-            "table_description": "The Services table stores information about various government services, including their identification numbers, types, names, and descriptions."
+            "table_description": "The table catalogs various government services and their details."
+        }
+    ],
+    "Forms": [
+        {
+            "columns": {
+                "form_id": "The unique identifier for each form entry.",
+                "form_type_code": "The code indicating the complexity level of the form.",
+                "service_id": "The identifier linking the form to its related service.",
+                "form_number": "The unique number assigned to each form for reference.",
+                "form_name": "The official name of the form used in submissions.",
+                "form_description": "The detailed explanation describing the form's purpose."
+            },
+            "table_description": "The table holds information on various government forms and their attributes."
+        }
+    ],
+    "Individuals": [
+        {
+            "columns": {
+                "individual_id": "The unique identifier for each individual.",
+                "individual_first_name": "The first name of the individual.",
+                "individual_middle_name": "The middle name of the individual, if applicable.",
+                "inidividual_phone": "The contact phone number of the individual.",
+                "individual_email": "The email address used for communication.",
+                "individual_address": "The complete address of the individual.",
+                "individual_last_name": "The last name of the individual."
+            },
+            "table_description": "The table contains personal information for individuals in the database."
+        }
+    ],
+    "Organizations": [
+        {
+            "columns": {
+                "organization_id": "The unique identifier for each organization.",
+                "date_formed": "The date and time when the organization was established.",
+                "organization_name": "The official name of the organization.",
+                "uk_vat_number": "The VAT registration number of the organization in the UK."
+            },
+            "table_description": "The table registers details for various organizations in the database."
+        }
+    ],
+    "Parties": [
+        {
+            "columns": {
+                "party_id": "The unique identifier for each party.",
+                "payment_method_code": "The method of payment used by the party.",
+                "party_phone": "The contact phone number for the party.",
+                "party_email": "The email address for communication with the party."
+            },
+            "table_description": "The table stores information related to parties involved in transactions."
+        }
+    ],
+    "Organization_Contact_Individuals": [
+        {
+            "columns": {
+                "individual_id": "The unique identifier for each individual connected to an organization.",
+                "organization_id": "The unique identifier for each organization involved.",
+                "date_contact_from": "The date when the contact with the individual began.",
+                "date_contact_to": "The date when the contact with the individual ended."
+            },
+            "table_description": "The table tracks contact history between individuals and organizations."
+        }
+    ],
+    "Party_Addresses": [
+        {
+            "columns": {
+                "party_id": "The unique identifier for each party involved.",
+                "address_id": "The unique identifier for each address associated with the party.",
+                "date_address_from": "The date when the party started using the address.",
+                "address_type_code": "The code indicating the type of address used by the party.",
+                "date_address_to": "The date when the party ceased using the address."
+            },
+            "table_description": "The table links parties to their addresses and tracks usage dates."
+        }
+    ],
+    "Party_Forms": [
+        {
+            "columns": {
+                "party_id": "The unique identifier for each party involved in the form submission.",
+                "form_id": "The unique identifier for each form associated with the party.",
+                "date_completion_started": "The date when the party began the form completion process.",
+                "form_status_code": "The current status of the form in the completion process.",
+                "date_fully_completed": "The date when the form was fully completed, if applicable."
+            },
+            "table_description": "The table tracks the forms submitted by various parties and their statuses."
+        }
+    ],
+    "Party_Services": [
+        {
+            "columns": {
+                "booking_id": "The unique identifier for each service booking.",
+                "customer_id": "The unique identifier for the customer making the booking.",
+                "service_id": "The unique identifier for the service being booked.",
+                "service_datetime": "The scheduled date and time for the service.",
+                "booking_made_date": "The date and time when the booking was made."
+            },
+            "table_description": "The table records service bookings made by customers and their details."
         }
     ]
 }

@@ -1,0 +1,59 @@
+{
+    "Products": [
+        {
+            "columns": {
+                "product_id": "The unique identifier for each product.",
+                "product_type_code": "The category of the product, such as Hardware or Clothes.",
+                "product_name": "The name of the product, describing its specific model.",
+                "product_price": "The retail price of the product in the specified currency."
+            },
+            "table_description": "The table manages detailed information about products available for sale."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer.",
+                "address_id": "The unique identifier for the customer's address.",
+                "payment_method_code": "The method used for customer payments.",
+                "customer_number": "The identifier assigned to the customer for internal use.",
+                "customer_name": "The full name of the customer.",
+                "customer_address": "The complete address of the customer.",
+                "customer_phone": "The phone number for contacting the customer.",
+                "customer_email": "The email address of the customer."
+            },
+            "table_description": "The table holds important information about customers and their contact details."
+        }
+    ],
+    "Customer_Orders": [
+        {
+            "columns": {
+                "order_id": "The unique identifier for each order placed by customers.",
+                "customer_id": "The unique identifier for the customer who made the order.",
+                "order_date": "The date and time when the order was placed.",
+                "order_status_code": "The current status of the order, indicating its progress."
+            },
+            "table_description": "The table tracks orders placed by customers, along with their statuses."
+        }
+    ],
+    "Order_Items": [
+        {
+            "columns": {
+                "order_item_id": "The unique identifier for each item in an order.",
+                "order_id": "The unique identifier for the order to which the item belongs.",
+                "product_id": "The unique identifier for the product being ordered.",
+                "order_quantity": "The quantity of the product ordered by the customer."
+            },
+            "table_description": "The table records details of items included in customer orders."
+        }
+    ],
+    "Addresses": [
+        {
+            "columns": {
+                "address_id": "The unique identifier for each address in the database.",
+                "address_details": "The full details of the address, including street and city."
+            },
+            "table_description": "The table stores complete address information for customers and orders."
+        }
+    ]
+}

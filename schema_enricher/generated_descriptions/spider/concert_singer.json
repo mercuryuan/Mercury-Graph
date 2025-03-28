@@ -2,50 +2,50 @@
     "stadium": [
         {
             "columns": {
-                "Stadium_ID": "A unique identifier for each stadium in the database.",
+                "Stadium_ID": "The unique identifier for each stadium.",
                 "Location": "The geographical area where the stadium is situated.",
                 "Name": "The official name of the stadium.",
-                "Capacity": "The maximum number of spectators that the stadium can accommodate.",
-                "Highest": "The highest recorded attendance at the stadium.",
-                "Lowest": "The lowest recorded attendance at the stadium.",
-                "Average": "The average attendance at the stadium over a specified period."
+                "Capacity": "The total seating capacity of the stadium.",
+                "Highest": "The highest attendance recorded at the stadium.",
+                "Lowest": "The lowest attendance recorded at the stadium.",
+                "Average": "The average attendance observed at the stadium."
             },
-            "table_description": "The stadium table stores information about various stadiums, including their identifiers, locations, names, attendance capacities, and historical attendance records."
+            "table_description": "The table stores details about stadiums and their attendance records."
         }
     ],
     "singer": [
         {
             "columns": {
-                "Singer_ID": "A unique identifier for each singer in the database.",
-                "Name": "The name of the singer.",
-                "Country": "The country where the singer is from.",
-                "Song_Name": "The title of the song associated with the singer.",
-                "Song_release_year": "The year in which the song was released.",
-                "Age": "The age of the singer.",
-                "Is_male": "A boolean indicating whether the singer is male (True) or not (False)."
+                "Singer_ID": "The unique identifier for each singer.",
+                "Name": "The official name of the singer.",
+                "Country": "The nation where the singer originates.",
+                "Song_Name": "The title of a song performed by the singer.",
+                "Song_release_year": "The year the song was officially released.",
+                "Age": "The current age of the singer.",
+                "Is_male": "The gender of the singer, indicated as true for male."
             },
-            "table_description": "The singer table contains information about various singers, including their identity, nationality, song details, demographics, and gender."
+            "table_description": "The table stores information about singers and their songs."
         }
     ],
     "concert": [
         {
             "columns": {
-                "concert_ID": "A unique identifier for each concert entry in the database.",
-                "concert_Name": "The title or name of the concert event.",
-                "Theme": "The specific theme or concept that the concert is based around.",
-                "Stadium_ID": "A reference identifier indicating the stadium where the concert is held.",
+                "concert_ID": "The unique identifier for each concert.",
+                "concert_Name": "The official name of the concert event.",
+                "Theme": "The theme or concept of the concert.",
+                "Stadium_ID": "The identifier for the stadium hosting the concert.",
                 "Year": "The year in which the concert takes place."
             },
-            "table_description": "The concert table contains information about various concert events, including their identifiers, names, themes, locations, and the years they occur."
+            "table_description": "The table holds details about concerts and their associated stadiums."
         }
     ],
     "singer_in_concert": [
         {
             "columns": {
-                "concert_ID": "This column represents the unique identifier for each concert in which a singer performs.",
-                "Singer_ID": "This column represents the unique identifier for each singer participating in the concerts."
+                "concert_ID": "The unique identifier for each concert in which a singer participates.",
+                "Singer_ID": "The unique identifier for each singer in the concert."
             },
-            "table_description": "The singer_in_concert table captures the relationship between singers and the concerts they are associated with, identifying each concert and the respective singers performing in them."
+            "table_description": "The table connects singers with their respective concerts."
         }
     ]
 }

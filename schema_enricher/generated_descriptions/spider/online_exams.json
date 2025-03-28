@@ -1,0 +1,85 @@
+{
+    "Student_Assessments": [
+        {
+            "columns": {
+                "Student_Answer_ID": "The unique identifier for each student answer submission.",
+                "Valid_Answer_ID": "The identifier linking to the valid answer for the assessment.",
+                "Student_Answer_Text": "The text input provided by the student as their answer.",
+                "Satisfactory_YN": "The indication of whether the student provided a satisfactory answer.",
+                "Assessment": "The evaluation rating of the student's answer."
+            },
+            "table_description": "The table records student answers and their assessments for evaluations."
+        }
+    ],
+    "Students": [
+        {
+            "columns": {
+                "Student_ID": "The unique identifier for each student in the database.",
+                "First_Name": "The first name of the student for identification.",
+                "Middle_Name": "The middle name of the student for identification.",
+                "Last_Name": "The last name of the student for identification.",
+                "Gender_MFU": "The gender of the student, represented by a single character.",
+                "Student_Address": "The residential address of the student.",
+                "Email_Adress": "The email address used for communication with the student.",
+                "Cell_Mobile_Phone": "The mobile phone number of the student for contact purposes.",
+                "Home_Phone": "The home phone number of the student for additional contact."
+            },
+            "table_description": "The table records essential information about each student enrolled."
+        }
+    ],
+    "Questions": [
+        {
+            "columns": {
+                "Question_ID": "The unique identifier for each question in the database.",
+                "Type_of_Question_Code": "The code representing the format of the question.",
+                "Question_Text": "The text content of the question posed to students."
+            },
+            "table_description": "The table stores questions used in assessments for students."
+        }
+    ],
+    "Exams": [
+        {
+            "columns": {
+                "Exam_ID": "The unique identifier for each exam listed in the database.",
+                "Subject_Code": "The code representing the subject of the exam.",
+                "Exam_Date": "The scheduled date and time for the exam to take place.",
+                "Exam_Name": "The name given to the specific exam for identification."
+            },
+            "table_description": "The table maintains details about various exams offered to students."
+        }
+    ],
+    "Questions_in_Exams": [
+        {
+            "columns": {
+                "Exam_ID": "The unique identifier for the exam linked to the questions.",
+                "Question_ID": "The unique identifier for the questions associated with the exam."
+            },
+            "table_description": "The table links questions with their respective exams for assessments."
+        }
+    ],
+    "Valid_Answers": [
+        {
+            "columns": {
+                "Valid_Answer_ID": "The unique identifier for each valid answer option provided.",
+                "Question_ID": "The identifier linking to the question associated with the valid answer.",
+                "Valid_Answer_Text": "The text of the valid answer option for the corresponding question."
+            },
+            "table_description": "The table stores valid answers linked to specific questions for assessments."
+        }
+    ],
+    "Student_Answers": [
+        {
+            "columns": {
+                "Student_Answer_ID": "The unique identifier for each student's answer submission.",
+                "Exam_ID": "The identifier linking to the exam associated with the answer.",
+                "Question_ID": "The identifier linking to the question related to the answer.",
+                "Student_ID": "The unique identifier for each student providing the answer.",
+                "Date_of_Answer": "The date and time the student submitted their answer.",
+                "Comments": "The remarks or notes about the student's answer submission.",
+                "Satisfactory_YN": "The indication of whether the answer was satisfactory.",
+                "Student_Answer_Text": "The text input provided by the student as their answer."
+            },
+            "table_description": "The table records students' answers along with evaluations and comments."
+        }
+    ]
+}

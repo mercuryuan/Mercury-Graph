@@ -1,0 +1,89 @@
+{
+    "category": [
+        {
+            "columns": {
+                "id": "A unique identifier for each category entry in the table.",
+                "business_id": "The identifier for the business associated with the category, linking to the business table.",
+                "category_name": "The name of the category that describes the type of service or product offered by the business."
+            },
+            "table_description": "The category table stores the relationship between businesses and their corresponding categories, allowing for the classification of businesses based on the services or products they provide."
+        }
+    ],
+    "user": [
+        {
+            "columns": {
+                "uid": "A unique identifier for each user in the database.",
+                "user_id": "A textual identifier that represents the user, often used for integration with external systems.",
+                "name": "The full name of the user, typically used for display purposes."
+            },
+            "table_description": "The user table stores information about users, including unique identifiers and their personal details."
+        }
+    ],
+    "tip": [
+        {
+            "columns": {
+                "tip_id": "A unique identifier for each tip entry.",
+                "business_id": "The unique identifier of the business being reviewed.",
+                "text": "The content of the user tip, containing their feedback or opinion.",
+                "user_id": "The unique identifier of the user who made the tip.",
+                "likes": "The number of times the tip has been liked by other users.",
+                "year": "The year in which the tip was created.",
+                "month": "The month in which the tip was created."
+            },
+            "table_description": "The 'tip' table stores user-generated tips associated with businesses, capturing user feedback, popularity metrics, and temporal information regarding when the tips were made."
+        }
+    ],
+    "checkin": [
+        {
+            "columns": {
+                "cid": "A unique identifier for each check-in record.",
+                "business_id": "An identifier linking the check-in to a specific business.",
+                "count": "The total number of check-ins recorded for the business on the specified day.",
+                "day": "The date when the check-ins occurred."
+            },
+            "table_description": "The checkin table stores records of customer check-ins to businesses, capturing the number of check-ins on specific days linked to each business."
+        }
+    ],
+    "neighbourhood": [
+        {
+            "columns": {
+                "id": "A unique identifier for each record in the neighbourhood table.",
+                "business_id": "A reference to the unique identifier of a business, linking it to the corresponding neighbourhood.",
+                "neighbourhood_name": "The name of the neighbourhood where the business is located."
+            },
+            "table_description": "The neighbourhood table captures the relationship between businesses and their respective neighbourhoods, indicating the location context for each business."
+        }
+    ],
+    "review": [
+        {
+            "columns": {
+                "rid": "A unique identifier for each review entry.",
+                "business_id": "An identifier representing the business associated with the review.",
+                "user_id": "An identifier for the user who wrote the review.",
+                "rating": "A numerical score given by the user to evaluate the business.",
+                "text": "The written content of the review provided by the user.",
+                "year": "The year when the review was submitted.",
+                "month": "The month when the review was submitted."
+            },
+            "table_description": "The 'review' table stores information about user-generated reviews for various businesses, including identifiers for the reviews, businesses, and users, as well as the rating given and the text of the review along with the submission date."
+        }
+    ],
+    "business": [
+        {
+            "columns": {
+                "bid": "A unique identifier for each business entry in the table.",
+                "business_id": "An identifier used for a business, typically used for external references.",
+                "name": "The official name of the business.",
+                "full_address": "The complete street address where the business is located.",
+                "city": "The city in which the business operates.",
+                "latitude": "The geographical latitude coordinate of the business's location.",
+                "longitude": "The geographical longitude coordinate of the business's location.",
+                "review_count": "The total number of reviews submitted for the business.",
+                "is_open": "A flag indicating whether the business is currently open (1) or closed (0).",
+                "rating": "The average rating of the business, typically a value between 1 and 5.",
+                "state": "The state in which the business is located."
+            },
+            "table_description": "The 'business' table stores information about various businesses, including their identifiers, names, locations, operational status, and customer ratings."
+        }
+    ]
+}

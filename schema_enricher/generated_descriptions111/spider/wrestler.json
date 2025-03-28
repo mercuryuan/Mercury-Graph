@@ -1,0 +1,28 @@
+{
+    "wrestler": [
+        {
+            "columns": {
+                "Wrestler_ID": "A unique identifier assigned to each wrestler in the database.",
+                "Name": "The full name of the wrestler.",
+                "Reign": "The count of the championship reign for the wrestler.",
+                "Days_held": "The total number of days the wrestler has held the championship title.",
+                "Location": "The location where the championship event took place.",
+                "Event": "The type or name of the event in which the wrestler participated."
+            },
+            "table_description": "The wrestler table stores information about professional wrestlers, including their unique identifiers, names, championship reigns, duration of title holdings, event locations, and the nature of the events they participated in."
+        }
+    ],
+    "Elimination": [
+        {
+            "columns": {
+                "Elimination_ID": "A unique identifier for each elimination event in the dataset.",
+                "Wrestler_ID": "The identifier for the wrestler who was eliminated, referencing their entry in the wrestler table.",
+                "Team": "The name of the team to which the eliminated wrestler belonged during the elimination event.",
+                "Eliminated_By": "The name of the wrestler who performed the elimination on the specified wrestler.",
+                "Elimination_Move": "The specific move used by the eliminating wrestler to achieve the elimination.",
+                "Time": "The elapsed time in the match at which the elimination occurred, formatted as minutes and seconds."
+            },
+            "table_description": "The Elimination table records the details of each elimination event that occurs in a wrestling match, including identifiers for the wrestlers, the teams they represent, and the specifics of how and when they were eliminated."
+        }
+    ]
+}

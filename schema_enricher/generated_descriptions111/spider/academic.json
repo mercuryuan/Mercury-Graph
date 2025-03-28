@@ -1,0 +1,149 @@
+{
+    "domain": [
+        {
+            "columns": {
+                "did": "A unique identifier for each domain, serving as the primary key.",
+                "name": "The name of the academic domain, which categorizes specific fields of study."
+            },
+            "table_description": "The 'domain' table is designed to store information about various academic domains, uniquely identified by 'did' and described by their corresponding names."
+        }
+    ],
+    "domain_author": [
+        {
+            "columns": {
+                "aid": "This column represents the unique identifier for an author within the academic database.",
+                "did": "This column represents the unique identifier for a domain associated with the author."
+            },
+            "table_description": "The domain_author table serves to associate authors with specific domains in the academic database, enabling the organization of authorship within different subject areas."
+        }
+    ],
+    "conference": [
+        {
+            "columns": {
+                "cid": "A unique identifier for each conference entry in the table.",
+                "homepage": "The official website URL for the conference.",
+                "name": "The name or title of the conference."
+            },
+            "table_description": "The conference table stores information about various academic conferences, including their unique identifiers, names, and homepage links."
+        }
+    ],
+    "cite": [
+        {
+            "columns": {
+                "cited": "This column represents the identifier of a publication that has been cited by another publication.",
+                "citing": "This column represents the identifier of a publication that is citing another publication."
+            },
+            "table_description": "The `cite` table is designed to record the relationships between publications, specifically tracking which publications have cited which other publications."
+        }
+    ],
+    "author": [
+        {
+            "columns": {
+                "oid": "This column represents the organizational identifier associated with the author.",
+                "homepage": "This column contains the URL to the author's personal or professional homepage.",
+                "aid": "This column serves as the unique identifier for each author within the database.",
+                "name": "This column stores the full name of the author."
+            },
+            "table_description": "The author table is designed to store information about individual authors, including their unique identifier, name, homepage URL, and an organizational identifier."
+        }
+    ],
+    "domain_conference": [
+        {
+            "columns": {
+                "cid": "This column represents the identifier for a conference.",
+                "did": "This column denotes the identifier for a domain."
+            },
+            "table_description": "The domain_conference table serves as a junction table to establish a many-to-many relationship between conferences and domains."
+        }
+    ],
+    "journal": [
+        {
+            "columns": {
+                "homepage": "This column represents the website URL of the academic journal.",
+                "jid": "This column serves as the unique identifier for each journal entry.",
+                "name": "This column contains the title or name of the academic journal."
+            },
+            "table_description": "The journal table is designed to store information about academic journals, including their names, unique identifiers, and associated homepage URLs."
+        }
+    ],
+    "domain_journal": [
+        {
+            "columns": {
+                "did": "This column represents the unique identifier for a domain, linking to the domain entity within the academic context.",
+                "jid": "This column represents the unique identifier for a journal, linking to the journal entity associated with the domain."
+            },
+            "table_description": "The domain_journal table serves as a junction or association table that connects domains to journals, facilitating a many-to-many relationship between these two entities."
+        }
+    ],
+    "keyword": [
+        {
+            "columns": {
+                "keyword": "This column represents the specific keywords used in academic literature for indexing and search purposes.",
+                "kid": "This column serves as the unique identifier for each keyword, allowing for efficient data retrieval and association with other tables."
+            },
+            "table_description": "The 'keyword' table is designed to store unique keywords related to academic publications, facilitating databases in managing and searching for relevant literature."
+        }
+    ],
+    "domain_keyword": [
+        {
+            "columns": {
+                "did": "This column represents a unique identifier for a domain.",
+                "kid": "This column represents a unique identifier for a keyword."
+            },
+            "table_description": "The domain_keyword table establishes a many-to-many relationship between domains and keywords, linking each domain to relevant keywords through their unique identifiers."
+        }
+    ],
+    "publication": [
+        {
+            "columns": {
+                "pid": "A unique identifier for each publication.",
+                "abstract": "A brief summary of the publication's content.",
+                "cid": "The identifier for the conference where the publication was presented, linking to conference information.",
+                "citation_num": "The number of times the publication has been cited by other works.",
+                "jid": "The identifier for the journal where the publication was published, linking to journal information.",
+                "reference_num": "The number of references cited within the publication.",
+                "title": "The title of the publication, encapsulating its main topic.",
+                "year": "The year the publication was released."
+            },
+            "table_description": "The publication table stores information about academic publications, including their unique identifiers, abstracts, titles, citation metrics, and related conference or journal identifiers."
+        }
+    ],
+    "domain_publication": [
+        {
+            "columns": {
+                "did": "Represents the unique identifier for a domain, linking it to specific academic disciplines or fields.",
+                "pid": "Represents the unique identifier for a publication, linking it to scholarly works and research outputs."
+            },
+            "table_description": "The domain_publication table serves as a junction table that connects domains to their respective publications, enabling the organization of academic works by their related disciplines."
+        }
+    ],
+    "organization": [
+        {
+            "columns": {
+                "continent": "Denotes the geographical continent where the organization is located.",
+                "homepage": "Provides the URL of the organization's official website.",
+                "name": "Represents the official name of the organization.",
+                "oid": "Unique identifier assigned to each organization."
+            },
+            "table_description": "The organization table captures essential details about academic organizations, including their geographical location, online presence, official names, and unique identifiers."
+        }
+    ],
+    "publication_keyword": [
+        {
+            "columns": {
+                "pid": "Represents the unique identifier for a publication in the database.",
+                "kid": "Represents the unique identifier for a keyword that is associated with the publication."
+            },
+            "table_description": "The publication_keyword table serves to establish a many-to-many relationship between publications and keywords, allowing for the organization and retrieval of publications based on associated keywords."
+        }
+    ],
+    "writes": [
+        {
+            "columns": {
+                "aid": "This column represents the unique identifier for an author who has contributed to a publication.",
+                "pid": "This column signifies the unique identifier for a publication to which the author has contributed."
+            },
+            "table_description": "The 'writes' table serves to establish a many-to-many relationship between authors and publications, indicating which authors have written which publications."
+        }
+    ]
+}

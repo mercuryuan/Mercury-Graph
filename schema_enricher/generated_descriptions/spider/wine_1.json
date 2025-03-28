@@ -2,42 +2,42 @@
     "grapes": [
         {
             "columns": {
-                "ID": "A unique identifier for each grape entry in the table.",
+                "ID": "The unique identifier for each grape entry.",
                 "Grape": "The name of the grape variety.",
-                "Color": "The color classification of the grape, indicating whether it is red or white."
+                "Color": "The color classification of the grape."
             },
-            "table_description": "The grapes table contains information about various grape varieties used in winemaking, including their unique IDs, names, and color classifications."
+            "table_description": "The table provides details about different grape varieties."
         }
     ],
     "appellations": [
         {
             "columns": {
-                "No": "A unique identifier assigned to each appellation.",
-                "Appelation": "The name of the wine-growing region or designated area.",
-                "County": "The county in which the appellation is located.",
-                "State": "The state in which the appellation is found, which is consistently California.",
-                "Area": "The broader geographical area classification of the appellation.",
-                "isAVA": "A designation indicating whether the appellation is an American Viticultural Area (AVA)."
+                "No": "The unique identifier for each appellation entry.",
+                "Appelation": "The name of the wine appellation.",
+                "County": "The county where the appellation is located.",
+                "State": "The state where the appellation is situated.",
+                "Area": "The specific area classification of the appellation.",
+                "isAVA": "The indicator if the appellation is an American Viticultural Area."
             },
-            "table_description": "The 'appellations' table provides detailed information about various wine-growing regions, including their unique identifiers and classifications, along with their geographical locations and designations within the state of California."
+            "table_description": "The table details various wine appellations in different locations."
         }
     ],
     "wine": [
         {
             "columns": {
-                "No": "A unique identifier for each wine entry in the table.",
-                "Grape": "The type of grape used to produce the wine.",
-                "Winery": "The name of the winery that produced the wine.",
-                "Appelation": "The specific region or area where the wine is produced.",
-                "State": "The state in which the winery is located.",
-                "Name": "The name of the wine, often reflecting its brand or specific label.",
-                "Year": "The year in which the wine was produced.",
-                "Price": "The retail price of the wine.",
-                "Score": "A numerical rating that reflects the quality of the wine, typically based on expert reviews.",
-                "Cases": "The number of cases available for sale or produced.",
-                "Drink": "Recommended drinking windows or the optimal time range for consuming the wine."
+                "No": "The unique identifier for each wine entry.",
+                "Grape": "The grape variety used for producing the wine.",
+                "Winery": "The name of the winery that produces the wine.",
+                "Appelation": "The appellation where the wine is sourced.",
+                "State": "The state where the wine is produced.",
+                "Name": "The name designation of the wine.",
+                "Year": "The vintage year when the wine was produced.",
+                "Price": "The retail price of the wine in dollars.",
+                "Score": "The rating score assigned to the wine.",
+                "Cases": "The number of cases available for sale.",
+                "Drink": "The recommended time frame for drinking the wine."
             },
-            "table_description": "The wine table provides comprehensive information about various wines, including their identification, characteristics, origins, pricing, and quality assessments."
+            "table_description": "The table provides details about various wines including origins and characteristics."
         }
     ]
 }

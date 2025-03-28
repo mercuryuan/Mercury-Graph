@@ -2,46 +2,46 @@
     "routes": [
         {
             "columns": {
-                "rid": "A unique identifier for each route in the table.",
-                "dst_apid": "The unique identifier for the destination airport associated with the route.",
-                "dst_ap": "The three-letter IATA code representing the destination airport.",
-                "src_apid": "The unique identifier for the source airport from which the route originates.",
-                "alid": "The unique identifier for the airline that operates the route.",
-                "airline": "The two-letter IATA code representing the airline operating the route.",
-                "codeshare": "Indicates whether the route is a codeshare flight, allowing passengers to book through multiple airlines.",
-                "src_ap": "The three-letter IATA code representing the source airport."
+                "rid": "The unique identifier for each route.",
+                "dst_apid": "The unique identifier for the destination airport.",
+                "dst_ap": "The code representing the destination airport.",
+                "src_apid": "The unique identifier for the source airport.",
+                "src_ap": "The code representing the source airport.",
+                "alid": "The unique identifier for the airline.",
+                "airline": "The code representing the airline operating the route.",
+                "codeshare": "The indication if the route is codeshared with other airlines."
             },
-            "table_description": "The routes table captures detailed information about air travel routes, including unique identifiers for routes, airports, and airlines, along with relevant IATA codes and codeshare information."
+            "table_description": "The table stores flight route details, including source and destination."
         }
     ],
     "airports": [
         {
             "columns": {
-                "apid": "A unique identifier for each airport.",
+                "apid": "The unique identifier for each airport.",
                 "name": "The official name of the airport.",
-                "city": "The city in which the airport is located.",
+                "city": "The city where the airport is located.",
                 "country": "The country where the airport is situated.",
-                "x": "The geographical coordinate representing the longitude of the airport.",
-                "y": "The geographical coordinate representing the latitude of the airport.",
-                "elevation": "The elevation of the airport above sea level, measured in feet.",
-                "iata": "The three-letter International Air Transport Association code assigned to the airport.",
-                "icao": "The four-letter International Civil Aviation Organization code assigned to the airport."
+                "x": "The geographic x-coordinate of the airport.",
+                "y": "The geographic y-coordinate of the airport.",
+                "elevation": "The elevation of the airport above sea level.",
+                "iata": "The IATA code assigned to the airport.",
+                "icao": "The ICAO code assigned to the airport."
             },
-            "table_description": "The airports table contains information about various airports worldwide, including their unique identifiers, names, locations, geographical coordinates, elevation, and standardized codes used for air transport."
+            "table_description": "The table stores airport details, including location and identifiers."
         }
     ],
     "airlines": [
         {
             "columns": {
-                "alid": "A unique identifier for each airline.",
+                "alid": "The unique identifier for each airline.",
                 "name": "The official name of the airline.",
-                "iata": "The IATA code assigned to the airline, typically consisting of two letters.",
-                "icao": "The ICAO code assigned to the airline, typically consisting of three letters.",
-                "callsign": "The radio callsign used by the airline during radio communication.",
-                "country": "The country where the airline is registered or based.",
-                "active": "Indicates whether the airline is currently active (Y for yes, N for no)."
+                "iata": "The IATA code assigned to the airline.",
+                "icao": "The ICAO code assigned to the airline.",
+                "callsign": "The radio call sign used by the airline.",
+                "country": "The country where the airline is based.",
+                "active": "The indication of whether the airline is currently operational."
             },
-            "table_description": "The airlines table contains data about various airlines worldwide, including their unique identifiers, names, codes, and operational status."
+            "table_description": "The table stores details about airlines, including identifiers and status."
         }
     ]
 }

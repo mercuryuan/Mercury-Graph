@@ -1,0 +1,46 @@
+{
+    "channel": [
+        {
+            "columns": {
+                "Channel_ID": "The unique identifier for each channel.",
+                "Name": "The name of the channel.",
+                "Analogue_terrestrial_channel": "The analogue channel number for terrestrial broadcasts.",
+                "Digital_terrestrial_channel": "The digital channel number for terrestrial broadcasts.",
+                "Internet": "The website URL for the channel."
+            },
+            "table_description": "The table stores details about various broadcast channels."
+        }
+    ],
+    "director": [
+        {
+            "columns": {
+                "Director_ID": "The unique identifier for each director.",
+                "Name": "The name of the director.",
+                "Age": "The age of the director in years."
+            },
+            "table_description": "The table stores information about directors associated with channels."
+        }
+    ],
+    "program": [
+        {
+            "columns": {
+                "Program_ID": "The unique identifier for each program.",
+                "Start_Year": "The year the program started airing.",
+                "Title": "The title of the program.",
+                "Director_ID": "The unique identifier for the program's director.",
+                "Channel_ID": "The unique identifier for the channel broadcasting the program."
+            },
+            "table_description": "The table stores details about programs aired on various channels."
+        }
+    ],
+    "director_admin": [
+        {
+            "columns": {
+                "Director_ID": "The unique identifier for each director.",
+                "Channel_ID": "The unique identifier for each channel.",
+                "Is_first_director": "The indicator of whether the director is the first for the channel."
+            },
+            "table_description": "The table links directors to their respective channels and indicates first directors."
+        }
+    ]
+}

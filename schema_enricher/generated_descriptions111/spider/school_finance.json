@@ -1,0 +1,42 @@
+{
+    "School": [
+        {
+            "columns": {
+                "School_id": "A unique identifier for each school in the database.",
+                "School_name": "The official name of the school.",
+                "Location": "The geographical location or city where the school is situated.",
+                "Mascot": "The name or representation of the school's mascot.",
+                "Enrollment": "The total number of students enrolled in the school.",
+                "IHSAA_Class": "The classification of the school according to the Indiana High School Athletic Association (IHSAA).",
+                "IHSAA_Football_Class": "The specific classification of the school for football competitions under IHSAA.",
+                "County": "The name of the county in which the school is located."
+            },
+            "table_description": "The School table contains information about various schools, including their identification, names, locations, mascots, enrollment numbers, athletic classifications, and the counties they are situated in."
+        }
+    ],
+    "budget": [
+        {
+            "columns": {
+                "School_id": "A unique identifier for each school.",
+                "Year": "The fiscal year for which the budget is being reported.",
+                "Budgeted": "The total amount of money that has been budgeted for the specific year.",
+                "total_budget_percent_budgeted": "The percentage of the total budget that has been allocated as budgeted funds.",
+                "Invested": "The actual amount of money that has been invested in the school for the specified year.",
+                "total_budget_percent_invested": "The percentage of the total budget that has been allocated as invested funds.",
+                "Budget_invested_percent": "The percentage representation of the invested budget compared to the budgeted amount."
+            },
+            "table_description": "The budget table captures the fiscal budgeting and investment data for various schools across different years, allowing for analysis of budgeting practices and investment levels."
+        }
+    ],
+    "endowment": [
+        {
+            "columns": {
+                "endowment_id": "A unique identifier for each endowment record in the table.",
+                "School_id": "A reference to the associated school, linking to the school's unique identifier.",
+                "donator_name": "The name of the individual or organization that provided the endowment.",
+                "amount": "The monetary value of the endowment given by the donator."
+            },
+            "table_description": "The endowment table stores records of financial contributions made to schools, including details about the donor and the amount contributed."
+        }
+    ]
+}

@@ -1,0 +1,74 @@
+{
+    "Customer_Interactions": [
+        {
+            "columns": {
+                "Customer_Interaction_ID": "The unique identifier for each customer interaction.",
+                "Channel_ID": "The identifier for the communication channel used.",
+                "Customer_ID": "The identifier for the customer involved in the interaction.",
+                "Service_ID": "The identifier for the specific service related to the interaction.",
+                "Status_Code": "The current status of the customer interaction.",
+                "Services_and_Channels_Details": "The feedback on services and channels used by customers."
+            },
+            "table_description": "The table tracks interactions between customers and services."
+        }
+    ],
+    "Integration_Platform": [
+        {
+            "columns": {
+                "Integration_Platform_ID": "The unique identifier for each integration platform entry.",
+                "Customer_Interaction_ID": "The identifier linking to the customer interaction record.",
+                "Integration_Platform_Details": "The outcome status of the integration platform usage."
+            },
+            "table_description": "The table records details of integration platforms used in customer interactions."
+        }
+    ],
+    "Analytical_Layer": [
+        {
+            "columns": {
+                "Analytical_ID": "The unique identifier for each analytical layer entry.",
+                "Customers_and_Services_ID": "The identifier linking to customers and services records.",
+                "Pattern_Recognition": "The classification of patterns recognized in the data.",
+                "Analytical_Layer_Type_Code": "The type of analytical layer, categorizing its level."
+            },
+            "table_description": "The table analyzes customer interactions and associated service patterns."
+        }
+    ],
+    "Services": [
+        {
+            "columns": {
+                "Service_ID": "The unique identifier for each service offered.",
+                "Service_Details": "The description of the specific service provided."
+            },
+            "table_description": "The table lists various services available for government transactions."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "Customer_ID": "The unique identifier for each customer.",
+                "Customer_Details": "The detailed information about the customer."
+            },
+            "table_description": "The table stores essential information about government customers."
+        }
+    ],
+    "Channels": [
+        {
+            "columns": {
+                "Channel_ID": "The unique identifier for each communication channel.",
+                "Channel_Details": "The details describing the specific communication channel."
+            },
+            "table_description": "The table outlines communication channels for customer interactions."
+        }
+    ],
+    "Customers_and_Services": [
+        {
+            "columns": {
+                "Customers_and_Services_ID": "The unique identifier for each customer and service pairing.",
+                "Customer_ID": "The identifier linking to the customer utilizing the service.",
+                "Service_ID": "The identifier linking to the specific service offered.",
+                "Customers_and_Services_Details": "The assessment of customer satisfaction with the service."
+            },
+            "table_description": "The table captures customer satisfaction related to services provided."
+        }
+    ]
+}

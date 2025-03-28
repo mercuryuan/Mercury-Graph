@@ -1,0 +1,38 @@
+{
+    "press": [
+        {
+            "columns": {
+                "Press_ID": "The unique identifier for each press.",
+                "Name": "The name of the publishing press.",
+                "Month_Profits_billion": "The monthly profits of the press in billions.",
+                "Year_Profits_billion": "The yearly profits of the press in billions."
+            },
+            "table_description": "The table stores financial data for various publishing presses."
+        }
+    ],
+    "book": [
+        {
+            "columns": {
+                "Book_ID": "The unique identifier for each book.",
+                "Title": "The title of the book.",
+                "Book_Series": "The series to which the book belongs.",
+                "Author_ID": "The unique identifier for the author of the book.",
+                "Press_ID": "The unique identifier for the publishing press.",
+                "Sale_Amount": "The total sales amount of the book.",
+                "Release_date": "The release date of the book."
+            },
+            "table_description": "The table catalogs books with their authors and sales data."
+        }
+    ],
+    "author": [
+        {
+            "columns": {
+                "Author_ID": "The unique identifier for each author.",
+                "Name": "The full name of the author.",
+                "Age": "The age of the author in years.",
+                "Gender": "The gender of the author."
+            },
+            "table_description": "The table stores information about authors in the publishing industry."
+        }
+    ]
+}

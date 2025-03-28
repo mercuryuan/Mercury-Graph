@@ -1,0 +1,38 @@
+{
+    "district": [
+        {
+            "columns": {
+                "District_ID": "The unique identifier for each district.",
+                "Name": "The name of the district.",
+                "Area_km": "The total area of the district in square kilometers.",
+                "Population": "The total population residing in the district.",
+                "Density_km": "The population density calculated per square kilometer.",
+                "Government_website": "The official government website for the district."
+            },
+            "table_description": "The table provides demographic and geographic information about districts."
+        }
+    ],
+    "spokesman": [
+        {
+            "columns": {
+                "Spokesman_ID": "The unique identifier for each spokesman.",
+                "Name": "The full name of the spokesman.",
+                "Age": "The age of the spokesman in years.",
+                "Speach_title": "The title of the speech given by the spokesman.",
+                "Rank_position": "The ranking position of the spokesman based on performance.",
+                "Points": "The total points accumulated by the spokesman."
+            },
+            "table_description": "The table provides information about various spokesmen and their attributes."
+        }
+    ],
+    "spokesman_district": [
+        {
+            "columns": {
+                "Spokesman_ID": "The unique identifier for each spokesman in the district.",
+                "District_ID": "The unique identifier for the associated district.",
+                "Start_year": "The year the spokesman began representing the district."
+            },
+            "table_description": "The table links spokesmen to their respective districts and start years."
+        }
+    ]
+}

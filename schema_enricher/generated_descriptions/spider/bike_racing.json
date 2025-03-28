@@ -1,0 +1,36 @@
+{
+    "bike": [
+        {
+            "columns": {
+                "id": "The unique identifier for each bike.",
+                "product_name": "The name of the bike model.",
+                "weight": "The weight of the bike in grams.",
+                "price": "The price of the bike in the local currency.",
+                "material": "The primary material used in the bike's construction."
+            },
+            "table_description": "The table stores details about different bike models for racing."
+        }
+    ],
+    "cyclists_own_bikes": [
+        {
+            "columns": {
+                "cyclist_id": "The unique identifier for each cyclist.",
+                "bike_id": "The unique identifier for each bike.",
+                "purchase_year": "The year the bike was purchased by the cyclist."
+            },
+            "table_description": "The table tracks which bikes are owned by each cyclist."
+        }
+    ],
+    "cyclist": [
+        {
+            "columns": {
+                "id": "The unique identifier for each cyclist.",
+                "heat": "The heat number the cyclist participated in.",
+                "name": "The name of the cyclist.",
+                "nation": "The country the cyclist represents.",
+                "result": "The recorded time result of the cyclist in the race."
+            },
+            "table_description": "The table records details about cyclists in the racing events."
+        }
+    ]
+}

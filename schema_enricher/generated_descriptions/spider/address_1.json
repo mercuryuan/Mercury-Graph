@@ -1,0 +1,40 @@
+{
+    "City": [
+        {
+            "columns": {
+                "city_code": "The unique identifier for each city.",
+                "city_name": "The name of the city.",
+                "state": "The state where the city is located.",
+                "country": "The country where the city is situated.",
+                "latitude": "The geographical latitude of the city.",
+                "longitude": "The geographical longitude of the city."
+            },
+            "table_description": "The table catalogs cities with geographical and administrative details."
+        }
+    ],
+    "Student": [
+        {
+            "columns": {
+                "StuID": "The unique identifier for each student.",
+                "LName": "The last name of the student.",
+                "Fname": "The first name of the student.",
+                "Age": "The age of the student.",
+                "Sex": "The gender of the student.",
+                "Major": "The academic major of the student.",
+                "Advisor": "The unique identifier for the student's advisor.",
+                "city_code": "The code for the city of residence."
+            },
+            "table_description": "The table records details about students, including demographics and academic information."
+        }
+    ],
+    "Direct_distance": [
+        {
+            "columns": {
+                "city1_code": "The unique identifier for the first city.",
+                "city2_code": "The unique identifier for the second city.",
+                "distance": "The direct distance in kilometers between the two cities."
+            },
+            "table_description": "The table tracks direct distances between pairs of cities."
+        }
+    ]
+}

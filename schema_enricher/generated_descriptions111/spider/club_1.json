@@ -1,0 +1,38 @@
+{
+    "Student": [
+        {
+            "columns": {
+                "StuID": "A unique identifier assigned to each student.",
+                "LName": "The last name of the student.",
+                "Fname": "The first name of the student.",
+                "Age": "The age of the student.",
+                "Sex": "The gender of the student, represented as a single character.",
+                "Major": "The major field of study for the student, represented by a numeric code.",
+                "Advisor": "A numeric identifier for the student's academic advisor.",
+                "city_code": "A three-letter code representing the city where the student resides."
+            },
+            "table_description": "The Student table contains detailed information about students, including their identification, names, age, gender, major, advisor, and place of residence."
+        }
+    ],
+    "Club": [
+        {
+            "columns": {
+                "ClubID": "A unique identifier for each club in the database.",
+                "ClubName": "The name of the club, which provides a concise indication of its purpose or activities.",
+                "ClubDesc": "A brief description of the club, outlining its goals, activities, or functions.",
+                "ClubLocation": "The location of the club, indicating where the club is primarily based or meets."
+            },
+            "table_description": "The Club table contains information about various clubs, including their unique identifiers, names, descriptions, and locations."
+        }
+    ],
+    "Member_of_club": [
+        {
+            "columns": {
+                "StuID": "Identifies the student who is a member of the club.",
+                "ClubID": "Identifies the club to which the student belongs.",
+                "Position": "Denotes the role or title of the student within the club."
+            },
+            "table_description": "The Member_of_club table captures the enrollment information of students in various clubs, detailing which students are associated with which clubs and their respective positions within those clubs."
+        }
+    ]
+}

@@ -2,42 +2,42 @@
     "stadium": [
         {
             "columns": {
-                "id": "A unique identifier for each stadium recorded in the table.",
-                "name": "The official name of the stadium.",
-                "Home_Games": "The total number of home games played in the stadium for the season.",
-                "Average_Attendance": "The average number of attendees per game held at the stadium.",
-                "Total_Attendance": "The cumulative total of attendees for all home games played in the stadium.",
-                "Capacity_Percentage": "The percentage of the stadium's total capacity that was filled during home games."
+                "id": "The unique identifier for each stadium.",
+                "name": "The name of the stadium.",
+                "Home_Games": "The number of home games played at the stadium.",
+                "Average_Attendance": "The average number of attendees per game.",
+                "Total_Attendance": "The total number of attendees for all games.",
+                "Capacity_Percentage": "The percentage of stadium capacity filled during games."
             },
-            "table_description": "The 'stadium' table provides detailed information about various stadiums, including their names, attendance statistics, and capacity utilization during home games."
+            "table_description": "The table provides information about stadiums and their attendance metrics."
         }
     ],
     "game": [
         {
             "columns": {
-                "stadium_id": "The unique identifier for the stadium where the game is held.",
-                "id": "The unique identifier for each individual game recorded in the table.",
-                "Season": "The year corresponding to the season in which the game takes place.",
-                "Date": "The date on which the game is conducted.",
-                "Home_team": "The name of the team that is designated as the home team for the game.",
-                "Away_team": "The name of the team that is playing against the home team.",
-                "Competition": "The type of competition in which the game is being played, such as a league or cup.",
-                "Score": "The final result of the game, indicating the score achieved by each team."
+                "stadium_id": "The unique identifier for the stadium hosting the game.",
+                "id": "The unique identifier for each game.",
+                "Season": "The year in which the game is played.",
+                "Date": "The date when the game occurs.",
+                "Home_team": "The name of the home team in the game.",
+                "Away_team": "The name of the away team in the game.",
+                "Score": "The final score of the game, for both teams.",
+                "Competition": "The tournament or league in which the game is played."
             },
-            "table_description": "The 'game' table stores detailed information about each game, including the teams involved, the season, date, venue, competition type, and the final score."
+            "table_description": "The table captures details of games including teams, scores, and seasons."
         }
     ],
     "injury_accident": [
         {
             "columns": {
-                "game_id": "This column represents the unique identifier for the game during which the injury occurred.",
-                "id": "This column serves as the unique identifier for each injury accident record.",
-                "Player": "This column contains the name of the player who sustained the injury.",
-                "Injury": "This column describes the nature or type of injury sustained by the player.",
-                "Number_of_matches": "This column indicates the number of matches that the player is expected to miss due to the injury.",
-                "Source": "This column refers to the source of the information regarding the injury."
+                "game_id": "The unique identifier for the game related to the injury.",
+                "id": "The unique identifier for each injury record.",
+                "Player": "The name of the player who sustained the injury.",
+                "Injury": "The description of the injury incurred by the player.",
+                "Number_of_matches": "The number of matches the player missed due to the injury.",
+                "Source": "The source of information regarding the injury."
             },
-            "table_description": "The injury_accident table is designed to track incidents of player injuries during specific games, detailing the affected players, the nature of their injuries, and the resultant impact on their game participation."
+            "table_description": "The table tracks injuries of players related to specific games."
         }
     ]
 }

@@ -1,49 +1,49 @@
 {
-    "Student": [
-        {
-            "columns": {
-                "StuID": "Unique identifier for each student in the database.",
-                "LName": "Last name of the student.",
-                "Fname": "First name of the student.",
-                "Age": "Age of the student, representing their current age during enrollment.",
-                "Sex": "Gender of the student, represented by a single character.",
-                "Major": "The academic major of the student, indicated by a corresponding code.",
-                "Advisor": "Identifier for the academic advisor assigned to the student.",
-                "city_code": "Code representing the city of the student's residence."
-            },
-            "table_description": "The Student table contains information about students, including their identifiers, names, demographic information, academic major, advisor assignments, and city of residence."
-        }
-    ],
-    "Plays_Games": [
-        {
-            "columns": {
-                "StuID": "Identifier for the student playing the games.",
-                "GameID": "Identifier for the video game being played.",
-                "Hours_Played": "Total number of hours spent playing the associated video game by the student."
-            },
-            "table_description": "The Plays_Games table captures the relationship between students and the video games they play, detailing the number of hours each student has dedicated to each game."
-        }
-    ],
     "SportsInfo": [
         {
             "columns": {
-                "StuID": "A unique identifier for each student participating in sports.",
-                "SportName": "The name of the sport that the student is involved in.",
-                "HoursPerWeek": "The average number of hours the student dedicates to the sport each week.",
-                "GamesPlayed": "The total number of games played by the student in the sport during the season.",
-                "OnScholarship": "Indicates whether the student is receiving a scholarship for playing the sport (Y for Yes, N for No)."
+                "StuID": "The unique identifier for each student in the database.",
+                "SportName": "The name of the sport the student participates in.",
+                "HoursPerWeek": "The number of hours the student dedicates to the sport weekly.",
+                "GamesPlayed": "The total number of games played by the student in the sport.",
+                "OnScholarship": "The scholarship status of the student, denoted by 'Y' or 'N'."
             },
-            "table_description": "The SportsInfo table captures information about students' participation in various sports, including their identification details, the sports they are involved in, their commitment in terms of hours, the frequency of games played, and scholarship status."
+            "table_description": "The table tracks students' sports participation and related details."
+        }
+    ],
+    "Student": [
+        {
+            "columns": {
+                "StuID": "The unique identifier for each student in the database.",
+                "LName": "The last name of the student.",
+                "Fname": "The first name of the student.",
+                "Age": "The age of the student.",
+                "Sex": "The gender of the student.",
+                "Major": "The identification number for the student's major.",
+                "Advisor": "The unique identifier for the student's academic advisor.",
+                "city_code": "The code representing the city of the student."
+            },
+            "table_description": "The table stores student information and academic details."
         }
     ],
     "Video_Games": [
         {
             "columns": {
-                "GameID": "A unique identifier for each video game in the database.",
-                "GName": "The name of the video game, providing its title.",
-                "GType": "The genre or category of the video game, describing its gameplay style."
+                "GameID": "The unique identifier for each video game in the database.",
+                "GName": "The name of the video game.",
+                "GType": "The genre or type of the video game."
             },
-            "table_description": "The Video_Games table stores information about various video games, including a unique identifier, their respective titles, and their genres."
+            "table_description": "The table catalogs video games and their details."
+        }
+    ],
+    "Plays_Games": [
+        {
+            "columns": {
+                "StuID": "The unique identifier for each student playing the game.",
+                "GameID": "The unique identifier for the game being played.",
+                "Hours_Played": "The total hours a student has played the game."
+            },
+            "table_description": "The table tracks students' gaming activities and their playing hours."
         }
     ]
 }

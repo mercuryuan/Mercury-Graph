@@ -1,103 +1,103 @@
 {
-    "People": [
-        {
-            "columns": {
-                "person_id": "A unique identifier assigned to each individual in the database.",
-                "first_name": "The first name of the individual.",
-                "middle_name": "The middle name of the individual, if applicable.",
-                "last_name": "The last name or surname of the individual.",
-                "cell_mobile_number": "The individual's mobile phone number.",
-                "email_address": "The email address of the individual.",
-                "login_name": "A unique username chosen by the individual for logging into systems.",
-                "password": "The password associated with the login name for secure access."
-            },
-            "table_description": "The People table stores personal information about individuals, including their names, contact details, and credentials for system access."
-        }
-    ],
     "Addresses": [
         {
             "columns": {
-                "address_id": "A unique identifier for each address record.",
-                "line_1": "The primary line of the address, typically containing the building number and street name.",
-                "line_2": "An optional second line for the address, often used for apartment or suite numbers.",
-                "city": "The name of the city where the address is located.",
-                "zip_postcode": "The postal code assigned for the address, used for sorting and delivering mail.",
-                "state_province_county": "The name of the state, province, or county associated with the address.",
-                "country": "The name of the country where the address is situated."
+                "address_id": "The unique identifier for each address entry.",
+                "line_1": "The primary address line containing essential location details.",
+                "line_2": "The secondary address line for additional location information.",
+                "city": "The city associated with the address.",
+                "zip_postcode": "The postal code for the address area.",
+                "state_province_county": "The state, province, or county of the address.",
+                "country": "The country where the address is located."
             },
-            "table_description": "The Addresses table stores detailed information about locations related to individuals, including unique identifiers and comprehensive address components."
+            "table_description": "The table stores detailed address information for students."
         }
     ],
-    "Courses": [
+    "People": [
         {
             "columns": {
-                "course_id": "A unique identifier assigned to each course, used to distinguish one course from another.",
-                "course_name": "The title of the course, providing an overview of the subject being taught.",
-                "course_description": "A brief overview that outlines the course content and what students can expect to learn.",
-                "other_details": "Additional information regarding the course that may include prerequisites, grading policy, or other relevant notes."
+                "person_id": "The unique identifier for each person entry.",
+                "first_name": "The first name of the person.",
+                "middle_name": "The middle name of the person.",
+                "last_name": "The last name of the person.",
+                "cell_mobile_number": "The mobile phone number of the person.",
+                "email_address": "The email address for contacting the person.",
+                "login_name": "The username used for system login.",
+                "password": "The password for securing the person's account."
             },
-            "table_description": "The Courses table holds information about various academic courses offered, including identification, title, description, and supplementary details."
-        }
-    ],
-    "People_Addresses": [
-        {
-            "columns": {
-                "person_address_id": "Identifies a unique record of the relationship between a person and their address.",
-                "person_id": "References a unique identifier for the person associated with the address.",
-                "address_id": "References a unique identifier for the address linked to the person.",
-                "date_from": "Indicates the start date of the person's association with the address.",
-                "date_to": "Indicates the end date of the person's association with the address."
-            },
-            "table_description": "The People_Addresses table maintains a record of the addresses associated with individuals, tracking the duration of their residence at each address."
-        }
-    ],
-    "Student_Course_Registrations": [
-        {
-            "columns": {
-                "student_id": "A unique identifier for each student enrolled in a course.",
-                "course_id": "A unique identifier for each course that a student can register for.",
-                "registration_date": "The date and time when a student registered for a specific course."
-            },
-            "table_description": "The Student_Course_Registrations table tracks the relationships between students and the courses they are enrolled in, along with the date of their registration."
+            "table_description": "The table stores personal information for students and candidates."
         }
     ],
     "Students": [
         {
             "columns": {
-                "student_id": "A unique identifier for each student in the database, used to distinguish students from one another.",
-                "student_details": "Additional information about the student, which may include their name or other relevant personal details."
+                "student_id": "The unique identifier for each student.",
+                "student_details": "The name of the student."
             },
-            "table_description": "The Students table stores essential information about each student, identified by a unique student ID and supplemented by specific details about the student."
+            "table_description": "The table stores information about students enrolled in the program."
+        }
+    ],
+    "Courses": [
+        {
+            "columns": {
+                "course_id": "The unique identifier for each course.",
+                "course_name": "The name of the course offered.",
+                "course_description": "The detailed overview of the course content.",
+                "other_details": "Any additional information related to the course."
+            },
+            "table_description": "The table stores information about courses available for students."
+        }
+    ],
+    "Student_Course_Registrations": [
+        {
+            "columns": {
+                "student_id": "The unique identifier for each student in the registration.",
+                "course_id": "The unique identifier for each course registered by the student.",
+                "registration_date": "The timestamp indicating when the student registered for the course."
+            },
+            "table_description": "The table tracks student registrations for various courses."
         }
     ],
     "Student_Course_Attendance": [
         {
             "columns": {
-                "student_id": "This column represents the unique identifier for a student enrolled in a course.",
-                "course_id": "This column signifies the unique identifier of the course in which the student is attending.",
-                "date_of_attendance": "This column captures the date and time when the student attended the specified course."
+                "student_id": "The unique identifier for each student attending classes.",
+                "course_id": "The unique identifier for each course being attended.",
+                "date_of_attendance": "The date and time when the student attended the course."
             },
-            "table_description": "The Student_Course_Attendance table records the attendance of students for various courses, using the student and course identifiers along with the date of attendance."
+            "table_description": "The table records attendance of students in their respective courses."
         }
     ],
     "Candidates": [
         {
             "columns": {
-                "candidate_id": "A unique identifier assigned to each candidate in the database.",
-                "candidate_details": "Contains information about the candidate, typically their name."
+                "candidate_id": "The unique identifier for each candidate in the system.",
+                "candidate_details": "The name or details identifying the candidate."
             },
-            "table_description": "The Candidates table stores essential information about individuals participating in assessments."
+            "table_description": "The table stores information about candidates participating in assessments."
+        }
+    ],
+    "People_Addresses": [
+        {
+            "columns": {
+                "person_address_id": "The unique identifier for each person-address relationship.",
+                "person_id": "The unique identifier for each person associated with the address.",
+                "address_id": "The unique identifier for each address linked to the person.",
+                "date_from": "The starting date when the address was associated with the person.",
+                "date_to": "The ending date when the address was no longer used by the person."
+            },
+            "table_description": "The table manages the address history for each person in the system."
         }
     ],
     "Candidate_Assessments": [
         {
             "columns": {
-                "candidate_id": "The unique identifier for each candidate being assessed.",
-                "qualification": "Indicates the qualification level achieved by the candidate.",
-                "assessment_date": "The date and time when the assessment was conducted.",
-                "asessment_outcome_code": "The result of the assessment, indicating whether the candidate passed or failed."
+                "candidate_id": "The unique identifier for each candidate's assessment record.",
+                "qualification": "The qualification code associated with the candidate's assessment.",
+                "assessment_date": "The date when the assessment was conducted.",
+                "asessment_outcome_code": "The outcome of the assessment, indicating pass or fail status."
             },
-            "table_description": "The Candidate_Assessments table stores assessment records for candidates, including their qualifications, assessment dates, and outcomes."
+            "table_description": "The table records assessment results for candidates and their qualifications."
         }
     ]
 }

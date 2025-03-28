@@ -1,0 +1,52 @@
+{
+    "country": [
+        {
+            "columns": {
+                "Country_Id": "The unique identifier for each country.",
+                "Country": "The name of the country.",
+                "Capital": "The capital city of the country.",
+                "Official_native_language": "The main language spoken in the country.",
+                "Regoin": "The geographical region in which the country is located."
+            },
+            "table_description": "The table holds information about various countries."
+        }
+    ],
+    "team": [
+        {
+            "columns": {
+                "Team_ID": "The unique identifier for each racing team.",
+                "Team": "The name of the racing team.",
+                "Make": "The vehicle make used by the team.",
+                "Manager": "The name of the team's manager.",
+                "Sponsor": "The company sponsoring the racing team.",
+                "Car_Owner": "The individual or entity that owns the car."
+            },
+            "table_description": "The table stores details of various car racing teams."
+        }
+    ],
+    "driver": [
+        {
+            "columns": {
+                "Driver_ID": "The unique identifier for each driver.",
+                "Driver": "The name of the racing driver.",
+                "Country": "The country of the driver, linked to the country table.",
+                "Age": "The age of the racing driver in years.",
+                "Car_#": "The number assigned to the driver's car.",
+                "Make": "The make of the vehicle used by the driver.",
+                "Points": "The accumulated points by the driver in competitions.",
+                "Laps": "The total laps completed by the driver in races.",
+                "Winnings": "The total monetary winnings earned by the driver."
+            },
+            "table_description": "The table provides information about racing drivers."
+        }
+    ],
+    "team_driver": [
+        {
+            "columns": {
+                "Team_ID": "The unique identifier for the racing team.",
+                "Driver_ID": "The unique identifier for the racing driver."
+            },
+            "table_description": "The table associates drivers with their respective racing teams."
+        }
+    ]
+}

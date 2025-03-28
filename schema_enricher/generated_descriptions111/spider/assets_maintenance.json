@@ -1,0 +1,164 @@
+{
+    "Third_Party_Companies": [
+        {
+            "columns": {
+                "company_id": "A unique identifier assigned to each third-party company in the database.",
+                "company_type": "The classification of the company, indicating whether it is a Maintenance Contractor or Supplier.",
+                "company_name": "The official name of the third-party company.",
+                "company_address": "The physical location or address of the third-party company.",
+                "other_company_details": "Additional information related to the company, such as geographical or operational details."
+            },
+            "table_description": "The Third_Party_Companies table stores details about third-party companies involved in asset maintenance, including their identification, classification, contact details, and supplementary information."
+        }
+    ],
+    "Maintenance_Contracts": [
+        {
+            "columns": {
+                "maintenance_contract_id": "A unique identifier for each maintenance contract.",
+                "maintenance_contract_company_id": "Identifier for the company associated with the maintenance contract.",
+                "contract_start_date": "The date when the maintenance contract begins.",
+                "contract_end_date": "The date when the maintenance contract expires.",
+                "other_contract_details": "Additional details related to the maintenance contract, if any."
+            },
+            "table_description": "The Maintenance_Contracts table stores information regarding maintenance agreements, including the start and end dates of the contracts, the company involved, and any additional details relevant to the contract."
+        }
+    ],
+    "Parts": [
+        {
+            "columns": {
+                "part_id": "A unique identifier assigned to each part in the system.",
+                "part_name": "The name or designation of the part.",
+                "chargeable_yn": "Indicator of whether the part incurs a charge (1 for yes, 0 for no).",
+                "chargeable_amount": "The amount charged for the part if it is chargeable.",
+                "other_part_details": "Additional details or comments regarding the part, if applicable."
+            },
+            "table_description": "The Parts table stores information about various parts, including their identifiers, names, chargeability status, associated costs, and additional details."
+        }
+    ],
+    "Fault_Log": [
+        {
+            "columns": {
+                "fault_log_entry_id": "A unique identifier for each fault log entry.",
+                "asset_id": "The identifier of the asset related to the fault log entry.",
+                "recorded_by_staff_id": "The identifier for the staff member who recorded the fault.",
+                "fault_log_entry_datetime": "The date and time when the fault was logged.",
+                "fault_description": "A brief summary of the fault or issue encountered.",
+                "other_fault_details": "Additional information regarding the fault, if available."
+            },
+            "table_description": "The Fault_Log table captures details about faults associated with assets, including the recorded entries, responsible staff, timestamps, and descriptions of the faults."
+        }
+    ],
+    "Skills": [
+        {
+            "columns": {
+                "skill_id": "A unique identifier for each skill in the table.",
+                "skill_code": "A short, alphanumeric code representing the skill, used for quick reference.",
+                "skill_description": "A brief explanation of the skill, detailing the specific expertise or field it pertains to."
+            },
+            "table_description": "The Skills table contains essential information about various skills used in asset maintenance, providing unique identifiers, codes, and descriptions to facilitate the management and assignment of these skills."
+        }
+    ],
+    "Assets": [
+        {
+            "columns": {
+                "asset_id": "A unique identifier for each asset in the table.",
+                "maintenance_contract_id": "An identifier that links the asset to its maintenance contract.",
+                "supplier_company_id": "An identifier that connects the asset to the supplier company providing it.",
+                "asset_details": "A brief description of the asset, typically including specifics about the asset's nature or features.",
+                "asset_make": "The manufacturer or brand of the asset.",
+                "asset_model": "The specific model name or number of the asset.",
+                "asset_acquired_date": "The date and time when the asset was acquired or purchased.",
+                "asset_disposed_date": "The date and time when the asset was disposed of or removed from service.",
+                "other_asset_details": "Additional details or comments about the asset that may not fit in other columns."
+            },
+            "table_description": "The Assets table is used to store information about various assets, including their identification, supplier information, maintenance contracts, and relevant details about their acquisition and disposal."
+        }
+    ],
+    "Part_Faults": [
+        {
+            "columns": {
+                "part_fault_id": "A unique identifier for each instance of a part fault.",
+                "part_id": "A reference identifying the specific part associated with the fault.",
+                "fault_short_name": "A brief code representing the type of fault.",
+                "fault_description": "A detailed description of the fault encountered with the part.",
+                "other_fault_details": "Additional details regarding the fault, if any."
+            },
+            "table_description": "The Part_Faults table stores information about faults experienced by various parts, including a unique identifier for each fault, the associated part, a short name for the fault, a detailed description, and any other relevant details."
+        }
+    ],
+    "Fault_Log_Parts": [
+        {
+            "columns": {
+                "fault_log_entry_id": "Identifies the log entry associated with a specific fault occurrence.",
+                "part_fault_id": "Identifies the part that has experienced a fault.",
+                "fault_status": "Indicates the current status of the fault related to the part, describing whether it is reported, fixed, waiting for action, or returned."
+            },
+            "table_description": "The Fault_Log_Parts table tracks the relationship between fault log entries and faulty parts, providing insights into the status of faults for maintenance and repair activities."
+        }
+    ],
+    "Skills_Required_To_Fix": [
+        {
+            "columns": {
+                "part_fault_id": "Identifies the specific part fault that requires attention for maintenance or repair.",
+                "skill_id": "Indicates the skill necessary to effectively address and resolve the identified part fault."
+            },
+            "table_description": "The table captures the relationship between specific part faults and the skills required to fix them, ensuring that maintenance personnel have the appropriate expertise for each fault."
+        }
+    ],
+    "Asset_Parts": [
+        {
+            "columns": {
+                "asset_id": "Identifies the specific asset associated with the part.",
+                "part_id": "Identifies the specific part associated with the asset."
+            },
+            "table_description": "The Asset_Parts table establishes a many-to-many relationship between assets and parts, allowing for the tracking of which parts are associated with which assets."
+        }
+    ],
+    "Maintenance_Engineers": [
+        {
+            "columns": {
+                "engineer_id": "A unique identifier for each maintenance engineer.",
+                "company_id": "An identifier linking the engineer to their respective company.",
+                "first_name": "The first name of the maintenance engineer.",
+                "last_name": "The last name of the maintenance engineer.",
+                "other_details": "Additional information about the maintenance engineer, which may include skills or qualifications."
+            },
+            "table_description": "The Maintenance_Engineers table stores information about maintenance engineers, including their identity, association with companies, and relevant details about their skills or qualifications."
+        }
+    ],
+    "Engineer_Skills": [
+        {
+            "columns": {
+                "engineer_id": "Identifies the engineer associated with a specific skill.",
+                "skill_id": "Defines the specific skill that an engineer possesses."
+            },
+            "table_description": "The Engineer_Skills table links engineers to their respective skills, establishing a relationship between maintenance engineers and the skills they have acquired."
+        }
+    ],
+    "Staff": [
+        {
+            "columns": {
+                "staff_id": "A unique identifier for each staff member in the organization.",
+                "staff_name": "The full name of the staff member.",
+                "gender": "A single character representing the gender of the staff member, where '1' may indicate male and '0' may indicate female.",
+                "other_staff_details": "Additional information about the staff member's function or role, such as their job title."
+            },
+            "table_description": "The Staff table contains information about personnel involved in asset maintenance, including their unique identifiers, names, gender, and roles within the organization."
+        }
+    ],
+    "Engineer_Visits": [
+        {
+            "columns": {
+                "engineer_visit_id": "A unique identifier for each engineer visit.",
+                "contact_staff_id": "The identifier for the staff member responsible for the visit.",
+                "engineer_id": "The identifier for the engineer assigned to the visit.",
+                "fault_log_entry_id": "The identifier for the fault log entry associated with the visit.",
+                "fault_status": "The current status of the fault as reported after the visit.",
+                "visit_start_datetime": "The date and time when the engineer visit began.",
+                "visit_end_datetime": "The date and time when the engineer visit concluded.",
+                "other_visit_details": "Additional details regarding the visit, if any."
+            },
+            "table_description": "The Engineer_Visits table records the visits made by engineers to address specific faults, including details on the engineer, staff contact, fault status, and visit timings."
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "Warehouses": [
+        {
+            "columns": {
+                "Code": "The unique identifier for each warehouse.",
+                "Location": "The geographic site where the warehouse is situated.",
+                "Capacity": "The maximum storage capability of the warehouse."
+            },
+            "table_description": "The table manages information about warehouse locations and capacities."
+        }
+    ],
+    "Boxes": [
+        {
+            "columns": {
+                "Code": "The unique identifier for each box.",
+                "Contents": "The items contained within the box.",
+                "Value": "The monetary worth of the box's contents.",
+                "Warehouse": "The identifier linking the box to its warehouse."
+            },
+            "table_description": "The table tracks individual boxes and their associations with warehouses."
+        }
+    ]
+}

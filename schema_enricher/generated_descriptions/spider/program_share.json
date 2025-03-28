@@ -2,46 +2,46 @@
     "program": [
         {
             "columns": {
-                "Program_ID": "A unique identifier assigned to each program in the database.",
+                "Program_ID": "The unique identifier for the program.",
                 "Name": "The title of the program.",
-                "Origin": "The geographical location where the program originated.",
-                "Launch": "The year when the program was first launched.",
-                "Owner": "The organization or entity responsible for producing and distributing the program."
+                "Origin": "The geographical location where the program was created.",
+                "Launch": "The year the program was first launched.",
+                "Owner": "The organization that owns the program."
             },
-            "table_description": "The 'program' table contains details about television programs including their unique identifiers, titles, origins, launch years, and owning organizations."
+            "table_description": "The table tracks programs with their identifiers, names, origins, launch years, and owners."
         }
     ],
     "channel": [
         {
             "columns": {
-                "Channel_ID": "A unique identifier for each channel in the database.",
-                "Name": "The name of the television channel.",
-                "Owner": "The organization or entity that owns the channel.",
-                "Share_in_percent": "The percentage of the market share represented by the channel.",
-                "Rating_in_percent": "The percentage rating that reflects the channel's popularity or viewership."
+                "Channel_ID": "The unique identifier for each channel.",
+                "Name": "The official name of the channel.",
+                "Owner": "The organization that owns the channel.",
+                "Share_in_percent": "The market share percentage of the channel.",
+                "Rating_in_percent": "The audience rating percentage of the channel."
             },
-            "table_description": "The channel table contains detailed information about television channels, including their identifiers, names, ownership, market share percentages, and viewership ratings."
+            "table_description": "The table stores channels with their IDs, names, owners, share, and ratings."
         }
     ],
     "broadcast": [
         {
             "columns": {
-                "Channel_ID": "Identifies the channel broadcasting the program.",
-                "Program_ID": "Identifies the specific program being broadcast.",
-                "Time_of_day": "Indicates the time of day when the program is being aired."
+                "Channel_ID": "The unique identifier for the channel broadcasting the program.",
+                "Program_ID": "The unique identifier for the program being broadcast.",
+                "Time_of_day": "The time during the day when the program is broadcast."
             },
-            "table_description": "The broadcast table captures the relationship between channels and programs, detailing when each program is aired throughout the day."
+            "table_description": "The table connects channels and programs with their broadcasting times."
         }
     ],
     "broadcast_share": [
         {
             "columns": {
-                "Channel_ID": "Identifies the television channel broadcasting the program.",
-                "Program_ID": "Identifies the specific program being broadcasted.",
-                "Date": "Specifies the date on which the program was aired.",
-                "Share_in_percent": "Represents the percentage of viewers who watched the program on the specified channel."
+                "Channel_ID": "The unique identifier for the channel sharing the program.",
+                "Program_ID": "The unique identifier for the program being shared.",
+                "Date": "The date when the share percentage is recorded.",
+                "Share_in_percent": "The percentage of the program's share on the channel."
             },
-            "table_description": "The broadcast_share table records the viewer share statistics for various television programs, detailing the channel, program, date of broadcast, and the share percentage viewers allocated to each program."
+            "table_description": "The table records share percentages of programs on different channels per date."
         }
     ]
 }

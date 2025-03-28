@@ -1,127 +1,127 @@
 {
+    "Things": [
+        {
+            "columns": {
+                "thing_id": "The unique identifier for each thing.",
+                "organization_id": "The identifier linking each thing to its organization.",
+                "Type_of_Thing_Code": "The category classification of the thing.",
+                "service_type_code": "The code indicating the type of service offered.",
+                "service_details": "The specific details regarding the service satisfaction."
+            },
+            "table_description": "The table records various things and their associated services."
+        }
+    ],
     "Customers": [
         {
             "columns": {
-                "customer_id": "A unique identifier assigned to each customer, ensuring that each entry can be distinctly recognized.",
-                "customer_details": "Information detailing the customer's name or designation, providing context about the individual associated with the customer_id."
+                "customer_id": "The unique identifier for each customer.",
+                "customer_details": "The information detailing each customer's profile."
             },
-            "table_description": "The Customers table serves to catalog individual customers with unique identifiers and their respective details, facilitating efficient customer management and reference in associated tables."
+            "table_description": "The table records customer information for local government services."
         }
     ],
     "Properties": [
         {
             "columns": {
-                "property_id": "A unique identifier assigned to each property, serving as the primary key for the table.",
-                "property_type_code": "A code indicating the type of the property, such as 'house', 'apartment', or 'flat'.",
-                "property_address": "The physical address of the property, which provides specific location details.",
-                "other_details": "Additional information related to the property, which may include administrative or geographic details."
+                "property_id": "The unique identifier for each property.",
+                "property_type_code": "The code defining the type of property.",
+                "property_address": "The address where the property is located.",
+                "other_details": "The additional information regarding the property."
             },
-            "table_description": "The Properties table stores information about different properties, including unique identifiers, property types, addresses, and any additional details pertinent to the properties."
+            "table_description": "The table holds records of properties in the local government area."
         }
     ],
     "Residents": [
         {
             "columns": {
-                "resident_id": "A unique identifier for each resident in the table.",
-                "property_id": "A unique identifier for the property associated with the resident.",
-                "date_moved_in": "The date and time when the resident first moved into the property.",
-                "date_moved_out": "The date and time when the resident vacated the property.",
-                "other_details": "Additional information regarding the resident, such as their name or other identifying traits."
+                "resident_id": "The unique identifier for each resident.",
+                "property_id": "The identifier linking the resident to their property.",
+                "date_moved_in": "The date when the resident moved into the property.",
+                "date_moved_out": "The date when the resident moved out of the property.",
+                "other_details": "The additional information regarding the resident."
             },
-            "table_description": "The Residents table captures essential information regarding individuals residing in properties, including their unique identifiers, move-in and move-out dates, and additional personal details."
+            "table_description": "The table records residents and their property occupancy details."
         }
     ],
     "Organizations": [
         {
             "columns": {
-                "organization_id": "A unique identifier for each organization within the table.",
-                "parent_organization_id": "An identifier that references another organization, indicating the hierarchy or relationship between organizations.",
-                "organization_details": "A textual description providing additional information about the organization."
+                "organization_id": "The unique identifier for each organization.",
+                "parent_organization_id": "The identifier of the parent organization, if applicable.",
+                "organization_details": "The detailed information about each organization."
             },
-            "table_description": "The Organizations table stores information about various organizations, including their unique identifiers, hierarchical relationships, and detailed descriptions."
-        }
-    ],
-    "Services": [
-        {
-            "columns": {
-                "service_id": "A unique identifier for each service offered by the organization.",
-                "organization_id": "An identifier that links the service to the organization providing it.",
-                "service_type_code": "A code that categorizes the type of service, such as billing or cleaning.",
-                "service_details": "A brief description of the satisfaction level or feedback related to the service."
-            },
-            "table_description": "The Services table contains details about services provided by different organizations, including unique service identifiers, organization linkage, service categories, and feedback on service satisfaction."
-        }
-    ],
-    "Residents_Services": [
-        {
-            "columns": {
-                "resident_id": "The unique identifier for each resident in the database.",
-                "service_id": "The unique identifier for each service provided to residents.",
-                "date_moved_in": "The date and time when the resident moved into their property.",
-                "property_id": "The unique identifier for the property where the resident resides.",
-                "date_requested": "The date and time when the resident requested the service.",
-                "date_provided": "The date and time when the service was provided to the resident.",
-                "other_details": "Additional information or comments regarding the service request or provision."
-            },
-            "table_description": "The Residents_Services table maintains records of services requested and provided to residents, linking them through resident and property identifiers along with relevant dates."
-        }
-    ],
-    "Things": [
-        {
-            "columns": {
-                "thing_id": "A unique identifier for each item recorded in the Things table.",
-                "organization_id": "A reference to the organization that owns or manages the item.",
-                "Type_of_Thing_Code": "A code representing the category or type of the item, such as common items or electronics.",
-                "service_type_code": "A code indicating the type of service associated with the item, such as checking or cleaning.",
-                "service_details": "Additional information about the service experience related to the item, indicating satisfaction levels."
-            },
-            "table_description": "The Things table serves to catalog various items managed by specific organizations, detailing their types, associated services, and the satisfaction level regarding those services."
-        }
-    ],
-    "Customer_Events": [
-        {
-            "columns": {
-                "Customer_Event_ID": "A unique identifier for each customer event.",
-                "customer_id": "An identifier for the customer associated with the event.",
-                "date_moved_in": "The date when the resident moved into the property.",
-                "property_id": "An identifier for the property related to the customer event.",
-                "resident_id": "An identifier for the resident involved in the event.",
-                "thing_id": "An identifier for a specific object or item related to the customer event."
-            },
-            "table_description": "The Customer_Events table tracks events related to residents moving into properties, associating each event with customers, properties, residents, and specific items."
+            "table_description": "The table holds records of organizations within the local government structure."
         }
     ],
     "Customer_Event_Notes": [
         {
             "columns": {
-                "Customer_Event_Note_ID": "Unique identifier for each note associated with a customer event.",
-                "Customer_Event_ID": "Identifier linking the note to a specific customer event.",
-                "service_type_code": "Code representing the type of service related to the event or note.",
-                "resident_id": "Unique identifier for the resident associated with the customer event.",
-                "property_id": "Unique identifier for the property related to the customer event.",
-                "date_moved_in": "Date and time when the resident moved into the property."
+                "Customer_Event_Note_ID": "The unique identifier for each customer event note.",
+                "Customer_Event_ID": "The identifier linking to the associated customer event.",
+                "service_type_code": "The code indicating the type of service related to the note.",
+                "resident_id": "The unique identifier for the resident associated with the note.",
+                "property_id": "The unique identifier for the property linked to the note.",
+                "date_moved_in": "The date when the resident moved into the property."
             },
-            "table_description": "The Customer_Event_Notes table stores detailed notes and related information about customer events, including specific service types, linked residents and properties, and the dates when residents moved in."
+            "table_description": "The table records notes related to customer events and their details."
+        }
+    ],
+    "Customer_Events": [
+        {
+            "columns": {
+                "Customer_Event_ID": "The unique identifier for each customer event.",
+                "customer_id": "The identifier linking the customer to the event.",
+                "date_moved_in": "The date when the resident moved into the property.",
+                "property_id": "The identifier linking each event to the associated property.",
+                "resident_id": "The unique identifier for the resident involved in the event.",
+                "thing_id": "The identifier linking the event to a specific thing."
+            },
+            "table_description": "The table records customer events related to residents and properties."
+        }
+    ],
+    "Services": [
+        {
+            "columns": {
+                "service_id": "The unique identifier for each service.",
+                "organization_id": "The identifier linking the service to its organization.",
+                "service_type_code": "The code defining the type of service provided.",
+                "service_details": "The satisfaction level regarding the service received."
+            },
+            "table_description": "The table records various services offered by local government organizations."
+        }
+    ],
+    "Residents_Services": [
+        {
+            "columns": {
+                "resident_id": "The unique identifier for each resident involved in the service.",
+                "service_id": "The unique identifier for each service requested by the resident.",
+                "date_moved_in": "The date when the resident moved into the property.",
+                "property_id": "The unique identifier for the property linked to the resident.",
+                "date_requested": "The date when the service request was made.",
+                "date_provided": "The date when the requested service was provided.",
+                "other_details": "The additional information regarding the service request."
+            },
+            "table_description": "The table records services requested and provided to residents."
         }
     ],
     "Timed_Status_of_Things": [
         {
             "columns": {
-                "thing_id": "A unique identifier for each item or entity being tracked in the system.",
-                "Date_and_Date": "The specific date and time when the status of the thing was recorded.",
-                "Status_of_Thing_Code": "A code representing the current status of the item or entity, indicating whether it is open, closed, or in progress."
+                "thing_id": "The unique identifier for each thing's status record.",
+                "Date_and_Date": "The timestamp indicating when the status was recorded.",
+                "Status_of_Thing_Code": "The code representing the current status of the thing."
             },
-            "table_description": "The Timed_Status_of_Things table captures the status and associated timestamps for various entities tracked by the local government, facilitating the monitoring of their current state over time."
+            "table_description": "The table tracks the status of things over specific time intervals."
         }
     ],
     "Timed_Locations_of_Things": [
         {
             "columns": {
-                "thing_id": "A unique identifier for each item or entity being tracked within the system.",
-                "Date_and_Time": "The specific date and time when the item was recorded at a particular location.",
-                "Location_Code": "A code representing the physical location associated with the recorded time of the item."
+                "thing_id": "The unique identifier for each thing's location record.",
+                "Date_and_Time": "The timestamp indicating when the location was recorded.",
+                "Location_Code": "The code representing the recorded location of the thing."
             },
-            "table_description": "The Timed_Locations_of_Things table is used to log the locations and times of various tracked entities, allowing for historical analysis and tracking of their movements."
+            "table_description": "The table tracks the historical locations of things at specific times."
         }
     ]
 }

@@ -2,60 +2,60 @@
     "Staff": [
         {
             "columns": {
-                "staff_id": "A unique identifier assigned to each staff member.",
-                "gender": "Denotes the gender of the staff member, represented using a single character.",
+                "staff_id": "The unique identifier for each staff member.",
+                "gender": "The gender of the staff member, represented by a single character.",
                 "first_name": "The first name of the staff member.",
                 "last_name": "The last name of the staff member.",
                 "email_address": "The email address used for communication with the staff member.",
-                "phone_number": "The contact phone number for the staff member."
+                "phone_number": "The phone number for contacting the staff member."
             },
-            "table_description": "The Staff table contains information about staff members, including their personal identifiers, contact details, and demographic information."
-        }
-    ],
-    "Complaints": [
-        {
-            "columns": {
-                "complaint_id": "A unique identifier for each complaint recorded in the system.",
-                "product_id": "An identifier that links the complaint to a specific product related to the issue.",
-                "customer_id": "An identifier that associates the complaint with the customer who raised it.",
-                "complaint_outcome_code": "A code representing the outcome of the complaint handling process.",
-                "complaint_status_code": "A code that indicates the current status of the complaint (e.g., New, Open, Closed).",
-                "complaint_type_code": "A code that categorizes the type of complaint, such as product usability or failure.",
-                "date_complaint_raised": "The date and time when the complaint was initially raised by the customer.",
-                "date_complaint_closed": "The date and time when the complaint was officially resolved and closed.",
-                "staff_id": "An identifier linking the complaint to the staff member who handled or processed it."
-            },
-            "table_description": "The Complaints table is designed to store detailed information about customer complaints, including related product and customer information, the outcome and status of the complaint, and the handling staff, along with timestamps for when the complaint was raised and closed."
+            "table_description": "The table stores information about staff members in the organization."
         }
     ],
     "Customers": [
         {
             "columns": {
-                "customer_id": "A unique identifier for each customer in the database.",
-                "customer_type_code": "A code indicating the customer's credit status, such as 'Good Credit Rating' or 'Defaults on payments'.",
-                "address_line_1": "The first line of the customer's address, typically including street name and number.",
-                "address_line_2": "The second line of the customer's address, often including apartment or suite numbers.",
+                "customer_id": "The unique identifier for each customer.",
+                "customer_type_code": "The classification of the customer based on credit status.",
+                "address_line_1": "The primary address line for the customer.",
+                "address_line_2": "The secondary address line for the customer.",
                 "town_city": "The town or city where the customer resides.",
-                "state": "The state in which the customer lives.",
-                "email_address": "The customer's email address for communication.",
-                "phone_number": "The customer's contact phone number."
+                "state": "The state in which the customer is located.",
+                "email_address": "The primary email address for contacting the customer.",
+                "phone_number": "The phone number for reaching the customer."
             },
-            "table_description": "The Customers table contains information about individuals who have made complaints, including their identification, contact details, and credit status."
+            "table_description": "The table stores customer information for managing complaints."
         }
     ],
     "Products": [
         {
             "columns": {
-                "product_id": "Unique identifier for each product.",
-                "parent_product_id": "Identifier for the parent product if the item is a variant or part of a larger set.",
-                "product_category_code": "Code representing the category to which the product belongs.",
-                "date_product_first_available": "Date and time when the product became available for purchase.",
-                "date_product_discontinued": "Date and time when the product was last available for purchase.",
-                "product_name": "Name or title of the product.",
-                "product_description": "Brief description of the product's features or characteristics.",
-                "product_price": "Retail price of the product."
+                "product_id": "The unique identifier for each product.",
+                "parent_product_id": "The identifier for the parent product, if applicable.",
+                "product_category_code": "The category classification for the product.",
+                "date_product_first_available": "The date when the product first became available.",
+                "date_product_discontinued": "The date when the product was discontinued.",
+                "product_name": "The name of the product.",
+                "product_description": "The detailed description of the product.",
+                "product_price": "The selling price of the product."
             },
-            "table_description": "The Products table contains information about various products available for purchase, including details such as product identifiers, availability dates, categorization, names, descriptions, and pricing."
+            "table_description": "The table stores product information for customer complaints management."
+        }
+    ],
+    "Complaints": [
+        {
+            "columns": {
+                "complaint_id": "The unique identifier for each complaint.",
+                "product_id": "The identifier for the product associated with the complaint.",
+                "customer_id": "The identifier for the customer who raised the complaint.",
+                "complaint_outcome_code": "The resolution status of the complaint.",
+                "complaint_status_code": "The current status of the complaint.",
+                "complaint_type_code": "The classification of the complaint type.",
+                "date_complaint_raised": "The date and time when the complaint was submitted.",
+                "date_complaint_closed": "The date and time when the complaint was resolved.",
+                "staff_id": "The identifier for the staff member handling the complaint."
+            },
+            "table_description": "The table stores details regarding customer complaints."
         }
     ]
 }

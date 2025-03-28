@@ -1,80 +1,80 @@
 {
+    "highlow": [
+        {
+            "columns": {
+                "state_name": "The name of the state.",
+                "highest_elevation": "The highest elevation point in the state.",
+                "lowest_point": "The lowest geographic point in the state.",
+                "highest_point": "The highest geographic point located in the state.",
+                "lowest_elevation": "The lowest elevation level found in the state."
+            },
+            "table_description": "The table provides elevation and geographical point information by state."
+        }
+    ],
     "city": [
         {
             "columns": {
                 "city_name": "The name of the city.",
-                "population": "The total number of people living in the city.",
-                "country_name": "The three-letter code representing the country where the city is located.",
-                "state_name": "The name of the state where the city resides."
+                "population": "The total population of the city.",
+                "country_name": "The country code in which the city is located.",
+                "state_name": "The name of the state where the city is situated."
             },
-            "table_description": "The 'city' table provides information about various cities, including their names, populations, associated country codes, and the states they belong to."
+            "table_description": "The table provides demographic and locational data for cities."
         }
     ],
-    "border_info": [
+    "river": [
         {
             "columns": {
-                "state_name": "This column represents the name of the state being referenced in the border relationship.",
-                "border": "This column denotes the name of the state that borders the state identified in the 'state_name' column."
+                "river_name": "The name of the river.",
+                "length": "The total length of the river in kilometers.",
+                "country_name": "The three-letter country code where the river is located.",
+                "traverse": "The name of the state the river traverses."
             },
-            "table_description": "The border_info table stores relationships between states and the states they share borders with."
+            "table_description": "The table provides information about rivers and their geographical associations."
         }
     ],
-    "highlow": [
+    "state": [
         {
             "columns": {
-                "state_name": "The name of the state, serving as the primary and foreign key.",
-                "highest_elevation": "The highest elevation point in the state.",
-                "lowest_point": "The lowest geographical point within the state's boundaries.",
-                "highest_point": "The highest physical point, which may not necessarily be the same as the highest elevation, in the state.",
-                "lowest_elevation": "The lowest elevation of any area within the state, often representing sea level."
+                "state_name": "The name of the state.",
+                "population": "The total population residing in the state.",
+                "area": "The total land area of the state in square kilometers.",
+                "country_name": "The three-letter code for the country of the state.",
+                "capital": "The capital city of the state.",
+                "density": "The population density per square kilometer of the state."
             },
-            "table_description": "The highlow table provides geographical information regarding the highest and lowest elevations and points within a state, tied to each state's name."
+            "table_description": "The table provides demographic and geographical details about states."
         }
     ],
     "lake": [
         {
             "columns": {
                 "lake_name": "The name of the lake.",
-                "area": "The surface area of the lake, typically measured in square kilometers or acres.",
-                "country_name": "The three-letter ISO code representing the country where the lake is located.",
-                "state_name": "The name of the state or region within the country where the lake is found."
+                "area": "The surface area of the lake in square kilometers.",
+                "country_name": "The three-letter country code where the lake is found.",
+                "state_name": "The name of the state in which the lake is located."
             },
-            "table_description": "The 'lake' table is designed to store comprehensive information about various lakes, including their names, surface areas, and geographic locations defined by country and state."
+            "table_description": "The table provides details about lakes and their geographical locations."
         }
     ],
     "mountain": [
         {
             "columns": {
                 "mountain_name": "The name of the mountain.",
-                "mountain_altitude": "The height of the mountain above sea level, measured in meters.",
+                "mountain_altitude": "The elevation height of the mountain in meters.",
                 "country_name": "The three-letter country code where the mountain is located.",
-                "state_name": "The name of the state where the mountain is located."
+                "state_name": "The name of the state containing the mountain."
             },
-            "table_description": "The 'mountain' table provides a detailed record of mountains, including their names, altitudes, associated countries, and states."
+            "table_description": "The table provides elevation and locational details of mountains."
         }
     ],
-    "river": [
+    "border_info": [
         {
             "columns": {
-                "river_name": "The name of the river, serving as the unique identifier for each entry.",
-                "length": "The total length of the river, typically measured in kilometers or miles.",
-                "country_name": "The three-letter country code identifying the country through which the river flows.",
-                "traverse": "The name of the state or region the river traverses, linking to the states table."
+                "state_name": "The name of the state.",
+                "border": "The name of the neighboring state."
             },
-            "table_description": "The river table contains information about rivers, including their names, lengths, associated countries, and the states they traverse."
-        }
-    ],
-    "state": [
-        {
-            "columns": {
-                "state_name": "The name of the state, serving as the primary key for the table.",
-                "population": "The total number of residents living in the state.",
-                "area": "The total land area of the state, typically measured in square units.",
-                "country_name": "The name of the country to which the state belongs, usually represented by a three-letter code.",
-                "capital": "The name of the city that serves as the administrative center of the state.",
-                "density": "The measure of population per unit area within the state."
-            },
-            "table_description": "The state table contains essential information about each state, including its name, population, area, country association, capital city, and population density."
+            "table_description": "The table provides information about state borders and their connections."
         }
     ]
 }

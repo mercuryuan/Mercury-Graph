@@ -2,48 +2,48 @@
     "train": [
         {
             "columns": {
-                "id": "A unique identifier for each train entry in the table.",
-                "train_number": "A numeric code assigned to each train, used for identification and scheduling purposes.",
-                "name": "The official name of the train, which may include its service designation.",
-                "origin": "The starting station from which the train departs.",
-                "destination": "The final station where the train arrives.",
-                "time": "The scheduled departure time of the train from its origin station.",
-                "interval": "The frequency at which the train operates, indicating how often it runs."
+                "id": "The unique identifier for each train.",
+                "train_number": "The official number assigned to the train.",
+                "name": "The name of the train service.",
+                "origin": "The starting station of the train.",
+                "destination": "The final station of the train.",
+                "time": "The scheduled time of train departure.",
+                "interval": "The frequency of the train's service."
             },
-            "table_description": "The train table provides detailed information about the train services, including their identifiers, scheduling details, and operational attributes, effectively aiding in the management of train routes and timetables."
+            "table_description": "The table stores details about train schedules and routes."
         }
     ],
     "station": [
         {
             "columns": {
-                "id": "A unique identifier for each station within the dataset.",
-                "network_name": "The name of the transportation network to which the station belongs.",
-                "services": "A list of transportation services available at the station.",
-                "local_authority": "The local government authority responsible for the area where the station is located."
+                "id": "The unique identifier for each station.",
+                "local_authority": "The governing authority for the station's location.",
+                "network_name": "The name of the transport network serving the station.",
+                "services": "The services operated at the station."
             },
-            "table_description": "The station table contains information about various transportation stations, including their unique identifiers, associated networks, available services, and the local authorities governing those areas."
+            "table_description": "The table holds information about different transport stations and their details."
         }
     ],
     "route": [
         {
             "columns": {
-                "train_id": "This column represents a unique identifier for each train operating within the system.",
-                "station_id": "This column represents a unique identifier for each station where trains can stop."
+                "train_id": "The unique identifier for the train on the route.",
+                "station_id": "The unique identifier for the station along the route."
             },
-            "table_description": "The 'route' table maps the relationship between trains and their respective stations, indicating which trains service which stations."
+            "table_description": "The table connects trains with their respective stations."
         }
     ],
     "weekly_weather": [
         {
             "columns": {
-                "station_id": "Identifier for the weather station from which data has been collected.",
-                "day_of_week": "The name of the day for which the weather data is recorded.",
-                "high_temperature": "The highest recorded temperature for the given day.",
-                "low_temperature": "The lowest recorded temperature for the given day.",
-                "precipitation": "The amount of precipitation measured for the day, typically in millimeters.",
-                "wind_speed_mph": "The wind speed recorded for the day, measured in miles per hour."
+                "station_id": "The unique identifier for each weather station.",
+                "day_of_week": "The day of the week for the weather report.",
+                "high_temperature": "The maximum recorded temperature for the day.",
+                "low_temperature": "The minimum recorded temperature for the day.",
+                "precipitation": "The amount of precipitation recorded in the day.",
+                "wind_speed_mph": "The wind speed recorded in miles per hour."
             },
-            "table_description": "The weekly_weather table presents weather data collected from various stations, detailing temperature extremes, precipitation levels, and wind speed for each day of the week."
+            "table_description": "The table provides weekly weather data for various stations."
         }
     ]
 }

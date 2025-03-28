@@ -1,35 +1,35 @@
 {
+    "round": [
+        {
+            "columns": {
+                "Decoration_Theme": "The theme of decoration for the round.",
+                "Member_ID": "The unique identifier of each member participating.",
+                "Round_ID": "The unique identifier for each round of decoration.",
+                "Rank_in_Round": "The ranking of a member within a specific round."
+            },
+            "table_description": "The table tracks decoration competition rounds and member rankings."
+        }
+    ],
     "college": [
         {
             "columns": {
-                "College_ID": "A unique identifier for each college in the database.",
-                "Name": "The official name of the college.",
-                "Leader_Name": "The name of the individual who leads or oversees the college.",
-                "College_Location": "The geographical location of the college, denoting the city or area."
+                "College_ID": "The unique identifier for each college.",
+                "Name": "The name of the college.",
+                "Leader_Name": "The name of the college leader.",
+                "College_Location": "The geographic location of the college."
             },
-            "table_description": "The college table serves to store information about different colleges participating in the decoration competition, including their unique identifiers, names, leaders, and locations."
+            "table_description": "The table stores information about various colleges and their leaders."
         }
     ],
     "member": [
         {
             "columns": {
-                "Member_ID": "A unique identifier for each member in the competition.",
-                "Name": "The name of the member participating in the decoration competition.",
-                "Country": "The country of origin for the member.",
-                "College_ID": "An identifier representing the college associated with the member."
+                "Country": "The country where the member resides.",
+                "College_ID": "The unique identifier of the college associated with the member.",
+                "Member_ID": "The unique identifier for each member.",
+                "Name": "The name of the member."
             },
-            "table_description": "The member table stores information about participants in the decoration competition, including their unique identifiers, names, countries, and associated colleges."
-        }
-    ],
-    "round": [
-        {
-            "columns": {
-                "Round_ID": "Identifies the specific round of the decoration competition in which the members participated.",
-                "Member_ID": "References the unique identifier for each member who participated in the decoration competition.",
-                "Decoration_Theme": "Specifies the theme assigned for decoration during the respective round of the competition.",
-                "Rank_in_Round": "Indicates the ranking achieved by a member in the respective round based on their decoration efforts."
-            },
-            "table_description": "The 'round' table captures the details of each round in a decoration competition, linking members to their respective themes and ranks."
+            "table_description": "The table holds information about members and their college affiliations."
         }
     ]
 }

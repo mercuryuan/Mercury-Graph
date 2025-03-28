@@ -1,0 +1,28 @@
+{
+    "book": [
+        {
+            "columns": {
+                "Book_ID": "The unique identifier for each book.",
+                "Title": "The title of the book.",
+                "Type": "The genre or category of the book.",
+                "Pages": "The total number of pages in the book.",
+                "Chapters": "The total number of chapters in the book.",
+                "Audio": "The duration of the book in audio format.",
+                "Release": "The publication date of the book."
+            },
+            "table_description": "The table stores information about various books."
+        }
+    ],
+    "review": [
+        {
+            "columns": {
+                "Review_ID": "The unique identifier for each review.",
+                "Book_ID": "The identifier for the associated book.",
+                "Rating": "The rating given to the book on a scale.",
+                "Readers_in_Million": "The estimated number of readers in millions.",
+                "Rank": "The rank of the book based on ratings."
+            },
+            "table_description": "The table stores reviews and ratings for various books."
+        }
+    ]
+}

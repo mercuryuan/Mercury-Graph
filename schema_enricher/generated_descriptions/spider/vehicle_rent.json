@@ -1,0 +1,52 @@
+{
+    "Customers": [
+        {
+            "columns": {
+                "id": "The unique identifier for each customer.",
+                "name": "The full name of the customer.",
+                "age": "The age of the customer in years.",
+                "membership_credit": "The total credit available for the customer's membership."
+            },
+            "table_description": "The table tracks customer details for vehicle rental."
+        }
+    ],
+    "Discount": [
+        {
+            "columns": {
+                "id": "The unique identifier for each discount.",
+                "name": "The description of the discount offered.",
+                "membership_credit": "The credit amount required for the discount."
+            },
+            "table_description": "The table tracks discount offers for vehicle rentals."
+        }
+    ],
+    "Vehicles": [
+        {
+            "columns": {
+                "id": "The unique identifier for each vehicle.",
+                "name": "The name of the vehicle model.",
+                "Model_year": "The manufacturing year of the vehicle.",
+                "Type_of_powertrain": "The type of powertrain used in the vehicle.",
+                "Combined_fuel_economy_rate": "The overall fuel economy rate for the vehicle.",
+                "City_fuel_economy_rate": "The city driving fuel economy rate for the vehicle.",
+                "Highway_fuel_economy_rate": "The highway driving fuel economy rate for the vehicle.",
+                "Cost_per_25_miles": "The estimated cost for driving 25 miles.",
+                "Annual_fuel_cost": "The estimated annual fuel cost associated with the vehicle.",
+                "Notes": "Additional notes or comments regarding the vehicle."
+            },
+            "table_description": "The table provides details about vehicles available for rent."
+        }
+    ],
+    "Renting_history": [
+        {
+            "columns": {
+                "id": "The unique identifier for each renting record.",
+                "customer_id": "The unique identifier for the customer renting the vehicle.",
+                "discount_id": "The identifier for any discount applied to the rental.",
+                "vehicles_id": "The unique identifier for the vehicle being rented.",
+                "total_hours": "The total duration of the rental in hours."
+            },
+            "table_description": "The table records the history of vehicle rentals by customers."
+        }
+    ]
+}

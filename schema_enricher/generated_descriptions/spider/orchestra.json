@@ -2,52 +2,52 @@
     "conductor": [
         {
             "columns": {
-                "Conductor_ID": "A unique identifier for each conductor in the table.",
+                "Conductor_ID": "The unique identifier for each conductor.",
                 "Name": "The full name of the conductor.",
-                "Age": "The age of the conductor at the time of entry in the database.",
-                "Nationality": "The country of origin or citizenship of the conductor.",
-                "Year_of_Work": "The total number of years the conductor has worked in their field."
+                "Age": "The age of the conductor in years.",
+                "Nationality": "The country of origin of the conductor.",
+                "Year_of_Work": "The total years the conductor has worked."
             },
-            "table_description": "The conductor table contains information about conductors, including their unique identifiers, names, ages, nationalities, and years of professional experience."
+            "table_description": "The table stores information about conductors in the orchestra."
         }
     ],
     "orchestra": [
         {
             "columns": {
-                "Orchestra_ID": "This column uniquely identifies each orchestra in the database.",
-                "Orchestra": "This column contains the name of the orchestra.",
-                "Conductor_ID": "This column refers to the unique identifier of the conductor associated with the orchestra.",
-                "Record_Company": "This column specifies the name of the record company that produces recordings for the orchestra.",
-                "Year_of_Founded": "This column represents the year in which the orchestra was established.",
-                "Major_Record_Format": "This column indicates the primary format in which the orchestra's music recordings are available."
+                "Orchestra_ID": "The unique identifier for each orchestra.",
+                "Orchestra": "The name of the orchestra.",
+                "Conductor_ID": "The unique identifier for the associated conductor.",
+                "Record_Company": "The name of the record company producing the orchestra's recordings.",
+                "Year_of_Founded": "The year the orchestra was established.",
+                "Major_Record_Format": "The primary format used for the orchestra's recordings."
             },
-            "table_description": "The orchestra table captures essential information about various orchestras, including their unique identifiers, names, associated conductors, record companies, founding years, and primary recording formats."
+            "table_description": "The table stores information about orchestras and their details."
         }
     ],
     "performance": [
         {
             "columns": {
-                "Performance_ID": "A unique identifier for each performance entry.",
-                "Orchestra_ID": "A reference to the orchestra associated with the performance.",
-                "Type": "The category or phase of the performance, such as auditions or finals.",
-                "Date": "The date on which the performance took place.",
-                "Official_ratings_(millions)": "The official audience ratings for the performance, measured in millions.",
-                "Weekly_rank": "The performance's rank in a weekly listing based on its ratings.",
-                "Share": "The percentage share of the audience that watched the performance."
+                "Performance_ID": "The unique identifier for each performance.",
+                "Orchestra_ID": "The unique identifier for the associated orchestra.",
+                "Type": "The category of the performance event.",
+                "Date": "The date when the performance took place.",
+                "Official_ratings_(millions)": "The audience ratings in millions for the performance.",
+                "Weekly_rank": "The ranking of the performance in the weekly charts.",
+                "Share": "The percentage share of the performance's audience."
             },
-            "table_description": "The performance table captures detailed information about various performances, including their identification, orchestras, type, date, ratings, ranking, and audience share."
+            "table_description": "The table stores details about various performances of orchestras."
         }
     ],
     "show": [
         {
             "columns": {
-                "Show_ID": "A unique identifier for each show in the database.",
-                "Performance_ID": "A foreign key linking to a specific performance in the performance table.",
-                "If_first_show": "Indicates whether this show is the first in a series for a performer or venue.",
-                "Result": "The outcome of the show, represented as a boolean where 'T' signifies a positive outcome and 'F' signifies a negative outcome.",
-                "Attendance": "The number of attendees present at the show, denoted as a real number."
+                "Show_ID": "The unique identifier for each show.",
+                "Performance_ID": "The unique identifier for the associated performance.",
+                "If_first_show": "The indicator of whether this is the first show.",
+                "Result": "The outcome of the show indicated by a character.",
+                "Attendance": "The number of attendees at the show."
             },
-            "table_description": "The 'show' table records details about various shows, including identification, performance association, whether it was the first show, the result of the show, and the attendance figures."
+            "table_description": "The table stores details about shows associated with performances."
         }
     ]
 }

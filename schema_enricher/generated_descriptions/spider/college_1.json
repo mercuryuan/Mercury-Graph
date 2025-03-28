@@ -1,94 +1,94 @@
 {
-    "CLASS": [
+    "EMPLOYEE": [
         {
             "columns": {
-                "CLASS_CODE": "Unique identifier for each class offered in the college.",
-                "CRS_CODE": "Code representing the course associated with the class.",
-                "CLASS_SECTION": "Designates the section number of the class.",
-                "CLASS_TIME": "Specifies the scheduled days and times when the class is held.",
-                "CLASS_ROOM": "Identifies the room where the class is conducted.",
-                "PROF_NUM": "Unique identifier for the professor teaching the class."
+                "EMP_NUM": "The unique identifier of each employee.",
+                "EMP_LNAME": "The last name of the employee.",
+                "EMP_FNAME": "The first name of the employee.",
+                "EMP_INITIAL": "The middle initial of the employee.",
+                "EMP_JOBCODE": "The job code indicating the employee's position.",
+                "EMP_HIREDATE": "The date when the employee was hired.",
+                "EMP_DOB": "The birth date of the employee."
             },
-            "table_description": "The CLASS table contains details about the classes offered, including their identifiers, associated courses, scheduling information, classroom assignments, and instructor information."
+            "table_description": "The table details employees and their personal information."
         }
     ],
     "COURSE": [
         {
             "columns": {
-                "CRS_CODE": "A unique identifier for each course offered, allowing for easy reference and categorization.",
-                "DEPT_CODE": "A code indicating the department that offers the course, linking the course to academic departments.",
-                "CRS_DESCRIPTION": "A brief description of the course content or focus, providing insight into what the course covers.",
-                "CRS_CREDIT": "The number of credit hours awarded upon successful completion of the course, representing the course's weight in the curriculum."
+                "CRS_CODE": "The unique identifier for each course.",
+                "DEPT_CODE": "The code representing the department offering the course.",
+                "CRS_DESCRIPTION": "The title or description of the course.",
+                "CRS_CREDIT": "The number of credits awarded for completing the course."
             },
-            "table_description": "The COURSE table organizes all courses available at the college, detailing their unique identifiers, departmental associations, descriptions, and credit values."
+            "table_description": "The table details courses offered in the college."
         }
     ],
-    "DEPARTMENT": [
+    "CLASS": [
         {
             "columns": {
-                "DEPT_CODE": "A unique identifier for each department.",
-                "DEPT_NAME": "The name of the department.",
-                "SCHOOL_CODE": "A code representing the school to which the department belongs.",
-                "EMP_NUM": "The employee number of the department head or main contact person.",
-                "DEPT_ADDRESS": "The physical location of the department within the college.",
-                "DEPT_EXTENSION": "The telephone extension for contacting the department."
+                "CLASS_CODE": "The unique identifier for each class.",
+                "CRS_CODE": "The code identifying the course associated with the class.",
+                "CLASS_SECTION": "The section number for the class.",
+                "CLASS_TIME": "The scheduled time for the class meetings.",
+                "CLASS_ROOM": "The room where the class is held.",
+                "PROF_NUM": "The identifier for the professor teaching the class."
             },
-            "table_description": "The DEPARTMENT table stores information about various academic departments within the college, including their identifiers, names, associated schools, leadership contact information, and contact details."
-        }
-    ],
-    "EMPLOYEE": [
-        {
-            "columns": {
-                "EMP_NUM": "A unique identifier assigned to each employee.",
-                "EMP_LNAME": "The last name of the employee.",
-                "EMP_FNAME": "The first name of the employee.",
-                "EMP_INITIAL": "An optional middle initial of the employee.",
-                "EMP_JOBCODE": "A code representing the job title or role of the employee.",
-                "EMP_HIREDATE": "The date on which the employee was hired.",
-                "EMP_DOB": "The date of birth of the employee."
-            },
-            "table_description": "The EMPLOYEE table stores information about each employee, including their unique identification number, names, job details, and significant dates related to their employment and personal history."
-        }
-    ],
-    "ENROLL": [
-        {
-            "columns": {
-                "CLASS_CODE": "Represents the unique code assigned to a specific class in which a student is enrolled.",
-                "STU_NUM": "Denotes the unique student number associated with a student who is enrolled in a class.",
-                "ENROLL_GRADE": "Indicates the grade received by the student for their enrollment in the class."
-            },
-            "table_description": "The ENROLL table serves to track the relationship between students and their respective enrollments in classes, including the grades they receive."
+            "table_description": "The table details class schedules and assignments in the college."
         }
     ],
     "PROFESSOR": [
         {
             "columns": {
-                "EMP_NUM": "A unique identifier assigned to each professor in the database.",
-                "DEPT_CODE": "A code representing the department to which the professor belongs.",
-                "PROF_OFFICE": "The designated office location for the professor within the institution.",
-                "PROF_EXTENSION": "The internal phone extension number assigned to the professor.",
+                "EMP_NUM": "The unique identifier of each professor.",
+                "DEPT_CODE": "The code representing the department of the professor.",
+                "PROF_OFFICE": "The office location of the professor.",
+                "PROF_EXTENSION": "The phone extension for contacting the professor.",
                 "PROF_HIGH_DEGREE": "The highest academic degree attained by the professor."
             },
-            "table_description": "The PROFESSOR table contains essential information about faculty members, including their identification number, affiliated department, office location, contact extension, and highest academic qualifications."
+            "table_description": "The table details professors and their departmental affiliations."
         }
     ],
     "STUDENT": [
         {
             "columns": {
-                "STU_NUM": "A unique identifier assigned to each student.",
+                "STU_NUM": "The unique identifier of each student.",
                 "STU_LNAME": "The last name of the student.",
                 "STU_FNAME": "The first name of the student.",
                 "STU_INIT": "The middle initial of the student.",
-                "STU_DOB": "The date of birth of the student.",
-                "STU_HRS": "The total number of credit hours the student has completed.",
-                "STU_CLASS": "The classification of the student based on their completed credit hours.",
-                "STU_GPA": "The grade point average of the student, reflecting their academic performance.",
-                "STU_TRANSFER": "Indicates whether the student is a transfer student (1) or not (0).",
-                "DEPT_CODE": "The code representing the department the student belongs to.",
-                "STU_PHONE": "The last four digits of the student's phone number.",
-                "PROF_NUM": "The identifier of the professor assigned to the student's advising or supervision."
+                "STU_DOB": "The birth date of the student.",
+                "STU_HRS": "The total credit hours completed by the student.",
+                "STU_CLASS": "The classification of the student (e.g., Fr, So, Jr, Sr).",
+                "STU_GPA": "The current grade point average of the student.",
+                "STU_TRANSFER": "Indicators if the student is a transfer student.",
+                "DEPT_CODE": "The code corresponding to the student's enrolled department.",
+                "STU_PHONE": "The phone number extension of the student.",
+                "PROF_NUM": "The identifier for the professor assigned to the student."
             },
-            "table_description": "The STUDENT table contains comprehensive information about each student enrolled in the college, including personal identifiers, academic metrics, and departmental associations."
+            "table_description": "The table details students and their academic information."
+        }
+    ],
+    "DEPARTMENT": [
+        {
+            "columns": {
+                "DEPT_CODE": "The unique identifier for each department.",
+                "DEPT_NAME": "The name of the department.",
+                "EMP_NUM": "The identifier for the employee managing the department.",
+                "SCHOOL_CODE": "The code representing the school to which the department belongs.",
+                "DEPT_ADDRESS": "The physical address of the department.",
+                "DEPT_EXTENSION": "The phone extension for contacting the department."
+            },
+            "table_description": "The table details departments and their associated information."
+        }
+    ],
+    "ENROLL": [
+        {
+            "columns": {
+                "CLASS_CODE": "The unique identifier for the class in which the student is enrolled.",
+                "STU_NUM": "The unique identifier of the student enrolled in the class.",
+                "ENROLL_GRADE": "The grade awarded to the student for the class."
+            },
+            "table_description": "The table details the enrollment records of students in classes."
         }
     ]
 }

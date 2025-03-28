@@ -1,0 +1,162 @@
+{
+    "Classes": [
+        {
+            "columns": {
+                "class_id": "The unique identifier for each class.",
+                "student_id": "The unique identifier of the enrolled student.",
+                "teacher_id": "The unique identifier of the instructor for the class.",
+                "class_details": "The specific subject or content covered in the class."
+            },
+            "table_description": "The table manages class information for students and instructors."
+        }
+    ],
+    "Students_Addresses": [
+        {
+            "columns": {
+                "student_address_id": "The unique identifier for each student address record.",
+                "address_id": "The unique identifier for the associated address.",
+                "address_type_code": "The code defining the type of address such as home or company.",
+                "student_id": "The unique identifier of the student associated with the address.",
+                "date_from": "The starting date when the address became effective.",
+                "date_to": "The ending date when the address is no longer effective."
+            },
+            "table_description": "The table records addresses associated with each student."
+        }
+    ],
+    "Detention": [
+        {
+            "columns": {
+                "detention_id": "The unique identifier for each detention record.",
+                "detention_type_code": "The code defining the type of detention assigned.",
+                "student_id": "The unique identifier of the student involved in the detention.",
+                "datetime_detention_start": "The date and time when the detention begins.",
+                "datetime_detention_end": "The date and time when the detention ends.",
+                "detention_summary": "The summary of the reasons for the detention.",
+                "other_details": "Additional notes or information related to the detention."
+            },
+            "table_description": "The table tracks detention records for students and related details."
+        }
+    ],
+    "Achievements": [
+        {
+            "columns": {
+                "achievement_id": "The unique identifier for each achievement record.",
+                "achievement_type_code": "The code specifying the category of achievement.",
+                "student_id": "The unique identifier of the student who attained the achievement.",
+                "date_achievement": "The date when the achievement was awarded.",
+                "achievement_details": "The description of the specific achievement received.",
+                "other_details": "Additional information related to the achievement."
+            },
+            "table_description": "The table records achievements attained by students and related details."
+        }
+    ],
+    "Students": [
+        {
+            "columns": {
+                "student_id": "The unique identifier for each student.",
+                "bio_data": "The name of the student as recorded in the database.",
+                "student_details": "The address or location details of the student."
+            },
+            "table_description": "The table maintains records of student identities and their corresponding details."
+        }
+    ],
+    "Transcripts": [
+        {
+            "columns": {
+                "transcript_id": "The unique identifier for each transcript record.",
+                "student_id": "The unique identifier of the associated student.",
+                "date_of_transcript": "The date when the transcript was issued.",
+                "transcript_details": "The summary of the student's performance on the transcript."
+            },
+            "table_description": "The table records transcripts issued for students and their performance details."
+        }
+    ],
+    "Behaviour_Monitoring": [
+        {
+            "columns": {
+                "behaviour_monitoring_id": "The unique identifier for each behaviour monitoring record.",
+                "student_id": "The unique identifier of the student being monitored.",
+                "behaviour_monitoring_details": "The specific details of the monitored behaviour."
+            },
+            "table_description": "The table tracks behaviour monitoring records for students."
+        }
+    ],
+    "Addresses": [
+        {
+            "columns": {
+                "address_id": "The unique identifier for each address.",
+                "address_details": "The specific location details for the address."
+            },
+            "table_description": "The table maintains address information for use in student records."
+        }
+    ],
+    "Ref_Event_Types": [
+        {
+            "columns": {
+                "event_type_code": "The unique code defining each event type.",
+                "event_type_description": "The detailed description of the event type."
+            },
+            "table_description": "The table holds reference information about different event types."
+        }
+    ],
+    "Ref_Achievement_Type": [
+        {
+            "columns": {
+                "achievement_type_code": "The unique code for each type of achievement.",
+                "achievement_type_description": "The detailed description of each achievement type."
+            },
+            "table_description": "The table stores types of achievements defined for student records."
+        }
+    ],
+    "Ref_Address_Types": [
+        {
+            "columns": {
+                "address_type_code": "The unique code for each type of address.",
+                "address_type_description": "The detailed description of the address type."
+            },
+            "table_description": "The table defines types of addresses for students' records."
+        }
+    ],
+    "Ref_Detention_Type": [
+        {
+            "columns": {
+                "detention_type_code": "The unique code defining each type of detention.",
+                "detention_type_description": "The detailed description of the specific detention type."
+            },
+            "table_description": "The table provides reference information for different types of detentions."
+        }
+    ],
+    "Student_Events": [
+        {
+            "columns": {
+                "event_id": "The unique identifier for each event record.",
+                "event_type_code": "The code defining the type of event recorded.",
+                "student_id": "The unique identifier of the student associated with the event.",
+                "event_date": "The date and time when the event occurred.",
+                "other_details": "Additional information related to the event."
+            },
+            "table_description": "The table records events associated with students and their details."
+        }
+    ],
+    "Teachers": [
+        {
+            "columns": {
+                "teacher_id": "The unique identifier for each teacher.",
+                "teacher_details": "The name of the teacher as recorded in the database."
+            },
+            "table_description": "The table maintains records of teacher identities and their details."
+        }
+    ],
+    "Student_Loans": [
+        {
+            "columns": {
+                "student_loan_id": "The unique identifier for each student loan record.",
+                "student_id": "The unique identifier of the student receiving the loan.",
+                "date_of_loan": "The date when the loan was issued to the student.",
+                "amount_of_loan": "The total amount of money lent to the student.",
+                "other_details": "Additional information about the loan that may be relevant."
+            },
+            "table_description": "The table tracks loans issued to students and associated details."
+        }
+    ]
+}

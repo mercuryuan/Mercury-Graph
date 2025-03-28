@@ -2,38 +2,38 @@
     "mountain": [
         {
             "columns": {
-                "id": "A unique identifier for each mountain entry in the database.",
-                "name": "The common name by which the mountain is known.",
-                "Height": "The elevation of the mountain above sea level, typically measured in meters.",
-                "Prominence": "The height of the mountain's summit relative to the lowest contour line surrounding the peak, indicating its independence from nearby mountains.",
-                "Range": "The name of the mountain range to which the mountain belongs.",
-                "Country": "The nation in which the mountain is located."
+                "id": "The unique identifier for each mountain.",
+                "name": "The name of the mountain.",
+                "Height": "The elevation of the mountain above sea level.",
+                "Prominence": "The height of the mountain's summit relative to surrounding terrain.",
+                "Range": "The mountain range to which the mountain belongs.",
+                "Country": "The country where the mountain is located."
             },
-            "table_description": "The mountain table provides a detailed record of mountains, including their unique identifiers, names, elevations, prominence, associated ranges, and geographical locations."
+            "table_description": "The table stores information about mountains and their characteristics."
         }
     ],
     "camera_lens": [
         {
             "columns": {
-                "id": "A unique identifier for each camera lens entry in the table.",
-                "brand": "The manufacturer or brand name of the camera lens.",
-                "name": "The full name or model designation of the camera lens.",
-                "focal_length_mm": "The focal length of the lens measured in millimeters, which affects the lens's field of view.",
-                "max_aperture": "The largest aperture setting of the lens, expressed in f-stops, which influences the amount of light that can pass through the lens."
+                "id": "The unique identifier for each camera lens.",
+                "brand": "The manufacturer or brand of the camera lens.",
+                "name": "The specific model name of the camera lens.",
+                "focal_length_mm": "The focal length of the lens in millimeters.",
+                "max_aperture": "The maximum aperture value of the lens."
             },
-            "table_description": "The camera_lens table stores detailed information about various camera lenses, including their unique identifiers, brands, names, focal lengths, and maximum aperture settings."
+            "table_description": "The table details characteristics of various camera lenses."
         }
     ],
     "photos": [
         {
             "columns": {
-                "id": "A unique identifier for each photo entry.",
-                "camera_lens_id": "References the camera lens used to take the photo.",
-                "mountain_id": "References the mountain that the photo depicts.",
-                "color": "Describes the color scheme of the photo.",
-                "name": "The title or name given to the photo."
+                "id": "The unique identifier for each photo.",
+                "camera_lens_id": "The identifier of the camera lens used to take the photo.",
+                "mountain_id": "The identifier of the mountain featured in the photo.",
+                "color": "The color representation used in the photo.",
+                "name": "The descriptive name of the photo."
             },
-            "table_description": "The photos table holds information about photographs taken of various mountains, including details about the camera lens used, the represented mountain, the color scheme of the image, and a descriptive name for each photo."
+            "table_description": "The table captures photos of mountains with associated characteristics."
         }
     ]
 }

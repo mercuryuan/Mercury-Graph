@@ -1,0 +1,26 @@
+{
+    "race": [
+        {
+            "columns": {
+                "Race_ID": "A unique identifier for each race in the database.",
+                "Name": "The official name of the race event.",
+                "Class": "The classification of the race, indicating the type of vehicles or competition involved.",
+                "Date": "The date on which the race is scheduled to occur.",
+                "Track_ID": "An identifier that connects the race to a specific track location."
+            },
+            "table_description": "The 'race' table contains information about various race events, including their unique identifiers, names, classifications, scheduled dates, and the associated tracks."
+        }
+    ],
+    "track": [
+        {
+            "columns": {
+                "Track_ID": "A unique identifier for each race track in the database.",
+                "Name": "The official name of the race track.",
+                "Location": "The geographical location where the race track is situated.",
+                "Seating": "The total seating capacity available for spectators at the race track.",
+                "Year_Opened": "The year in which the race track was officially opened for operations."
+            },
+            "table_description": "The 'track' table provides essential information about various race tracks, including their unique identifiers, names, locations, seating capacities, and the years they were opened."
+        }
+    ]
+}

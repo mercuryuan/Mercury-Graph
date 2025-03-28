@@ -1,0 +1,31 @@
+{
+    "Championship": [
+        {
+            "columns": {
+                "Institution_ID": "The unique identifier for each sports institution.",
+                "Nickname": "The commonly used name for the sports institution.",
+                "Joined": "The year the institution joined the championship.",
+                "Number_of_Championships": "The total championships won by the institution."
+            },
+            "table_description": "The table tracks various sports institutions and their championship records."
+        }
+    ],
+    "institution": [
+        {
+            "columns": {
+                "Institution_ID": "The unique identifier for each sports institution.",
+                "Name": "The full name of the sports institution.",
+                "Team": "The name of the sports team representing the institution.",
+                "City": "The city where the sports institution is located.",
+                "Province": "The province where the sports institution operates.",
+                "Founded": "The year the sports institution was established.",
+                "Affiliation": "The type of affiliation of the sports institution.",
+                "Enrollment": "The total number of students enrolled in the institution.",
+                "Endowment": "The financial endowment of the sports institution.",
+                "Stadium": "The name of the stadium used by the sports institution.",
+                "Capacity": "The maximum number of spectators the stadium can accommodate."
+            },
+            "table_description": "The table provides details about various sports institutions and their characteristics."
+        }
+    ]
+}

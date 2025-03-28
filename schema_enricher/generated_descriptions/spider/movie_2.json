@@ -1,0 +1,22 @@
+{
+    "Movies": [
+        {
+            "columns": {
+                "Code": "The unique identifier for each movie.",
+                "Title": "The name of the movie.",
+                "Rating": "The audience rating assigned to the movie."
+            },
+            "table_description": "The table stores detailed information about movies."
+        }
+    ],
+    "MovieTheaters": [
+        {
+            "columns": {
+                "Code": "The unique identifier for each movie theater.",
+                "Name": "The name of the movie theater.",
+                "Movie": "The identifier for the movie shown at the theater."
+            },
+            "table_description": "The table stores information about various movie theaters."
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "official_languages": [
+        {
+            "columns": {
+                "language_id": "The unique identifier for each language.",
+                "country_id": "The unique identifier for each country where the language is official."
+            },
+            "table_description": "The table links official languages to their respective countries."
+        }
+    ],
+    "languages": [
+        {
+            "columns": {
+                "id": "The unique identifier for each language.",
+                "name": "The name of the language in text format."
+            },
+            "table_description": "The table lists languages along with their unique identifiers."
+        }
+    ],
+    "countries": [
+        {
+            "columns": {
+                "id": "The unique identifier for each country.",
+                "name": "The name of the country in text format.",
+                "overall_score": "The aggregated score reflecting the country's overall performance.",
+                "justice_score": "The score measuring the fairness and equality in the country.",
+                "health_score": "The score assessing the health standards and services in the country.",
+                "education_score": "The score evaluating the quality of education in the country.",
+                "economics_score": "The score representing the economic stability and growth of the country.",
+                "politics_score": "The score indicating the political stability and governance in the country."
+            },
+            "table_description": "The table provides scores assessing various aspects of countries."
+        }
+    ]
+}

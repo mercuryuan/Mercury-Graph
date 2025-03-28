@@ -1,72 +1,72 @@
 {
-    "Staff": [
-        {
-            "columns": {
-                "staff_id": "A unique identifier for each staff member.",
-                "staff_first_name": "The first name of the staff member.",
-                "staff_last_name": "The last name of the staff member.",
-                "other_staff_details": "Any additional details related to the staff member that may not fit into other specific categories."
-            },
-            "table_description": "The Staff table contains essential information about staff members involved in problem tracking, including their names and additional details."
-        }
-    ],
     "Problem_Status_Codes": [
         {
             "columns": {
-                "problem_status_code": "A unique identifier for each problem status, indicating the current state of a problem.",
-                "problem_status_description": "A brief explanation of the problem status, providing context about what the status signifies in the problem tracking system."
+                "problem_status_code": "The unique code identifying the problem status.",
+                "problem_status_description": "The detailed description of the problem status."
             },
-            "table_description": "The Problem_Status_Codes table serves to categorize the various statuses of problems in the tracking software, ensuring that each status is clearly defined and can be referenced throughout related logs and processes."
+            "table_description": "The table categorizes various problem statuses used in tracking."
         }
     ],
     "Product": [
         {
             "columns": {
-                "product_id": "Unique identifier for each product in the system.",
-                "product_name": "The name of the product, which helps to identify it within the tracking system.",
-                "product_details": "Additional information or description related to the product."
+                "product_id": "The unique identifier for each product.",
+                "product_name": "The name of the product.",
+                "product_details": "The information detailing the features of the product."
             },
-            "table_description": "The Product table contains information about various products tracked within the software, including unique identifiers, names, and details about each product."
+            "table_description": "The table lists products tracked by the software."
         }
     ],
     "Problem_Category_Codes": [
         {
             "columns": {
-                "problem_category_code": "A unique identifier for each category of problems, used to categorize and organize issues logged in the system.",
-                "problem_category_description": "A detailed explanation of the nature of the problem category, providing context and clarification for users and developers."
+                "problem_category_code": "The unique code identifying each problem category.",
+                "problem_category_description": "The description detailing the nature of the problem category."
             },
-            "table_description": "The Problem_Category_Codes table is designed to store distinct categories of software problems, enabling efficient categorization and reporting within the tracking system."
+            "table_description": "The table categorizes different types of problems for tracking purposes."
         }
     ],
     "Problem_Log": [
         {
             "columns": {
-                "problem_log_id": "A unique identifier for each log entry in the problem log.",
-                "assigned_to_staff_id": "The identifier for the staff member assigned to address the problem.",
-                "problem_id": "A reference to the specific problem being logged.",
-                "problem_category_code": "A code indicating the category of the problem, such as Middleware or GUI.",
-                "problem_status_code": "The current status of the problem, indicating whether it has been reported or solved.",
+                "problem_log_id": "The unique identifier for each problem log entry.",
+                "assigned_to_staff_id": "The identifier of the staff member assigned to the problem.",
+                "problem_id": "The identifier for the specific problem in the log.",
+                "problem_category_code": "The code categorizing the type of problem logged.",
+                "problem_status_code": "The current status code of the logged problem.",
                 "log_entry_date": "The date and time when the log entry was created.",
-                "log_entry_description": "A brief description of the log entry or the specific issue.",
-                "log_entry_fix": "Details about the fix implemented for the problem, if applicable.",
-                "other_log_details": "Any additional information relevant to the log entry."
+                "log_entry_description": "The brief description of the log entry.",
+                "log_entry_fix": "The description of the fix applied to the problem.",
+                "other_log_details": "Additional details related to the log entry."
             },
-            "table_description": "The Problem_Log table records details about issues tracked within the system, including their status, category, and assignment, along with timestamps and descriptive entries about the logging process."
+            "table_description": "The table tracks detailed logs for reported problems in the system."
+        }
+    ],
+    "Staff": [
+        {
+            "columns": {
+                "staff_id": "The unique identifier for each staff member.",
+                "staff_first_name": "The first name of the staff member.",
+                "staff_last_name": "The last name of the staff member.",
+                "other_staff_details": "The additional information related to the staff member."
+            },
+            "table_description": "The table contains details of staff members managing problem tracking."
         }
     ],
     "Problems": [
         {
             "columns": {
-                "problem_id": "A unique identifier for each reported problem within the system.",
-                "product_id": "The identifier for the product associated with the reported problem.",
-                "closure_authorised_by_staff_id": "The identifier for the staff member who authorized the closure of the problem.",
-                "reported_by_staff_id": "The identifier for the staff member who reported the problem.",
-                "date_problem_reported": "The date and time when the problem was initially reported.",
-                "date_problem_closed": "The date and time when the problem was officially closed.",
-                "problem_description": "A brief description summarizing the nature of the problem.",
-                "other_problem_details": "Additional details that provide further context or specifics about the problem."
+                "problem_id": "The unique identifier for each reported problem.",
+                "product_id": "The identifier of the product related to the problem.",
+                "closure_authorised_by_staff_id": "The staff identifier authorizing the problem closure.",
+                "reported_by_staff_id": "The staff identifier who reported the problem.",
+                "date_problem_reported": "The date and time when the problem was reported.",
+                "date_problem_closed": "The date and time when the problem was closed.",
+                "problem_description": "The brief description detailing the nature of the problem.",
+                "other_problem_details": "The additional information related to the reported problem."
             },
-            "table_description": "The Problems table is designed to track reported issues related to products, capturing essential information such as the reporter, the closure authorization, and relevant dates and descriptions regarding each problem."
+            "table_description": "The table tracks all reported problems and their resolutions."
         }
     ]
 }

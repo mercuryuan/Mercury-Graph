@@ -1,0 +1,29 @@
+{
+    "player": [
+        {
+            "columns": {
+                "Player_ID": "The unique identifier for each player.",
+                "Name": "The full name of the player.",
+                "Country": "The country where the player originates.",
+                "Earnings": "The total earnings of the player.",
+                "Events_number": "The total number of events the player participated in.",
+                "Wins_count": "The total number of wins achieved by the player.",
+                "Club_ID": "The identifier of the club the player belongs to."
+            },
+            "table_description": "The table tracks player details and their performance statistics."
+        }
+    ],
+    "club": [
+        {
+            "columns": {
+                "Club_ID": "The unique identifier for each club.",
+                "Name": "The official name of the club.",
+                "Manager": "The name of the club's manager.",
+                "Captain": "The name of the club's captain.",
+                "Manufacturer": "The brand that manufactures the club's kit.",
+                "Sponsor": "The name of the club's sponsor."
+            },
+            "table_description": "The table holds details about clubs and their management."
+        }
+    ]
+}

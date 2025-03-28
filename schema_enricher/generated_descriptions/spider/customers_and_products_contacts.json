@@ -2,85 +2,85 @@
     "Addresses": [
         {
             "columns": {
-                "address_id": "A unique identifier for each address record.",
-                "line_1_number_building": "The first line of the address which typically includes the street number and name, along with any apartment or suite information.",
+                "address_id": "The unique identifier for each address entry.",
+                "line_1_number_building": "The primary address line including building number and name.",
                 "city": "The name of the city associated with the address.",
-                "zip_postcode": "The postal code or ZIP code that helps to identify the region or area for mail delivery.",
-                "state_province_county": "The state, province, or county in which the address is located.",
-                "country": "The country where the address is found."
+                "zip_postcode": "The postal code for the address location.",
+                "state_province_county": "The state, province, or county linked to the address.",
+                "country": "The country where the address is located."
             },
-            "table_description": "The Addresses table stores the details of customer addresses, including unique identifiers, street information, city names, postal details, and geographical classification."
-        }
-    ],
-    "Products": [
-        {
-            "columns": {
-                "product_id": "Unique identifier for each product in the table.",
-                "product_type_code": "Category of the product, such as Clothes or Hardware.",
-                "product_name": "Name of the product, representing the brand or specific item.",
-                "product_price": "Monetary value of the product, indicating its sale price."
-            },
-            "table_description": "The Products table stores information about various products available for sale, including their unique identifiers, types, names, and prices."
-        }
-    ],
-    "Customers": [
-        {
-            "columns": {
-                "customer_id": "A unique identifier for each customer in the database.",
-                "payment_method_code": "The code representing the method of payment used by the customer.",
-                "customer_number": "An identification number assigned to the customer, used for reference.",
-                "customer_name": "The full name of the customer.",
-                "customer_address": "The residential or business address of the customer.",
-                "customer_phone": "The contact phone number for the customer.",
-                "customer_email": "The email address associated with the customer."
-            },
-            "table_description": "The Customers table stores essential information related to each customer, including their identification details, contact information, and payment preferences."
+            "table_description": "The table stores detailed address information for customers."
         }
     ],
     "Contacts": [
         {
             "columns": {
-                "contact_id": "A unique identifier for each contact entry in the table.",
-                "customer_id": "The identifier associated with the customer to whom the contact belongs.",
-                "gender": "The gender of the contact, represented as a single character ('m' for male and 'f' for female).",
+                "contact_id": "The unique identifier for each contact entry.",
+                "customer_id": "The identifier for the associated customer.",
+                "gender": "The gender of the contact, represented by a single character.",
                 "first_name": "The first name of the contact person.",
                 "last_name": "The last name of the contact person.",
-                "contact_phone": "The phone number used to contact the person."
+                "contact_phone": "The phone number used to reach the contact."
             },
-            "table_description": "The Contacts table is designed to store details about individuals associated with customers, providing essential contact information including names, gender, and phone numbers."
+            "table_description": "The table holds contact information linked to customers."
         }
     ],
-    "Customer_Address_History": [
+    "Products": [
         {
             "columns": {
-                "customer_id": "A unique identifier representing a customer.",
-                "address_id": "A unique identifier representing a customer's address.",
-                "date_from": "The start date when the customer was associated with the given address.",
-                "date_to": "The end date when the customer was last associated with the given address, if applicable."
+                "product_id": "The unique identifier for each product entry.",
+                "product_type_code": "The classification code identifying the type of product.",
+                "product_name": "The name associated with the specific product.",
+                "product_price": "The monetary price assigned to the product."
             },
-            "table_description": "The Customer_Address_History table records the historical associations between customers and their addresses, capturing the duration of each address over time."
+            "table_description": "The table holds information about various products available for customers."
         }
     ],
     "Customer_Orders": [
         {
             "columns": {
-                "order_id": "A unique identifier for each order placed by a customer, serving as the primary key for the table.",
-                "customer_id": "A unique identifier associated with a customer, linking the order to the respective customer record.",
-                "order_date": "The date and time when the order was placed, providing insight into the order's timeline.",
-                "order_status_code": "A code representing the current status of the order, indicating whether it is completed, part of a larger order, or in another state."
+                "order_id": "The unique identifier for each customer order.",
+                "customer_id": "The identifier linking the order to a specific customer.",
+                "order_date": "The date and time when the order was placed.",
+                "order_status_code": "The current status of the order, indicating its processing state."
             },
-            "table_description": "The Customer_Orders table captures essential details about customer orders, including unique identifiers, the order placement date, and the current status of the orders, facilitating order management and tracking."
+            "table_description": "The table records orders placed by customers, tracking their status and timing."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer in the database.",
+                "payment_method_code": "The payment method selected by the customer.",
+                "customer_number": "The assigned number used to uniquely recognize the customer.",
+                "customer_name": "The full name of the customer.",
+                "customer_address": "The physical address of the customer.",
+                "customer_phone": "The contact phone number for the customer.",
+                "customer_email": "The email address to reach the customer."
+            },
+            "table_description": "The table holds comprehensive details about customers and their contact information."
         }
     ],
     "Order_Items": [
         {
             "columns": {
-                "order_item_id": "A unique identifier for each item in an order.",
-                "order_id": "An identifier that links the order item to a specific customer order.",
-                "product_id": "An identifier that links the order item to a specific product in the catalog.",
-                "order_quantity": "The quantity of the product being ordered, represented as a string."
+                "order_item_id": "The unique identifier for each order item entry.",
+                "order_id": "The identifier linking the item to a specific customer order.",
+                "product_id": "The identifier for the product associated with the order item.",
+                "order_quantity": "The quantity of the product ordered in this entry."
             },
-            "table_description": "The Order_Items table contains details of the products associated with each customer order, including the quantity of each product ordered."
+            "table_description": "The table tracks items ordered by customers along with their quantities."
+        }
+    ],
+    "Customer_Address_History": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer associated with an address change.",
+                "address_id": "The unique identifier for the address linked to the customer.",
+                "date_from": "The date from which the address was effective for the customer.",
+                "date_to": "The date until which the address remained valid for the customer."
+            },
+            "table_description": "The table tracks the historical address changes for customers over time."
         }
     ]
 }

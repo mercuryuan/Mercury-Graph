@@ -2,83 +2,83 @@
     "Addresses": [
         {
             "columns": {
-                "address_id": "A unique identifier for each address record.",
-                "line_1_number_building": "The primary line of the address that includes the building number and street name.",
+                "line_1_number_building": "The primary address line including building number or name.",
+                "address_id": "The unique identifier for each address record.",
                 "city": "The name of the city where the address is located.",
-                "zip_postcode": "The postal code associated with the address for mail delivery.",
-                "state_province_county": "The state, province, or county in which the city resides.",
-                "country": "The country of the address."
+                "zip_postcode": "The postal code for the address area.",
+                "state_province_county": "The state, province, or county of the address.",
+                "country": "The country in which the address resides."
             },
-            "table_description": "The Addresses table stores detailed information related to the addresses used by staff and customers of the driving school, facilitating the organization and retrieval of address data for operational purposes."
-        }
-    ],
-    "Staff": [
-        {
-            "columns": {
-                "staff_id": "A unique identifier assigned to each staff member.",
-                "staff_address_id": "A reference identifier linking to the staff member's address information.",
-                "nickname": "A preferred or casual name by which the staff member is known.",
-                "first_name": "The given name of the staff member.",
-                "middle_name": "The middle name of the staff member, if applicable.",
-                "last_name": "The family name or surname of the staff member.",
-                "date_of_birth": "The date when the staff member was born.",
-                "date_joined_staff": "The date when the staff member officially began employment.",
-                "date_left_staff": "The date when the staff member ended their employment."
-            },
-            "table_description": "The Staff table contains information about each staff member, including personal identifiers, contact details, employment dates, and names."
-        }
-    ],
-    "Vehicles": [
-        {
-            "columns": {
-                "vehicle_id": "A unique identifier assigned to each vehicle in the driving school.",
-                "vehicle_details": "A description of the type of vehicle, such as Car, Van, or Truck."
-            },
-            "table_description": "The Vehicles table stores information about the various vehicles used in the driving school, allowing reference by lessons associated with each vehicle."
+            "table_description": "The Addresses table stores detailed location information for contacts."
         }
     ],
     "Customers": [
         {
             "columns": {
-                "customer_id": "A unique identifier for each customer within the driving school.",
-                "customer_address_id": "A reference to the address associated with the customer.",
-                "customer_status_code": "Indicates the status of the customer, such as whether they are a good or bad customer.",
-                "date_became_customer": "The date and time when the customer enrolled in the driving school.",
+                "customer_id": "The unique identifier for each customer in the database.",
+                "customer_address_id": "The reference to the customer's address identifier.",
+                "customer_status_code": "The current status of the customer (e.g., good or bad).",
+                "date_became_customer": "The date and time when the customer registered.",
                 "date_of_birth": "The birth date of the customer.",
                 "first_name": "The first name of the customer.",
                 "last_name": "The last name of the customer.",
-                "amount_outstanding": "The total amount of fees that the customer has yet to pay.",
-                "email_address": "The customer's email address for communication purposes.",
+                "amount_outstanding": "The total amount the customer owes.",
+                "email_address": "The email contact information of the customer.",
                 "phone_number": "The primary phone number of the customer.",
                 "cell_mobile_phone_number": "The mobile phone number of the customer."
             },
-            "table_description": "The Customers table contains information about individuals who are enrolled in the driving school, including their personal details, contact information, and financial status."
+            "table_description": "The Customers table stores essential information about each customer."
         }
     ],
-    "Customer_Payments": [
+    "Vehicles": [
         {
             "columns": {
-                "customer_id": "A unique identifier for each customer making a payment.",
-                "datetime_payment": "The exact date and time when the payment was processed.",
-                "payment_method_code": "The method used by the customer to make the payment, indicating whether it was through Direct Debit or Credit Card.",
-                "amount_payment": "The total monetary amount that was paid by the customer at the time of transaction."
+                "vehicle_id": "The unique identifier for each vehicle in the database.",
+                "vehicle_details": "The descriptive details of the vehicle type."
             },
-            "table_description": "The Customer_Payments table records information about payments made by customers, including details on the payment method, amount, and when they were made."
+            "table_description": "The Vehicles table stores information about vehicles used in driving lessons."
         }
     ],
     "Lessons": [
         {
             "columns": {
-                "lesson_id": "A unique identifier for each driving lesson.",
-                "customer_id": "A reference to the customer who is taking the lesson.",
-                "lesson_status_code": "Indicates the current status of the lesson, such as completed or cancelled.",
-                "staff_id": "A reference to the staff member who is conducting the lesson.",
-                "vehicle_id": "A reference to the vehicle being used for the lesson.",
-                "lesson_date": "The date when the lesson is scheduled to occur.",
+                "lesson_id": "The unique identifier for each driving lesson.",
+                "customer_id": "The reference to the customer's unique identifier.",
+                "lesson_status_code": "The current status of the lesson (e.g., Completed, Cancelled).",
+                "staff_id": "The reference to the staff member conducting the lesson.",
+                "vehicle_id": "The reference to the vehicle used during the lesson.",
+                "lesson_date": "The scheduled date and time of the driving lesson.",
                 "lesson_time": "The duration of the lesson measured in hours.",
-                "price": "The cost of the lesson."
+                "price": "The total cost of the driving lesson."
             },
-            "table_description": "The Lessons table captures details about driving lessons offered at the driving school, including identifiers for lessons, customers, staff, vehicles, lesson status, timing, and pricing."
+            "table_description": "The Lessons table tracks scheduled driving lessons for customers."
+        }
+    ],
+    "Customer_Payments": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer making a payment.",
+                "datetime_payment": "The date and time of the payment transaction.",
+                "payment_method_code": "The method used for the payment (e.g., Direct Debit, Credit Card).",
+                "amount_payment": "The total amount paid by the customer in the transaction."
+            },
+            "table_description": "The Customer_Payments table records payments made by customers."
+        }
+    ],
+    "Staff": [
+        {
+            "columns": {
+                "staff_id": "The unique identifier for each staff member.",
+                "staff_address_id": "The reference to the staff member's address identifier.",
+                "nickname": "The chosen nickname of the staff member.",
+                "first_name": "The first name of the staff member.",
+                "middle_name": "The middle name of the staff member.",
+                "last_name": "The last name of the staff member.",
+                "date_of_birth": "The birth date of the staff member.",
+                "date_joined_staff": "The date when the staff member started working.",
+                "date_left_staff": "The date when the staff member ended their tenure."
+            },
+            "table_description": "The Staff table stores essential information about driving school staff members."
         }
     ]
 }

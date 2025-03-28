@@ -1,40 +1,40 @@
 {
-    "Services": [
-        {
-            "columns": {
-                "Service_ID": "A unique identifier assigned to each service entry in the table.",
-                "Service_Type_Code": "A code representing the type of service, such as documentation for life events."
-            },
-            "table_description": "The Services table holds information about various services provided by the local government, with each service identified by a unique ID and categorized by its type."
-        }
-    ],
-    "Participants": [
-        {
-            "columns": {
-                "Participant_ID": "A unique identifier for each participant in the database.",
-                "Participant_Type_Code": "A code representing the type of participant, indicating their role in events, such as 'Organizer' or 'Participant'.",
-                "Participant_Details": "Additional information about the participant, typically including their name or relevant description."
-            },
-            "table_description": "The Participants table stores information about individuals involved in various events, categorizing them by type and providing additional details to aid in the management and organization of local governmental activities in Alabama."
-        }
-    ],
     "Events": [
         {
             "columns": {
-                "Event_ID": "A unique identifier for each event in the database.",
-                "Service_ID": "An identifier that references the type of service associated with the event.",
-                "Event_Details": "A textual description indicating the outcome or status of the event."
+                "Event_ID": "The unique identifier for each event.",
+                "Service_ID": "The identifier linking to the related service.",
+                "Event_Details": "The outcome status of the event."
             },
-            "table_description": "The Events table records various events along with their associated service details and outcomes, providing insight into the interactions between these events and services."
+            "table_description": "The table tracks events and their associated services."
         }
     ],
     "Participants_in_Events": [
         {
             "columns": {
-                "Event_ID": "This column represents the unique identifier for each event in which participants can be involved.",
-                "Participant_ID": "This column denotes the unique identifier for each participant who is registered to take part in the events."
+                "Participant_ID": "The unique identifier for each participant.",
+                "Event_ID": "The unique identifier for each event."
             },
-            "table_description": "The Participants_in_Events table captures the many-to-many relationship between events and participants, linking each participant to the events they are involved in."
+            "table_description": "The table links participants to their respective events."
+        }
+    ],
+    "Services": [
+        {
+            "columns": {
+                "Service_ID": "The unique identifier for each service.",
+                "Service_Type_Code": "The code representing the type of service provided."
+            },
+            "table_description": "The table lists various services available in the local government."
+        }
+    ],
+    "Participants": [
+        {
+            "columns": {
+                "Participant_ID": "The unique identifier for each participant.",
+                "Participant_Type_Code": "The code indicating the type of participant.",
+                "Participant_Details": "The name of the participant, including titles."
+            },
+            "table_description": "The table records information about participants in events."
         }
     ]
 }

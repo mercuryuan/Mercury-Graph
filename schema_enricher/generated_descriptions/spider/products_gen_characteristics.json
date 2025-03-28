@@ -2,66 +2,66 @@
     "Ref_Characteristic_Types": [
         {
             "columns": {
-                "characteristic_type_code": "A unique identifier for each characteristic type, used to categorize and reference specific attributes.",
-                "characteristic_type_description": "A textual description providing additional context about the characteristic type, detailing its significance or application."
+                "characteristic_type_code": "The unique code identifying each characteristic type.",
+                "characteristic_type_description": "The detailed description of the characteristic type."
             },
-            "table_description": "The Ref_Characteristic_Types table serves as a reference for various types of product characteristics, providing unique codes and descriptions for attributes that can be associated with products."
+            "table_description": "The table defines types and descriptions of product characteristics."
         }
     ],
     "Ref_Colors": [
         {
             "columns": {
-                "color_code": "A unique identifier for each color, used to reference the color in related tables.",
-                "color_description": "A textual representation of the color, providing a human-readable name for each color code."
+                "color_code": "The unique code identifying each color.",
+                "color_description": "The detailed description of each color."
             },
-            "table_description": "The Ref_Colors table serves as a reference for color identification and description, ensuring consistency and clarity across related product entries."
+            "table_description": "The table defines colors and their descriptions related to products."
         }
     ],
     "Ref_Product_Categories": [
         {
             "columns": {
-                "product_category_code": "A unique identifier for each product category, representing classifications such as Herbs, Seeds, and Spices.",
-                "product_category_description": "A brief textual description of the product category, providing clarity on the nature of the products it encompasses.",
-                "unit_of_measure": "The standard measurement unit used for quantifying products within the respective category, such as weight or volume."
+                "product_category_code": "The unique code identifying each product category.",
+                "product_category_description": "The detailed description of each product category.",
+                "unit_of_measure": "The unit used for measuring products in each category."
             },
-            "table_description": "The Ref_Product_Categories table serves to categorize various product types related to botanical goods, allowing for organized inventory management and clear communication of product attributes."
-        }
-    ],
-    "Product_Characteristics": [
-        {
-            "columns": {
-                "product_characteristic_value": "This column represents the value of the characteristic associated with a product, indicating specific attributes such as quality or performance level.",
-                "characteristic_id": "This column identifies the characteristic type that is being described, linking to specific characteristics defined in the system.",
-                "product_id": "This column indicates the unique identifier for the product to which the characteristic is associated, linking it to the product catalog."
-            },
-            "table_description": "The Product_Characteristics table serves to relate various products to their specific characteristics, allowing for an organized way to describe and analyze product attributes."
+            "table_description": "The table categorizes products and specifies their measurement units."
         }
     ],
     "Characteristics": [
         {
             "columns": {
-                "characteristic_id": "A unique identifier for each characteristic entry in the table.",
-                "characteristic_type_code": "A code representing the type of characteristic, linking to a reference table for predefined types.",
-                "characteristic_data_type": "The format or nature of the data that the characteristic represents.",
-                "characteristic_name": "The name or label associated with the characteristic, describing its specific attribute.",
-                "other_characteristic_details": "Any additional details or notes relevant to the characteristic, which may provide further context."
+                "characteristic_id": "The unique identifier for each characteristic.",
+                "characteristic_type_code": "The code indicating the type of characteristic.",
+                "characteristic_data_type": "The data type used for the characteristic value.",
+                "characteristic_name": "The name or label given to the characteristic.",
+                "other_characteristic_details": "The additional details related to the characteristic."
             },
-            "table_description": "The Characteristics table is designed to store various product characteristics, providing a structured way to define and categorize different attributes that products may possess."
+            "table_description": "The table stores various characteristics and their associated details."
+        }
+    ],
+    "Product_Characteristics": [
+        {
+            "columns": {
+                "product_id": "The unique identifier for each product.",
+                "characteristic_id": "The unique identifier for each characteristic.",
+                "product_characteristic_value": "The value associated with the characteristic for the product."
+            },
+            "table_description": "The table links products with their specific characteristics and values."
         }
     ],
     "Products": [
         {
             "columns": {
-                "product_id": "Unique identifier for each product in the table.",
-                "color_code": "Code representing the color of the product, linked to a reference table of colors.",
-                "product_category_code": "Code representing the category of the product, linked to a reference table of product categories.",
-                "product_name": "The name of the product as it will be known in the market.",
-                "typical_buying_price": "Standard price for which the product is typically purchased.",
-                "typical_selling_price": "Standard price at which the product is typically sold.",
-                "product_description": "A brief description providing details about the product.",
-                "other_product_details": "Additional details about the product that are not captured in other columns."
+                "product_id": "The unique identifier for each product.",
+                "color_code": "The code representing the product's color.",
+                "product_category_code": "The code denoting the product's category.",
+                "product_name": "The name given to the product.",
+                "typical_buying_price": "The average cost to purchase the product.",
+                "typical_selling_price": "The average price for selling the product.",
+                "product_description": "The detailed description of the product.",
+                "other_product_details": "The additional details related to the product."
             },
-            "table_description": "The Products table serves to catalog various items available for sale, providing essential information about each product, including identifiers, pricing, descriptions, and categorization."
+            "table_description": "The table stores details of products including pricing and categorization."
         }
     ]
 }

@@ -1,0 +1,64 @@
+{
+    "Author": [
+        {
+            "columns": {
+                "Name": "The full name of the author.",
+                "idAuthor": "The unique identifier for each author."
+            },
+            "table_description": "The purpose of the table is to maintain authors' details."
+        }
+    ],
+    "Book": [
+        {
+            "columns": {
+                "ISBN": "The unique identifier for each book.",
+                "Title": "The title of the book.",
+                "Author": "The identifier for the book's author.",
+                "PurchasePrice": "The price paid to purchase the book.",
+                "SalePrice": "The price at which the book is sold."
+            },
+            "table_description": "The purpose of the table is to maintain book details."
+        }
+    ],
+    "Client": [
+        {
+            "columns": {
+                "IdClient": "The unique identifier for each client.",
+                "Name": "The full name of the client.",
+                "Address": "The residential address of the client.",
+                "NumCC": "The credit card number associated with the client."
+            },
+            "table_description": "The purpose of the table is to maintain client details."
+        }
+    ],
+    "Orders": [
+        {
+            "columns": {
+                "IdOrder": "The unique identifier for each order.",
+                "IdClient": "The identifier for the client placing the order.",
+                "DateOrder": "The date when the order was placed.",
+                "DateExped": "The expected shipping date of the order."
+            },
+            "table_description": "The purpose of the table is to maintain order details."
+        }
+    ],
+    "Author_Book": [
+        {
+            "columns": {
+                "ISBN": "The unique identifier for each book.",
+                "Author": "The identifier for the book's author."
+            },
+            "table_description": "The purpose of the table is to link authors with their books."
+        }
+    ],
+    "Books_Order": [
+        {
+            "columns": {
+                "ISBN": "The unique identifier for each book.",
+                "IdOrder": "The unique identifier for each order.",
+                "amount": "The quantity of the book ordered."
+            },
+            "table_description": "The purpose of the table is to maintain details of books ordered."
+        }
+    ]
+}

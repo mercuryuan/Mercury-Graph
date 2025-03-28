@@ -1,73 +1,73 @@
 {
-    "Documents_with_Expenses": [
-        {
-            "columns": {
-                "Document_ID": "A unique identifier for each document in the table, representing the specific document associated with the expenses.",
-                "Budget_Type_Code": "A code that categorizes the budget type associated with the document, linking it to predefined budget classifications.",
-                "Document_Details": "A brief description or details about the document that provides additional context or information related to the document."
-            },
-            "table_description": "The Documents_with_Expenses table serves to associate specific documents with their corresponding budget types and additional details, facilitating the management and tracking of expenses linked to various documents."
-        }
-    ],
-    "Ref_Budget_Codes": [
-        {
-            "columns": {
-                "Budget_Type_Code": "A unique identifier for the type of budget, used to categorize and reference different budget types.",
-                "Budget_Type_Description": "A descriptive label that provides a detailed explanation of the budget type associated with the corresponding code."
-            },
-            "table_description": "The Ref_Budget_Codes table serves to define and categorize various budget types within the system, providing clear identifiers and descriptions for each type to facilitate reference in related documents."
-        }
-    ],
-    "Projects": [
-        {
-            "columns": {
-                "Project_ID": "A unique identifier assigned to each project, used to reference and distinguish between different projects in the database.",
-                "Project_Details": "A brief description providing insights into the nature or focus of the project."
-            },
-            "table_description": "The Projects table contains information about various projects, each identified by a unique Project_ID and detailed with descriptive information in the Project_Details column."
-        }
-    ],
-    "Documents": [
-        {
-            "columns": {
-                "Document_ID": "A unique identifier for each document in the table.",
-                "Document_Type_Code": "A code representing the type of document, linked to a reference of document types.",
-                "Project_ID": "A unique identifier representing the project associated with the document.",
-                "Document_Date": "The date and time when the document was created or submitted.",
-                "Document_Name": "The title or name of the document.",
-                "Document_Description": "A description providing additional information about the document, which is currently not populated.",
-                "Other_Details": "Any additional details relevant to the document, which is currently not populated."
-            },
-            "table_description": "The Documents table stores information about various documents associated with projects, including their types, names, and creation dates."
-        }
-    ],
     "Statements": [
         {
             "columns": {
-                "Statement_ID": "A unique identifier for each statement in the table.",
-                "Statement_Details": "A textual description providing details about the statement."
+                "Statement_ID": "The unique identifier for each statement.",
+                "Statement_Details": "The detailed description of the statement."
             },
-            "table_description": "The Statements table is designed to store unique identifiers and associated details for various statements related to documents and expenses."
+            "table_description": "The table stores statements with their unique identifiers and details."
+        }
+    ],
+    "Documents_with_Expenses": [
+        {
+            "columns": {
+                "Document_ID": "The unique identifier for each document.",
+                "Budget_Type_Code": "The code indicating the budget type associated with the document.",
+                "Document_Details": "The description providing details about the document."
+            },
+            "table_description": "The table links documents to their associated budget types and details."
         }
     ],
     "Accounts": [
         {
             "columns": {
-                "Account_ID": "A unique identifier for each account in the database.",
-                "Statement_ID": "A reference identifier that links each account to a specific statement.",
-                "Account_Details": "Detailed information about the account, which may include balance or transaction details."
+                "Account_ID": "The unique identifier for each account.",
+                "Statement_ID": "The identifier linking to the associated statement.",
+                "Account_Details": "The details providing information about the account."
             },
-            "table_description": "The Accounts table serves to store data relating to individual accounts, linking them to corresponding statements while providing essential account-related information."
+            "table_description": "The table links accounts to statements and provides account details."
         }
     ],
     "Ref_Document_Types": [
         {
             "columns": {
-                "Document_Type_Code": "A unique identifier for each type of document.",
-                "Document_Type_Name": "The name of the document type, providing a user-friendly reference.",
-                "Document_Type_Description": "A brief explanation or characteristic of the document type."
+                "Document_Type_Code": "The unique identifier for each document type.",
+                "Document_Type_Name": "The name of the document type.",
+                "Document_Type_Description": "The description providing details about the document type."
             },
-            "table_description": "The Ref_Document_Types table catalogues various types of documents, providing a unique code, a descriptive name, and a description for each document type."
+            "table_description": "The table stores different types of documents with identifiers, names, and descriptions."
+        }
+    ],
+    "Ref_Budget_Codes": [
+        {
+            "columns": {
+                "Budget_Type_Code": "The unique identifier for each budget type.",
+                "Budget_Type_Description": "The description providing information about the budget type."
+            },
+            "table_description": "The table stores budget codes with identifiers and their corresponding descriptions."
+        }
+    ],
+    "Projects": [
+        {
+            "columns": {
+                "Project_ID": "The unique identifier for each project.",
+                "Project_Details": "The description providing details about the project."
+            },
+            "table_description": "The table stores project information with unique identifiers and details."
+        }
+    ],
+    "Documents": [
+        {
+            "columns": {
+                "Document_ID": "The unique identifier for each document.",
+                "Document_Type_Code": "The code indicating the type of document.",
+                "Project_ID": "The unique identifier for the associated project.",
+                "Document_Date": "The date and time when the document was created.",
+                "Document_Name": "The title or name of the document.",
+                "Document_Description": "The description providing additional information about the document.",
+                "Other_Details": "The supplementary information related to the document."
+            },
+            "table_description": "The table stores documents with their identifiers, types, projects, and details."
         }
     ]
 }

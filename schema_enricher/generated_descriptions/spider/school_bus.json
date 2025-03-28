@@ -2,36 +2,36 @@
     "driver": [
         {
             "columns": {
-                "Driver_ID": "A unique identifier for each driver in the database.",
+                "Driver_ID": "The unique identifier for each driver.",
                 "Name": "The full name of the driver.",
                 "Party": "The political party affiliation of the driver.",
                 "Home_city": "The city where the driver resides.",
                 "Age": "The age of the driver."
             },
-            "table_description": "The driver table stores information about school bus drivers, including their unique identifiers, personal details, political affiliations, residence locations, and ages."
-        }
-    ],
-    "school": [
-        {
-            "columns": {
-                "School_ID": "A unique identifier for each school in the dataset.",
-                "Grade": "The educational level or grade range that the school serves.",
-                "School": "The name of the school.",
-                "Location": "The city or geographic area where the school is located.",
-                "Type": "The classification of the school, such as public or private."
-            },
-            "table_description": "The school table contains information about various schools, including their unique identifiers, the grade levels they serve, their names, locations, and types."
+            "table_description": "The table stores information about school bus drivers."
         }
     ],
     "school_bus": [
         {
             "columns": {
-                "School_ID": "This column represents the unique identifier for each school associated with the school bus system.",
-                "Driver_ID": "This column serves as the unique identifier for each bus driver, linking them to the corresponding school.",
-                "Years_Working": "This column indicates the total number of years a driver has been working in the school bus system.",
-                "If_full_time": "This column specifies whether the driver is employed on a full-time basis or not."
+                "School_ID": "The unique identifier for each school.",
+                "Driver_ID": "The unique identifier for each driver.",
+                "Years_Working": "The number of years the driver has worked at the school.",
+                "If_full_time": "The employment status of the driver, indicating full-time or part-time."
             },
-            "table_description": "The school_bus table is designed to link schools with their respective bus drivers, detailing the drivers' years of service and full-time employment status."
+            "table_description": "The table tracks the association of drivers with their respective schools."
+        }
+    ],
+    "school": [
+        {
+            "columns": {
+                "School_ID": "The unique identifier for each school.",
+                "Grade": "The grade levels offered at the school.",
+                "School": "The full name of the school.",
+                "Location": "The geographical location of the school.",
+                "Type": "The classification of the school as private or public."
+            },
+            "table_description": "The table holds information about various schools and their characteristics."
         }
     ]
 }

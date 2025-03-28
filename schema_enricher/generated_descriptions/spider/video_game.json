@@ -1,0 +1,49 @@
+{
+    "game": [
+        {
+            "columns": {
+                "Game_ID": "The unique identifier for each game.",
+                "Title": "The name of the video game.",
+                "Release_Date": "The launch date of the video game.",
+                "Franchise": "The series to which the game belongs.",
+                "Platform_ID": "The identifier for the gaming platform.",
+                "Developers": "The company or group that developed the game.",
+                "Units_sold_Millions": "The total sales of the game in millions."
+            },
+            "table_description": "The table stores detailed information about video games."
+        }
+    ],
+    "game_player": [
+        {
+            "columns": {
+                "Player_ID": "The unique identifier for each player.",
+                "Game_ID": "The unique identifier for each game.",
+                "If_active": "The status indicating if the player is currently active."
+            },
+            "table_description": "The table links players to the games they engage with."
+        }
+    ],
+    "player": [
+        {
+            "columns": {
+                "Player_ID": "The unique identifier for each player.",
+                "Rank_of_the_year": "The annual ranking position of the player.",
+                "Player_name": "The name of the player.",
+                "Position": "The position the player plays in the game.",
+                "College": "The college from which the player graduated."
+            },
+            "table_description": "The table holds information about players and their ranking positions."
+        }
+    ],
+    "platform": [
+        {
+            "columns": {
+                "Platform_ID": "The unique identifier for each gaming platform.",
+                "Platform_name": "The name of the gaming platform.",
+                "Market_district": "The geographical area where the platform is marketed.",
+                "Download_rank": "The rank of the platform based on download frequency."
+            },
+            "table_description": "The table contains information about different gaming platforms."
+        }
+    ]
+}

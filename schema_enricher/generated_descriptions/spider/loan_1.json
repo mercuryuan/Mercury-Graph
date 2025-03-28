@@ -1,41 +1,41 @@
 {
+    "bank": [
+        {
+            "columns": {
+                "branch_ID": "The unique identifier for each bank branch.",
+                "bname": "The name of the bank branch.",
+                "no_of_customers": "The total number of customers at the branch.",
+                "city": "The city where the bank branch is located.",
+                "state": "The state where the bank branch is located."
+            },
+            "table_description": "The table holds information about various bank branches."
+        }
+    ],
     "customer": [
         {
             "columns": {
-                "cust_ID": "A unique identifier for each customer.",
+                "cust_ID": "The unique identifier for each customer.",
                 "cust_name": "The name of the customer.",
-                "acc_type": "The type of account held by the customer, such as saving or checking.",
-                "acc_bal": "The current balance in the customer's account.",
-                "no_of_loans": "The number of loans currently held by the customer.",
-                "credit_score": "The customer's credit score, which indicates their creditworthiness.",
-                "branch_ID": "An identifier for the bank branch where the customer holds their account.",
-                "state": "The state in which the customer resides."
+                "acc_type": "The type of account held by the customer.",
+                "acc_bal": "The current balance of the customer's account.",
+                "no_of_loans": "The total number of loans taken by the customer.",
+                "credit_score": "The credit score of the customer.",
+                "branch_ID": "The identifier of the branch associated with the customer.",
+                "state": "The state where the customer resides."
             },
-            "table_description": "The customer table contains information about bank customers, including their unique identifiers, personal details, account types, account balances, loan information, credit scores, associated bank branches, and residential states."
+            "table_description": "The table stores details about customers and their accounts."
         }
     ],
     "loan": [
         {
             "columns": {
-                "loan_ID": "A unique identifier for each loan.",
-                "loan_type": "The classification of the loan, such as Business, Mortgages, or Auto.",
-                "cust_ID": "The identifier of the customer who has taken the loan.",
-                "branch_ID": "The identifier of the bank branch that provided the loan.",
-                "amount": "The total monetary value of the loan."
+                "loan_ID": "The unique identifier for each loan.",
+                "loan_type": "The category of the loan granted to the customer.",
+                "cust_ID": "The unique identifier of the customer receiving the loan.",
+                "branch_ID": "The identifier of the branch processing the loan.",
+                "amount": "The total amount of money loaned to the customer."
             },
-            "table_description": "The loan table contains records of loans issued by the bank, including details such as loan identifiers, types, associated customers, their respective bank branches, and the loan amounts."
-        }
-    ],
-    "bank": [
-        {
-            "columns": {
-                "branch_ID": "This column represents the unique identifier for each bank branch.",
-                "bname": "This column contains the name of the bank branch.",
-                "no_of_customers": "This column indicates the total number of customers associated with the bank branch.",
-                "city": "This column specifies the city in which the bank branch is located.",
-                "state": "This column denotes the state where the bank branch is situated."
-            },
-            "table_description": "The bank table stores information about various bank branches, including their unique identifiers, names, customer counts, and geographical locations."
+            "table_description": "The table contains information about various loans granted to customers."
         }
     ]
 }

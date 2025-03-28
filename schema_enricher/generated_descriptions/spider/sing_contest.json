@@ -1,0 +1,36 @@
+{
+    "songs": [
+        {
+            "columns": {
+                "id": "The unique identifier for each song.",
+                "language": "The language in which the song is performed.",
+                "original_artist": "The name of the original artist of the song.",
+                "name": "The title of the song.",
+                "english_translation": "The English translation of the song title."
+            },
+            "table_description": "The table stores details of songs in the contest."
+        }
+    ],
+    "performance_score": [
+        {
+            "columns": {
+                "participant_id": "The unique identifier for each participant in the contest.",
+                "songs_id": "The unique identifier for each song performed.",
+                "voice_sound_quality": "The quality of the participant's vocal performance.",
+                "rhythm_tempo": "The tempo of the song's rhythm as perceived in performance.",
+                "stage_presence": "The ability of the participant to engage with the audience."
+            },
+            "table_description": "The table records performance scores for participants in the contest."
+        }
+    ],
+    "participants": [
+        {
+            "columns": {
+                "id": "The unique identifier for each participant.",
+                "name": "The name of the participant in the contest.",
+                "popularity": "The popularity score of the participant based on votes."
+            },
+            "table_description": "The table holds information about participants in the singing contest."
+        }
+    ]
+}

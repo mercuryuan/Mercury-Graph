@@ -1,0 +1,187 @@
+{
+    "races": [
+        {
+            "columns": {
+                "raceId": "A unique identifier for each race, which serves as the primary key for the table.",
+                "year": "The year in which the race took place.",
+                "round": "The round number of the race within that particular year, indicating the race's position in the overall season schedule.",
+                "circuitId": "An identifier for the circuit where the race was held, linking it to the circuits table.",
+                "name": "The official name of the race, often including the location or sponsor.",
+                "date": "The date on which the race occurred, formatted as YYYY-MM-DD.",
+                "time": "The starting time of the race in HH:MM:SS format, although this may have a high rate of null values indicating missed data.",
+                "url": "A link to a webpage containing more information about the race, typically a Wikipedia page."
+            },
+            "table_description": "The races table contains details about Formula 1 races, including identifiers, dates, circuit information, names, and URLs for further reference."
+        }
+    ],
+    "drivers": [
+        {
+            "columns": {
+                "driverId": "A unique identifier for each driver in the database.",
+                "driverRef": "An alternative reference name for the driver, typically used for sorting and indexing.",
+                "number": "The racing number assigned to the driver, which may vary over time.",
+                "code": "An abbreviated code that represents the driver, often used in standings and results.",
+                "forename": "The driver's first name.",
+                "surname": "The driver's last name.",
+                "dob": "The date of birth of the driver, recorded in a 'day/month/year' format.",
+                "nationality": "The national identity of the driver, representing the country they are associated with.",
+                "url": "A hyperlink to a web page containing more detailed information about the driver."
+            },
+            "table_description": "The drivers table contains a comprehensive record of individual racing drivers, encapsulating their identities, racing numbers, nationalities, and additional information pertinent to their careers."
+        }
+    ],
+    "status": [
+        {
+            "columns": {
+                "statusId": "A unique identifier for each status entry in the database.",
+                "status": "A text representation of the status related to a specific Formula 1 event or condition."
+            },
+            "table_description": "The status table contains various statuses associated with Formula 1 events, with each status identified by a unique identifier."
+        }
+    ],
+    "seasons": [
+        {
+            "columns": {
+                "year": "This column represents the specific year of the Formula 1 season, indicating when the races took place.",
+                "url": "This column contains the URL links to external resources, typically Wikipedia pages, which provide detailed information about each Formula 1 season."
+            },
+            "table_description": "The seasons table serves to catalog various Formula 1 seasons by year and provide references to more detailed information about each season."
+        }
+    ],
+    "constructors": [
+        {
+            "columns": {
+                "constructorId": "Unique identifier for each constructor in the database.",
+                "constructorRef": "A reference name for the constructor typically used for identification purposes.",
+                "name": "The official name of the constructor as recognized in motorsport.",
+                "nationality": "The country or region that the constructor is associated with.",
+                "url": "A link to the constructor's page on Wikipedia or another relevant resource providing more information."
+            },
+            "table_description": "The constructors table contains information about various racing constructors participating in Formula 1, including their unique identifiers, reference names, official names, nationalities, and associated URLs for additional details."
+        }
+    ],
+    "constructorStandings": [
+        {
+            "columns": {
+                "constructorStandingsId": "A unique identifier for each record in the constructor standings.",
+                "raceId": "References the specific race in which the constructor participated.",
+                "constructorId": "References the constructor (team) associated with the standings.",
+                "points": "The total points earned by the constructor during the race, contributing to their overall standings.",
+                "position": "The finishing position of the constructor in the race.",
+                "positionText": "A textual representation of the finishing position.",
+                "wins": "The number of races won by the constructor."
+            },
+            "table_description": "The constructorStandings table captures the performance and outcomes of constructors in various races, detailing their points, positions, and victories."
+        }
+    ],
+    "driverStandings": [
+        {
+            "columns": {
+                "driverStandingsId": "A unique identifier for each entry in the driver standings.",
+                "raceId": "References the specific race in which the standings are recorded.",
+                "driverId": "References the specific driver whose standings are being recorded.",
+                "points": "The total points earned by a driver in the associated race.",
+                "position": "The finishing position of the driver in the race.",
+                "positionText": "A text representation of the driver's finishing position.",
+                "wins": "The total number of wins achieved by the driver in the current season."
+            },
+            "table_description": "The driverStandings table tracks the performance of drivers in various races, detailing their standings, scores, and achievements throughout the season."
+        }
+    ],
+    "constructorResults": [
+        {
+            "columns": {
+                "constructorResultsId": "A unique identifier for each constructor results entry.",
+                "raceId": "A reference to the race in which the constructor participated.",
+                "constructorId": "A reference to the constructor involved in the race.",
+                "points": "The number of points awarded to the constructor based on their performance in the race.",
+                "status": "Indicates the status of the constructor's performance, which may be NULL for certain entries."
+            },
+            "table_description": "The constructorResults table captures the performance results of constructors in various races, linking constructors with the races they participated in, and detailing the points earned and their performance status."
+        }
+    ],
+    "pitStops": [
+        {
+            "columns": {
+                "raceId": "Identifies the specific race during which the pit stop occurred.",
+                "driverId": "Identifies the driver who made the pit stop.",
+                "stop": "Indicates the sequence number of the pit stop during the race.",
+                "lap": "Denotes the lap number in which the pit stop took place.",
+                "time": "Represents the timestamp of when the pit stop started.",
+                "duration": "Specifies the total time taken to complete the pit stop.",
+                "milliseconds": "Quantifies the duration of the pit stop in milliseconds."
+            },
+            "table_description": "The pitStops table records detailed information about pit stops made by drivers during Formula 1 races, including timing and duration metrics."
+        }
+    ],
+    "lapTimes": [
+        {
+            "columns": {
+                "raceId": "Identifies the specific race for which the lap times are recorded.",
+                "driverId": "Identifies the driver who completed the lap.",
+                "lap": "Indicates the lap number completed by the driver during the race.",
+                "position": "Represents the finishing position of the driver at the end of the lap.",
+                "time": "Records the time taken by the driver to complete the lap in a time format.",
+                "milliseconds": "Shows the time taken to complete the lap in milliseconds."
+            },
+            "table_description": "The lapTimes table stores detailed lap time information for drivers in Formula 1 races, including which race the lap pertains to, the driver involved, the lap number, their position upon completing the lap, and the time taken to complete it."
+        }
+    ],
+    "results": [
+        {
+            "columns": {
+                "resultId": "A unique identifier for each race result entry.",
+                "raceId": "An identifier that links the result to a specific race event.",
+                "driverId": "An identifier for the driver whose performance is recorded in this result.",
+                "constructorId": "An identifier for the constructor or team associated with the driver's vehicle.",
+                "number": "The racing number assigned to the driver in the event.",
+                "grid": "The starting position of the driver on the grid for the race.",
+                "position": "The final position of the driver after the race is completed.",
+                "positionText": "Textual representation of the driver's finishing status, which may include special values like 'R' for retired or 'F' for disqualified.",
+                "positionOrder": "An integer indicating the order of the driver's finishing position in the race.",
+                "points": "The number of championship points awarded to the driver based on their finishing position.",
+                "laps": "The total number of laps completed by the driver during the race.",
+                "time": "The amount of time taken by the driver to complete the race, represented in various formats.",
+                "milliseconds": "The total time taken to finish the race expressed in milliseconds.",
+                "fastestLap": "The lap number in which the driver recorded their fastest time during the race.",
+                "rank": "The rank of the driver based on their performance, which may be empty if not ranked.",
+                "fastestLapTime": "The time taken by the driver to complete their fastest lap in the race.",
+                "fastestLapSpeed": "The speed achieved by the driver during their fastest lap, typically measured in km/h.",
+                "statusId": "An identifier representing the final status of the driver's race, such as finished, retired, or disqualified."
+            },
+            "table_description": "The results table records essential performance data for each Formula 1 race entry, linking drivers, constructors, and specific races with detailed results including finishing positions, lap times, and points awarded."
+        }
+    ],
+    "circuits": [
+        {
+            "columns": {
+                "circuitId": "A unique identifier for each circuit.",
+                "circuitRef": "A reference name for the circuit, often used in URLs.",
+                "name": "The official name of the circuit.",
+                "location": "The specific location where the circuit is situated.",
+                "country": "The country in which the circuit is located.",
+                "lat": "The latitude coordinate of the circuit's geographical position.",
+                "lng": "The longitude coordinate of the circuit's geographical position.",
+                "alt": "The altitude of the circuit's location, typically in meters.",
+                "url": "A web link that provides more information about the circuit."
+            },
+            "table_description": "The 'circuits' table holds information about various racing circuits, including their names, locations, geographical coordinates, and related URLs for additional details."
+        }
+    ],
+    "qualifying": [
+        {
+            "columns": {
+                "qualifyId": "A unique identifier for each qualifying entry.",
+                "raceId": "The identifier for the race associated with the qualifying session.",
+                "driverId": "The identifier for the driver who participated in the qualifying session.",
+                "constructorId": "The identifier for the constructor (team) the driver represents.",
+                "number": "The car number associated with the driver during the qualifying session.",
+                "position": "The final position achieved by the driver in the qualifying session.",
+                "q1": "The lap time recorded by the driver during the first qualifying segment.",
+                "q2": "The lap time recorded by the driver during the second qualifying segment.",
+                "q3": "The lap time recorded by the driver during the final qualifying segment."
+            },
+            "table_description": "The qualifying table stores detailed records of qualifying sessions for Formula 1 races, capturing the performance of drivers across different segments of the qualifying rounds."
+        }
+    ]
+}

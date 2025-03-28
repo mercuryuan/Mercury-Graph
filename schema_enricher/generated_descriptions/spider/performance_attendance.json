@@ -2,34 +2,34 @@
     "performance": [
         {
             "columns": {
-                "Performance_ID": "A unique identifier for each performance event.",
-                "Date": "The date on which the performance took place.",
-                "Host": "The team or organization that hosted the performance.",
-                "Location": "The venue where the performance was held.",
+                "Performance_ID": "The unique identifier for each performance event.",
+                "Date": "The date on which the performance takes place.",
+                "Host": "The name of the team hosting the performance.",
+                "Location": "The venue where the performance occurs.",
                 "Attendance": "The number of attendees present at the performance."
             },
-            "table_description": "The performance table records details of various performance events, including their unique identifiers, dates, hosts, locations, and attendance figures."
+            "table_description": "The table tracks details of performance events and their attendance."
         }
     ],
     "member_attendance": [
         {
             "columns": {
-                "Member_ID": "Identifies a member who attends a performance.",
-                "Performance_ID": "Identifies the specific performance attended by a member.",
-                "Num_of_Pieces": "Represents the number of pieces performed by the member during the attendance at the performance."
+                "Performance_ID": "The unique identifier for each performance event attended.",
+                "Member_ID": "The unique identifier for each member attending the performance.",
+                "Num_of_Pieces": "The number of pieces a member participated in during the performance."
             },
-            "table_description": "The member_attendance table captures the attendance records of members at performances, detailing which member attended which performance and the number of pieces they performed."
+            "table_description": "The table tracks attendance and participation details of members in performances."
         }
     ],
     "member": [
         {
             "columns": {
-                "Member_ID": "A unique identifier assigned to each member in the table.",
+                "Member_ID": "The unique identifier for each member of the group.",
                 "Name": "The full name of the member.",
-                "Nationality": "The country of citizenship or origin of the member.",
-                "Role": "The specific instrumental role or position held by the member within the group."
+                "Nationality": "The country of origin of the member.",
+                "Role": "The instrument or position held by the member."
             },
-            "table_description": "The member table stores information about the members of a group, detailing their unique identifiers, names, national origins, and roles in the ensemble."
+            "table_description": "The table details each member's identity and role within the group."
         }
     ]
 }

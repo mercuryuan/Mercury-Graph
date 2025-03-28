@@ -2,26 +2,26 @@
     "poker_player": [
         {
             "columns": {
-                "Poker_Player_ID": "A unique identifier assigned to each poker player in the table.",
-                "People_ID": "A reference to the unique identifier of the person associated with the poker player.",
-                "Final_Table_Made": "The number of times the player has reached the final table in poker tournaments.",
-                "Best_Finish": "The best ranking position the player has achieved in a tournament.",
-                "Money_Rank": "The player's ranking based on their total earnings compared to other players.",
-                "Earnings": "The total monetary earnings the player has received from their tournament participation."
+                "Poker_Player_ID": "The unique identifier for each poker player.",
+                "People_ID": "The unique identifier linking to the person's details.",
+                "Final_Table_Made": "The number of times the player reached the final table.",
+                "Best_Finish": "The highest place achieved by the player in tournaments.",
+                "Money_Rank": "The player's rank based on total money won.",
+                "Earnings": "The total prize money earned by the player."
             },
-            "table_description": "The poker_player table contains detailed information about individual poker players, tracking their performance, rankings, and earnings in tournaments."
+            "table_description": "The table tracks poker player performance and earnings."
         }
     ],
     "people": [
         {
             "columns": {
-                "People_ID": "A unique identifier assigned to each person in the database.",
-                "Nationality": "The country representing the nationality of the person.",
-                "Name": "The full name of the individual.",
-                "Birth_Date": "The date when the individual was born.",
-                "Height": "The height of the person, typically measured in centimeters."
+                "People_ID": "The unique identifier for each person.",
+                "Nationality": "The country of citizenship for the person.",
+                "Name": "The full name of the person.",
+                "Birth_Date": "The date when the person was born.",
+                "Height": "The height of the person in centimeters."
             },
-            "table_description": "The 'people' table contains essential information about individuals, including their unique identifier, nationality, name, date of birth, and height, primarily used for identifying and profiling poker players."
+            "table_description": "The table records personal information about individuals."
         }
     ]
 }

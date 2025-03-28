@@ -2,85 +2,85 @@
     "regions": [
         {
             "columns": {
-                "REGION_ID": "The unique identifier for each region in the database.",
-                "REGION_NAME": "The name of the region, representing a specific geographical area."
+                "REGION_NAME": "The name of the geographical region.",
+                "REGION_ID": "The unique identifier for each region."
             },
-            "table_description": "The regions table stores distinct geographic regions, each identified by a unique ID and described by its name."
-        }
-    ],
-    "countries": [
-        {
-            "columns": {
-                "COUNTRY_ID": "A unique identifier for each country, represented by a two-letter code.",
-                "COUNTRY_NAME": "The full name of the country.",
-                "REGION_ID": "An identifier that indicates the region to which the country belongs."
-            },
-            "table_description": "The countries table stores information about various countries, including their unique identifiers, names, and the regions they are part of."
-        }
-    ],
-    "departments": [
-        {
-            "columns": {
-                "DEPARTMENT_ID": "The unique identifier for each department within the organization.",
-                "DEPARTMENT_NAME": "The name of the department, which indicates its function or area of responsibility.",
-                "MANAGER_ID": "The identifier of the manager responsible for the department, linking it to the managerial hierarchy.",
-                "LOCATION_ID": "The identifier of the physical location where the department is situated."
-            },
-            "table_description": "The departments table contains information about the various departments within the organization, including their unique identifiers, names, associated managers, and locations."
+            "table_description": "The table categorizes different geographical regions."
         }
     ],
     "jobs": [
         {
             "columns": {
-                "JOB_ID": "A unique identifier for each job role within the organization.",
-                "JOB_TITLE": "The official title given to a specific job role, reflecting the nature of the work performed.",
-                "MIN_SALARY": "The minimum salary that can be offered for the job role.",
-                "MAX_SALARY": "The maximum salary that can be offered for the job role."
+                "JOB_ID": "The unique identifier for each job.",
+                "JOB_TITLE": "The title or name of the job position.",
+                "MIN_SALARY": "The minimum salary range for the job.",
+                "MAX_SALARY": "The maximum salary range for the job."
             },
-            "table_description": "The jobs table contains information about various job roles available within the organization, including unique identifiers, titles, and salary ranges."
+            "table_description": "The table defines job positions and their associated salary ranges."
         }
     ],
-    "employees": [
+    "countries": [
         {
             "columns": {
-                "EMPLOYEE_ID": "A unique identifier for each employee.",
-                "FIRST_NAME": "The first name of the employee.",
-                "LAST_NAME": "The last name of the employee.",
-                "EMAIL": "The email address of the employee, used for communication.",
-                "PHONE_NUMBER": "The contact number of the employee.",
-                "HIRE_DATE": "The date when the employee was hired.",
-                "JOB_ID": "The identifier for the job held by the employee.",
-                "SALARY": "The monthly salary earned by the employee.",
-                "COMMISSION_PCT": "The commission percentage applicable to the employee's sales, if any.",
-                "MANAGER_ID": "The unique identifier of the employee's manager.",
-                "DEPARTMENT_ID": "The identifier for the department to which the employee belongs."
+                "COUNTRY_NAME": "The name of the country.",
+                "COUNTRY_ID": "The unique identifier for each country.",
+                "REGION_ID": "The identifier linking the country to its region."
             },
-            "table_description": "The employees table contains information about individuals working within the organization, including their personal details, job roles, and departmental affiliations."
+            "table_description": "The table lists countries and their associated regions."
         }
     ],
     "job_history": [
         {
             "columns": {
-                "EMPLOYEE_ID": "Identifies the employee associated with the job history record.",
-                "START_DATE": "Indicates the date when the employee started the job.",
-                "END_DATE": "Denotes the date when the employee ended the job.",
-                "JOB_ID": "Specifies the job position held by the employee.",
-                "DEPARTMENT_ID": "Represents the department to which the employee was assigned during their job."
+                "EMPLOYEE_ID": "The unique identifier for each employee.",
+                "START_DATE": "The date the employee started in their job.",
+                "END_DATE": "The date the employee ended their job.",
+                "JOB_ID": "The identifier for the job position held by the employee.",
+                "DEPARTMENT_ID": "The identifier for the department of the employee."
             },
-            "table_description": "The job_history table contains records of employee job positions, detailing the duration of each position, including the start and end dates, associated job IDs, and the departments in which the employees worked."
+            "table_description": "The table tracks the job history of employees."
+        }
+    ],
+    "employees": [
+        {
+            "columns": {
+                "EMPLOYEE_ID": "The unique identifier for each employee.",
+                "FIRST_NAME": "The first name of the employee.",
+                "LAST_NAME": "The last name of the employee.",
+                "EMAIL": "The email address of the employee.",
+                "PHONE_NUMBER": "The contact phone number of the employee.",
+                "HIRE_DATE": "The date the employee was hired.",
+                "JOB_ID": "The identifier for the job position held by the employee.",
+                "SALARY": "The annual salary of the employee.",
+                "COMMISSION_PCT": "The commission percentage earned by the employee.",
+                "MANAGER_ID": "The identifier for the employee's manager.",
+                "DEPARTMENT_ID": "The identifier for the department of the employee."
+            },
+            "table_description": "The table manages employee information and employment details."
+        }
+    ],
+    "departments": [
+        {
+            "columns": {
+                "DEPARTMENT_ID": "The unique identifier for each department.",
+                "DEPARTMENT_NAME": "The name of the department.",
+                "MANAGER_ID": "The identifier for the department's manager.",
+                "LOCATION_ID": "The identifier for the department's location."
+            },
+            "table_description": "The table organizes information about company departments."
         }
     ],
     "locations": [
         {
             "columns": {
-                "LOCATION_ID": "A unique identifier for each location in the table.",
-                "STREET_ADDRESS": "The street address where the location is situated.",
-                "POSTAL_CODE": "The postal code associated with the location.",
-                "CITY": "The name of the city where the location is found.",
-                "STATE_PROVINCE": "The name of the state or province associated with the location, if applicable.",
-                "COUNTRY_ID": "A code representing the country of the location, linking to the countries table."
+                "LOCATION_ID": "The unique identifier for each location.",
+                "STREET_ADDRESS": "The street address of the location.",
+                "POSTAL_CODE": "The postal code for the location.",
+                "CITY": "The city where the location is situated.",
+                "STATE_PROVINCE": "The state or province of the location.",
+                "COUNTRY_ID": "The identifier linking the location to its country."
             },
-            "table_description": "The locations table stores information about various geographic locations, including their addresses, city names, postal codes, states or provinces, and associated country codes."
+            "table_description": "The table details various locations within specific countries."
         }
     ]
 }

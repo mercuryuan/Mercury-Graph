@@ -2,29 +2,29 @@
     "Highschooler": [
         {
             "columns": {
-                "ID": "A unique identifier for each student in the high school.",
+                "ID": "The unique identifier for each high school student.",
                 "name": "The name of the high school student.",
-                "grade": "The current grade level of the student, ranging from 9 to 12."
+                "grade": "The current academic grade of the student."
             },
-            "table_description": "The Highschooler table stores information about students in a high school, including their unique ID, name, and current grade level."
+            "table_description": "The table stores information about high school students."
         }
     ],
     "Friend": [
         {
             "columns": {
-                "friend_id": "This column represents the unique identifier of a friend associated with a student, establishing a link to another student.",
-                "student_id": "This column denotes the unique identifier of a student who has the specified friend."
+                "student_id": "The unique identifier for each student in the network.",
+                "friend_id": "The unique identifier for each student’s friend in the network."
             },
-            "table_description": "The Friend table captures the relationships between students, identifying pairs of friends through their unique identifiers."
+            "table_description": "The table manages friend relationships between high school students."
         }
     ],
     "Likes": [
         {
             "columns": {
-                "student_id": "An identifier for the student who is expressing a like.",
-                "liked_id": "An identifier for the student who is being liked."
+                "student_id": "The unique identifier for each student who likes another student.",
+                "liked_id": "The unique identifier for each student who is liked by another student."
             },
-            "table_description": "The Likes table records relationships between students based on the likes they express towards each other."
+            "table_description": "The table tracks liking relationships between high school students."
         }
     ]
 }

@@ -1,97 +1,97 @@
 {
-    "venue": [
-        {
-            "columns": {
-                "venueId": "A unique identifier for each venue, used to distinguish between different venues.",
-                "venueName": "The name of the venue where events, conferences, or presentations occur."
-            },
-            "table_description": "The venue table stores information about various venues, providing a reference point for their unique identifiers and associated names."
-        }
-    ],
-    "author": [
-        {
-            "columns": {
-                "authorId": "A unique identifier for each author in the database.",
-                "authorName": "The full name of the author."
-            },
-            "table_description": "The author table stores information about individual authors, including their unique ID and name."
-        }
-    ],
     "dataset": [
         {
             "columns": {
-                "datasetId": "A unique identifier for each dataset in the database.",
-                "datasetName": "The name assigned to the dataset, representing its content or purpose."
+                "datasetId": "The unique identifier for each dataset entry.",
+                "datasetName": "The name assigned to the dataset."
             },
-            "table_description": "The dataset table stores information about various datasets, including their unique identifiers and respective names."
+            "table_description": "The table stores information about various datasets."
         }
     ],
     "journal": [
         {
             "columns": {
-                "journalId": "A unique identifier for each journal in the database.",
-                "journalName": "The name of the journal, which may be referenced by papers."
+                "journalId": "The unique identifier for each journal entry.",
+                "journalName": "The name assigned to the journal."
             },
-            "table_description": "The journal table stores information about academic journals, including a unique ID and the corresponding journal name."
-        }
-    ],
-    "keyphrase": [
-        {
-            "columns": {
-                "keyphraseId": "A unique identifier for each keyphrase in the database.",
-                "keyphraseName": "The textual representation of the keyphrase used in academic contexts."
-            },
-            "table_description": "The keyphrase table serves to store distinct keyphrases that can be associated with research papers, facilitating the categorization and retrieval of academic content based on specified terms."
-        }
-    ],
-    "paper": [
-        {
-            "columns": {
-                "paperId": "A unique identifier for each paper in the database.",
-                "title": "The title of the paper, reflecting its main topic or findings.",
-                "venueId": "The identifier for the venue where the paper was presented or published.",
-                "year": "The year in which the paper was published.",
-                "numCiting": "The number of times this paper has been cited by other papers.",
-                "numCitedBy": "The number of papers that have cited this paper.",
-                "journalId": "The identifier for the journal in which the paper was published, if applicable."
-            },
-            "table_description": "The 'paper' table is designed to store information about academic papers, including their titles, publication years, citation metrics, and references to related venues and journals."
+            "table_description": "The table stores information about various academic journals."
         }
     ],
     "cite": [
         {
             "columns": {
-                "citingPaperId": "The identifier of the paper that is citing another paper.",
-                "citedPaperId": "The identifier of the paper that is being cited by another paper."
+                "citingPaperId": "The unique identifier of the paper that cites another paper.",
+                "citedPaperId": "The unique identifier of the paper being cited."
             },
-            "table_description": "The 'cite' table serves to establish relationships between research papers, indicating which papers cite which other papers, thereby reflecting the academic referencing structure."
+            "table_description": "The table tracks citation relationships between academic papers."
         }
     ],
-    "writes": [
+    "venue": [
         {
             "columns": {
-                "paperId": "Identifies the unique paper that is associated with the author.",
-                "authorId": "Identifies the unique author who has contributed to the paper."
+                "venueId": "The unique identifier for each venue.",
+                "venueName": "The name assigned to the venue."
             },
-            "table_description": "The 'writes' table establishes a many-to-many relationship between authors and papers, showing which authors have contributed to which papers."
+            "table_description": "The table stores information about various academic venues."
+        }
+    ],
+    "author": [
+        {
+            "columns": {
+                "authorId": "The unique identifier for each author.",
+                "authorName": "The name assigned to the author."
+            },
+            "table_description": "The table stores information about authors of academic works."
         }
     ],
     "paperDataset": [
         {
             "columns": {
-                "paperId": "A unique identifier for each scholarly paper within the dataset.",
-                "datasetId": "A unique identifier for the dataset to which the paper belongs."
+                "datasetId": "The unique identifier for each dataset linked to papers.",
+                "paperId": "The unique identifier for each academic paper."
             },
-            "table_description": "The paperDataset table serves as a junction table linking scholarly papers with their respective datasets, enabling the organization and retrieval of papers based on dataset associations."
+            "table_description": "The table links academic papers to their respective datasets."
         }
     ],
     "paperKeyphrase": [
         {
             "columns": {
-                "paperId": "Identifies a specific academic paper in the database.",
-                "keyphraseId": "Identifies a specific keyphrase associated with the academic paper."
+                "paperId": "The unique identifier for each academic paper.",
+                "keyphraseId": "The unique identifier for each keyphrase associated with papers."
             },
-            "table_description": "The paperKeyphrase table establishes a many-to-many relationship between academic papers and their associated keyphrases, allowing for the categorization and retrieval of research topics."
+            "table_description": "The table associates keyphrases with academic papers."
+        }
+    ],
+    "writes": [
+        {
+            "columns": {
+                "paperId": "The unique identifier for each academic paper.",
+                "authorId": "The unique identifier for each author of the paper."
+            },
+            "table_description": "The table tracks the authorship of academic papers."
+        }
+    ],
+    "keyphrase": [
+        {
+            "columns": {
+                "keyphraseId": "The unique identifier for each keyphrase.",
+                "keyphraseName": "The name assigned to the keyphrase."
+            },
+            "table_description": "The table stores information about various keyphrases used in academic papers."
+        }
+    ],
+    "paper": [
+        {
+            "columns": {
+                "paperId": "The unique identifier for each academic paper.",
+                "title": "The title assigned to the academic paper.",
+                "venueId": "The unique identifier for the venue where the paper was presented.",
+                "year": "The year the academic paper was published.",
+                "numCiting": "The number of papers that cite this paper.",
+                "numCitedBy": "The number of times this paper has been cited.",
+                "journalId": "The unique identifier for the journal where the paper was published."
+            },
+            "table_description": "The table stores information about academic papers and their citations."
         }
     ]
 }

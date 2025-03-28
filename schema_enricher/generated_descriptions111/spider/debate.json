@@ -1,0 +1,36 @@
+{
+    "people": [
+        {
+            "columns": {
+                "People_ID": "A unique identifier assigned to each individual in the table.",
+                "District": "The electoral district that the individual represents.",
+                "Name": "The full name of the individual.",
+                "Party": "The political party affiliation of the individual.",
+                "Age": "The age of the individual at the time of data entry."
+            },
+            "table_description": "The table 'people' contains information about individuals involved in debates, including their identifiers, electoral districts, names, political party affiliations, and ages."
+        }
+    ],
+    "debate": [
+        {
+            "columns": {
+                "Debate_ID": "A unique identifier for each debate event.",
+                "Date": "The date on which the debate took place.",
+                "Venue": "The location where the debate was held.",
+                "Num_of_Audience": "The total number of attendees present at the debate."
+            },
+            "table_description": "The debate table stores information about various debate events, including their unique identifiers, dates, venues, and audience sizes."
+        }
+    ],
+    "debate_people": [
+        {
+            "columns": {
+                "Debate_ID": "This column represents the unique identifier for each debate session.",
+                "Affirmative": "This column indicates the identifier for the person or team proposing the affirmative argument.",
+                "Negative": "This column indicates the identifier for the person or team proposing the negative argument.",
+                "If_Affirmative_Win": "This column indicates whether the affirmative argument won the debate, represented as a boolean value."
+            },
+            "table_description": "The debate_people table stores information about various debates, including identifiers for the participants on both the affirmative and negative sides, along with the outcome of the debate."
+        }
+    ]
+}

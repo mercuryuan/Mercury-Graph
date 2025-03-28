@@ -1,135 +1,135 @@
 {
-    "Courses": [
+    "Addresses": [
         {
             "columns": {
-                "course_id": "A unique identifier for each course in the database.",
-                "course_name": "The name of the course, typically representing the subject or field of study.",
-                "course_description": "A brief overview or synopsis of what the course entails.",
-                "other_details": "Additional pertinent information regarding the course, which is currently not utilized."
+                "address_id": "The unique identifier for each address.",
+                "line_1": "The primary address line, usually including the street number and name.",
+                "line_2": "The secondary address line, often for apartments or suites.",
+                "line_3": "The additional address line for further details, currently unused.",
+                "city": "The city where the address is located.",
+                "zip_postcode": "The postal code for the address.",
+                "state_province_county": "The state, province, or county of the address.",
+                "country": "The country where the address is situated.",
+                "other_address_details": "The field for any additional address information, currently unused."
             },
-            "table_description": "The Courses table maintains a record of all available courses, including their unique identifiers, names, descriptions, and any other relevant details."
-        }
-    ],
-    "Departments": [
-        {
-            "columns": {
-                "department_id": "A unique identifier for each department in the database.",
-                "department_name": "The name of the department, representing its area of study or focus.",
-                "department_description": "A brief description of the department, providing context and information about its purpose and offerings.",
-                "other_details": "Additional information regarding the department, which is currently not populated."
-            },
-            "table_description": "The Departments table serves to catalog various academic departments, their unique identifiers, names, descriptions, and any additional information that may be relevant."
+            "table_description": "The table stores detailed information about addresses."
         }
     ],
     "Degree_Programs": [
         {
             "columns": {
-                "degree_program_id": "Unique identifier for each degree program offered.",
-                "department_id": "Identifier for the department that offers the degree program.",
-                "degree_summary_name": "Short title or name of the degree program.",
-                "degree_summary_description": "Brief overview or description of the degree program.",
-                "other_details": "Additional information about the degree program, if available."
+                "degree_program_id": "The unique identifier for each degree program.",
+                "department_id": "The identifier for the department offering the program.",
+                "degree_summary_name": "The name of the degree program.",
+                "degree_summary_description": "The short description of the degree program.",
+                "other_details": "The field for additional details about the program, currently unused."
             },
-            "table_description": "The Degree_Programs table catalogs the various degree programs available, providing essential details such as unique IDs, departmental associations, brief names, descriptions, and any other relevant information."
-        }
-    ],
-    "Semesters": [
-        {
-            "columns": {
-                "semester_id": "A unique identifier for each semester.",
-                "semester_name": "The name of the semester, typically corresponding to the season and year.",
-                "semester_description": "A brief description of the semester, often intended for additional context.",
-                "other_details": "Any additional information related to the semester that may not fit into the other columns."
-            },
-            "table_description": "The Semesters table maintains records of different academic semesters offered, including unique identifiers, names, descriptions, and other relevant details."
+            "table_description": "The table catalogs degree programs offered by various departments."
         }
     ],
     "Sections": [
         {
             "columns": {
-                "section_id": "The unique identifier for each section within the database.",
-                "course_id": "The identifier linking the section to a specific course.",
-                "section_name": "The name designated to the section, typically representing a letter or code.",
-                "section_description": "A textual description providing additional details about the section.",
-                "other_details": "Any supplementary information related to the section, potentially including attributes not covered by other columns."
+                "section_id": "The unique identifier for each section.",
+                "course_id": "The identifier for the course associated with the section.",
+                "section_name": "The name of the section.",
+                "section_description": "The brief description of the section.",
+                "other_details": "The field for additional section information, currently unused."
             },
-            "table_description": "The Sections table is designed to store information about different sections of courses, linking each section to its respective course while providing descriptive and auxiliary details to enhance understanding and management of the academic offerings."
+            "table_description": "The table tracks sections of courses in the curriculum."
+        }
+    ],
+    "Courses": [
+        {
+            "columns": {
+                "course_id": "The unique identifier for each course.",
+                "course_name": "The name of the course offered to students.",
+                "course_description": "The brief description of the course content.",
+                "other_details": "The field for any additional course details, currently unused."
+            },
+            "table_description": "The table catalogs courses available for student enrollment."
+        }
+    ],
+    "Departments": [
+        {
+            "columns": {
+                "department_id": "The unique identifier for each department.",
+                "department_name": "The name of the department within the institution.",
+                "department_description": "The brief description of the department's focus and offerings.",
+                "other_details": "The field for additional details about the department, currently unused."
+            },
+            "table_description": "The table lists departments associated with various degree programs."
         }
     ],
     "Students": [
         {
             "columns": {
-                "student_id": "A unique identifier for each student in the table.",
-                "current_address_id": "Identification number for the student's current residential address.",
-                "permanent_address_id": "Identification number for the student's permanent residential address.",
-                "first_name": "The given name of the student.",
-                "middle_name": "The middle name of the student, if applicable.",
-                "last_name": "The family name or surname of the student.",
+                "student_id": "The unique identifier for each student.",
+                "current_address_id": "The identifier for the student's current address.",
+                "permanent_address_id": "The identifier for the student's permanent address.",
+                "first_name": "The first name of the student.",
+                "middle_name": "The middle name of the student.",
+                "last_name": "The last name of the student.",
                 "cell_mobile_number": "The mobile phone number of the student.",
-                "email_address": "The email contact address for the student.",
-                "ssn": "The Social Security Number of the student, if applicable.",
-                "date_first_registered": "The date and time the student first registered.",
-                "date_left": "The date and time the student left or graduated.",
-                "other_student_details": "Additional details or comments related to the student."
+                "email_address": "The email address of the student.",
+                "ssn": "The student's social security number.",
+                "date_first_registered": "The date when the student first registered.",
+                "date_left": "The date when the student left the institution.",
+                "other_student_details": "The field for additional student-related information."
             },
-            "table_description": "The Students table stores comprehensive information about students, including their personal details, contact information, registration dates, and associated addresses."
+            "table_description": "The table manages detailed information about students."
+        }
+    ],
+    "Semesters": [
+        {
+            "columns": {
+                "semester_id": "The unique identifier for each semester.",
+                "semester_name": "The name designating the specific semester.",
+                "semester_description": "The brief description of the semester.",
+                "other_details": "The field for any additional semester-related information."
+            },
+            "table_description": "The table organizes and details semester information for student enrolments."
         }
     ],
     "Student_Enrolment": [
         {
             "columns": {
-                "student_enrolment_id": "A unique identifier for each enrolment record.",
-                "degree_program_id": "An identifier for the degree program in which the student is enrolled.",
-                "semester_id": "An identifier representing the semester during which the enrolment took place.",
-                "student_id": "A unique identifier for the student associated with the enrolment.",
-                "other_details": "Additional information related to the enrolment, if any."
+                "student_enrolment_id": "The unique identifier for each student enrolment record.",
+                "degree_program_id": "The identifier for the degree program the student is enrolled in.",
+                "semester_id": "The identifier for the semester during which the enrolment occurs.",
+                "student_id": "The unique identifier for each student enrolled.",
+                "other_details": "The field for additional enrolment information, currently unused."
             },
-            "table_description": "The Student_Enrolment table tracks the enrolment details of students in various degree programs across different semesters."
-        }
-    ],
-    "Addresses": [
-        {
-            "columns": {
-                "address_id": "A unique identifier for each address record.",
-                "line_1": "The primary street address or location of the residence.",
-                "line_2": "Additional address information, such as apartment or suite number.",
-                "line_3": "A third line for address details, typically used for additional information if required.",
-                "city": "The city where the address is located.",
-                "zip_postcode": "The postal code assigned to the address for mail delivery.",
-                "state_province_county": "The state, province, or county associated with the address.",
-                "country": "The country where the address is situated.",
-                "other_address_details": "Any other relevant information about the address that does not fit into the predefined fields."
-            },
-            "table_description": "The Addresses table stores comprehensive address information linked to students, ensuring that each address record captures essential location details required for tracking student transcripts."
+            "table_description": "The table manages records of student enrolments in degree programs."
         }
     ],
     "Student_Enrolment_Courses": [
         {
             "columns": {
-                "student_course_id": "This column represents a unique identifier for each record in the Student Enrolment Courses table, linking students to their respective course enrollments.",
-                "course_id": "This column indicates the unique identifier for the course in which the student is enrolled, linking to the Courses table.",
-                "student_enrolment_id": "This column represents the unique identifier for the student's enrollment record, linking to the Student Enrolment table."
+                "student_course_id": "The unique identifier for each enrolment in a course.",
+                "course_id": "The identifier for the specific course assigned to the enrolment.",
+                "student_enrolment_id": "The identifier linking to the student's enrolment record."
             },
-            "table_description": "The Student Enrolment Courses table is designed to record and manage the relationships between students and the courses they are enrolled in, enabling tracking of enrollment details and course participation."
+            "table_description": "The table links students' enrolments to the courses they are taking."
         }
     ],
     "Transcripts": [
         {
             "columns": {
-                "transcript_id": "A unique identifier for each transcript entry.",
-                "transcript_date": "The date and time when the transcript was created.",
-                "other_details": "Additional information pertaining to the transcript that may include remarks or notes."
+                "transcript_id": "The unique identifier for each transcript.",
+                "transcript_date": "The date and time when the transcript was generated.",
+                "other_details": "The field for additional information regarding the transcript, currently unused."
             },
-            "table_description": "The Transcripts table stores the records of student transcripts, including a unique identifier for each transcript, the date the transcript was generated, and any other relevant details."
+            "table_description": "The table stores records of transcripts generated for students."
         }
     ],
     "Transcript_Contents": [
         {
             "columns": {
-                "student_course_id": "This column identifies the unique course enrollment of a student, linking to their participation in specific courses.",
-                "transcript_id": "This column represents the unique identifier for the transcript, linking to the comprehensive record of a student's academic achievements."
+                "student_course_id": "The identifier for the course in the student's transcript.",
+                "transcript_id": "The unique identifier for each generated transcript."
             },
-            "table_description": "The Transcript_Contents table serves to associate specific course enrollments with their corresponding academic transcripts, facilitating tracking and management of student academic records."
+            "table_description": "The table links courses to their corresponding student transcripts."
         }
     ]
 }

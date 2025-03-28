@@ -1,0 +1,96 @@
+{
+    "Staff": [
+        {
+            "columns": {
+                "staff_id": "The unique identifier for each staff member.",
+                "staff_details": "The name and title of the staff member."
+            },
+            "table_description": "The table stores information about staff members involved in the workflow."
+        }
+    ],
+    "Ref_Staff_Roles": [
+        {
+            "columns": {
+                "staff_role_code": "The unique code identifying each staff role.",
+                "staff_role_description": "The detailed description of the staff role."
+            },
+            "table_description": "The table stores reference data for various staff roles."
+        }
+    ],
+    "Process_Outcomes": [
+        {
+            "columns": {
+                "process_outcome_code": "The unique code for each process outcome.",
+                "process_outcome_description": "The detailed description of the process outcome."
+            },
+            "table_description": "The table stores outcomes associated with various document processes."
+        }
+    ],
+    "Process_Status": [
+        {
+            "columns": {
+                "process_status_code": "The unique code for each process status.",
+                "process_status_description": "The detailed description of the process status."
+            },
+            "table_description": "The table stores statuses related to document processing workflows."
+        }
+    ],
+    "Authors": [
+        {
+            "columns": {
+                "author_name": "The unique name of the author.",
+                "other_details": "The additional information about the author."
+            },
+            "table_description": "The table stores authors and their associated details for documents."
+        }
+    ],
+    "Documents": [
+        {
+            "columns": {
+                "document_id": "The unique identifier for each document.",
+                "author_name": "The name of the author associated with the document.",
+                "document_name": "The title of the document.",
+                "document_description": "The detailed overview of the document's content.",
+                "other_details": "The additional information relevant to the document."
+            },
+            "table_description": "The table stores documents along with their authors and descriptions."
+        }
+    ],
+    "Business_Processes": [
+        {
+            "columns": {
+                "process_id": "The unique identifier for each business process.",
+                "next_process_id": "The identifier for the subsequent process in the workflow.",
+                "process_name": "The name assigned to the business process.",
+                "process_description": "The detailed explanation of the business process.",
+                "other_details": "The additional information related to the business process."
+            },
+            "table_description": "The table stores details of various business processes in the workflow."
+        }
+    ],
+    "Documents_Processes": [
+        {
+            "columns": {
+                "document_id": "The unique identifier for each document in the process.",
+                "process_id": "The unique identifier for each business process conducted.",
+                "process_outcome_code": "The code indicating the outcome of the document processing.",
+                "process_status_code": "The code representing the current status of the document process."
+            },
+            "table_description": "The table stores relationships between documents and their associated processes."
+        }
+    ],
+    "Staff_in_Processes": [
+        {
+            "columns": {
+                "document_id": "The unique identifier for each document involved in the process.",
+                "process_id": "The unique identifier for each business process related to the document.",
+                "staff_id": "The unique identifier for each staff member associated with the process.",
+                "staff_role_code": "The code representing the role of the staff member in the process.",
+                "date_from": "The start date and time of the staff member's involvement.",
+                "date_to": "The end date and time of the staff member's involvement.",
+                "other_details": "The additional information related to the staff member's role."
+            },
+            "table_description": "The table stores staff assignments for specific documents and processes."
+        }
+    ]
+}

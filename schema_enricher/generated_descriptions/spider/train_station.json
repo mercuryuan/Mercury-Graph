@@ -2,36 +2,36 @@
     "station": [
         {
             "columns": {
-                "Station_ID": "A unique identifier for each train station in the database.",
-                "Name": "The official name of the railway station.",
-                "Annual_entry_exit": "The total number of entries and exits at the station over a year, indicating passenger flow.",
-                "Annual_interchanges": "The number of times passengers transfer between different lines or services at the station annually.",
-                "Total_Passengers": "The combined total of all passengers entering and exiting the station within a year.",
-                "Location": "The geographic city or area where the station is situated.",
-                "Main_Services": "The primary railway services that operate from this station.",
-                "Number_of_Platforms": "The total count of platforms available for train services at the station."
+                "Station_ID": "The unique identifier for each train station.",
+                "Name": "The official name of the train station.",
+                "Annual_entry_exit": "The total number of entries and exits per year.",
+                "Annual_interchanges": "The number of times passengers change trains annually.",
+                "Total_Passengers": "The total number of passengers using the station yearly.",
+                "Location": "The city where the train station is situated.",
+                "Main_Services": "The primary train services operating at the station.",
+                "Number_of_Platforms": "The total count of platforms available at the station."
             },
-            "table_description": "The table provides a comprehensive overview of train stations, including identifiers, location details, passenger statistics, and available services, aiding in the management and analysis of railway stations."
+            "table_description": "The table documents details about train stations and passenger metrics."
         }
     ],
     "train": [
         {
             "columns": {
-                "Train_ID": "A unique identifier assigned to each train.",
-                "Name": "The name of the train, which often includes its route or service designation.",
-                "Time": "The scheduled departure time of the train from the station.",
-                "Service": "The frequency of service provided by the train, indicating how often it operates."
+                "Train_ID": "The unique identifier for each train.",
+                "Name": "The official name of the train service.",
+                "Time": "The scheduled departure time of the train.",
+                "Service": "The frequency of train service availability."
             },
-            "table_description": "The table 'train' contains information about various trains, including their unique identifiers, names, scheduled departure times, and service frequency."
+            "table_description": "The table details various trains and their operational schedules."
         }
     ],
     "train_station": [
         {
             "columns": {
-                "Train_ID": "An identifier representing a specific train for scheduling and tracking purposes.",
-                "Station_ID": "An identifier representing a specific train station where the train makes stops."
+                "Train_ID": "The unique identifier for each train associated with a station.",
+                "Station_ID": "The unique identifier for each train station linked to a train."
             },
-            "table_description": "The train_station table serves to associate trains with their respective stations, allowing for efficient tracking of train routes and stops."
+            "table_description": "The table connects trains with their respective stations."
         }
     ]
 }

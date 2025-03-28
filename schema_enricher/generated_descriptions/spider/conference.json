@@ -1,0 +1,46 @@
+{
+    "conference": [
+        {
+            "columns": {
+                "Conference_ID": "The unique identifier for each conference.",
+                "Conference_Name": "The name of the conference.",
+                "Year": "The year the conference is held.",
+                "Location": "The geographical venue of the conference."
+            },
+            "table_description": "The table stores details about various conferences."
+        }
+    ],
+    "institution": [
+        {
+            "columns": {
+                "Institution_ID": "The unique identifier for each institution.",
+                "Institution_Name": "The name of the educational institution.",
+                "Location": "The geographical address of the institution.",
+                "Founded": "The year the institution was established."
+            },
+            "table_description": "The table stores information about different educational institutions."
+        }
+    ],
+    "staff": [
+        {
+            "columns": {
+                "staff_ID": "The unique identifier for each staff member.",
+                "name": "The full name of the staff member.",
+                "Age": "The age of the staff member in years.",
+                "Nationality": "The country of citizenship of the staff member.",
+                "Institution_ID": "The identifier linking staff to their respective institution."
+            },
+            "table_description": "The table stores information about staff members associated with institutions."
+        }
+    ],
+    "conference_participation": [
+        {
+            "columns": {
+                "Conference_ID": "The unique identifier for each conference participation record.",
+                "staff_ID": "The unique identifier for each staff member participating.",
+                "role": "The role of the staff member in the conference."
+            },
+            "table_description": "The table tracks staff participation roles in various conferences."
+        }
+    ]
+}

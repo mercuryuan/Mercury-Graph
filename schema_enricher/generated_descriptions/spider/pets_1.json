@@ -1,37 +1,37 @@
 {
-    "Has_Pet": [
-        {
-            "columns": {
-                "StuID": "Represents the unique identifier for a student who owns a pet.",
-                "PetID": "Represents the unique identifier for a pet owned by the student."
-            },
-            "table_description": "The Has_Pet table serves to establish a many-to-many relationship between students and their pets, linking students to the pets they own."
-        }
-    ],
     "Student": [
         {
             "columns": {
-                "StuID": "A unique identifier assigned to each student.",
+                "StuID": "The unique identifier for each student.",
                 "LName": "The last name of the student.",
                 "Fname": "The first name of the student.",
                 "Age": "The age of the student.",
-                "Sex": "The gender of the student, represented by a single character.",
-                "Major": "A code representing the student's declared major area of study.",
-                "Advisor": "A unique identifier for the student's academic advisor.",
-                "city_code": "A code representing the city where the student is from."
+                "Sex": "The gender of the student.",
+                "Major": "The identification number of the student's major.",
+                "Advisor": "The identification number of the student's advisor.",
+                "city_code": "The code representing the city of the student."
             },
-            "table_description": "The Student table contains essential information about each student, including their unique identification, personal details, academic focus, and city of origin, along with the details of their academic advisor."
+            "table_description": "The table stores information about students enrolled in the program."
+        }
+    ],
+    "Has_Pet": [
+        {
+            "columns": {
+                "StuID": "The unique identifier of the student who owns the pet.",
+                "PetID": "The unique identifier of the pet owned by the student."
+            },
+            "table_description": "The table tracks the relationship between students and their pets."
         }
     ],
     "Pets": [
         {
             "columns": {
-                "PetID": "A unique identifier for each pet in the database.",
-                "PetType": "The type of pet, such as cat or dog.",
+                "PetID": "The unique identifier for each pet.",
+                "PetType": "The type of pet, such as dog or cat.",
                 "pet_age": "The age of the pet in years.",
-                "weight": "The weight of the pet measured in pounds."
+                "weight": "The weight of the pet in kilograms."
             },
-            "table_description": "The Pets table stores information about various pets, including their unique identifiers, types, ages, and weights."
+            "table_description": "The table stores details about pets owned by students."
         }
     ]
 }

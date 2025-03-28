@@ -1,0 +1,98 @@
+{
+    "Customer_Payment_Methods": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for the customer making a payment.",
+                "payment_method_code": "The code representing the customer's preferred payment method."
+            },
+            "table_description": "The table stores information on customer payment methods."
+        }
+    ],
+    "Invoices": [
+        {
+            "columns": {
+                "invoice_number": "The unique identifier for each invoice issued in the system.",
+                "invoice_status_code": "The code indicating the current status of the invoice.",
+                "invoice_date": "The date and time when the invoice was created."
+            },
+            "table_description": "The table tracks invoices issued within the e-commerce system."
+        }
+    ],
+    "Orders": [
+        {
+            "columns": {
+                "order_id": "The unique identifier for each order placed in the system.",
+                "customer_id": "The unique identifier for the customer placing the order.",
+                "order_status_code": "The code indicating the current status of the order.",
+                "date_order_placed": "The date and time when the order was placed."
+            },
+            "table_description": "The table records orders made by customers in the e-commerce system."
+        }
+    ],
+    "Products": [
+        {
+            "columns": {
+                "product_id": "The unique identifier for each product in the inventory.",
+                "parent_product_id": "The unique identifier for the parent product, if applicable.",
+                "product_name": "The name given to the product for identification and marketing.",
+                "product_price": "The selling price of the product in the marketplace.",
+                "product_color": "The color options available for the product.",
+                "product_size": "The size options available for the product.",
+                "product_description": "The detailed description highlighting the product's features."
+            },
+            "table_description": "The table catalogs products available in the e-commerce platform."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer in the database.",
+                "gender_code": "The gender of the customer, represented by a single character.",
+                "customer_first_name": "The first name of the customer for identification.",
+                "customer_middle_initial": "The middle initial of the customer, if provided.",
+                "customer_last_name": "The last name of the customer for identification.",
+                "email_address": "The email address used for customer communications.",
+                "login_name": "The username created by the customer for account access.",
+                "login_password": "The password set by the customer to secure their account.",
+                "phone_number": "The contact phone number of the customer.",
+                "address_line_1": "The primary address line for billing or shipping purposes.",
+                "town_city": "The city or town where the customer resides.",
+                "county": "The county associated with the customer's address.",
+                "country": "The country of residence for the customer."
+            },
+            "table_description": "The table holds customer information for the e-commerce platform."
+        }
+    ],
+    "Order_Items": [
+        {
+            "columns": {
+                "order_item_id": "The unique identifier for each order item in the order.",
+                "product_id": "The unique identifier for the product included in the order.",
+                "order_id": "The unique identifier for the order containing the item.",
+                "order_item_status_code": "The current status of the order item, such as 'Delivered' or 'Out of Stock'."
+            },
+            "table_description": "The table tracks items within customer orders in the e-commerce system."
+        }
+    ],
+    "Shipments": [
+        {
+            "columns": {
+                "shipment_id": "The unique identifier for each shipment processed in the system.",
+                "order_id": "The unique identifier for the order associated with the shipment.",
+                "invoice_number": "The unique identifier for the invoice linked to the shipment.",
+                "shipment_tracking_number": "The number used to track the shipment's progress.",
+                "shipment_date": "The date and time when the shipment was dispatched."
+            },
+            "table_description": "The table records shipment details for orders within the e-commerce platform."
+        }
+    ],
+    "Shipment_Items": [
+        {
+            "columns": {
+                "shipment_id": "The unique identifier for each shipment associated with order items.",
+                "order_item_id": "The unique identifier for the order item included in the shipment."
+            },
+            "table_description": "The table records items included in each shipment for orders."
+        }
+    ]
+}

@@ -1,44 +1,44 @@
 {
+    "chip_model": [
+        {
+            "columns": {
+                "Model_name": "The unique identifier for each chip model.",
+                "Launch_year": "The year the chip model was released.",
+                "RAM_MiB": "The RAM capacity of the chip model in MiB.",
+                "ROM_MiB": "The ROM capacity of the chip model in MiB.",
+                "Slots": "The types of slots available on the chip model.",
+                "WiFi": "The WiFi standards supported by the chip model.",
+                "Bluetooth": "The Bluetooth version supported by the chip model."
+            },
+            "table_description": "The table provides details of various chip models."
+        }
+    ],
     "phone": [
         {
             "columns": {
-                "Company_name": "The name of the company that manufactures the phone hardware.",
-                "Hardware_Model_name": "The specific model name of the phone hardware, serving as a unique identifier.",
-                "Accreditation_type": "The type of accreditation the hardware has received, indicating its status.",
-                "Accreditation_level": "The level of accreditation granted to the hardware, specifying the quality and standards met.",
-                "Date": "The date when the accreditation was approved or the validity of the accreditation.",
-                "chip_model": "The model of the chip used in the phone, providing a link to specific chip characteristics.",
-                "screen_mode": "The graphical mode used by the phone's screen, which defines its display capabilities."
+                "Company_name": "The name of the company manufacturing the hardware model.",
+                "Hardware_Model_name": "The unique identifier for each hardware model.",
+                "Accreditation_type": "The type of accreditation granted to the hardware model.",
+                "Accreditation_level": "The level of accreditation assigned to the hardware model.",
+                "Date": "The date when the accreditation was awarded or approved.",
+                "chip_model": "The specific chip model associated with the hardware model.",
+                "screen_mode": "The graphics mode supported by the hardware model."
             },
-            "table_description": "The table 'phone' contains information about various phone hardware models, detailing their manufacturers, accreditation status, chip models, and display modes."
+            "table_description": "The table contains details about various phone hardware models."
         }
     ],
     "screen_mode": [
         {
             "columns": {
-                "Graphics_mode": "This column represents a unique identifier for each graphics mode available.",
-                "Char_cells": "This column indicates the character cell dimensions in terms of width and height.",
-                "Pixels": "This column specifies the resolution of the screen mode in pixels, revealing the width and height.",
-                "map": "This column denotes the address range that the graphics mode occupies in memory.",
-                "used_kb": "This column measures the amount of memory in kilobytes that is utilized by the graphics mode.",
-                "Hardware_colours": "This column lists the number of colors that can be rendered in the graphics mode.",
-                "Type": "This column defines the category of the display mode, distinguishing between graphics and text modes."
+                "Graphics_mode": "The unique identifier for each graphics mode.",
+                "Char_cells": "The dimensions of character cells in the graphics mode.",
+                "Pixels": "The pixel dimensions supported by the graphics mode.",
+                "Hardware_colours": "The number of colors displayed by the graphics mode.",
+                "used_kb": "The memory usage in kilobytes for the graphics mode.",
+                "map": "The memory range associated with the graphics mode.",
+                "Type": "The classification of the graphics mode as graphics or text."
             },
-            "table_description": "The screen_mode table provides detailed information about various display modes available on the device, including their identifiers, characteristics such as resolution and memory usage, and type classification."
-        }
-    ],
-    "chip_model": [
-        {
-            "columns": {
-                "Model_name": "The name of the chip model.",
-                "Launch_year": "The year the chip model was launched.",
-                "RAM_MiB": "The amount of RAM available for the chip model, measured in MiB.",
-                "ROM_MiB": "The amount of internal storage available for the chip model, measured in MiB.",
-                "Slots": "The types and number of slots available in the chip model for expansion or connectivity.",
-                "WiFi": "The WiFi standards supported by the chip model.",
-                "Bluetooth": "The version of Bluetooth supported by the chip model."
-            },
-            "table_description": "The chip_model table contains information about various chip models, including their specifications such as launch year, RAM, ROM, connectivity options, and expansion slots."
+            "table_description": "The table details different graphics modes and their characteristics."
         }
     ]
 }

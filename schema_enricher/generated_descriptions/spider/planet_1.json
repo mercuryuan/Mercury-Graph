@@ -1,0 +1,67 @@
+{
+    "Employee": [
+        {
+            "columns": {
+                "EmployeeID": "The unique identifier for each employee.",
+                "Name": "The full name of the employee.",
+                "Position": "The job title or role of the employee.",
+                "Salary": "The compensation amount for the employee's position.",
+                "Remarks": "The additional comments or notes about the employee."
+            },
+            "table_description": "The table stores essential information about employees."
+        }
+    ],
+    "Planet": [
+        {
+            "columns": {
+                "PlanetID": "The unique identifier for each planet.",
+                "Name": "The designated name of the planet.",
+                "Coordinates": "The spatial location of the planet in real numbers."
+            },
+            "table_description": "The table stores detailed information about different planets."
+        }
+    ],
+    "Shipment": [
+        {
+            "columns": {
+                "ShipmentID": "The unique identifier for each shipment.",
+                "Date": "The scheduled date for the shipment.",
+                "Manager": "The identifier for the employee managing the shipment.",
+                "Planet": "The identifier for the planet associated with the shipment."
+            },
+            "table_description": "The table tracks shipments along with relevant management and planetary details."
+        }
+    ],
+    "Has_Clearance": [
+        {
+            "columns": {
+                "Employee": "The unique identifier for each employee with clearance.",
+                "Planet": "The unique identifier for each planet related to clearance.",
+                "Level": "The clearance level assigned to the employee for the planet."
+            },
+            "table_description": "The table associates employees with their clearance levels for specific planets."
+        }
+    ],
+    "Client": [
+        {
+            "columns": {
+                "AccountNumber": "The unique identifier for each client account.",
+                "Name": "The full name of the client associated with the account."
+            },
+            "table_description": "The table stores essential details about client accounts."
+        }
+    ],
+    "Package": [
+        {
+            "columns": {
+                "Shipment": "The unique identifier for each shipment to which the package is associated.",
+                "PackageNumber": "The unique identifier for each specific package within a shipment.",
+                "Contents": "The description of items contained within the package.",
+                "Weight": "The total weight of the package measured in real numbers.",
+                "Sender": "The unique identifier of the client sending the package.",
+                "Recipient": "The unique identifier of the client receiving the package."
+            },
+            "table_description": "The table manages information related to packages within shipments."
+        }
+    ]
+}

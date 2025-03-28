@@ -1,0 +1,78 @@
+{
+    "Payments": [
+        {
+            "columns": {
+                "payment_id": "The unique identifier for each payment record.",
+                "invoice_id": "The reference ID for the associated invoice.",
+                "payment_details": "The method of payment used for the transaction."
+            },
+            "table_description": "The table stores records of payments linked to invoices."
+        }
+    ],
+    "Meetings": [
+        {
+            "columns": {
+                "meeting_id": "The unique identifier for each meeting record.",
+                "client_id": "The reference ID for the associated client.",
+                "meeting_outcome": "The result or summary of the meeting.",
+                "meeting_type": "The category of the meeting, such as team or company.",
+                "billable_yn": "The indication of whether the meeting is billable.",
+                "start_date_time": "The scheduled start date and time of the meeting.",
+                "end_date_time": "The scheduled end date and time of the meeting.",
+                "purpose_of_meeting": "The main goal or objective of the meeting.",
+                "other_details": "Any additional information regarding the meeting."
+            },
+            "table_description": "The table tracks details of meetings held with clients."
+        }
+    ],
+    "Agencies": [
+        {
+            "columns": {
+                "agency_id": "The unique identifier for each advertising agency.",
+                "agency_details": "The name and description of the advertising agency."
+            },
+            "table_description": "The table stores details of advertising agencies in the system."
+        }
+    ],
+    "Clients": [
+        {
+            "columns": {
+                "client_id": "The unique identifier for each client record.",
+                "agency_id": "The reference ID for the associated advertising agency.",
+                "sic_code": "The Standard Industrial Classification code for the client.",
+                "client_details": "The name and description of the client."
+            },
+            "table_description": "The table maintains records of clients linked to advertising agencies."
+        }
+    ],
+    "Invoices": [
+        {
+            "columns": {
+                "invoice_id": "The unique identifier for each invoice record.",
+                "client_id": "The reference ID for the associated client.",
+                "invoice_status": "The current status of the invoice processing.",
+                "invoice_details": "The description or quality rating of the invoice."
+            },
+            "table_description": "The table manages invoice records linked to clients."
+        }
+    ],
+    "Staff_in_Meetings": [
+        {
+            "columns": {
+                "meeting_id": "The unique identifier for each meeting attended by staff.",
+                "staff_id": "The unique identifier for each staff member participating in meetings."
+            },
+            "table_description": "The table records associations between staff members and meetings."
+        }
+    ],
+    "Staff": [
+        {
+            "columns": {
+                "staff_id": "The unique identifier for each staff member.",
+                "agency_id": "The reference ID for the associated advertising agency.",
+                "staff_details": "The name and description of the staff member."
+            },
+            "table_description": "The table maintains records of staff members and their agency affiliations."
+        }
+    ]
+}

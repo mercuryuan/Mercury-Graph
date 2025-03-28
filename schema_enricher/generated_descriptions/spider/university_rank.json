@@ -1,0 +1,50 @@
+{
+    "university": [
+        {
+            "columns": {
+                "University_ID": "The unique identifier for each university.",
+                "University_Name": "The name of the university.",
+                "City": "The city where the university is located.",
+                "State": "The state where the university is located.",
+                "Team_Name": "The athletic team name of the university.",
+                "Affiliation": "The religious or secular affiliation of the university.",
+                "Enrollment": "The total number of enrolled students at the university.",
+                "Home_Conference": "The athletic conference the university belongs to."
+            },
+            "table_description": "The table provides information about universities and their attributes."
+        }
+    ],
+    "overall_ranking": [
+        {
+            "columns": {
+                "Rank": "The rank of the university based on evaluation criteria.",
+                "University_ID": "The unique identifier for each university.",
+                "Reputation_point": "The points determined by the university's reputation.",
+                "Research_point": "The points assigned based on research contributions.",
+                "Citation_point": "The points awarded for citations of research work.",
+                "Total": "The total score calculated from different assessment points."
+            },
+            "table_description": "The table summarizes the ranking metrics for universities."
+        }
+    ],
+    "major": [
+        {
+            "columns": {
+                "Major_ID": "The unique identifier for each major.",
+                "Major_Name": "The name of the academic major.",
+                "Major_Code": "The code assigned to each major for identification."
+            },
+            "table_description": "The table lists academic majors and their attributes."
+        }
+    ],
+    "major_ranking": [
+        {
+            "columns": {
+                "Rank": "The rank of the major within the university.",
+                "University_ID": "The unique identifier for each university.",
+                "Major_ID": "The unique identifier for each major."
+            },
+            "table_description": "The table ranks majors within universities based on specified criteria."
+        }
+    ]
+}

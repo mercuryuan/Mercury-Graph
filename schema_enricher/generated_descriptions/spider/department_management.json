@@ -2,35 +2,35 @@
     "department": [
         {
             "columns": {
-                "Department_ID": "A unique identifier assigned to each department.",
-                "Name": "The official name of the department.",
+                "Department_ID": "The unique identifier for each department.",
+                "Name": "The name of the department.",
                 "Creation": "The year the department was established.",
-                "Ranking": "The ranking of the department, reflecting its priority or significance.",
-                "Budget_in_Billions": "The allocated budget for the department expressed in billions of dollars.",
-                "Num_Employees": "The total number of employees working within the department."
+                "Ranking": "The hierarchical ranking of the department.",
+                "Budget_in_Billions": "The financial allocation of the department in billions.",
+                "Num_Employees": "The total number of employees in the department."
             },
-            "table_description": "The department table contains information about various governmental departments, detailing their identifiers, names, establishment years, rankings, budgets, and employee counts."
-        }
-    ],
-    "head": [
-        {
-            "columns": {
-                "head_ID": "A unique identifier for each head within the department management system.",
-                "name": "The full name of the head in charge of a department.",
-                "born_state": "The state where the head was born.",
-                "age": "The current age of the head."
-            },
-            "table_description": "The 'head' table contains information about the heads of departments, including their unique identifiers, names, states of birth, and ages."
+            "table_description": "The table provides information about various departments."
         }
     ],
     "management": [
         {
             "columns": {
-                "department_ID": "This column represents the unique identifier for each department within the management system.",
-                "head_ID": "This column corresponds to the unique identifier for the head of the department, linking the head to their respective department.",
-                "temporary_acting": "This column indicates whether the head of the department is temporarily acting in their role."
+                "department_ID": "The unique identifier for each department.",
+                "head_ID": "The unique identifier for the head of the department.",
+                "temporary_acting": "The status of whether the head is temporarily acting."
             },
-            "table_description": "The 'management' table is designed to store details regarding the leadership structure of various departments, including department identifiers, head identifiers, and the status of heads as temporary or permanent in their roles."
+            "table_description": "The table manages department leadership information."
+        }
+    ],
+    "head": [
+        {
+            "columns": {
+                "head_ID": "The unique identifier for each department head.",
+                "name": "The full name of the department head.",
+                "born_state": "The state where the department head was born.",
+                "age": "The current age of the department head."
+            },
+            "table_description": "The table catalogs information about department heads."
         }
     ]
 }

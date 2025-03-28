@@ -1,0 +1,56 @@
+{
+    "Dorm": [
+        {
+            "columns": {
+                "dormid": "A unique identifier for each dormitory.",
+                "dorm_name": "The name of the dormitory, which can reflect its theme or donor.",
+                "student_capacity": "The maximum number of students that can be accommodated in the dormitory.",
+                "gender": "The gender designation of the dormitory, indicating whether it is designated for male, female, or mixed-gender use."
+            },
+            "table_description": "The Dorm table contains information about various dormitories, including their unique identifiers, names, accommodation capacities, and gender designations, facilitating the management of housing for students."
+        }
+    ],
+    "Dorm_amenity": [
+        {
+            "columns": {
+                "amenid": "A unique identifier for each amenity in the dormitory.",
+                "amenity_name": "The name or description of the amenity available in the dormitory."
+            },
+            "table_description": "The Dorm_amenity table catalogs various amenities provided in the dormitory, offering a standardized reference for each amenity's unique identifier and its name."
+        }
+    ],
+    "Student": [
+        {
+            "columns": {
+                "StuID": "A unique identifier assigned to each student.",
+                "LName": "The last name of the student.",
+                "Fname": "The first name of the student.",
+                "Age": "The age of the student.",
+                "Sex": "The gender of the student, represented as a single character.",
+                "Major": "A numerical code representing the student's major field of study.",
+                "Advisor": "A numerical identifier for the student's academic advisor.",
+                "city_code": "A short code representing the city of the student's residence."
+            },
+            "table_description": "The Student table maintains records of students, including their personal details, educational major, academic advisor, and residence city."
+        }
+    ],
+    "Has_amenity": [
+        {
+            "columns": {
+                "dormid": "The unique identifier for a specific dormitory.",
+                "amenid": "The unique identifier for an amenity associated with a dormitory."
+            },
+            "table_description": "The Has_amenity table captures the relationship between dormitories and their respective amenities, linking each dormitory to the amenities it offers."
+        }
+    ],
+    "Lives_in": [
+        {
+            "columns": {
+                "stuid": "A unique identifier for each student residing in the dormitory.",
+                "dormid": "A unique identifier for each dormitory within the university that houses students.",
+                "room_number": "The specific room number assigned to a student within the dormitory."
+            },
+            "table_description": "The Lives_in table captures the relationship between students and their assigned dormitory rooms, specifying which students live in which dormitories and their respective room numbers."
+        }
+    ]
+}

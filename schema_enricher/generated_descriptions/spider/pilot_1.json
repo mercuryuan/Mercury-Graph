@@ -1,0 +1,21 @@
+{
+    "PilotSkills": [
+        {
+            "columns": {
+                "pilot_name": "The name of the pilot involved in flying the plane.",
+                "plane_name": "The name of the plane piloted by the pilot.",
+                "age": "The age of the pilot in years."
+            },
+            "table_description": "The table captures skills and details of pilots and their planes."
+        }
+    ],
+    "Hangar": [
+        {
+            "columns": {
+                "plane_name": "The name of the plane stored in the hangar.",
+                "location": "The location where the hangar is situated."
+            },
+            "table_description": "The table details planes and their respective hangar locations."
+        }
+    ]
+}

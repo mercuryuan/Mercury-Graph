@@ -1,0 +1,47 @@
+{
+    "country": [
+        {
+            "columns": {
+                "Code": "A unique three-letter code that identifies each country.",
+                "Name": "The official name of the country.",
+                "Continent": "The continent on which the country is located.",
+                "Region": "The specific region within the continent where the country is categorized.",
+                "SurfaceArea": "The total area, in square kilometers, that the country occupies.",
+                "IndepYear": "The year when the country gained independence.",
+                "Population": "The total number of people living in the country.",
+                "LifeExpectancy": "The average number of years a person can expect to live in the country.",
+                "GNP": "The gross national product, which measures the economic performance of the country.",
+                "GNPOld": "The gross national product as previously recorded or estimated.",
+                "LocalName": "The name of the country in its primary language or local terminology.",
+                "GovernmentForm": "The type of political system or government under which the country operates.",
+                "HeadOfState": "The name of the individual currently serving as the head of state of the country.",
+                "Capital": "The city that serves as the capital of the country.",
+                "Code2": "A unique two-letter code that further identifies each country."
+            },
+            "table_description": "The country table contains comprehensive information about countries worldwide, including their identification codes, geographic details, demographic statistics, economic indicators, and government structures."
+        }
+    ],
+    "countrylanguage": [
+        {
+            "columns": {
+                "CountryCode": "A three-letter code that uniquely identifies a country.",
+                "Language": "The name of the language spoken in the country.",
+                "IsOfficial": "Indicates whether the language is an official language of the country.",
+                "Percentage": "The percentage of the population that speaks this language in the country."
+            },
+            "table_description": "The countrylanguage table provides information on the languages spoken in various countries, including details on their official status and the percentage of the population that uses each language."
+        }
+    ],
+    "city": [
+        {
+            "columns": {
+                "ID": "A unique identifier for each city in the table.",
+                "Name": "The name of the city.",
+                "CountryCode": "A three-letter code that represents the country to which the city belongs.",
+                "District": "The district or administrative division of the city.",
+                "Population": "The total number of residents living in the city."
+            },
+            "table_description": "The 'city' table contains information about various cities, including their unique identifiers, names, associated countries, administrative divisions, and population counts."
+        }
+    ]
+}

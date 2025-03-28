@@ -1,0 +1,34 @@
+{
+    "College": [
+        {
+            "columns": {
+                "cName": "This column represents the name of the college.",
+                "state": "This column indicates the state in which the college is located.",
+                "enr": "This column denotes the enrollment number of students at the college."
+            },
+            "table_description": "The College table contains information about various colleges, including their names, locations, and student enrollment figures."
+        }
+    ],
+    "Player": [
+        {
+            "columns": {
+                "pID": "A unique identifier assigned to each player.",
+                "pName": "The name of the player.",
+                "yCard": "Indicates whether the player has received a yellow card during a match.",
+                "HS": "Represents the player's goal scoring history or statistics."
+            },
+            "table_description": "The Player table contains details about soccer players, including their unique ID, name, yellow card status, and goal scoring statistics."
+        }
+    ],
+    "Tryout": [
+        {
+            "columns": {
+                "pID": "The unique identifier for each player participating in the tryout.",
+                "cName": "The name of the college associated with the tryout event.",
+                "pPos": "The playing position of the player during the tryout.",
+                "decision": "The decision made regarding the player's participation status after the tryout."
+            },
+            "table_description": "The Tryout table captures the details of players who are trying out for various college soccer programs, including their unique ID, the college they are trying out for, their playing position, and the decision made about their participation."
+        }
+    ]
+}

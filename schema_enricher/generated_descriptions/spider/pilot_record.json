@@ -2,41 +2,41 @@
     "aircraft": [
         {
             "columns": {
-                "Aircraft_ID": "A unique identifier for each aircraft entry in the table.",
-                "Order_Year": "The year in which the aircraft was ordered.",
-                "Manufacturer": "The name of the company that produced the aircraft.",
-                "Model": "The specific designation or variant of the aircraft.",
-                "Fleet_Series": "The series number assigned to a group of aircraft of the same type.",
-                "Powertrain": "Details about the engine or power system used in the aircraft.",
-                "Fuel_Propulsion": "The type of fuel or propulsion system used to power the aircraft."
+                "Aircraft_ID": "The unique identifier for each aircraft.",
+                "Order_Year": "The year the aircraft was ordered.",
+                "Manufacturer": "The company that manufactured the aircraft.",
+                "Model": "The specific model designation of the aircraft.",
+                "Fleet_Series": "The range and number of aircraft in the fleet.",
+                "Powertrain": "The type of powertrain used in the aircraft.",
+                "Fuel_Propulsion": "The fuel type used for propulsion of the aircraft."
             },
-            "table_description": "The aircraft table contains information regarding various aircraft, detailing aspects such as their identification, ordering, manufacturing, and specifications related to their construction and operation."
-        }
-    ],
-    "pilot": [
-        {
-            "columns": {
-                "Pilot_ID": "A unique identifier for each pilot in the table.",
-                "Pilot_name": "The full name of the pilot.",
-                "Rank": "The rank or position level of the pilot within their team.",
-                "Age": "The current age of the pilot.",
-                "Nationality": "The country of citizenship or origin of the pilot.",
-                "Position": "The specific playing position that the pilot is designated to within the team.",
-                "Join_Year": "The year the pilot joined their respective team.",
-                "Team": "The name of the team with which the pilot is affiliated."
-            },
-            "table_description": "This table contains comprehensive records of pilots, detailing their identities, ranks, age, nationality, playing positions, join year, and the teams they are associated with."
+            "table_description": "The table details aircraft specifications and ordering information."
         }
     ],
     "pilot_record": [
         {
             "columns": {
-                "Record_ID": "A unique identifier for each record in the pilot record, used for reference.",
-                "Pilot_ID": "The identifier for the pilot associated with the record, linking to pilot details.",
-                "Aircraft_ID": "The identifier for the aircraft associated with the record, linking to aircraft details.",
-                "Date": "The date on which the pilot operated the aircraft, marking the event in time."
+                "Record_ID": "The unique identifier for each pilot record.",
+                "Pilot_ID": "The unique identifier for each pilot.",
+                "Aircraft_ID": "The unique identifier for each aircraft.",
+                "Date": "The date of the pilot's record entry."
             },
-            "table_description": "The pilot_record table tracks the association between pilots and aircraft on specific dates, maintaining a comprehensive log of pilot activities."
+            "table_description": "The table captures records of pilots and their associated aircraft."
+        }
+    ],
+    "pilot": [
+        {
+            "columns": {
+                "Pilot_ID": "The unique identifier for each pilot.",
+                "Pilot_name": "The full name of the pilot.",
+                "Rank": "The rank assigned to the pilot.",
+                "Age": "The age of the pilot in years.",
+                "Nationality": "The country of citizenship of the pilot.",
+                "Position": "The position played by the pilot in the team.",
+                "Join_Year": "The year the pilot joined the team.",
+                "Team": "The name of the team the pilot is associated with."
+            },
+            "table_description": "The table records details about each pilot and their team affiliation."
         }
     ]
 }

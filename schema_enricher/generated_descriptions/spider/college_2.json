@@ -1,125 +1,125 @@
 {
+    "teaches": [
+        {
+            "columns": {
+                "ID": "The unique identifier for each instructor teaching a course.",
+                "course_id": "The identifier for the specific course being taught.",
+                "sec_id": "The identifier for the specific section of the course.",
+                "semester": "The semester in which the course section is offered.",
+                "year": "The year in which the course section is offered."
+            },
+            "table_description": "The table records which instructors teach specific courses in given semesters."
+        }
+    ],
     "classroom": [
         {
             "columns": {
                 "building": "The name of the building where the classroom is located.",
-                "room_number": "The specific room identifier within the building.",
-                "capacity": "The maximum number of students that the classroom can accommodate."
+                "room_number": "The unique identifier for the specific classroom within the building.",
+                "capacity": "The maximum number of students the classroom can accommodate."
             },
-            "table_description": "The classroom table holds information about the various classrooms in a college, including their locations within buildings, specific room identifiers, and seating capacities."
-        }
-    ],
-    "department": [
-        {
-            "columns": {
-                "dept_name": "The name of the department, which serves as the unique identifier for each department in the college.",
-                "building": "The name of the building where the department is located.",
-                "budget": "The total financial resources allocated to the department for its operations and activities."
-            },
-            "table_description": "The department table provides a structured overview of the various departments within the college, including their names, locations, and allocated budgets."
-        }
-    ],
-    "course": [
-        {
-            "columns": {
-                "course_id": "A unique identifier assigned to each course.",
-                "title": "The name or title of the course.",
-                "dept_name": "The name of the department offering the course.",
-                "credits": "The number of academic credits awarded upon successful completion of the course."
-            },
-            "table_description": "The course table stores information about the various courses offered at the college, including their unique identifiers, titles, associated departments, and credit values."
+            "table_description": "The table catalogs classrooms, their locations, and capacities in the college."
         }
     ],
     "instructor": [
         {
             "columns": {
-                "ID": "A unique identifier for each instructor in the college.",
+                "ID": "The unique identifier for each instructor in the college.",
                 "name": "The full name of the instructor.",
-                "dept_name": "The name of the department to which the instructor belongs.",
+                "dept_name": "The department to which the instructor is affiliated.",
                 "salary": "The annual salary of the instructor."
             },
-            "table_description": "The instructor table stores information about instructors at the college, including their unique IDs, names, departmental affiliations, and salaries."
+            "table_description": "The table stores details about instructors, their departments, and salaries."
         }
     ],
     "section": [
         {
             "columns": {
-                "course_id": "A unique identifier for each course offered.",
-                "sec_id": "A unique identifier for each section of a course.",
-                "semester": "The academic term during which the course section is offered, such as Spring or Fall.",
-                "year": "The year in which the course section is conducted.",
-                "building": "The name of the building where the course section is held.",
-                "room_number": "The specific room number within the building where the course section takes place.",
-                "time_slot_id": "A code representing the scheduled time for the course section."
+                "course_id": "The identifier for the specific course associated with the section.",
+                "sec_id": "The unique identifier for each section of the course.",
+                "semester": "The semester during which the course section is offered.",
+                "year": "The academic year in which the course section is conducted.",
+                "building": "The name of the building housing the classroom for the section.",
+                "room_number": "The identifier for the specific classroom where the section meets.",
+                "time_slot_id": "The identifier for the scheduled time slot of the section."
             },
-            "table_description": "The section table contains information about course sections offered at the college, including their identifiers, academic term details, location, and scheduled times."
-        }
-    ],
-    "teaches": [
-        {
-            "columns": {
-                "ID": "The unique identifier for an instructor responsible for teaching a particular course section.",
-                "course_id": "The identifier for the specific course being taught.",
-                "sec_id": "The section identifier for the course, representing different class sections or meetings.",
-                "semester": "The term in which the course is taught, indicating either Spring or Fall.",
-                "year": "The year in which the course is offered."
-            },
-            "table_description": "The teaches table records the relationships between instructors and the courses they teach across different sections, semesters, and years."
-        }
-    ],
-    "student": [
-        {
-            "columns": {
-                "ID": "A unique identifier for each student in the table.",
-                "name": "The full name of the student.",
-                "dept_name": "The name of the department to which the student belongs.",
-                "tot_cred": "The total number of credits earned by the student."
-            },
-            "table_description": "The student table stores information about students enrolled in the college, including their unique ID, name, associated department, and total credits earned."
-        }
-    ],
-    "takes": [
-        {
-            "columns": {
-                "ID": "Identifier for the student enrolled in the course.",
-                "course_id": "Identifier for the course being taken.",
-                "sec_id": "Identifier for the specific section of the course.",
-                "semester": "The semester during which the course is taken (e.g., Fall or Spring).",
-                "year": "The year in which the course is taken.",
-                "grade": "The grade the student received for the course."
-            },
-            "table_description": "The 'takes' table captures the enrollment details of students in various courses, including their grades, for specific semesters and years."
-        }
-    ],
-    "advisor": [
-        {
-            "columns": {
-                "s_ID": "This column represents the unique identifier for each student who is assigned to an advisor.",
-                "i_ID": "This column indicates the unique identifier of the instructor serving as the advisor for the student."
-            },
-            "table_description": "The advisor table maps students to their respective advisors, linking each student with the instructor responsible for their guidance."
-        }
-    ],
-    "time_slot": [
-        {
-            "columns": {
-                "time_slot_id": "A unique identifier for each time slot, which helps in distinguishing between different slots in the database.",
-                "day": "The specific day of the week during which the time slot occurs, represented by a single character.",
-                "start_hr": "The hour at which the time slot begins, indicating the starting time in a 24-hour format.",
-                "start_min": "The minute at which the time slot begins, providing the exact starting minute of the time slot.",
-                "end_hr": "The hour at which the time slot ends, indicating the ending time in a 24-hour format.",
-                "end_min": "The minute at which the time slot ends, providing the exact ending minute of the time slot."
-            },
-            "table_description": "The time_slot table captures the schedule for various educational activities, detailing the specific time intervals allotted for each activity on given days."
+            "table_description": "The table defines sections of courses along with their scheduling details."
         }
     ],
     "prereq": [
         {
             "columns": {
-                "course_id": "This column identifies the unique ID of a course that has prerequisites.",
-                "prereq_id": "This column specifies the unique ID of a course that is a prerequisite for the course identified by course_id."
+                "course_id": "The identifier for the primary course requiring prerequisites.",
+                "prereq_id": "The identifier for the prerequisite course needed before enrollment."
             },
-            "table_description": "The prereq table is designed to establish relationships between courses and their prerequisites, enabling the identification of which courses must be completed before enrolling in a specific course."
+            "table_description": "The table clarifies prerequisite relationships between courses in the college."
+        }
+    ],
+    "department": [
+        {
+            "columns": {
+                "dept_name": "The unique name identifying each academic department in the college.",
+                "building": "The name of the building where the department's offices are located.",
+                "budget": "The allocated budget for departmental operations and activities."
+            },
+            "table_description": "The table organizes academic departments along with their locations and budgets."
+        }
+    ],
+    "course": [
+        {
+            "columns": {
+                "course_id": "The unique identifier for each course in the college.",
+                "title": "The title of the course, indicating its subject matter.",
+                "dept_name": "The name of the department offering the course.",
+                "credits": "The number of credits awarded upon completing the course."
+            },
+            "table_description": "The table lists courses offered, including titles, departments, and credit values."
+        }
+    ],
+    "student": [
+        {
+            "columns": {
+                "ID": "The unique identifier for each student enrolled in the college.",
+                "name": "The full name of the student.",
+                "dept_name": "The department to which the student belongs.",
+                "tot_cred": "The total number of credits earned by the student."
+            },
+            "table_description": "The table tracks students, their departments, and earned credits."
+        }
+    ],
+    "takes": [
+        {
+            "columns": {
+                "ID": "The unique identifier for each student enrolled in a course.",
+                "course_id": "The identifier for the specific course taken by the student.",
+                "sec_id": "The unique identifier for the section of the course.",
+                "semester": "The semester during which the student is enrolled in the course section.",
+                "year": "The academic year when the course section is taken.",
+                "grade": "The final grade received by the student in the course section."
+            },
+            "table_description": "The table records student enrollments, course sections, and associated grades."
+        }
+    ],
+    "advisor": [
+        {
+            "columns": {
+                "i_ID": "The unique identifier for each instructor assigned as an advisor.",
+                "s_ID": "The unique identifier for each student assigned to an advisor."
+            },
+            "table_description": "The table associates students with their respective academic advisors."
+        }
+    ],
+    "time_slot": [
+        {
+            "columns": {
+                "time_slot_id": "The unique identifier for each time slot entry.",
+                "day": "The day of the week when the time slot occurs.",
+                "start_hr": "The hour at which the time slot begins.",
+                "start_min": "The minute at which the time slot begins.",
+                "end_hr": "The hour at which the time slot ends.",
+                "end_min": "The minute at which the time slot ends."
+            },
+            "table_description": "The table specifies time slots indicating start and end times for classes."
         }
     ]
 }

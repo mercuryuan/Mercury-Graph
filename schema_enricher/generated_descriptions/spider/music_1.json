@@ -1,51 +1,51 @@
 {
+    "files": [
+        {
+            "columns": {
+                "f_id": "The unique identifier for each file entry.",
+                "artist_name": "The name of the artist associated with the file.",
+                "file_size": "The size of the file in megabytes.",
+                "duration": "The playback length of the file in minutes and seconds.",
+                "formats": "The file format type such as mp3 or mp4."
+            },
+            "table_description": "The table stores metadata about music files including size and duration."
+        }
+    ],
     "genre": [
         {
             "columns": {
-                "g_name": "The name of the music genre.",
-                "rating": "A score representing the popularity or quality of the genre, typically on a scale of 1 to 10.",
-                "most_popular_in": "The geographical regions or countries where the genre is most popular."
+                "g_name": "The unique name of the music genre.",
+                "rating": "The popularity rating of the genre on a scale.",
+                "most_popular_in": "The geographic regions where the genre is most popular."
             },
-            "table_description": "This table stores information about various music genres, including their names, popularity ratings, and the areas where they are most favored."
+            "table_description": "The table categorizes music genres with associated ratings and popularity."
         }
     ],
     "artist": [
         {
             "columns": {
-                "artist_name": "The name of the artist, which serves as the unique identifier for each artist in the database.",
-                "country": "The country where the artist is based or originated from.",
-                "gender": "The gender of the artist, indicating whether the artist is male or female.",
-                "preferred_genre": "The musical genre that the artist predominantly identifies with or prefers to perform."
+                "artist_name": "The unique name of the artist.",
+                "country": "The country where the artist is based.",
+                "gender": "The gender of the artist.",
+                "preferred_genre": "The music genre the artist prefers."
             },
-            "table_description": "The 'artist' table serves to store information about musicians, including their name, country of origin, gender, and preferred musical genre, allowing for easy retrieval and association with other related entities in the music database."
-        }
-    ],
-    "files": [
-        {
-            "columns": {
-                "f_id": "A unique identifier for each file in the database.",
-                "artist_name": "The name of the artist who created the file.",
-                "file_size": "The size of the audio file, typically measured in megabytes.",
-                "duration": "The total playback time of the audio file, formatted as minutes and seconds.",
-                "formats": "The format type of the audio file, such as mp3 or mp4."
-            },
-            "table_description": "The 'files' table contains information about the audio files including their identifiers, associated artists, file sizes, durations, and formats."
+            "table_description": "The table profiles artists with their name, country, gender, and preferred genre."
         }
     ],
     "song": [
         {
             "columns": {
-                "song_name": "The title of the song, which serves as the primary identifier for each record.",
-                "artist_name": "The name of the artist or band who performed the song.",
-                "country": "The country where the artist is based or where the song was produced.",
-                "f_id": "A unique identifier for the file associated with the song.",
-                "genre_is": "The genre or category of the song, indicating its musical style.",
-                "rating": "A numerical assessment of the song's quality or popularity, typically on a scale.",
-                "languages": "The language in which the song is performed or sung.",
-                "releasedate": "The date when the song was officially released to the public.",
-                "resolution": "The quality of the audio file, measured in kilobits per second or a similar metric."
+                "song_name": "The unique name of each song in the database.",
+                "artist_name": "The name of the artist who performed the song.",
+                "country": "The country where the song or artist is based.",
+                "f_id": "The unique identifier for the associated file of the song.",
+                "genre_is": "The genre category to which the song belongs.",
+                "rating": "The rating score assigned to the song.",
+                "languages": "The language in which the song is sung.",
+                "releasedate": "The date when the song was officially released.",
+                "resolution": "The audio resolution quality of the song in kilobits."
             },
-            "table_description": "The 'song' table contains information about various songs, including their titles, performing artists, associated countries, genres, ratings, languages, release dates, and audio file resolutions."
+            "table_description": "The table stores detailed information about songs with attributes like artist and genre."
         }
     ]
 }

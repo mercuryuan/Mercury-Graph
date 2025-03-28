@@ -1,35 +1,35 @@
 {
+    "storm": [
+        {
+            "columns": {
+                "Storm_ID": "The unique identifier for each storm.",
+                "Name": "The name or title of the storm.",
+                "Dates_active": "The date range during which the storm was active.",
+                "Max_speed": "The maximum wind speed recorded for the storm.",
+                "Damage_millions_USD": "The estimated damage caused by the storm in millions of USD.",
+                "Number_Deaths": "The total number of deaths attributed to the storm."
+            },
+            "table_description": "The table records information about significant storms."
+        }
+    ],
     "region": [
         {
             "columns": {
-                "Region_id": "A unique identifier for each region in the database.",
-                "Region_code": "A short text abbreviation representing each region.",
-                "Region_name": "The full name of the region as recognized internationally."
+                "Region_id": "The unique identifier for each region.",
+                "Region_code": "The short code representing the region.",
+                "Region_name": "The full name of the region."
             },
-            "table_description": "The region table contains information about various geographic regions, including unique identifiers, codes, and names for each region."
+            "table_description": "The table lists different regions and their identifiers."
         }
     ],
     "affected_region": [
         {
             "columns": {
-                "Region_id": "The unique identifier for a region affected by a storm.",
-                "Storm_ID": "The unique identifier for the storm that affected the region.",
-                "Number_city_affected": "The total number of cities within the region that were impacted by the storm."
+                "Region_id": "The unique identifier for each region affected by the storm.",
+                "Storm_ID": "The unique identifier for each storm impacting the region.",
+                "Number_city_affected": "The total number of cities impacted by the storm."
             },
-            "table_description": "The affected_region table records the relationship between specific storms and the regions they impacted, detailing how many cities were affected in each region."
-        }
-    ],
-    "storm": [
-        {
-            "columns": {
-                "Storm_ID": "A unique identifier for each storm entry in the database.",
-                "Name": "The designated name of the storm.",
-                "Dates_active": "The period during which the storm was active, indicated by start and end dates.",
-                "Max_speed": "The highest wind speed recorded for the storm, measured in miles per hour.",
-                "Damage_millions_USD": "The amount of financial damage caused by the storm, represented in millions of US dollars.",
-                "Number_Deaths": "The total number of fatalities attributed to the storm."
-            },
-            "table_description": "The 'storm' table contains records of significant storms, detailing their identifiers, names, active dates, maximum wind speeds, economic damages, and associated death tolls."
+            "table_description": "The table tracks regions affected by specific storms and their impacts."
         }
     ]
 }

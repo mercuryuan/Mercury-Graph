@@ -1,36 +1,36 @@
 {
-    "phone_market": [
+    "phone": [
         {
             "columns": {
-                "Market_ID": "This column represents the unique identifier for each market where phones are sold.",
-                "Phone_ID": "This column denotes the unique identifier for each phone model available in the market.",
-                "Num_of_stock": "This column indicates the number of units available for each phone model in the respective market."
+                "Name": "The model name of the phone.",
+                "Phone_ID": "The unique identifier for each phone.",
+                "Memory_in_G": "The storage capacity of the phone in gigabytes.",
+                "Carrier": "The telecommunications service provider for the phone.",
+                "Price": "The retail price of the phone in USD."
             },
-            "table_description": "The phone_market table is used to track the availability of different phone models across various markets, including the quantity of stock available for each phone in each market."
+            "table_description": "The table lists various phone models and their attributes."
         }
     ],
     "market": [
         {
             "columns": {
-                "Market_ID": "A unique identifier for each market entry.",
-                "District": "The geographical district where the market is located.",
-                "Num_of_employees": "The total number of employees working in the market.",
-                "Num_of_shops": "The total number of shops operating within the market.",
-                "Ranking": "The market's rank based on various performance metrics."
+                "Market_ID": "The unique identifier for each market.",
+                "District": "The geographical area where the market is located.",
+                "Num_of_employees": "The total number of employees in the market.",
+                "Num_of_shops": "The total count of shops operating in the market.",
+                "Ranking": "The market's position relative to other markets."
             },
-            "table_description": "The market table provides an overview of different markets, including their unique identifiers, geographical locations, workforce sizes, number of shops, and performance rankings."
+            "table_description": "The table provides information about different markets and their characteristics."
         }
     ],
-    "phone": [
+    "phone_market": [
         {
             "columns": {
-                "Name": "The name of the phone model.",
-                "Phone_ID": "A unique identifier for each phone entry.",
-                "Memory_in_G": "The available internal memory of the phone measured in gigabytes.",
-                "Carrier": "The mobile network carrier associated with the phone.",
-                "Price": "The selling price of the phone in dollars."
+                "Market_ID": "The unique identifier for each market.",
+                "Phone_ID": "The unique identifier for each phone.",
+                "Num_of_stock": "The quantity of phones available in stock."
             },
-            "table_description": "The phone table contains information about various phone models, including their names, unique identifiers, memory capacity, associated carriers, and prices."
+            "table_description": "The table tracks phone stock levels across different markets."
         }
     ]
 }

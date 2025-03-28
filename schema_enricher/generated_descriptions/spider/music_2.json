@@ -1,73 +1,73 @@
 {
-    "Songs": [
-        {
-            "columns": {
-                "SongId": "A unique identifier for each song in the database.",
-                "Title": "The name or title of the song."
-            },
-            "table_description": "The Songs table stores information about individual songs, including a unique identifier and the title for each song."
-        }
-    ],
-    "Albums": [
-        {
-            "columns": {
-                "AId": "A unique identifier for each album in the database.",
-                "Title": "The title of the album.",
-                "Year": "The year the album was released.",
-                "Label": "The record label associated with the album.",
-                "Type": "The category or genre of the album."
-            },
-            "table_description": "The Albums table stores information about music albums, including their unique identifiers, titles, release years, associated record labels, and types or genres."
-        }
-    ],
-    "Band": [
-        {
-            "columns": {
-                "Id": "A unique identifier assigned to each band record.",
-                "Firstname": "The first name of the band member.",
-                "Lastname": "The last name of the band member."
-            },
-            "table_description": "The Band table stores information about band members, including their unique id and names."
-        }
-    ],
-    "Instruments": [
-        {
-            "columns": {
-                "SongId": "This column identifies the unique song associated with the record.",
-                "BandmateId": "This column represents the unique identifier for a bandmate involved in the instrumentation of the song.",
-                "Instrument": "This column specifies the type of instrument played by the bandmate for the specific song."
-            },
-            "table_description": "The Instruments table captures the relationship between songs and the bandmates who play specific instruments on those songs."
-        }
-    ],
     "Performance": [
         {
             "columns": {
-                "SongId": "Identifies the unique identifier of a song performed.",
-                "Bandmate": "Identifies the unique identifier of a band member participating in the performance.",
-                "StagePosition": "Indicates the position of the bandmate on stage during the performance."
+                "SongId": "The unique identifier for each song performance.",
+                "Bandmate": "The unique identifier for each band member involved.",
+                "StagePosition": "The position of the bandmate on stage during the performance."
             },
-            "table_description": "The Performance table captures the relationship between songs and bandmates during a performance, detailing their unique identities and positions on stage."
+            "table_description": "The table tracks performance details for each song by bandmates."
         }
     ],
     "Tracklists": [
         {
             "columns": {
-                "AlbumId": "This column identifies the album to which the track belongs.",
-                "Position": "This column indicates the order of the track within the album.",
-                "SongId": "This column references the unique identifier for the song included in the album's tracklist."
+                "AlbumId": "The unique identifier for each album containing the tracks.",
+                "Position": "The order number of the song within the album tracklist.",
+                "SongId": "The unique identifier for each song in the database."
             },
-            "table_description": "The Tracklists table serves to associate songs with albums, specifying the order in which each song appears on a given album."
+            "table_description": "The table organizes songs into their respective album tracklists."
         }
     ],
     "Vocals": [
         {
             "columns": {
-                "SongId": "This column identifies the unique song associated with the vocals in the table.",
-                "Bandmate": "This column identifies the specific band member performing the vocals for the song.",
-                "Type": "This column describes the nature or style of the vocals performed, such as lead, background, or harmony."
+                "SongId": "The unique identifier for each song featuring vocals.",
+                "Bandmate": "The unique identifier for each band member providing vocals.",
+                "Type": "The vocal type performed by the bandmate in the song."
             },
-            "table_description": "The Vocals table records the relationship between songs and the bandmates performing their vocals, detailing the type of vocal performance."
+            "table_description": "The table records vocal contributions of bandmates for each song."
+        }
+    ],
+    "Songs": [
+        {
+            "columns": {
+                "SongId": "The unique identifier for each song in the database.",
+                "Title": "The title or name of the song."
+            },
+            "table_description": "The table stores information about songs and their titles."
+        }
+    ],
+    "Albums": [
+        {
+            "columns": {
+                "AId": "The unique identifier for each album in the music database.",
+                "Title": "The name of the album as released.",
+                "Year": "The year when the album was released.",
+                "Label": "The record label that published the album.",
+                "Type": "The genre or style classification of the album."
+            },
+            "table_description": "The table catalogs albums with their titles, release years, labels, and types."
+        }
+    ],
+    "Band": [
+        {
+            "columns": {
+                "Id": "The unique identifier for each band in the database.",
+                "Firstname": "The first name of the band member.",
+                "Lastname": "The last name of the band member."
+            },
+            "table_description": "The table organizes band members with their identifying names."
+        }
+    ],
+    "Instruments": [
+        {
+            "columns": {
+                "SongId": "The unique identifier for each song that features instruments.",
+                "BandmateId": "The unique identifier for each band member playing an instrument.",
+                "Instrument": "The name of the instrument played by the bandmate in the song."
+            },
+            "table_description": "The table details instruments played by bandmates for each song."
         }
     ]
 }

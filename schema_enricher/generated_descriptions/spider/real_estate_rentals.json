@@ -1,0 +1,162 @@
+{
+    "User_Searches": [
+        {
+            "columns": {
+                "user_id": "The unique identifier of the user who performed the search.",
+                "search_seq": "The sequential number of the user's search entries.",
+                "search_datetime": "The date and time when the search was conducted.",
+                "search_string": "The keywords or phrases used in the search query."
+            },
+            "table_description": "The table records user search activities for real estate rentals."
+        }
+    ],
+    "Ref_Age_Categories": [
+        {
+            "columns": {
+                "age_category_code": "The unique code identifying each age category.",
+                "age_category_description": "The textual description of the age category."
+            },
+            "table_description": "The table categorizes users based on their age ranges."
+        }
+    ],
+    "Ref_Property_Types": [
+        {
+            "columns": {
+                "property_type_code": "The unique code identifying each property type.",
+                "property_type_description": "The textual description of the property type."
+            },
+            "table_description": "The table defines various types of properties for rental listings."
+        }
+    ],
+    "Ref_Room_Types": [
+        {
+            "columns": {
+                "room_type_code": "The unique code identifying each room type.",
+                "room_type_description": "The textual description of the room type."
+            },
+            "table_description": "The table defines various room types available in properties."
+        }
+    ],
+    "Ref_User_Categories": [
+        {
+            "columns": {
+                "user_category_code": "The unique code identifying each user category.",
+                "user_category_description": "The textual description of the user category."
+            },
+            "table_description": "The table classifies users into specific categories for rental services."
+        }
+    ],
+    "User_Property_History": [
+        {
+            "columns": {
+                "property_id": "The unique identifier of the property in the history record.",
+                "user_id": "The unique identifier of the user associated with the property.",
+                "datestamp": "The date and time when the property was accessed by the user."
+            },
+            "table_description": "The table tracks user interactions with properties over time."
+        }
+    ],
+    "Addresses": [
+        {
+            "columns": {
+                "address_id": "The unique identifier for each address record.",
+                "line_1_number_building": "The primary address line including the building number.",
+                "line_2_number_street": "The secondary address line, often with an apartment or suite number.",
+                "line_3_area_locality": "The optional area or locality descriptor for the address.",
+                "town_city": "The city or town where the address is located.",
+                "zip_postcode": "The postal code associated with the address.",
+                "county_state_province": "The county, state, or province where the address is situated.",
+                "country": "The country in which the address is found.",
+                "other_address_details": "Additional details regarding the address, if any."
+            },
+            "table_description": "The table stores address information for properties in real estate rentals."
+        }
+    ],
+    "Features": [
+        {
+            "columns": {
+                "feature_id": "The unique identifier for each feature in the database.",
+                "feature_name": "The name of the property feature being described.",
+                "feature_description": "A brief explanation of the property feature."
+            },
+            "table_description": "The table catalogs various features available in rental properties."
+        }
+    ],
+    "Users": [
+        {
+            "columns": {
+                "user_id": "The unique identifier for each user in the system.",
+                "age_category_code": "The age category to which the user belongs.",
+                "user_category_code": "The specific category in which the user is classified.",
+                "user_address_id": "The identifier linking to the user's address information.",
+                "is_buyer": "The indicator showing if the user is a buyer.",
+                "is_seller": "The indicator showing if the user is a seller.",
+                "login_name": "The unique login name for user authentication.",
+                "password": "The hashed password for user security.",
+                "date_registered": "The date and time when the user registered.",
+                "first_name": "The first name of the user.",
+                "middle_name": "The middle name of the user.",
+                "last_name": "The last name of the user.",
+                "other_user_details": "Additional details about the user, if available."
+            },
+            "table_description": "The table stores user information for real estate rentals."
+        }
+    ],
+    "Properties": [
+        {
+            "columns": {
+                "property_id": "The unique identifier for each property listing.",
+                "property_address_id": "The address identifier linked to this property.",
+                "owner_user_id": "The identifier of the user who owns the property.",
+                "property_type_code": "The code representing the type of the property.",
+                "date_on_market": "The date when the property was listed for rent.",
+                "date_off_market": "The date when the property was removed from the market.",
+                "property_name": "The name or title of the property.",
+                "property_description": "A detailed description of the property's features.",
+                "garage_yn": "The indicator showing if a garage is available.",
+                "parking_lots": "The number of parking lots associated with the property.",
+                "room_count": "The total number of rooms in the property.",
+                "vendor_requested_price": "The price requested by the owner to rent the property.",
+                "price_min": "The minimum rental price set for the property.",
+                "price_max": "The maximum rental price set for the property.",
+                "other_property_details": "Any additional details regarding the property."
+            },
+            "table_description": "The table details property listings available for rental in real estate."
+        }
+    ],
+    "Property_Features": [
+        {
+            "columns": {
+                "property_id": "The unique identifier of the property associated with the feature.",
+                "feature_id": "The unique identifier of the feature linked to the property.",
+                "feature_value": "The specific value assigned to the property feature.",
+                "property_feature_description": "The description of the particular property feature."
+            },
+            "table_description": "The table links properties with their unique features in real estate rentals."
+        }
+    ],
+    "Property_Photos": [
+        {
+            "columns": {
+                "property_id": "The unique identifier of the property for which the photo is taken.",
+                "photo_seq": "The sequential number assigned to each photo of the property.",
+                "photo_title": "The title or label identifying the specific photo.",
+                "photo_description": "The description providing details about the photo.",
+                "photo_filename": "The filename of the photo stored in the database."
+            },
+            "table_description": "The table stores photos related to properties available for rent."
+        }
+    ],
+    "Rooms": [
+        {
+            "columns": {
+                "property_id": "The unique identifier of the property containing the room.",
+                "room_number": "The specific number assigned to each room in the property.",
+                "room_type_code": "The code representing the type of room in the property.",
+                "room_size": "The size category of the room, such as small or large.",
+                "other_room_details": "Additional information or details about the room."
+            },
+            "table_description": "The table captures room details associated with rental properties."
+        }
+    ]
+}

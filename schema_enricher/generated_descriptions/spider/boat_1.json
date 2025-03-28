@@ -1,0 +1,33 @@
+{
+    "Boats": [
+        {
+            "columns": {
+                "bid": "The unique identifier for each boat.",
+                "name": "The name of the boat.",
+                "color": "The color of the boat."
+            },
+            "table_description": "The table stores information about various boats."
+        }
+    ],
+    "Reserves": [
+        {
+            "columns": {
+                "sid": "The unique identifier for each sailor.",
+                "bid": "The unique identifier for each boat.",
+                "day": "The date when the reservation is made."
+            },
+            "table_description": "The table manages reservations for boats by sailors."
+        }
+    ],
+    "Sailors": [
+        {
+            "columns": {
+                "sid": "The unique identifier for each sailor.",
+                "name": "The name of the sailor.",
+                "rating": "The performance rating of the sailor.",
+                "age": "The age of the sailor."
+            },
+            "table_description": "The table stores information about sailors participating in boat reservations."
+        }
+    ]
+}

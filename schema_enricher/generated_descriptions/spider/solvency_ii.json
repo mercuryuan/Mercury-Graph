@@ -1,118 +1,118 @@
 {
-    "Assets": [
-        {
-            "columns": {
-                "Asset_ID": "A unique identifier assigned to each asset within the table.",
-                "Other_Details": "Descriptive information pertaining to the asset, such as its type or function."
-            },
-            "table_description": "The Assets table is designed to store information about various assets, facilitating asset management and tracking within the solvency_ii database."
-        }
-    ],
-    "Channels": [
-        {
-            "columns": {
-                "Channel_ID": "A unique identifier for each channel in the database.",
-                "Other_Details": "Additional information or characteristics associated with each channel."
-            },
-            "table_description": "The Channels table stores information about various communication channels, identified uniquely by Channel_ID, and includes supplementary details in Other_Details."
-        }
-    ],
-    "Finances": [
-        {
-            "columns": {
-                "Finance_ID": "A unique identifier assigned to each financial entry, serving as the primary key for the table.",
-                "Other_Details": "Additional information related to the financial status, which may include qualitative descriptors such as 'Good', 'Bad', or 'Mutual'."
-            },
-            "table_description": "The Finances table serves as a record of financial statuses, associating each entry with a unique identifier and providing qualitative details about the financial condition."
-        }
-    ],
-    "Events": [
-        {
-            "columns": {
-                "Event_ID": "A unique identifier for each event in the table.",
-                "Address_ID": "An identifier linking to the address associated with the event.",
-                "Channel_ID": "An identifier representing the communication channel used for the event.",
-                "Event_Type_Code": "A code that specifies the type of event, such as trade shows or seminars.",
-                "Finance_ID": "An identifier linking to the financial details related to the event.",
-                "Location_ID": "An identifier linking to the location where the event is taking place."
-            },
-            "table_description": "The Events table stores information about various events, including their unique identifiers, associated addresses, communication channels, types, financial details, and locations."
-        }
-    ],
-    "Products_in_Events": [
-        {
-            "columns": {
-                "Product_in_Event_ID": "Unique identifier for each association between a product and an event.",
-                "Event_ID": "Identifier for the event to which the product is associated.",
-                "Product_ID": "Identifier for the product that is linked to the event."
-            },
-            "table_description": "The Products_in_Events table captures the many-to-many relationships between products and events, allowing for multiple products to be associated with a single event and vice versa."
-        }
-    ],
-    "Parties_in_Events": [
-        {
-            "columns": {
-                "Party_ID": "Identifies a unique party involved in the event.",
-                "Event_ID": "Identifies a unique event in which the party is participating.",
-                "Role_Code": "Indicates the role of the party in the event, such as 'Organizer' or 'Participant'."
-            },
-            "table_description": "The Parties_in_Events table is designed to establish the relationship between parties and events, recording their respective roles in each event."
-        }
-    ],
     "Agreements": [
         {
             "columns": {
-                "Document_ID": "Unique identifier for each agreement document.",
-                "Event_ID": "Identifier for the event associated with the agreement."
+                "Document_ID": "The unique identifier for each agreement document.",
+                "Event_ID": "The identifier linking the agreement to a specific event."
             },
-            "table_description": "The Agreements table stores information about various agreement documents, linking each document to a specific event through the Event_ID."
-        }
-    ],
-    "Addresses": [
-        {
-            "columns": {
-                "Address_ID": "A unique identifier for each address record in the table.",
-                "address_details": "A textual representation of the address, including street, city, state, and postal code."
-            },
-            "table_description": "The Addresses table stores detailed address information with a unique identifier for each record, facilitating reference and integration with other tables within the database."
-        }
-    ],
-    "Locations": [
-        {
-            "columns": {
-                "Location_ID": "A unique identifier for each location in the table.",
-                "Other_Details": "Additional information or names associated with the location."
-            },
-            "table_description": "The Locations table stores unique identifiers for various locations along with supplementary details related to each location."
+            "table_description": "The table captures agreements related to specific events."
         }
     ],
     "Products": [
         {
             "columns": {
-                "Product_ID": "A unique identifier for each product in the catalog.",
-                "Product_Type_Code": "A code that categorizes the product type, such as Food, Electronics, or Books.",
-                "Product_Name": "The name or title of the product, providing specific identification.",
-                "Product_Price": "The monetary value of the product, indicating its selling price."
+                "Product_ID": "The unique identifier for each product.",
+                "Product_Type_Code": "The code indicating the type of product offered.",
+                "Product_Name": "The name designated for the specific product.",
+                "Product_Price": "The selling price of the product, including decimal precision."
             },
-            "table_description": "The Products table serves to store and manage data regarding various products available in the system, including their identification, type, name, and pricing."
+            "table_description": "The table stores details about various products available for sale."
+        }
+    ],
+    "Products_in_Events": [
+        {
+            "columns": {
+                "Product_in_Event_ID": "The unique identifier for each product in an event.",
+                "Event_ID": "The identifier linking the product to a specific event.",
+                "Product_ID": "The identifier linking the product to its details."
+            },
+            "table_description": "The table links products to their corresponding events."
+        }
+    ],
+    "Parties_in_Events": [
+        {
+            "columns": {
+                "Party_ID": "The unique identifier for each party involved in the event.",
+                "Event_ID": "The unique identifier for each event the parties are associated with.",
+                "Role_Code": "The code indicating the role of the party in the event."
+            },
+            "table_description": "The table associates parties with their roles in specific events."
         }
     ],
     "Parties": [
         {
             "columns": {
-                "Party_ID": "A unique identifier assigned to each party, enabling the distinction between different parties within the database.",
-                "Party_Details": "A textual representation of the party's name or description, providing insight into the specific political organization."
+                "Party_ID": "The unique identifier for each political party.",
+                "Party_Details": "The name and relevant details of the political party."
             },
-            "table_description": "The Parties table is designed to store information about various political parties, including unique identifiers and detailed descriptions for each party."
+            "table_description": "The table lists various political parties with their details."
+        }
+    ],
+    "Locations": [
+        {
+            "columns": {
+                "Location_ID": "The unique identifier for each location.",
+                "Other_Details": "The additional details or names associated with each location."
+            },
+            "table_description": "The table provides information about various locations and their details."
+        }
+    ],
+    "Addresses": [
+        {
+            "columns": {
+                "Address_ID": "The unique identifier for each address.",
+                "address_details": "The detailed description of the specific address."
+            },
+            "table_description": "The table stores a list of addresses with their corresponding details."
+        }
+    ],
+    "Assets": [
+        {
+            "columns": {
+                "Asset_ID": "The unique identifier for each asset.",
+                "Other_Details": "The description of the specific asset type or use."
+            },
+            "table_description": "The table catalogs different types of assets and their details."
+        }
+    ],
+    "Channels": [
+        {
+            "columns": {
+                "Channel_ID": "The unique identifier for each communication channel.",
+                "Other_Details": "The additional details related to each communication channel."
+            },
+            "table_description": "The table stores various communication channels and their associated details."
+        }
+    ],
+    "Finances": [
+        {
+            "columns": {
+                "Finance_ID": "The unique identifier for each financial record.",
+                "Other_Details": "The qualitative assessment of the financial situation."
+            },
+            "table_description": "The table provides financial records and their corresponding assessments."
+        }
+    ],
+    "Events": [
+        {
+            "columns": {
+                "Location_ID": "The unique identifier for the location of the event.",
+                "Event_ID": "The unique identifier for each event.",
+                "Address_ID": "The identifier linked to the event's address.",
+                "Channel_ID": "The unique identifier for the communication channel used.",
+                "Event_Type_Code": "The code indicating the type of event being held.",
+                "Finance_ID": "The identifier linking the event to its financial details."
+            },
+            "table_description": "The table records events along with their financial and logistical details."
         }
     ],
     "Assets_in_Events": [
         {
             "columns": {
-                "Asset_ID": "A unique identifier for each asset associated with an event.",
-                "Event_ID": "A unique identifier for each event that the asset is linked to."
+                "Asset_ID": "The unique identifier for each asset associated with an event.",
+                "Event_ID": "The unique identifier for the event linked to the asset."
             },
-            "table_description": "The Assets_in_Events table establishes a many-to-many relationship between assets and events, allowing for the tracking of which assets are involved in specific events."
+            "table_description": "The table connects assets with the events they are utilized in."
         }
     ]
 }

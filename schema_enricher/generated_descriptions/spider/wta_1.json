@@ -1,0 +1,66 @@
+{
+    "players": [
+        {
+            "columns": {
+                "player_id": "The unique identifier for each player.",
+                "first_name": "The first name of the player.",
+                "last_name": "The last name of the player.",
+                "birth_date": "The birth date of the player.",
+                "country_code": "The country code representing the player's nationality.",
+                "hand": "The preferred playing hand of the player."
+            },
+            "table_description": "The table stores details about tennis players."
+        }
+    ],
+    "matches": [
+        {
+            "columns": {
+                "best_of": "The number of sets to win the match.",
+                "draw_size": "The total number of players in the tournament draw.",
+                "loser_age": "The age of the match loser.",
+                "loser_entry": "The entry status of the match loser.",
+                "loser_hand": "The playing hand preference of the match loser.",
+                "loser_ht": "The height of the match loser in centimeters.",
+                "loser_id": "The unique identifier of the match loser.",
+                "loser_ioc": "The International Olympic Committee code for the loser’s country.",
+                "loser_name": "The full name of the match loser.",
+                "loser_rank": "The current rank of the match loser.",
+                "loser_rank_points": "The ranking points held by the match loser.",
+                "loser_seed": "The seed number assigned to the match loser.",
+                "match_num": "The sequential number of the match in the tournament.",
+                "minutes": "The total duration of the match in minutes.",
+                "round": "The stage of the tournament in which the match occurs.",
+                "score": "The final score of the match.",
+                "surface": "The type of playing surface for the match.",
+                "tourney_date": "The date the tournament took place.",
+                "tourney_id": "The unique identifier for the tournament.",
+                "tourney_level": "The competitive level of the tournament.",
+                "tourney_name": "The official name of the tournament.",
+                "winner_age": "The age of the match winner.",
+                "winner_entry": "The entry status of the match winner.",
+                "winner_hand": "The playing hand preference of the match winner.",
+                "winner_ht": "The height of the match winner in centimeters.",
+                "winner_id": "The unique identifier of the match winner.",
+                "winner_rank_points": "The ranking points held by the match winner.",
+                "winner_ioc": "The International Olympic Committee code for the winner’s country.",
+                "winner_name": "The full name of the match winner.",
+                "winner_rank": "The current rank of the match winner.",
+                "winner_seed": "The seed number assigned to the match winner.",
+                "year": "The year in which the match was played."
+            },
+            "table_description": "The table records details of professional tennis matches."
+        }
+    ],
+    "rankings": [
+        {
+            "columns": {
+                "ranking_date": "The date the ranking was recorded.",
+                "ranking": "The player's rank within the tennis community.",
+                "player_id": "The unique identifier for each player.",
+                "ranking_points": "The total points accumulated by the player.",
+                "tours": "The number of tours accounted for in the ranking."
+            },
+            "table_description": "The table tracks player rankings over time."
+        }
+    ]
+}

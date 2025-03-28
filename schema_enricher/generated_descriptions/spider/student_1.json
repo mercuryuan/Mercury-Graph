@@ -2,22 +2,22 @@
     "list": [
         {
             "columns": {
-                "LastName": "The last name of the student, serving as part of the unique identifier for each record.",
-                "FirstName": "The first name of the student, which, along with the last name, forms the primary key of the table.",
-                "Grade": "The academic grade level of the student, indicating their current standing in the school's educational system.",
-                "Classroom": "The classroom number assigned to the student, representing the physical location where they attend lessons."
+                "FirstName": "The first name of the student.",
+                "Grade": "The grade level of the student.",
+                "Classroom": "The assigned classroom number for the student.",
+                "LastName": "The last name of the student."
             },
-            "table_description": "This table contains information about students, including their names, grade levels, and assigned classrooms, using a composite primary key of LastName and FirstName."
+            "table_description": "The table stores student names, grades, and classroom assignments."
         }
     ],
     "teachers": [
         {
             "columns": {
-                "LastName": "This column represents the last name of the teachers.",
-                "FirstName": "This column represents the first name of the teachers.",
-                "Classroom": "This column indicates the classroom number where the teacher conducts lessons."
+                "LastName": "The last name of the teacher.",
+                "FirstName": "The first name of the teacher.",
+                "Classroom": "The assigned classroom number for the teacher."
             },
-            "table_description": "The 'teachers' table stores information about instructors, including their names and assigned classroom numbers."
+            "table_description": "The table stores teachers' names and their classroom assignments."
         }
     ]
 }

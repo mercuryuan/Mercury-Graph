@@ -1,0 +1,31 @@
+{
+    "driver": [
+        {
+            "columns": {
+                "Driver_ID": "The unique identifier for each driver.",
+                "Driver_Name": "The full name of the driver.",
+                "Entrant": "The entity that entered the driver in the race.",
+                "Constructor": "The manufacturer associated with the driver's vehicle.",
+                "Chassis": "The specific model of the vehicle's chassis.",
+                "Engine": "The specification of the engine used in the vehicle.",
+                "Age": "The current age of the driver."
+            },
+            "table_description": "The table stores information about race drivers and their vehicles."
+        }
+    ],
+    "race": [
+        {
+            "columns": {
+                "Road": "The unique identifier for each race event.",
+                "Driver_ID": "The identifier linking to the participating driver.",
+                "Race_Name": "The official name of the race event.",
+                "Pole_Position": "The driver who started in the pole position.",
+                "Fastest_Lap": "The driver who recorded the fastest lap time.",
+                "Winning_driver": "The name of the driver who won the race.",
+                "Winning_team": "The team associated with the winning driver.",
+                "Report": "A summary report of the race event."
+            },
+            "table_description": "The table records key details about each race and its outcomes."
+        }
+    ]
+}

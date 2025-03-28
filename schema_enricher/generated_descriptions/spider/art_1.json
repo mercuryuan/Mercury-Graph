@@ -1,0 +1,43 @@
+{
+    "Sculptures": [
+        {
+            "columns": {
+                "sculptureID": "The unique identifier of each sculpture.",
+                "title": "The name of the sculpture.",
+                "year": "The year the sculpture was created.",
+                "medium": "The material used to create the sculpture.",
+                "location": "The display location of the sculpture.",
+                "sculptorID": "The unique identifier of the sculptor."
+            },
+            "table_description": "The collection of sculptures and their relevant details."
+        }
+    ],
+    "Paintings": [
+        {
+            "columns": {
+                "painterID": "The unique identifier of the painter.",
+                "paintingID": "The unique identifier of each painting.",
+                "title": "The name of the painting.",
+                "year": "The year the painting was created.",
+                "height_mm": "The height of the painting in millimeters.",
+                "width_mm": "The width of the painting in millimeters.",
+                "medium": "The material used to create the painting.",
+                "mediumOn": "The surface on which the painting is created.",
+                "location": "The display location of the painting."
+            },
+            "table_description": "The collection of paintings and their relevant attributes."
+        }
+    ],
+    "Artists": [
+        {
+            "columns": {
+                "artistID": "The unique identifier of each artist.",
+                "fname": "The first name of the artist.",
+                "lname": "The last name of the artist.",
+                "birthYear": "The year the artist was born.",
+                "deathYear": "The year the artist passed away."
+            },
+            "table_description": "The collection of artists and their biographical details."
+        }
+    ]
+}

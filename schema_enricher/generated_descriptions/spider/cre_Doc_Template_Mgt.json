@@ -2,46 +2,46 @@
     "Ref_Template_Types": [
         {
             "columns": {
-                "Template_Type_Code": "A unique code representing the type of template.",
-                "Template_Type_Description": "A textual description that explains the purpose and category of the template type."
+                "Template_Type_Code": "The unique identifier for template types.",
+                "Template_Type_Description": "The detailed description of each template type."
             },
-            "table_description": "The Ref_Template_Types table serves as a reference for different types of document templates, providing both a code and a description for each template type."
+            "table_description": "The table categorizes different types of document templates."
         }
     ],
     "Templates": [
         {
             "columns": {
-                "Template_ID": "A unique identifier for each template record in the table.",
-                "Version_Number": "Indicates the version number of the template, allowing for tracking of updates and changes.",
-                "Template_Type_Code": "A code representing the category or type of template, linking to a reference table for detailed type information.",
-                "Date_Effective_From": "The starting date and time from which the template is considered valid and effective.",
-                "Date_Effective_To": "The ending date and time until which the template remains valid and effective.",
-                "Template_Details": "A textual description or content that provides detailed information about the template."
+                "Template_ID": "The unique identifier for each template.",
+                "Version_Number": "The version number of the template.",
+                "Template_Type_Code": "The code representing the type of the template.",
+                "Date_Effective_From": "The start date when the template is effective.",
+                "Date_Effective_To": "The end date when the template is effective.",
+                "Template_Details": "The details and specifications of the template."
             },
-            "table_description": "The Templates table is designed to manage document templates, including their versions, types, effective date ranges, and detailed descriptions."
+            "table_description": "The table stores information and versions of various document templates."
         }
     ],
     "Documents": [
         {
             "columns": {
-                "Document_ID": "A unique identifier assigned to each document in the table.",
-                "Template_ID": "A reference to the template associated with the document, linking it to the Templates table.",
-                "Document_Name": "The name or title of the document which provides a brief indication of its content.",
-                "Document_Description": "A concise summary or description of the document's content.",
-                "Other_Details": "Any additional information related to the document that may or may not apply."
+                "Document_ID": "The unique identifier for each document.",
+                "Template_ID": "The identifier for the associated template.",
+                "Document_Name": "The name or title of the document.",
+                "Document_Description": "The brief description summarizing the document content.",
+                "Other_Details": "The additional details pertaining to the document."
             },
-            "table_description": "The Documents table serves as a repository for storing information related to various documents, including their identifiers, associated templates, names, descriptions, and any extra details."
+            "table_description": "The table stores information about various documents linked to templates."
         }
     ],
     "Paragraphs": [
         {
             "columns": {
-                "Paragraph_ID": "A unique identifier for each paragraph within the database.",
-                "Document_ID": "A reference to the unique identifier of the document that contains the paragraph.",
-                "Paragraph_Text": "The actual text content of the paragraph.",
-                "Other_Details": "Additional information related to the paragraph, which may include metadata or comments."
+                "Paragraph_ID": "The unique identifier for each paragraph.",
+                "Document_ID": "The identifier for the associated document.",
+                "Paragraph_Text": "The textual content of the paragraph.",
+                "Other_Details": "The additional details associated with the paragraph."
             },
-            "table_description": "The 'Paragraphs' table stores individual paragraphs associated with documents in the 'Documents' table, capturing both the text content and any relevant additional details."
+            "table_description": "The table stores paragraphs linked to specific documents."
         }
     ]
 }

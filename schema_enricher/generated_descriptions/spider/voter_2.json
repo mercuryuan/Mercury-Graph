@@ -2,32 +2,32 @@
     "Student": [
         {
             "columns": {
-                "StuID": "Unique identifier for each student.",
-                "LName": "Last name of the student.",
-                "Fname": "First name of the student.",
-                "Age": "Age of the student in years.",
-                "Sex": "Gender of the student, represented by a single character.",
-                "Major": "Numeric representation of the student's major field of study.",
-                "Advisor": "Numeric identifier for the student's academic advisor.",
-                "city_code": "Three-letter code representing the city of student residence."
+                "StuID": "The unique identifier for each student.",
+                "Fname": "The first name of the student.",
+                "LName": "The last name of the student.",
+                "Age": "The age of the student in years.",
+                "Sex": "The gender of the student.",
+                "Major": "The student's major field of study.",
+                "Advisor": "The unique identifier for the student's academic advisor.",
+                "city_code": "The code representing the student's city of residence."
             },
-            "table_description": "The Student table contains essential information about students, including their names, age, gender, academic major, academic advisor, and city of residence, each identified by a unique student ID."
+            "table_description": "The table stores information about students in the database."
         }
     ],
     "Voting_record": [
         {
             "columns": {
-                "StuID": "A unique identifier assigned to each student participating in the voting process.",
-                "Registration_Date": "The date on which the student registered to vote.",
-                "Election_Cycle": "The academic term during which the election occurs, such as Spring or Fall.",
-                "President_Vote": "The identifier of the student vote cast for the position of President.",
-                "Vice_President_Vote": "The identifier of the student vote cast for the position of Vice President.",
-                "Secretary_Vote": "The identifier of the student vote cast for the position of Secretary.",
-                "Treasurer_Vote": "The identifier of the student vote cast for the position of Treasurer.",
-                "Class_President_Vote": "The identifier of the student vote cast for the Class President position.",
-                "Class_Senator_Vote": "The identifier of the student vote cast for the Class Senator position."
+                "StuID": "The unique identifier for each student voting.",
+                "Registration_Date": "The date the student registered to vote.",
+                "Election_Cycle": "The term indicating the election period.",
+                "President_Vote": "The vote cast for the presidential candidate.",
+                "Vice_President_Vote": "The vote cast for the vice presidential candidate.",
+                "Secretary_Vote": "The vote cast for the secretary candidate.",
+                "Treasurer_Vote": "The vote cast for the treasurer candidate.",
+                "Class_President_Vote": "The vote cast for the class president candidate.",
+                "Class_Senator_Vote": "The vote cast for the class senator candidate."
             },
-            "table_description": "The Voting_record table captures the voting information of students, including their unique identifiers, registration details, election cycles, and votes for various elected positions."
+            "table_description": "The table records students' votes for various election positions."
         }
     ]
 }

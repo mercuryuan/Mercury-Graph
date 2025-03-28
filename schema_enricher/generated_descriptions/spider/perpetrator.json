@@ -2,28 +2,28 @@
     "perpetrator": [
         {
             "columns": {
-                "Perpetrator_ID": "A unique identifier for each perpetrator in the table.",
-                "People_ID": "A reference to the individual related to the perpetrator, linking to a separate people table.",
-                "Date": "The specific date on which the events associated with the perpetrator occurred.",
-                "Year": "The year in which the events involving the perpetrator took place.",
-                "Location": "The specific place where the incident occurred.",
-                "Country": "The country in which the incident took place.",
-                "Killed": "The number of victims killed in the incident attributed to the perpetrator.",
-                "Injured": "The number of victims injured in the incident involving the perpetrator."
+                "Perpetrator_ID": "The unique identifier for each perpetrator.",
+                "People_ID": "The identifier linking to a person related to the incident.",
+                "Date": "The date when the incident occurred.",
+                "Year": "The year when the incident occurred.",
+                "Location": "The specific location of the incident.",
+                "Country": "The country where the incident took place.",
+                "Killed": "The number of people killed in the incident.",
+                "Injured": "The number of people injured in the incident."
             },
-            "table_description": "The perpetrator table stores information about incidents involving perpetrators, including details on the date, location, and the consequences of their actions."
+            "table_description": "The table tracks details about perpetrators associated with incidents."
         }
     ],
     "people": [
         {
             "columns": {
-                "People_ID": "A unique identifier assigned to each individual in the dataset.",
-                "Name": "The full name of the individual.",
-                "Height": "The height of the individual measured in feet.",
-                "Weight": "The weight of the individual measured in pounds.",
-                "Home Town": "The city and state where the individual is from."
+                "People_ID": "The unique identifier for each person.",
+                "Name": "The full name of the person.",
+                "Height": "The height of the person in feet.",
+                "Weight": "The weight of the person in pounds.",
+                "Home Town": "The hometown of the person, including city and state."
             },
-            "table_description": "This table contains information about individuals, including their unique identifiers, names, physical attributes (height and weight), and their home towns."
+            "table_description": "The table stores personal information about individuals."
         }
     ]
 }

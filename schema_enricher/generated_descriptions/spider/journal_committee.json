@@ -2,32 +2,32 @@
     "journal": [
         {
             "columns": {
-                "Journal_ID": "A unique identifier for each journal entry.",
-                "Date": "The date on which the journal entry was created.",
-                "Theme": "The central focus or topic of the journal entry, indicating the relevant event or subject matter.",
-                "Sales": "The number of units sold as reported in the journal entry."
+                "Journal_ID": "The unique identifier for each journal entry.",
+                "Date": "The publication date of the journal entry.",
+                "Theme": "The main topic or focus of the journal entry.",
+                "Sales": "The total sales figures associated with the journal entry."
             },
-            "table_description": "The journal table contains records of various journal entries, each identified uniquely by a Journal_ID, detailing the date of the entry, its thematic focus, and the corresponding sales figures."
+            "table_description": "The journal records sales data tied to specific journal entries."
         }
     ],
     "editor": [
         {
             "columns": {
-                "Editor_ID": "A unique identifier for each editor in the database.",
+                "Editor_ID": "The unique identifier for each editor.",
                 "Name": "The full name of the editor.",
-                "Age": "The age of the editor."
+                "Age": "The age of the editor in years."
             },
-            "table_description": "The editor table stores information about the editors associated with the journal committee, including their unique identifiers, names, and ages."
+            "table_description": "The editor maintains information about editors involved in the journal."
         }
     ],
     "journal_committee": [
         {
             "columns": {
-                "Editor_ID": "Identifies the editor responsible for the journal entry.",
-                "Journal_ID": "Represents the unique identifier for the journal associated with the editor.",
-                "Work_Type": "Specifies the type of work (e.g., Photo, Article) authored or reviewed by the editor."
+                "Editor_ID": "The unique identifier for each editor associated with the journal.",
+                "Journal_ID": "The unique identifier for each journal related to the committee.",
+                "Work_Type": "The type of work contributed by the editor to the journal."
             },
-            "table_description": "The journal_committee table links editors to their respective journals and defines the type of work they have contributed, facilitating the management and organization of editorial responsibilities."
+            "table_description": "The journal_committee records contributions of editors to specific journals."
         }
     ]
 }

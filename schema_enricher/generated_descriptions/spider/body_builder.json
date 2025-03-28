@@ -2,26 +2,26 @@
     "body_builder": [
         {
             "columns": {
-                "Body_Builder_ID": "A unique identifier for each entry in the body_builder table.",
-                "People_ID": "A foreign key referencing the unique identifier of a person in the people table.",
-                "Snatch": "The maximum weight lifted in the snatch event by the bodybuilder.",
-                "Clean_Jerk": "The maximum weight lifted in the clean and jerk event by the bodybuilder.",
-                "Total": "The combined total weight lifted in both the snatch and clean jerk events."
+                "Body_Builder_ID": "The unique identifier for each body builder.",
+                "People_ID": "The identifier linking to a specific person.",
+                "Snatch": "The maximum weight lifted in the snatch event.",
+                "Clean_Jerk": "The maximum weight lifted in the clean and jerk event.",
+                "Total": "The combined maximum weight lifted in both events."
             },
-            "table_description": "The body_builder table contains records of different bodybuilders, documenting their performance metrics in the snatch and clean jerk weightlifting events, along with their total weight lifted. Each record is linked to a specific person from the people table."
+            "table_description": "The table tracks the performance metrics of body builders."
         }
     ],
     "people": [
         {
             "columns": {
-                "People_ID": "A unique identifier assigned to each person in the database.",
-                "Name": "The full name of the person, represented as a text string.",
-                "Height": "The height of the person, typically measured in centimeters.",
-                "Weight": "The weight of the person, typically measured in kilograms.",
-                "Birth_Date": "The date of birth of the person, formatted as text.",
-                "Birth_Place": "The location where the person was born, represented as a text string."
+                "People_ID": "The unique identifier for each person.",
+                "Name": "The full name of the person.",
+                "Height": "The height of the person in centimeters.",
+                "Weight": "The weight of the person in kilograms.",
+                "Birth_Date": "The date when the person was born.",
+                "Birth_Place": "The location where the person was born."
             },
-            "table_description": "This table contains information about individuals involved in bodybuilding, including their unique identifiers, personal details such as name, physical attributes like height and weight, as well as their birthdate and birthplace."
+            "table_description": "The table stores personal information about individuals."
         }
     ]
 }

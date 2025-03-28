@@ -1,33 +1,33 @@
 {
-    "course_arrange": [
+    "course": [
         {
             "columns": {
-                "Course_ID": "Identifier for the specific course being taught.",
-                "Teacher_ID": "Identifier for the teacher assigned to the course.",
-                "Grade": "Represents the grade level associated with the course."
+                "Course_ID": "The unique identifier for each course.",
+                "Staring_Date": "The starting date of the course.",
+                "Course": "The name of the course."
             },
-            "table_description": "The course_arrange table captures the relationship between courses, teachers, and the corresponding grade levels, ensuring the organization of teaching assignments."
+            "table_description": "The table stores course information including identifiers, names, and dates."
         }
     ],
     "teacher": [
         {
             "columns": {
-                "Teacher_ID": "A unique identifier for each teacher in the table.",
+                "Teacher_ID": "The unique identifier for each teacher.",
                 "Name": "The full name of the teacher.",
-                "Age": "The age of the teacher at the time of record.",
-                "Hometown": "The hometown of the teacher, indicating their place of origin."
+                "Age": "The age of the teacher.",
+                "Hometown": "The hometown of the teacher."
             },
-            "table_description": "This table contains information about teachers, including their unique IDs, names, ages, and hometowns."
+            "table_description": "The table stores information about teachers including identifiers, names, ages, and hometowns."
         }
     ],
-    "course": [
+    "course_arrange": [
         {
             "columns": {
-                "Course_ID": "A unique identifier for each course offered.",
-                "Staring_Date": "The date on which the course begins.",
-                "Course": "The name or title of the course."
+                "Course_ID": "The unique identifier for each course.",
+                "Teacher_ID": "The unique identifier for each teacher.",
+                "Grade": "The grade assigned to the course by the teacher."
             },
-            "table_description": "The course table contains essential information regarding the courses offered, including unique identifiers, starting dates, and course names."
+            "table_description": "The table organizes course assignments with associated teachers and grades."
         }
     ]
 }

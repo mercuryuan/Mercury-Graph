@@ -1,0 +1,74 @@
+{
+    "Document_Subsets": [
+        {
+            "columns": {
+                "Document_Subset_ID": "The unique identifier for each document subset.",
+                "Document_Subset_Name": "The name assigned to the document subset.",
+                "Document_Subset_Details": "The additional information about the document subset."
+            },
+            "table_description": "The table manages distinct subsets of documents with detailed descriptions."
+        }
+    ],
+    "Collection_Subsets": [
+        {
+            "columns": {
+                "Collection_Subset_ID": "The unique identifier for each collection subset.",
+                "Collection_Subset_Name": "The name assigned to the collection subset.",
+                "Collecrtion_Subset_Details": "The additional information about the collection subset."
+            },
+            "table_description": "The table organizes different subsets of collections with descriptive details."
+        }
+    ],
+    "Document_Objects": [
+        {
+            "columns": {
+                "Document_Object_ID": "The unique identifier for each document object.",
+                "Parent_Document_Object_ID": "The unique identifier of the parent document object.",
+                "Owner": "The name of the individual who owns the document object.",
+                "Description": "The detailed description of the document object.",
+                "Other_Details": "The additional details relevant to the document object."
+            },
+            "table_description": "The table manages and organizes various document objects with their attributes."
+        }
+    ],
+    "Collections": [
+        {
+            "columns": {
+                "Collection_ID": "The unique identifier for each collection.",
+                "Parent_Collection_ID": "The unique identifier of the parent collection.",
+                "Collection_Name": "The name assigned to the collection.",
+                "Collection_Description": "The detailed description of the collection."
+            },
+            "table_description": "The table organizes collections, including their hierarchy and details."
+        }
+    ],
+    "Documents_in_Collections": [
+        {
+            "columns": {
+                "Document_Object_ID": "The unique identifier for each document object in the collection.",
+                "Collection_ID": "The unique identifier for each collection that holds documents."
+            },
+            "table_description": "The table associates documents with their respective collections."
+        }
+    ],
+    "Document_Subset_Members": [
+        {
+            "columns": {
+                "Document_Object_ID": "The unique identifier for each document object in the subset.",
+                "Related_Document_Object_ID": "The unique identifier for each related document object.",
+                "Document_Subset_ID": "The unique identifier for the associated document subset."
+            },
+            "table_description": "The table links document objects to their related subsets and members."
+        }
+    ],
+    "Collection_Subset_Members": [
+        {
+            "columns": {
+                "Collection_ID": "The unique identifier for each collection in the subset.",
+                "Related_Collection_ID": "The unique identifier for each related collection.",
+                "Collection_Subset_ID": "The unique identifier for the associated collection subset."
+            },
+            "table_description": "The table links collections with their related subsets and members."
+        }
+    ]
+}

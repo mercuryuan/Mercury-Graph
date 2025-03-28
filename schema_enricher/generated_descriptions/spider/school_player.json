@@ -2,55 +2,55 @@
     "school": [
         {
             "columns": {
-                "School_ID": "A unique identifier for each school in the database.",
-                "School": "The official name of the school.",
+                "School_Colors": "The color scheme associated with the school.",
+                "School_ID": "The unique identifier for each school.",
+                "School": "The name of the school.",
                 "Location": "The geographical area where the school is situated.",
                 "Enrollment": "The total number of students enrolled at the school.",
                 "Founded": "The year the school was established.",
-                "Denomination": "The religious affiliation of the school, if applicable.",
-                "Boys_or_Girls": "Indicates whether the school is exclusively for boys, for girls, or co-educational.",
-                "Day_or_Boarding": "Specifies whether the school offers day classes, boarding facilities, or both.",
-                "Year_Entered_Competition": "The year the school started participating in competitive events.",
-                "School_Colors": "The official colors representing the school, often used in branding and uniforms."
+                "Denomination": "The religious affiliation of the school.",
+                "Boys_or_Girls": "The gender composition of the school.",
+                "Day_or_Boarding": "The type of school experience offered: day or boarding.",
+                "Year_Entered_Competition": "The year the school first participated in competitions."
             },
-            "table_description": "The 'school' table provides comprehensive information about various schools, including their identifying features, enrollment numbers, and operational characteristics."
-        }
-    ],
-    "school_details": [
-        {
-            "columns": {
-                "School_ID": "A unique identifier for each school in the database.",
-                "Nickname": "The mascot or alternative name associated with the school.",
-                "Colors": "The official colors used by the school, often represented in branding and uniforms.",
-                "League": "The league in which the school competes in athletic competitions.",
-                "Class": "The classification level of the school within the league, indicating its competitive tier.",
-                "Division": "The specific division within the league that the school belongs to, often used for scheduling and tournament purposes."
-            },
-            "table_description": "The school_details table contains comprehensive information about various schools, including their identifiers, mascots, colors, competitive leagues, classifications, and divisions."
+            "table_description": "The table provides information about various schools and their attributes."
         }
     ],
     "school_performance": [
         {
             "columns": {
-                "School_Id": "A unique identifier for each school.",
-                "School_Year": "The academic year for which the performance data is recorded.",
-                "Class_A": "The name of the school district corresponding to Class A category.",
-                "Class_AA": "The name of the school district corresponding to Class AA category."
+                "School_Id": "The unique identifier for each school.",
+                "School_Year": "The academic year of the performance data.",
+                "Class_A": "The name of schools in Class A category.",
+                "Class_AA": "The name of schools in Class AA category."
             },
-            "table_description": "The school_performance table contains data related to the academic performance of schools classified into Class A and Class AA categories for various academic years."
+            "table_description": "The table provides performance data for schools categorized by year and class."
         }
     ],
     "player": [
         {
             "columns": {
-                "Player_ID": "A unique identifier assigned to each player in the database.",
+                "Player_ID": "The unique identifier for each player.",
                 "Player": "The name of the player.",
-                "Team": "The name of the team that the player is associated with.",
+                "Team": "The team the player is affiliated with.",
                 "Age": "The age of the player.",
-                "Position": "The position that the player plays on the field.",
-                "School_ID": "A unique identifier for the school associated with the player."
+                "Position": "The playing position of the player.",
+                "School_ID": "The unique identifier for the school associated with the player."
             },
-            "table_description": "This table contains information about players, including their unique ID, name, team affiliation, age, position played, and the school they are associated with."
+            "table_description": "The table provides information about players and their respective teams and schools."
+        }
+    ],
+    "school_details": [
+        {
+            "columns": {
+                "School_ID": "The unique identifier for each school record.",
+                "Nickname": "The commonly used name of the school.",
+                "Colors": "The color scheme associated with the school.",
+                "League": "The league in which the school competes.",
+                "Class": "The classification category of the school.",
+                "Division": "The division within the league where the school is placed."
+            },
+            "table_description": "The table provides detailed information about schools and their competitive classifications."
         }
     ]
 }

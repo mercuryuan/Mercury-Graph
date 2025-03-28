@@ -1,0 +1,38 @@
+{
+    "headphone": [
+        {
+            "columns": {
+                "Headphone_ID": "The unique identifier for each headphone model.",
+                "Model": "The name or identifier of the headphone model.",
+                "Class": "The classification category of the headphone.",
+                "Driver-matched_dB": "The sound pressure level matched to the driver specifications.",
+                "Construction": "The materials used in the construction of the headphone.",
+                "Earpads": "The type of earpads used for comfort and sound isolation.",
+                "Price": "The retail price of the headphone."
+            },
+            "table_description": "The table lists details of various headphone models available."
+        }
+    ],
+    "store": [
+        {
+            "columns": {
+                "Store_ID": "The unique identifier for each store.",
+                "Name": "The name of the store location.",
+                "Neighborhood": "The neighborhood where the store is located.",
+                "Parking": "The parking availability at the store.",
+                "Date_Opened": "The date when the store first opened."
+            },
+            "table_description": "The table lists information about different store locations."
+        }
+    ],
+    "stock": [
+        {
+            "columns": {
+                "Store_ID": "The unique identifier for each store holding stock.",
+                "Headphone_ID": "The unique identifier for each headphone model in stock.",
+                "Quantity": "The number of units available for each headphone model."
+            },
+            "table_description": "The table tracks stock levels of headphones per store."
+        }
+    ]
+}

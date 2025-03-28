@@ -2,24 +2,24 @@
     "publication": [
         {
             "columns": {
-                "Publication_ID": "A unique identifier for each publication record.",
-                "Book_ID": "A reference identifier linking to the associated book.",
-                "Publisher": "The name of the publisher responsible for the publication.",
-                "Publication_Date": "The date when the publication was released.",
-                "Price": "The retail price of the publication."
+                "Publication_ID": "The unique identifier for each publication.",
+                "Book_ID": "The identifier linking the publication to a specific book.",
+                "Publisher": "The name of the organization publishing the book.",
+                "Publication_Date": "The date when the book was published.",
+                "Price": "The cost of the publication in the specified currency."
             },
-            "table_description": "The publication table stores details about various publications, including unique identifiers, associated books, publishers, publication dates, and pricing information."
+            "table_description": "The table records details about book publications."
         }
     ],
     "book": [
         {
             "columns": {
-                "Book_ID": "A unique identifier for each book in the table.",
-                "Title": "The title of the book, which represents its name.",
-                "Issues": "The number of issues or editions available for the book.",
-                "Writer": "The name of the author who wrote the book."
+                "Book_ID": "The unique identifier for each book.",
+                "Title": "The name of the book.",
+                "Issues": "The total number of issues published for the book.",
+                "Writer": "The author of the book."
             },
-            "table_description": "The book table serves as a catalog of books, detailing their unique identifiers, titles, available issues, and corresponding writers."
+            "table_description": "The table stores information about books and their authors."
         }
     ]
 }

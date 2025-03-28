@@ -1,0 +1,43 @@
+{
+    "items": [
+        {
+            "columns": {
+                "Receipt": "The unique identifier for each transaction in the bakery.",
+                "Ordinal": "The position of the item in the transaction list.",
+                "Item": "The identifier for the specific product sold."
+            },
+            "table_description": "The table records item transactions in the bakery."
+        }
+    ],
+    "goods": [
+        {
+            "columns": {
+                "Id": "The unique identifier for each food item in the bakery.",
+                "Flavor": "The specific taste variant of the food item offered.",
+                "Food": "The type or category of the food item sold.",
+                "Price": "The cost of the food item in the bakery."
+            },
+            "table_description": "The table lists food items available for sale in the bakery."
+        }
+    ],
+    "customers": [
+        {
+            "columns": {
+                "Id": "The unique identifier for each customer in the bakery.",
+                "LastName": "The surname of the customer for identification.",
+                "FirstName": "The given name of the customer for personal reference."
+            },
+            "table_description": "The table holds customer information for the bakery."
+        }
+    ],
+    "receipts": [
+        {
+            "columns": {
+                "ReceiptNumber": "The unique identifier for each receipt issued by the bakery.",
+                "Date": "The date when the transaction occurred at the bakery.",
+                "CustomerId": "The unique identifier for the customer associated with the receipt."
+            },
+            "table_description": "The table records transaction details for customer purchases in the bakery."
+        }
+    ]
+}

@@ -1,26 +1,26 @@
 {
-    "singer": [
-        {
-            "columns": {
-                "Singer_ID": "A unique identifier assigned to each singer in the database.",
-                "Name": "The full name of the singer.",
-                "Birth_Year": "The year in which the singer was born.",
-                "Net_Worth_Millions": "The estimated net worth of the singer in millions of currency units.",
-                "Citizenship": "The country of citizenship of the singer."
-            },
-            "table_description": "The singer table contains information about individual singers, including their unique identifiers, names, birth years, estimated net worth, and citizenship status."
-        }
-    ],
     "song": [
         {
             "columns": {
-                "Song_ID": "A unique identifier for each song in the database.",
-                "Title": "The name of the song as recorded in the database.",
-                "Singer_ID": "A reference identifier for the singer of the song, linking it to the singer table.",
-                "Sales": "The total number of sales achieved by the song, representing its commercial success.",
-                "Highest_Position": "The highest rank achieved by the song on music charts, indicating its popularity."
+                "Song_ID": "The unique identifier for each song.",
+                "Title": "The name of the song.",
+                "Singer_ID": "The unique identifier for the singer performing the song.",
+                "Sales": "The total number of sales for the song.",
+                "Highest_Position": "The highest chart position achieved by the song."
             },
-            "table_description": "The song table contains information about individual songs, including their titles, associated singers, sales figures, and chart performance."
+            "table_description": "The table stores song details, including sales and rankings."
+        }
+    ],
+    "singer": [
+        {
+            "columns": {
+                "Singer_ID": "The unique identifier for each singer.",
+                "Name": "The full name of the singer.",
+                "Birth_Year": "The year the singer was born.",
+                "Net_Worth_Millions": "The singer's net worth in millions.",
+                "Citizenship": "The country of citizenship for the singer."
+            },
+            "table_description": "The table holds details about singers, including their net worth and citizenship."
         }
     ]
 }

@@ -1,0 +1,67 @@
+{
+    "Campuses": [
+        {
+            "columns": {
+                "Id": "A unique identifier for each campus in the database.",
+                "Campus": "The name of the educational institution or campus.",
+                "Location": "The city or town where the campus is situated.",
+                "County": "The county in which the campus is located.",
+                "Year": "The year when the campus was established."
+            },
+            "table_description": "The Campuses table contains information regarding various educational campuses, including their unique identifiers, names, geographic locations, counties, and years of establishment."
+        }
+    ],
+    "csu_fees": [
+        {
+            "columns": {
+                "Campus": "Identifies the specific campus associated with the fee entry.",
+                "Year": "Represents the academic year for which the campus fee is applicable.",
+                "CampusFee": "Specifies the amount of fee charged to students for the corresponding campus and year."
+            },
+            "table_description": "The csu_fees table contains financial data related to campus fees charged to students for various campuses over a range of academic years."
+        }
+    ],
+    "degrees": [
+        {
+            "columns": {
+                "Year": "Indicates the year in which the degrees were awarded.",
+                "Campus": "Represents the identifier for the campus where the degrees were awarded.",
+                "Degrees": "Counts the total number of degrees awarded in the specified year and campus."
+            },
+            "table_description": "The 'degrees' table contains records of degrees awarded at various campuses over a range of years, capturing the number of degrees conferred in each year for each campus."
+        }
+    ],
+    "discipline_enrollments": [
+        {
+            "columns": {
+                "Campus": "Identifies the campus where the enrollment data pertains to.",
+                "Discipline": "Represents the specific academic discipline or program associated with the enrollments.",
+                "Year": "Indicates the academic year for which the enrollment statistics are recorded.",
+                "Undergraduate": "Counts the number of undergraduate students enrolled in the specified discipline for the given year.",
+                "Graduate": "Counts the number of graduate students enrolled in the specified discipline for the given year."
+            },
+            "table_description": "The discipline_enrollments table captures enrollment statistics for various academic disciplines across different campuses and years, detailing the numbers of undergraduate and graduate students."
+        }
+    ],
+    "enrollments": [
+        {
+            "columns": {
+                "Campus": "Represents the identifier for the campus where the enrollment is recorded.",
+                "Year": "Indicates the academic year for which the enrollment data is reported.",
+                "TotalEnrollment_AY": "Shows the total number of enrolled students for the specified academic year.",
+                "FTE_AY": "Refers to the Full-Time Equivalent enrollment for the academic year, representing the total credit hours divided by the standard full-time course load."
+            },
+            "table_description": "The 'enrollments' table captures enrollment statistics related to various campuses over different academic years, including total enrollment figures and full-time equivalent status."
+        }
+    ],
+    "faculty": [
+        {
+            "columns": {
+                "Campus": "This column represents the unique identifier for the campus associated with the faculty record.",
+                "Year": "This column indicates the academic year in which the faculty data was recorded.",
+                "Faculty": "This column denotes the faculty count associated with the respective campus and year."
+            },
+            "table_description": "The 'faculty' table contains records that link faculty counts to specific campuses and academic years, enabling analysis of faculty distribution across different campuses over time."
+        }
+    ]
+}

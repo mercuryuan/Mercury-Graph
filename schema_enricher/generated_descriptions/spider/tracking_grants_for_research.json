@@ -1,128 +1,128 @@
 {
-    "Project_Staff": [
-        {
-            "columns": {
-                "staff_id": "A unique identifier for the staff member associated with a project.",
-                "project_id": "A unique identifier for the project that the staff member is assigned to.",
-                "role_code": "A code indicating the specific role of the staff member within the project.",
-                "date_from": "The date on which the staff member began their association with the project.",
-                "date_to": "The date on which the staff member's association with the project ended.",
-                "other_details": "Any additional information or notes relevant to the staff member's role in the project."
-            },
-            "table_description": "The Project_Staff table provides a record of staff members assigned to various projects, detailing their roles, the duration of their involvement, and any supplementary information."
-        }
-    ],
-    "Project_Outcomes": [
-        {
-            "columns": {
-                "project_id": "A unique identifier for each project associated with the research outcomes.",
-                "outcome_code": "A code representing the type of outcome achieved from the project, such as papers or patents.",
-                "outcome_details": "Additional details describing the specific outcomes related to the project and outcome code."
-            },
-            "table_description": "The Project_Outcomes table tracks the outcomes associated with various research projects, linking outcome types to specific projects while providing detailed descriptions of those outcomes."
-        }
-    ],
-    "Research_Outcomes": [
-        {
-            "columns": {
-                "outcome_code": "A unique identifier that represents a specific type of research outcome.",
-                "outcome_description": "A detailed explanation of the research outcome corresponding to the outcome code."
-            },
-            "table_description": "The Research_Outcomes table categorizes various research outcomes, allowing for tracking and referencing in other related tables."
-        }
-    ],
-    "Research_Staff": [
-        {
-            "columns": {
-                "staff_id": "A unique identifier assigned to each research staff member.",
-                "employer_organisation_id": "An identifier that links the research staff to their respective employer organization.",
-                "staff_details": "A brief description or details regarding the research staff member."
-            },
-            "table_description": "The Research_Staff table contains information about research personnel, their affiliations with organizations, and specific details related to each staff member."
-        }
-    ],
-    "Staff_Roles": [
-        {
-            "columns": {
-                "role_code": "A unique identifier for each role assigned to staff members in the research projects.",
-                "role_description": "A brief explanation of the responsibilities and functions associated with each staff role."
-            },
-            "table_description": "The Staff_Roles table is designed to define the different roles that staff members can hold within the research projects, providing both the codes and descriptions for these roles."
-        }
-    ],
     "Tasks": [
         {
             "columns": {
-                "task_id": "A unique identifier for each task within the table.",
-                "project_id": "An identifier that links each task to a specific project.",
-                "task_details": "A description of the tasks to be performed, detailing the specific actions required.",
-                "eg Agree Objectives": "An example or placeholder for additional task information, currently unused."
+                "task_id": "The unique identifier for each task.",
+                "project_id": "The reference identifier for the associated project.",
+                "task_details": "The textual description of the task to be completed.",
+                "eg Agree Objectives": "The example used for illustrating task types."
             },
-            "table_description": "The Tasks table serves as a record of various tasks associated with research projects, detailing each task's unique identifier, its association with a project, and the specifics of the task."
-        }
-    ],
-    "Documents": [
-        {
-            "columns": {
-                "document_id": "A unique identifier for each document in the table.",
-                "document_type_code": "A code representing the type of document, referencing a list of document types.",
-                "grant_id": "A reference to the specific grant associated with the document, indicating which grant the document pertains to.",
-                "sent_date": "The date and time when the document was sent.",
-                "response_received_date": "The date and time when a response to the sent document was received.",
-                "other_details": "Additional information or notes related to the document that may not fit into other defined columns."
-            },
-            "table_description": "The Documents table stores information regarding various documents associated with specific grants, including their types, sending dates, and response details."
-        }
-    ],
-    "Projects": [
-        {
-            "columns": {
-                "project_id": "A unique identifier for each project within the database.",
-                "organisation_id": "A reference to the unique identifier of the organisation associated with the project.",
-                "project_details": "A textual description providing additional details about the project."
-            },
-            "table_description": "The Projects table captures essential information about various research projects, linking them to their respective organisations and providing details about each project."
+            "table_description": "The table tracks tasks associated with specific research projects."
         }
     ],
     "Document_Types": [
         {
             "columns": {
-                "document_type_code": "A unique identifier for each document type.",
-                "document_description": "A textual description of the document type."
+                "document_type_code": "The unique code identifying each document type.",
+                "document_description": "The detailed explanation of the document type."
             },
-            "table_description": "The Document_Types table defines the various types of documents related to research grants, providing both unique identifiers and descriptive labels for each type."
+            "table_description": "The table categorizes different types of documents used in research grants."
+        }
+    ],
+    "Documents": [
+        {
+            "columns": {
+                "document_id": "The unique identifier for each document.",
+                "document_type_code": "The code classifying the type of document submitted.",
+                "grant_id": "The reference identifier for the associated grant.",
+                "sent_date": "The timestamp when the document was sent.",
+                "response_received_date": "The timestamp when a response to the document was received.",
+                "other_details": "The additional information related to the document."
+            },
+            "table_description": "The table tracks documents submitted for research grants."
         }
     ],
     "Grants": [
         {
             "columns": {
-                "grant_id": "The unique identifier for each grant within the table.",
-                "organisation_id": "The identifier for the organisation that is receiving the grant.",
-                "grant_amount": "The total amount of money allocated for the grant.",
-                "grant_start_date": "The date and time when the grant funding begins.",
-                "grant_end_date": "The date and time when the grant funding ends.",
-                "other_details": "Any additional information relevant to the grant."
+                "grant_id": "The unique identifier for each grant.",
+                "organisation_id": "The reference identifier for the granting organization.",
+                "grant_amount": "The total monetary value awarded for the grant.",
+                "grant_start_date": "The date when the grant period begins.",
+                "grant_end_date": "The date when the grant period concludes.",
+                "other_details": "The additional information pertinent to the grant."
             },
-            "table_description": "The Grants table is designed to track the allocation and details of grants issued to organisations for research purposes."
+            "table_description": "The table manages grants allocated for research purposes."
         }
     ],
     "Organisation_Types": [
         {
             "columns": {
-                "organisation_type": "A short code representing the type of organisation.",
-                "organisation_type_description": "A detailed textual description of the organisation type."
+                "organisation_type": "The unique identifier for each type of organisation.",
+                "organisation_type_description": "The detailed explanation of the organisation type."
             },
-            "table_description": "The Organisation_Types table stores information about different types of organisations involved in research and sponsorship, facilitating the categorization and retrieval of related data in the database."
+            "table_description": "The table categorizes types of organisations involved in research grants."
         }
     ],
     "Organisations": [
         {
             "columns": {
-                "organisation_id": "A unique identifier assigned to each organisation in the database.",
-                "organisation_type": "A code that categorizes the type of organisation, such as sponsor or research entity.",
-                "organisation_details": "Additional information or description pertaining to the organisation."
+                "organisation_id": "The unique identifier for each organisation.",
+                "organisation_type": "The code classifying the type of organisation.",
+                "organisation_details": "The comprehensive information about the organisation."
             },
-            "table_description": "The Organisations table serves to store information about various organisations involved in research and grants, with unique identifiers, types, and detailed descriptions."
+            "table_description": "The table maintains details about organisations involved in research grants."
+        }
+    ],
+    "Project_Outcomes": [
+        {
+            "columns": {
+                "project_id": "The unique identifier for each project.",
+                "outcome_code": "The code categorizing the specific project outcome.",
+                "outcome_details": "The additional information related to the project outcome."
+            },
+            "table_description": "The table records various outcomes associated with research projects."
+        }
+    ],
+    "Project_Staff": [
+        {
+            "columns": {
+                "staff_id": "The unique identifier for each staff member.",
+                "project_id": "The reference identifier for the associated project.",
+                "role_code": "The code indicating the specific role assigned to the staff member.",
+                "date_from": "The start date when the staff member began their role.",
+                "date_to": "The end date when the staff member's role concluded.",
+                "other_details": "The additional information pertaining to the staff member's involvement."
+            },
+            "table_description": "The table tracks staff involvement in various research projects."
+        }
+    ],
+    "Projects": [
+        {
+            "columns": {
+                "project_id": "The unique identifier for each project.",
+                "organisation_id": "The reference identifier for the organisation funding the project.",
+                "project_details": "The descriptive information detailing the project's objectives."
+            },
+            "table_description": "The table manages details of projects funded by various organisations."
+        }
+    ],
+    "Research_Outcomes": [
+        {
+            "columns": {
+                "outcome_code": "The unique identifier for each research outcome.",
+                "outcome_description": "The detailed explanation of the research outcome."
+            },
+            "table_description": "The table categorizes various outcomes of research projects."
+        }
+    ],
+    "Research_Staff": [
+        {
+            "columns": {
+                "staff_id": "The unique identifier for each staff member.",
+                "employer_organisation_id": "The reference identifier for the organisation employing the staff member.",
+                "staff_details": "The descriptive information about the staff member's role and responsibilities."
+            },
+            "table_description": "The table manages details of staff employed for research projects."
+        }
+    ],
+    "Staff_Roles": [
+        {
+            "columns": {
+                "role_code": "The unique identifier for each staff role.",
+                "role_description": "The detailed explanation of the staff role."
+            },
+            "table_description": "The table categorizes various roles assigned to research project staff."
         }
     ]
 }

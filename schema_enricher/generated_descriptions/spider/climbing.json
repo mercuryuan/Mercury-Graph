@@ -2,27 +2,27 @@
     "mountain": [
         {
             "columns": {
-                "Mountain_ID": "A unique identifier for each mountain in the database.",
-                "Name": "The common name or title of the mountain.",
-                "Height": "The elevation of the mountain above sea level, measured in meters.",
-                "Prominence": "The height of the mountain's summit relative to the lowest contour line encircling it, expressed in meters.",
-                "Range": "The geographical mountain range to which the mountain belongs.",
-                "Country": "The country or countries in which the mountain is located."
+                "Mountain_ID": "The unique identifier for each mountain entry.",
+                "Name": "The official name of the mountain.",
+                "Height": "The elevation of the mountain in meters.",
+                "Prominence": "The height of the mountain's summit relative to the lowest contour.",
+                "Range": "The mountain range where the mountain is located.",
+                "Country": "The country or countries the mountain is situated in."
             },
-            "table_description": "The mountain table provides information about various mountains, including their identification, names, physical characteristics such as elevation and prominence, as well as their geographical ranges and locations."
+            "table_description": "The table stores information about various mountains."
         }
     ],
     "climber": [
         {
             "columns": {
-                "Climber_ID": "A unique identifier assigned to each climber in the database.",
+                "Climber_ID": "The unique identifier for each climber entry.",
                 "Name": "The full name of the climber.",
-                "Country": "The country representing the climber's nationality.",
-                "Time": "The total time taken by the climber to complete the climb.",
-                "Points": "The score or points earned by the climber based on their performance.",
-                "Mountain_ID": "A reference identifier that links to the specific mountain the climber ascended."
+                "Country": "The country where the climber is from.",
+                "Time": "The total time taken by the climber for the climb.",
+                "Points": "The points awarded for the climber's performance.",
+                "Mountain_ID": "The identifier linking to the climbed mountain."
             },
-            "table_description": "The climber table stores information about individual climbers, including their identifiers, names, nationalities, performance times, scoring points, and the mountains they climbed."
+            "table_description": "The table maintains records of climbers and their climbing achievements."
         }
     ]
 }

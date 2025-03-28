@@ -1,81 +1,81 @@
 {
+    "Claims_Processing": [
+        {
+            "columns": {
+                "Claim_Stage_ID": "The stage of the claim in the processing workflow.",
+                "Claim_ID": "The unique identifier for each claim being processed.",
+                "Claim_Outcome_Code": "The current status of the claim's processing outcome.",
+                "Staff_ID": "The identifier for the staff member handling the claim.",
+                "Claim_Processing_ID": "The unique identifier for each claims processing entry."
+            },
+            "table_description": "The table processes and tracks the status of insurance claims."
+        }
+    ],
     "Customers": [
         {
             "columns": {
-                "Customer_ID": "A unique identifier assigned to each customer, which distinguishes them from one another.",
-                "Customer_Details": "Information pertaining to the customer, typically including their name and possibly other identifying details."
+                "Customer_ID": "The unique identifier for each customer in the database.",
+                "Customer_Details": "The information pertaining to each customer, such as name."
             },
-            "table_description": "The Customers table stores information about individuals who are clients of the insurance organization, identified by a unique Customer_ID."
-        }
-    ],
-    "Staff": [
-        {
-            "columns": {
-                "Staff_ID": "A unique identifier assigned to each staff member.",
-                "Staff_Details": "A brief name or identification descriptor for the staff member."
-            },
-            "table_description": "The Staff table contains information about staff members involved in insurance and eClaims processes, including unique identifiers and their names."
-        }
-    ],
-    "Policies": [
-        {
-            "columns": {
-                "Policy_ID": "A unique identifier for each insurance policy.",
-                "Customer_ID": "An identifier that links the policy to the customer who owns it.",
-                "Policy_Type_Code": "A code representing the type of policy, which helps categorize the policy for various purposes.",
-                "Start_Date": "The date and time when the insurance policy becomes effective.",
-                "End_Date": "The date and time when the insurance policy expires or is terminated."
-            },
-            "table_description": "The Policies table holds information regarding insurance policies, including unique identifiers, customer associations, policy types, and the effective date range for each policy."
-        }
-    ],
-    "Claim_Headers": [
-        {
-            "columns": {
-                "Claim_Header_ID": "A unique identifier for each claim header record.",
-                "Claim_Status_Code": "Indicates the current status of the claim, such as Settled, Disputed, or In Progress.",
-                "Claim_Type_Code": "Defines the type of claim, such as Overtime Meal Subsidy or Child Birth.",
-                "Policy_ID": "A reference to the insurance policy associated with the claim.",
-                "Date_of_Claim": "The date and time when the claim was filed.",
-                "Date_of_Settlement": "The date and time when the claim was settled.",
-                "Amount_Claimed": "The total amount of money requested in the claim.",
-                "Amount_Paid": "The amount of money that has been disbursed to settle the claim."
-            },
-            "table_description": "The Claim_Headers table stores information about insurance claims, including identifiers, status, types, associated policies, dates of the claim and settlement, and financial amounts."
+            "table_description": "The table tracks customer information for insurance claims processing."
         }
     ],
     "Claims_Documents": [
         {
             "columns": {
-                "Claim_ID": "A unique identifier for each claim, linking it to associated documents.",
-                "Document_Type_Code": "A code representing the type of document associated with the claim.",
-                "Created_by_Staff_ID": "An identifier for the staff member who created the document entry.",
-                "Created_Date": "The date on which the document was created."
+                "Claim_ID": "The unique identifier for each insurance claim document.",
+                "Document_Type_Code": "The type of document related to the claim process.",
+                "Created_by_Staff_ID": "The identifier for the staff member who created the document.",
+                "Created_Date": "The date when the document was created in the system."
             },
-            "table_description": "The Claims_Documents table stores records of documents related to insurance claims, including information about the claim, the type of documents, and the staff responsible for creating the entries."
+            "table_description": "The table stores documents associated with insurance claims and their details."
         }
     ],
     "Claims_Processing_Stages": [
         {
             "columns": {
-                "Claim_Stage_ID": "A unique identifier for each claim processing stage.",
-                "Next_Claim_Stage_ID": "The identifier for the subsequent claim processing stage that follows the current one.",
-                "Claim_Status_Name": "The name representing the current status of the claim, such as 'Open' or 'Close'.",
-                "Claim_Status_Description": "A detailed explanation of what the current claim status signifies."
+                "Claim_Stage_ID": "The unique identifier for each claim processing stage.",
+                "Next_Claim_Stage_ID": "The identifier for the subsequent stage in the process.",
+                "Claim_Status_Name": "The name of the current status of the claim.",
+                "Claim_Status_Description": "The detailed description of the claim's status."
             },
-            "table_description": "The Claims_Processing_Stages table is utilized to describe various stages in the claims processing workflow, along with their corresponding statuses and descriptions."
+            "table_description": "The table outlines stages and statuses in the claims processing workflow."
         }
     ],
-    "Claims_Processing": [
+    "Staff": [
         {
             "columns": {
-                "Claim_Processing_ID": "A unique identifier for each claims processing record.",
-                "Claim_ID": "A reference to the specific claim associated with this processing record.",
-                "Claim_Outcome_Code": "The current status or outcome of the claim, indicating whether it is in progress, settled, or disputed.",
-                "Claim_Stage_ID": "An identifier representing the current stage of the claims processing workflow.",
-                "Staff_ID": "A reference to the staff member responsible for managing the claim processing."
+                "Staff_ID": "The unique identifier for each staff member in the database.",
+                "Staff_Details": "The personal details of each staff member, such as name."
             },
-            "table_description": "The Claims_Processing table captures details regarding the processing of insurance claims, linking specific claims to their current status, stages, and the staff handling them."
+            "table_description": "The table maintains information about staff involved in claims processing."
+        }
+    ],
+    "Policies": [
+        {
+            "columns": {
+                "Policy_ID": "The unique identifier for each insurance policy in the database.",
+                "Customer_ID": "The unique identifier for the customer associated with the policy.",
+                "Policy_Type_Code": "The designated type of insurance policy provided.",
+                "Start_Date": "The date when the insurance policy becomes effective.",
+                "End_Date": "The date when the insurance policy expires."
+            },
+            "table_description": "The table records and manages insurance policy details for customers."
+        }
+    ],
+    "Claim_Headers": [
+        {
+            "columns": {
+                "Claim_Header_ID": "The unique identifier for each claim header entry.",
+                "Claim_Status_Code": "The current status of the insurance claim.",
+                "Claim_Type_Code": "The designated type of the insurance claim filed.",
+                "Policy_ID": "The identifier for the policy related to the claim.",
+                "Date_of_Claim": "The date when the claim was officially filed.",
+                "Date_of_Settlement": "The date when the claim was settled or resolved.",
+                "Amount_Claimed": "The total amount requested in the insurance claim.",
+                "Amount_Piad": "The amount that has been paid for the claim settlement."
+            },
+            "table_description": "The table captures details and statuses of insurance claims."
         }
     ]
 }

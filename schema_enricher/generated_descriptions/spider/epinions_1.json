@@ -1,42 +1,42 @@
 {
-    "review": [
+    "trust": [
         {
             "columns": {
-                "a_id": "A unique identifier for each review entry.",
-                "u_id": "The identifier of the user who submitted the review.",
-                "i_id": "The identifier of the item being reviewed.",
-                "rating": "The score given by the user to the item, typically reflecting their level of satisfaction.",
-                "rank": "An optional ranking or order for the reviews provided by the user."
+                "source_u_id": "The unique identifier of the user initiating the trust.",
+                "target_u_id": "The unique identifier of the user receiving the trust.",
+                "trust": "The trust level between users, ranging from 1 to 10."
             },
-            "table_description": "The 'review' table stores user-generated reviews of items, linking users to their reviews and the items being reviewed, along with the corresponding ratings and ranks."
+            "table_description": "The table tracks trust relationships between users."
         }
     ],
     "item": [
         {
             "columns": {
                 "i_id": "The unique identifier for each item in the database.",
-                "title": "The name or label given to the item."
+                "title": "The name or title of the item being reviewed."
             },
-            "table_description": "The item table contains a list of items, each distinguished by a unique identifier and associated with a title."
+            "table_description": "The table stores information about items available for review."
+        }
+    ],
+    "review": [
+        {
+            "columns": {
+                "a_id": "The unique identifier for each review entry in the database.",
+                "u_id": "The unique identifier of the user who submitted the review.",
+                "i_id": "The unique identifier of the item being reviewed.",
+                "rating": "The score given to the item, ranging from 5 to 10.",
+                "rank": "The rank of the review, indicating its position among others."
+            },
+            "table_description": "The table records user reviews for items with ratings and ranks."
         }
     ],
     "useracct": [
         {
             "columns": {
-                "u_id": "A unique identifier for each user account in the database.",
-                "name": "The name associated with the user account."
+                "u_id": "The unique identifier for each user account.",
+                "name": "The name of the user associated with the account."
             },
-            "table_description": "The useracct table stores information about user accounts, including unique identifiers and names for each user."
-        }
-    ],
-    "trust": [
-        {
-            "columns": {
-                "source_u_id": "This column represents the unique identifier of the user who expresses trust in another user.",
-                "target_u_id": "This column represents the unique identifier of the user who is being trusted by the source user.",
-                "trust": "This column indicates the strength of trust that the source user has for the target user, expressed as a numerical value."
-            },
-            "table_description": "The 'trust' table stores relationships of trust between users in the system, detailing which users trust which others and the degree of trust expressed."
+            "table_description": "The table stores information about user accounts."
         }
     ]
 }

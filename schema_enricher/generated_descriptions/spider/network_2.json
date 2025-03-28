@@ -2,23 +2,23 @@
     "Person": [
         {
             "columns": {
-                "name": "The name of the person, serving as a unique identifier within the table.",
-                "age": "The age of the person, indicating how many years they have lived.",
-                "city": "The city where the person resides, providing information about their location.",
-                "gender": "The gender of the person, capturing the individual's self-identified gender identity.",
-                "job": "The occupation or role of the person, reflecting their professional engagement."
+                "name": "The unique identifier of each person.",
+                "age": "The current age of the person in years.",
+                "city": "The city where the person resides.",
+                "gender": "The gender of the person.",
+                "job": "The job or occupation of the person."
             },
-            "table_description": "The Person table contains demographic and professional information about individuals, identified uniquely by their name."
+            "table_description": "The table stores personal information about individuals."
         }
     ],
     "PersonFriend": [
         {
             "columns": {
-                "name": "The name of the person who has a friendship connection.",
-                "friend": "The name of the person who is identified as a friend of the individual in the 'name' column.",
-                "year": "The duration of the friendship in years."
+                "name": "The name of the person who has a friendship.",
+                "friend": "The name of the person's friend.",
+                "year": "The duration of their friendship in years."
             },
-            "table_description": "The PersonFriend table captures the friendship relationships between individuals, detailing who is friends with whom and the length of their friendship."
+            "table_description": "The table tracks friendships between individuals over time."
         }
     ]
 }

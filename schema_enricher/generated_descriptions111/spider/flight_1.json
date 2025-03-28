@@ -1,0 +1,46 @@
+{
+    "aircraft": [
+        {
+            "columns": {
+                "aid": "Unique identifier for each aircraft in the database.",
+                "name": "The model name of the aircraft.",
+                "distance": "The maximum distance the aircraft can travel without refueling."
+            },
+            "table_description": "The aircraft table stores information about various aircraft models, their unique identifiers, and their travel capabilities."
+        }
+    ],
+    "certificate": [
+        {
+            "columns": {
+                "eid": "Represents the unique identifier for each employee associated with the certificate.",
+                "aid": "Represents the unique identifier for each aircraft associated with the certificate."
+            },
+            "table_description": "The certificate table serves to associate employees with aircraft, indicating which employee holds a certificate to operate or manage specific aircraft."
+        }
+    ],
+    "employee": [
+        {
+            "columns": {
+                "eid": "A unique identifier assigned to each employee.",
+                "name": "The full name of the employee.",
+                "salary": "The annual salary of the employee."
+            },
+            "table_description": "The employee table holds essential information about employees, including their unique ID, name, and salary."
+        }
+    ],
+    "flight": [
+        {
+            "columns": {
+                "flno": "The unique identifier for each flight.",
+                "origin": "The airport or city from which the flight departs.",
+                "destination": "The airport or city to which the flight is arriving.",
+                "distance": "The total distance, in miles, between the origin and destination.",
+                "departure_date": "The date and time at which the flight is scheduled to depart.",
+                "arrival_date": "The date and time at which the flight is scheduled to arrive.",
+                "price": "The cost of a ticket for the flight.",
+                "aid": "The identifier for the aircraft assigned to the flight."
+            },
+            "table_description": "The flight table contains records of individual flights, detailing their origins, destinations, distances, schedules, pricing, and associated aircraft."
+        }
+    ]
+}

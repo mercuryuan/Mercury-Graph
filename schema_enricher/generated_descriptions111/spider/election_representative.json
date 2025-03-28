@@ -1,0 +1,28 @@
+{
+    "election": [
+        {
+            "columns": {
+                "Election_ID": "A unique identifier for each election entry.",
+                "Representative_ID": "An identifier that links to the representative associated with the election.",
+                "Date": "The date when the election took place, presented in a textual format.",
+                "Votes": "The total number of votes cast during the election.",
+                "Vote_Percent": "The percentage of total votes that the representative received.",
+                "Seats": "The number of seats won by the representative in the election.",
+                "Place": "The ranking position of the representative based on the votes received."
+            },
+            "table_description": "The election table tracks details of electoral events, linking representatives to their performance metrics, including votes, percentage of votes, seats won, and their overall placement in each election."
+        }
+    ],
+    "representative": [
+        {
+            "columns": {
+                "Representative_ID": "A unique identifier assigned to each representative in the table.",
+                "Name": "The full name of the representative.",
+                "State": "The U.S. state that the representative is associated with.",
+                "Party": "The political party affiliation of the representative.",
+                "Lifespan": "The range of years indicating the representative's active life or term."
+            },
+            "table_description": "The 'representative' table stores information about various political representatives, including their identification, name, associated state, party affiliation, and lifespan."
+        }
+    ]
+}

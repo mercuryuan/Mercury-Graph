@@ -1,0 +1,72 @@
+{
+    "works_on": [
+        {
+            "columns": {
+                "Essn": "This column represents the employee's social security number, which serves as a unique identifier for each employee.",
+                "Pno": "This column indicates the project number that the employee is assigned to work on.",
+                "Hours": "This column denotes the number of hours that the employee has worked on the corresponding project."
+            },
+            "table_description": "The works_on table records the association between employees and the projects they work on, including the hours they dedicate to each project."
+        }
+    ],
+    "employee": [
+        {
+            "columns": {
+                "Fname": "The first name of the employee.",
+                "Minit": "The middle initial of the employee.",
+                "Lname": "The last name of the employee.",
+                "Ssn": "The social security number of the employee, serving as the primary identifier.",
+                "Bdate": "The birth date of the employee.",
+                "Address": "The residential address of the employee.",
+                "Sex": "The gender of the employee, indicated by 'M' for male and 'F' for female.",
+                "Salary": "The annual salary of the employee.",
+                "Super_ssn": "The social security number of the employee's supervisor.",
+                "Dno": "The department number in which the employee works."
+            },
+            "table_description": "The employee table contains information about each employee in the company, including personal details such as names and birth dates, as well as employment-related data like salary, department, and supervisor identification."
+        }
+    ],
+    "department": [
+        {
+            "columns": {
+                "Dname": "The name of the department within the company.",
+                "Dnumber": "A unique identifier for each department.",
+                "Mgr_ssn": "The Social Security Number of the department's manager.",
+                "Mgr_start_date": "The date when the manager started their role in the department."
+            },
+            "table_description": "The department table holds information about various departments within the company, including their names, unique identifiers, manager details, and the start date of the manager's tenure."
+        }
+    ],
+    "project": [
+        {
+            "columns": {
+                "Pname": "The name of the project.",
+                "Pnumber": "A unique identifier assigned to each project.",
+                "Plocation": "The geographical location where the project is based.",
+                "Dnum": "The department number that is responsible for the project."
+            },
+            "table_description": "The 'project' table contains information about various projects in the company, including their names, unique identifiers, locations, and the associated departments."
+        }
+    ],
+    "dependent": [
+        {
+            "columns": {
+                "Essn": "A unique identifier for the employee to whom the dependent is associated.",
+                "Dependent_name": "The full name of the dependent related to the employee.",
+                "Sex": "The gender of the dependent, represented as 'M' for male or 'F' for female.",
+                "Bdate": "The birth date of the dependent, formatted as YYYY-MM-DD.",
+                "Relationship": "The type of relationship the dependent has with the employee, such as spouse or child."
+            },
+            "table_description": "The 'dependent' table captures information about the dependents of employees within the company, detailing who they are, their relationship to the employee, and essential personal information."
+        }
+    ],
+    "dept_locations": [
+        {
+            "columns": {
+                "Dnumber": "This column represents the unique identifier of a department within the company.",
+                "Dlocation": "This column indicates the geographical location associated with a specific department."
+            },
+            "table_description": "The dept_locations table provides a mapping of department identifiers to their respective physical locations within the company."
+        }
+    ]
+}

@@ -2,64 +2,64 @@
     "pilot": [
         {
             "columns": {
-                "Pilot_Id": "A unique identifier assigned to each pilot in the database.",
+                "Pilot_Id": "The unique identifier for each pilot.",
                 "Name": "The full name of the pilot.",
-                "Age": "The age of the pilot, representing their current age in years."
+                "Age": "The age of the pilot in years."
             },
-            "table_description": "The pilot table contains information about individual pilots, including their unique identifiers, names, and ages, facilitating the management and retrieval of pilot data within the aircraft database."
+            "table_description": "The table stores pilot information for aircraft operations."
         }
     ],
     "aircraft": [
         {
             "columns": {
-                "Aircraft_ID": "A unique identifier for each aircraft entry.",
-                "Aircraft": "The name or model designation of the aircraft.",
-                "Description": "A brief description of the aircraft's primary function or type.",
-                "Max_Gross_Weight": "The maximum weight the aircraft can safely carry, including its own weight.",
-                "Total_disk_area": "The total surface area of the aircraft's rotor disks.",
-                "Max_disk_Loading": "The maximum load that each unit of disk area can support."
+                "Aircraft_ID": "The unique identifier for each aircraft.",
+                "Aircraft": "The name of the aircraft model.",
+                "Description": "The functional description of the aircraft.",
+                "Max_Gross_Weight": "The maximum allowable weight for the aircraft.",
+                "Total_disk_area": "The total surface area of the aircraft's disks.",
+                "Max_disk_Loading": "The maximum loading per unit area of the aircraft's disks."
             },
-            "table_description": "The aircraft table contains detailed information about various aircraft, including their identifiers, specifications, and performance-related metrics."
+            "table_description": "The table stores detailed information about various aircraft models."
         }
     ],
     "match": [
         {
             "columns": {
-                "Round": "This column represents the round number of the race, indicating the sequence in which the matches took place.",
-                "Location": "This column specifies the geographical location where the race was held.",
-                "Country": "This column indicates the country in which the race event took place.",
-                "Date": "This column records the date or date range of the race, including the possibility of cancellation.",
-                "Winning_Pilot": "This column identifies the pilot who won the race, referenced from the pilots table.",
-                "Winning_Aircraft": "This column denotes the aircraft that won the race, referenced from the aircraft table.",
-                "Fastest_Qualifying": "This column reveals the name of the pilot who achieved the fastest qualifying time, or indicates if the qualifying was cancelled."
+                "Round": "The unique identifier for each match round.",
+                "Location": "The geographical location where the match takes place.",
+                "Country": "The country hosting the match event.",
+                "Date": "The scheduled dates for the match round.",
+                "Fastest_Qualifying": "The pilot achieving the fastest qualifying time.",
+                "Winning_Pilot": "The unique identifier of the winning pilot.",
+                "Winning_Aircraft": "The unique identifier of the aircraft used by the winner."
             },
-            "table_description": "The 'match' table stores information about aircraft racing events, including the round number, location, date, winning pilot and aircraft, and details regarding the fastest qualifying times."
+            "table_description": "The table records details of match rounds, pilots, and aircraft."
         }
     ],
     "airport": [
         {
             "columns": {
-                "Airport_ID": "A unique identifier assigned to each airport.",
-                "Airport_Name": "The name of the airport.",
-                "Total_Passengers": "The total number of passengers that passed through the airport.",
-                "%_Change_2007": "The percentage change in passenger numbers compared to the year 2007.",
-                "International_Passengers": "The number of passengers traveling internationally.",
-                "Domestic_Passengers": "The number of passengers traveling within the same country.",
-                "Transit_Passengers": "The number of passengers who are in transit through the airport.",
-                "Aircraft_Movements": "The total number of takeoffs and landings at the airport.",
-                "Freight_Metric_Tonnes": "The amount of freight transported measured in metric tonnes."
+                "Airport_ID": "The unique identifier for each airport.",
+                "Airport_Name": "The official name of the airport.",
+                "Total_Passengers": "The total number of passengers using the airport.",
+                "%_Change_2007": "The percentage change in passenger numbers since 2007.",
+                "International_Passengers": "The number of international passengers at the airport.",
+                "Domestic_Passengers": "The number of domestic passengers at the airport.",
+                "Transit_Passengers": "The number of transit passengers passing through the airport.",
+                "Aircraft_Movements": "The total number of aircraft movements at the airport.",
+                "Freight_Metric_Tonnes": "The weight of freight measured in metric tonnes handled by the airport."
             },
-            "table_description": "The table contains information regarding airports, including their passenger statistics, aircraft movements, and freight capacities."
+            "table_description": "The table organizes comprehensive data about airport operations and passenger statistics."
         }
     ],
     "airport_aircraft": [
         {
             "columns": {
-                "Aircraft_ID": "This column represents the unique identifier for each aircraft associated with an airport.",
-                "ID": "This column serves as a unique identifier for each record in the airport_aircraft table.",
-                "Airport_ID": "This column denotes the unique identifier for each airport that has an associated aircraft."
+                "ID": "The unique identifier for each airport-aircraft association.",
+                "Airport_ID": "The unique identifier for the associated airport.",
+                "Aircraft_ID": "The unique identifier for the associated aircraft."
             },
-            "table_description": "The airport_aircraft table links aircraft to airports, establishing a many-to-many relationship where each aircraft can be associated with multiple airports and each airport can accommodate multiple aircraft."
+            "table_description": "The table links airports with their corresponding aircraft equipment."
         }
     ]
 }

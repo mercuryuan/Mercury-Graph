@@ -1,49 +1,49 @@
 {
-    "repair": [
+    "repair_assignment": [
         {
             "columns": {
-                "repair_ID": "A unique identifier for each repair record in the database.",
-                "name": "The designation or name of the machine associated with the repair.",
-                "Launch_Date": "The date on which the machine was launched or became operational.",
-                "Notes": "Additional information or observations related to the repair, including success or failure details."
+                "technician_id": "The unique identifier for each technician assigned to repairs.",
+                "repair_ID": "The unique identifier for each specific repair task.",
+                "Machine_ID": "The unique identifier for each machine undergoing repair."
             },
-            "table_description": "The repair table stores information about various machine repairs, including unique identifiers, machine names, launch dates, and notes about repair outcomes."
-        }
-    ],
-    "machine": [
-        {
-            "columns": {
-                "Machine_ID": "A unique identifier for each machine in the database.",
-                "Making_Year": "The year in which the machine was manufactured.",
-                "Class": "The displacement category of the machine, commonly used in racing classifications.",
-                "Team": "The name of the racing team associated with the machine.",
-                "Machine_series": "The series or model designation of the machine.",
-                "value_points": "A numerical value representing the points attributed to the machine for performance evaluation.",
-                "quality_rank": "A ranking that indicates the quality of the machine, with lower numbers denoting higher quality."
-            },
-            "table_description": "The machine table holds detailed information about various machines used for racing, including their identification, classification, associated teams, manufacturing year, performance evaluation metrics, and quality rankings."
+            "table_description": "The table links technicians to their assigned repair tasks for specific machines."
         }
     ],
     "technician": [
         {
             "columns": {
-                "technician_id": "A unique identifier for each technician in the database.",
+                "technician_id": "The unique identifier for each technician in the system.",
                 "Name": "The full name of the technician.",
-                "Team": "The team with which the technician is affiliated, represented by its abbreviation.",
-                "Starting_Year": "The year when the technician began their employment.",
-                "Age": "The current age of the technician."
+                "Team": "The team designation of the technician.",
+                "Starting_Year": "The year the technician started working.",
+                "Age": "The age of the technician in years."
             },
-            "table_description": "The technician table contains information about technicians, including their IDs, names, teams, starting years, and ages."
+            "table_description": "The table holds details of technicians available for repair assignments."
         }
     ],
-    "repair_assignment": [
+    "repair": [
         {
             "columns": {
-                "technician_id": "Identifies the technician assigned to perform the repair.",
-                "repair_ID": "Refers to the specific repair job that has been assigned.",
-                "Machine_ID": "Indicates the machine that requires repair."
+                "repair_ID": "The unique identifier for each repair entry in the system.",
+                "name": "The name assigned to the specific repair task.",
+                "Launch_Date": "The date when the repair task was initiated.",
+                "Notes": "The remarks or observations related to the repair task."
             },
-            "table_description": "The table 'repair_assignment' tracks the assignments of technicians to specific repair jobs on machines, linking technicians, repairs, and machines together."
+            "table_description": "The table catalogs repair tasks along with their details and notes."
+        }
+    ],
+    "machine": [
+        {
+            "columns": {
+                "Machine_ID": "The unique identifier for each machine in the database.",
+                "Making_Year": "The year the machine was manufactured.",
+                "Class": "The classification category of the machine.",
+                "Team": "The team associated with the machine's development.",
+                "Machine_series": "The series designation of the machine model.",
+                "value_points": "The numerical value score indicating machine performance.",
+                "quality_rank": "The ranking score assessing the machine's quality."
+            },
+            "table_description": "The table stores details of machines including specifications and rankings."
         }
     ]
 }

@@ -2,143 +2,143 @@
     "Products": [
         {
             "columns": {
-                "product_id": "A unique identifier for each product in the database.",
-                "product_name": "The name of the product, which provides a brief identifier of the item.",
-                "product_price": "The selling price of the product, expressed in a decimal format to allow for accurate financial transactions.",
-                "product_description": "A textual description of the product, providing additional details about its condition and features."
+                "product_id": "The unique identifier for each product.",
+                "product_name": "The name of the product being sold.",
+                "product_price": "The selling price of the product.",
+                "product_description": "The detailed description of the product's condition."
             },
-            "table_description": "The Products table maintains essential information about items available for sale, including unique identifiers, names, prices, and descriptions to aid in customer decision-making."
+            "table_description": "The table maintains information about products available for sale."
         }
     ],
     "Addresses": [
         {
             "columns": {
-                "address_id": "A unique identifier for each address record, ensuring distinct entries.",
-                "address_details": "A detailed description of the address, including components such as street number, name, and apartment or suite information.",
-                "city": "The name of the city in which the address is located.",
-                "zip_postcode": "The postal code associated with the address, used for mail delivery.",
-                "state_province_county": "The state, province, or county where the address resides.",
-                "country": "The country of the address, indicating the national jurisdiction."
+                "address_id": "The unique identifier for each address.",
+                "address_details": "The detailed address information for delivery locations.",
+                "city": "The city name associated with the address.",
+                "zip_postcode": "The postal code for the address.",
+                "state_province_county": "The state, province, or county of the address.",
+                "country": "The country of the delivery address."
             },
-            "table_description": "The Addresses table stores comprehensive information about customer and employee addresses, facilitating accurate delivery and location tracking."
-        }
-    ],
-    "Customers": [
-        {
-            "columns": {
-                "customer_id": "A unique identifier for each customer in the database.",
-                "payment_method": "The method used by the customer to make payments, such as credit card or PayPal.",
-                "customer_name": "The full name of the customer.",
-                "customer_phone": "The phone number of the customer for contact purposes.",
-                "customer_email": "The email address used by the customer for communication and notifications.",
-                "date_became_customer": "The date and time when the customer first registered or made a purchase."
-            },
-            "table_description": "The Customers table contains essential information about each customer, including their unique identifier, payment preferences, contact information, and registration date."
-        }
-    ],
-    "Regular_Orders": [
-        {
-            "columns": {
-                "regular_order_id": "A unique identifier for each regular order within the system.",
-                "distributer_id": "An identifier that links the order to a specific distributor responsible for fulfilling it."
-            },
-            "table_description": "The Regular_Orders table is designed to track individual orders placed by customers, associating each order with the distributor that is tasked with delivering the products."
-        }
-    ],
-    "Regular_Order_Products": [
-        {
-            "columns": {
-                "regular_order_id": "Identifies the specific regular order associated with the products in this entry.",
-                "product_id": "Identifies the specific product included in the regular order."
-            },
-            "table_description": "The Regular_Order_Products table establishes a many-to-many relationship between regular orders and products, linking each order to its respective products."
-        }
-    ],
-    "Actual_Orders": [
-        {
-            "columns": {
-                "actual_order_id": "A unique identifier for each actual order placed by a customer.",
-                "order_status_code": "Indicates the current status of the actual order, such as 'Cancel' or 'Success'.",
-                "regular_order_id": "Links the actual order to a corresponding regular order, serving as a reference point.",
-                "actual_order_date": "Records the date and time when the actual order was placed."
-            },
-            "table_description": "The Actual_Orders table captures detailed information about orders that have been placed by customers, including their status, associated regular orders, and timestamps for order placement."
-        }
-    ],
-    "Actual_Order_Products": [
-        {
-            "columns": {
-                "actual_order_id": "Represents the unique identifier for the order associated with the products.",
-                "product_id": "Represents the unique identifier for the product that is part of the order."
-            },
-            "table_description": "The Actual_Order_Products table serves to link specific products to their corresponding orders, facilitating the tracking of what products were included in each order placed by customers."
-        }
-    ],
-    "Customer_Addresses": [
-        {
-            "columns": {
-                "customer_id": "Identifies the unique customer associated with the address.",
-                "address_id": "Identifies the unique address being referenced for the customer.",
-                "date_from": "The date and time when the address became effective for the customer.",
-                "address_type": "The type of address (e.g., House, Flat) used for the customer.",
-                "date_to": "The date and time when the address is no longer valid for the customer."
-            },
-            "table_description": "The Customer_Addresses table stores the relationship between customers and their addresses, including the validity periods and types of those addresses."
-        }
-    ],
-    "Delivery_Routes": [
-        {
-            "columns": {
-                "route_id": "A unique identifier for each delivery route.",
-                "route_name": "The name assigned to the delivery route, often representing a company or location.",
-                "other_route_details": "Additional information regarding the delivery route, including addresses and specific route-related information."
-            },
-            "table_description": "The Delivery_Routes table stores information about delivery routes used for customer deliveries, including unique identifiers, names of the routes, and additional details pertinent to each route."
-        }
-    ],
-    "Delivery_Route_Locations": [
-        {
-            "columns": {
-                "location_code": "A unique identifier for each delivery route location.",
-                "route_id": "Identifies the specific delivery route to which this location belongs.",
-                "location_address_id": "References the unique identifier for the address associated with this location.",
-                "location_name": "The name assigned to the delivery location, often used for identification purposes."
-            },
-            "table_description": "The Delivery_Route_Locations table stores details about specific locations on delivery routes, including unique identifiers, associated routes and addresses, and descriptive names for each location."
-        }
-    ],
-    "Trucks": [
-        {
-            "columns": {
-                "truck_id": "A unique identifier for each truck in the system.",
-                "truck_licence_number": "The official licence number assigned to the truck for legal identification and operation.",
-                "truck_details": "A descriptive field providing additional details or names associated with the truck."
-            },
-            "table_description": "The Trucks table stores information regarding the delivery trucks used in the customer deliveries system, including identification, legal documentation, and descriptive details."
+            "table_description": "The table maintains addresses for customer delivery purposes."
         }
     ],
     "Employees": [
         {
             "columns": {
-                "employee_id": "A unique identifier for each employee.",
-                "employee_address_id": "The identifier for the employee's address, linking to the Addresses table.",
+                "employee_id": "The unique identifier for each employee.",
+                "employee_address_id": "The identifier linking to the employee's address.",
                 "employee_name": "The full name of the employee.",
                 "employee_phone": "The contact phone number of the employee."
             },
-            "table_description": "The Employees table stores information about individuals who work for the company, including their identifiers, contact details, and address associations."
+            "table_description": "The table maintains information about employees for delivery management."
+        }
+    ],
+    "Regular_Orders": [
+        {
+            "columns": {
+                "regular_order_id": "The unique identifier for each regular order.",
+                "distributer_id": "The identifier linking to the associated distributor."
+            },
+            "table_description": "The table maintains regular order information for processing deliveries."
+        }
+    ],
+    "Regular_Order_Products": [
+        {
+            "columns": {
+                "regular_order_id": "The unique identifier linking to each regular order.",
+                "product_id": "The unique identifier linking to each product sold."
+            },
+            "table_description": "The table maintains product information associated with regular orders."
+        }
+    ],
+    "Actual_Orders": [
+        {
+            "columns": {
+                "actual_order_id": "The unique identifier for each actual order.",
+                "order_status_code": "The status of the order, indicating current progress.",
+                "regular_order_id": "The identifier linking to the associated regular order.",
+                "actual_order_date": "The date and time the actual order was placed."
+            },
+            "table_description": "The table maintains details about actual orders for processing delivery."
+        }
+    ],
+    "Actual_Order_Products": [
+        {
+            "columns": {
+                "actual_order_id": "The unique identifier linking to each actual order.",
+                "product_id": "The unique identifier linking to each product sold."
+            },
+            "table_description": "The table maintains product details associated with actual orders."
+        }
+    ],
+    "Delivery_Routes": [
+        {
+            "columns": {
+                "route_id": "The unique identifier for each delivery route.",
+                "route_name": "The name assigned to the delivery route.",
+                "other_route_details": "The additional details describing the delivery route."
+            },
+            "table_description": "The table maintains information about defined delivery routes for distribution."
         }
     ],
     "Order_Deliveries": [
         {
             "columns": {
-                "location_code": "Represents the specific delivery location associated with the order.",
-                "actual_order_id": "Identifies the unique order that is being delivered.",
-                "delivery_status_code": "Indicates the current status of the delivery, such as whether it has been delivered or is still in transit.",
-                "driver_employee_id": "Specifies the employee ID of the driver responsible for the delivery.",
-                "truck_id": "Denotes the unique identifier of the truck used for the delivery.",
-                "delivery_date": "Records the date and time when the delivery occurred or is scheduled to occur."
+                "location_code": "The code representing the delivery location.",
+                "actual_order_id": "The unique identifier linking to the associated actual order.",
+                "delivery_status_code": "The current status of the delivery process.",
+                "driver_employee_id": "The unique identifier for the driver assigned to the delivery.",
+                "truck_id": "The unique identifier for the truck used for the delivery.",
+                "delivery_date": "The date and time when the delivery occurred."
             },
-            "table_description": "The Order_Deliveries table stores information on orders that have been delivered, including details about the delivery location, order identification, delivery status, driver information, truck used, and the delivery date."
+            "table_description": "The table maintains information about delivery details for customer orders."
+        }
+    ],
+    "Customers": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier for each customer.",
+                "payment_method": "The payment method used by the customer for transactions.",
+                "customer_name": "The full name of the customer.",
+                "customer_phone": "The contact phone number of the customer.",
+                "customer_email": "The email address of the customer for communication.",
+                "date_became_customer": "The date and time the customer started using services."
+            },
+            "table_description": "The table maintains customer information for processing orders and deliveries."
+        }
+    ],
+    "Customer_Addresses": [
+        {
+            "columns": {
+                "customer_id": "The unique identifier linking to each customer.",
+                "address_id": "The unique identifier linking to each address.",
+                "date_from": "The date and time when the address became active for the customer.",
+                "date_to": "The date and time when the address was deactivated for the customer.",
+                "address_type": "The type of address, such as House or Flat."
+            },
+            "table_description": "The table maintains addresses assigned to customers for delivery purposes."
+        }
+    ],
+    "Delivery_Route_Locations": [
+        {
+            "columns": {
+                "location_code": "The unique identifier for each delivery route location.",
+                "route_id": "The identifier linking to the associated delivery route.",
+                "location_address_id": "The identifier linking to the location's address.",
+                "location_name": "The name of the specific location for deliveries."
+            },
+            "table_description": "The table maintains locations for delivery routes to optimize distribution."
+        }
+    ],
+    "Trucks": [
+        {
+            "columns": {
+                "truck_id": "The unique identifier for each truck.",
+                "truck_licence_number": "The registration number assigned to the truck.",
+                "truck_details": "The specific details or names related to the truck."
+            },
+            "table_description": "The table maintains information about trucks used for deliveries."
         }
     ]
 }

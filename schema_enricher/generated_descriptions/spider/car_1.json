@@ -1,67 +1,67 @@
 {
-    "continents": [
-        {
-            "columns": {
-                "ContId": "This column represents the unique identifier for each continent.",
-                "Continent": "This column indicates the name of the continent."
-            },
-            "table_description": "The continents table stores a list of continents along with a unique identifier for each, facilitating relationships with other tables in the database."
-        }
-    ],
-    "countries": [
-        {
-            "columns": {
-                "CountryId": "A unique identifier assigned to each country in the database.",
-                "CountryName": "The official name of the country.",
-                "Continent": "An identifier that indicates the continent where the country is located."
-            },
-            "table_description": "The countries table provides essential information regarding different countries, including unique identifiers, their names, and their geographical groupings by continent."
-        }
-    ],
     "car_makers": [
         {
             "columns": {
-                "Id": "A unique identifier assigned to each car maker in the database.",
-                "Maker": "The commonly used name or abbreviation of the car maker.",
-                "FullName": "The official or complete name of the car manufacturer.",
-                "Country": "A reference to the country associated with the car maker, linking to the countries table."
+                "Id": "The unique identifier for each car maker.",
+                "Maker": "The name of the car manufacturer.",
+                "FullName": "The complete name of the car maker.",
+                "Country": "The foreign key linking to the country's identifier."
             },
-            "table_description": "The car_makers table stores information about various car manufacturers, including their unique identifiers, commonly used names, official names, and associated countries."
+            "table_description": "The table provides information about different car manufacturers."
         }
     ],
     "model_list": [
         {
             "columns": {
-                "ModelId": "A unique identifier for each model entry in the list.",
-                "Maker": "An identifier that connects the model to its corresponding manufacturer.",
-                "Model": "The name or designation of the car model."
+                "ModelId": "The unique identifier for each car model.",
+                "Maker": "The foreign key linking to the car maker's identifier.",
+                "Model": "The specific name or designation of the car model."
             },
-            "table_description": "The model_list table stores information about various car models, including their unique identifiers, the manufacturers associated with each model, and the names of the models themselves."
+            "table_description": "The table provides details about various car models."
         }
     ],
     "car_names": [
         {
             "columns": {
-                "MakeId": "A unique identifier for each car make entry in the table.",
-                "Model": "The model of the car associated with a particular make, serving as a foreign key.",
-                "Make": "The full name or description of the car make, detailing the brand and specific model type."
+                "MakeId": "The unique identifier for each car make.",
+                "Model": "The foreign key linking to the car model's identifier.",
+                "Make": "The name or description of the specific car make."
             },
-            "table_description": "The 'car_names' table contains a list of car makes and models, with unique identifiers for each make and a reference to specific models, providing a comprehensive overview of car names within the database."
+            "table_description": "The table catalogs car makes and their associated models."
+        }
+    ],
+    "continents": [
+        {
+            "columns": {
+                "ContId": "The unique identifier for each continent.",
+                "Continent": "The name of the continent."
+            },
+            "table_description": "The table lists all continents and their identifiers."
+        }
+    ],
+    "countries": [
+        {
+            "columns": {
+                "CountryId": "The unique identifier for each country.",
+                "CountryName": "The name of the country.",
+                "Continent": "The foreign key linking to the continent's identifier."
+            },
+            "table_description": "The table provides information about countries and their respective continents."
         }
     ],
     "cars_data": [
         {
             "columns": {
-                "Id": "A unique identifier for each car entry.",
-                "MPG": "The miles per gallon efficiency of the car, indicating fuel economy.",
-                "Cylinders": "The number of cylinders in the car's engine, which can affect performance.",
-                "Edispl": "The engine displacement in cubic inches, representing the total volume of all cylinders.",
-                "Horsepower": "The power output of the car’s engine, measured in horsepower.",
-                "Weight": "The weight of the car in pounds, influencing its acceleration and fuel efficiency.",
-                "Accelerate": "The time taken for the car to accelerate from 0 to 60 miles per hour.",
-                "Year": "The model year of the car, indicating when it was manufactured."
+                "Id": "The unique identifier for each car record.",
+                "MPG": "The miles per gallon the car achieves.",
+                "Cylinders": "The number of cylinders in the car's engine.",
+                "Edispl": "The engine displacement measured in cubic inches.",
+                "Horsepower": "The amount of power produced by the car's engine.",
+                "Weight": "The weight of the car in pounds.",
+                "Accelerate": "The time taken to accelerate from 0 to 60 mph.",
+                "Year": "The model year of the car."
             },
-            "table_description": "The cars_data table provides detailed specifications of various car entries, including performance metrics such as fuel efficiency, engine specifications, and manufacturing details."
+            "table_description": "The table contains detailed specifications of various cars."
         }
     ]
 }

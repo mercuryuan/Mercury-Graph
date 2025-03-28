@@ -1,76 +1,76 @@
 {
-    "Subjects": [
+    "Course_Authors_and_Tutors": [
         {
             "columns": {
-                "subject_id": "A unique identifier for each subject in the table.",
-                "subject_name": "The name of the subject, representing the field of study."
+                "author_id": "The unique identifier for each author or tutor.",
+                "author_tutor_ATB": "The attribute indicating the role of the author.",
+                "login_name": "The username used for author or tutor login.",
+                "password": "The encrypted password for secure user authentication.",
+                "personal_name": "The first name of the author or tutor.",
+                "middle_name": "The middle name of the author or tutor.",
+                "family_name": "The last name of the author or tutor.",
+                "gender_mf": "The gender of the author or tutor, represented by a single character.",
+                "address_line_1": "The primary address of the author or tutor."
             },
-            "table_description": "The Subjects table stores information about various academic subjects offered in the e-learning platform, with a unique identifier for each subject and its corresponding name."
-        }
-    ],
-    "Courses": [
-        {
-            "columns": {
-                "course_id": "A unique identifier for each course in the database.",
-                "subject_id": "References the subject classification associated with the course.",
-                "author_id": "Identifies the author or tutor responsible for creating the course.",
-                "course_name": "The title or name of the course being offered.",
-                "course_description": "A brief overview or details about the course content."
-            },
-            "table_description": "The Courses table holds the information regarding various courses available in the e-learning platform, including their identification, associated subjects, authors, names, and descriptions."
-        }
-    ],
-    "Student_Course_Enrolment": [
-        {
-            "columns": {
-                "registration_id": "A unique identifier for each enrolment record.",
-                "student_id": "An identifier representing the student enrolled in a course.",
-                "course_id": "An identifier for the course in which the student is enrolled.",
-                "date_of_enrolment": "The date and time when the student enrolled in the course.",
-                "date_of_completion": "The date and time when the student completed the course."
-            },
-            "table_description": "The Student_Course_Enrolment table tracks the enrolment of students in various courses, including details on their registration, course identifiers, and enrolment and completion dates."
+            "table_description": "The table holds information about course authors and tutors."
         }
     ],
     "Students": [
         {
             "columns": {
-                "student_id": "A unique identifier assigned to each student in the e-learning system.",
-                "date_of_registration": "The date and time when the student registered in the e-learning system.",
-                "date_of_latest_logon": "The date and time of the student's most recent login to the e-learning platform.",
-                "login_name": "The username used by the student to access the e-learning platform.",
-                "password": "The password associated with the student's login name for authentication purposes.",
+                "student_id": "The unique identifier for each student.",
+                "date_of_registration": "The date and time when the student registered.",
+                "date_of_latest_logon": "The date and time of the student's most recent logon.",
+                "login_name": "The username chosen by the student for login.",
+                "password": "The encrypted password for securing student login.",
                 "personal_name": "The first name of the student.",
-                "middle_name": "The middle name of the student, if applicable.",
-                "family_name": "The last name or surname of the student."
+                "middle_name": "The middle name of the student.",
+                "family_name": "The last name of the student."
             },
-            "table_description": "The Students table stores essential information about each student enrolled in the e-learning system, including identification, registration details, and personal information."
+            "table_description": "The table stores information about students enrolled in courses."
+        }
+    ],
+    "Subjects": [
+        {
+            "columns": {
+                "subject_id": "The unique identifier for each subject.",
+                "subject_name": "The name of the subject offered in the curriculum."
+            },
+            "table_description": "The table maintains information about subjects in the e-learning platform."
+        }
+    ],
+    "Courses": [
+        {
+            "columns": {
+                "course_id": "The unique identifier for each course.",
+                "author_id": "The unique identifier for the course author.",
+                "subject_id": "The unique identifier for the subject of the course.",
+                "course_name": "The title of the course being offered.",
+                "course_description": "The detailed description of the course content."
+            },
+            "table_description": "The table contains details of courses available in the e-learning platform."
+        }
+    ],
+    "Student_Course_Enrolment": [
+        {
+            "columns": {
+                "registration_id": "The unique identifier for each student course enrollment.",
+                "student_id": "The unique identifier for the student enrolling in the course.",
+                "course_id": "The unique identifier for the course being enrolled in.",
+                "date_of_enrolment": "The date and time when the student enrolled in the course.",
+                "date_of_completion": "The date and time when the course was completed by the student."
+            },
+            "table_description": "The table tracks student enrollments and course completion dates."
         }
     ],
     "Student_Tests_Taken": [
         {
             "columns": {
-                "registration_id": "A unique identifier that links each test taken to a specific student registration.",
-                "date_test_taken": "The date and time when the test was taken, providing a timestamp for the assessment.",
-                "test_result": "Indicates the outcome of the test, reflecting whether the student has passed or failed."
+                "registration_id": "The unique identifier for each student's test registration.",
+                "date_test_taken": "The date and time when the test was taken by the student.",
+                "test_result": "The outcome of the test, indicating pass or fail."
             },
-            "table_description": "The Student_Tests_Taken table records the details of tests taken by students, including the registration link, the date and time of each test, and the results indicating their performance."
-        }
-    ],
-    "Course_Authors_and_Tutors": [
-        {
-            "columns": {
-                "author_id": "A unique identifier for each author or tutor in the system.",
-                "author_tutor_ATB": "A code representing specific attributes or categories of the author or tutor.",
-                "login_name": "The username used by the author or tutor for logging into the system.",
-                "password": "The encrypted password associated with the login name for authentication purposes.",
-                "personal_name": "The first name of the author or tutor.",
-                "middle_name": "The middle name of the author or tutor, if applicable.",
-                "family_name": "The last name or surname of the author or tutor.",
-                "gender_mf": "A binary indicator of the author's or tutor's gender, where '1' typically represents male and '0' represents female.",
-                "address_line_1": "The primary address of the author or tutor, which may include a street address and possibly an apartment or suite number."
-            },
-            "table_description": "The Course_Authors_and_Tutors table stores information about individuals who are authors or tutors, including their personal details, login credentials, and attributes related to their roles."
+            "table_description": "The table records details of tests taken by students and their results."
         }
     ]
 }
