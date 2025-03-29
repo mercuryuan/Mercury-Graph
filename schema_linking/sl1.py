@@ -8,12 +8,13 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 # 创建大语言模型实例
-llm = ChatOpenAI(model="gpt-4", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
 schema_selection_prompt = ChatPromptTemplate.from_messages([
     ("system", """You are an expert in database schema reasoning. Respond ONLY with JSON format."""),
     ("user", """
-### Task Description: {task_description}
+### Task Description: 
+{task_description}
 
 ### Database Schema:
 {db_schema}
@@ -28,7 +29,7 @@ Generate response in the following JSON format:
 }}
 
 Guidelines:
-1. Select maximum 5 relevant tables
+1. Select maximum 5 relevant tables,order by confidence
 2. Only include tables with high confidence
 3. Maintain parallel structure between selected_entity and reason arrays
 4. Return ONLY the JSON object without additional commentary
@@ -82,12 +83,20 @@ if __name__ == "__main__":
     db_schema = "\n".join(
         sg.generate_combined_description(table) for table in sg.tables
     )
+    question = """How many movies are there that are directed by 'Asghar Farhadi' and featuring 'Taraneh Alidoosti '
+        """
 
+    final_prompt = schema_selection_prompt.format(
+        db_schema=db_schema,
+        question=question,
+        task_description=task_description
+    )
+    print("Final Prompt:\n", final_prompt)
     # 执行表选择
     result = select_relevant_tables(
         task_description,
         db_schema,
-        data["question"]
+        question
     )
 
     print("Selected tables:", result.get("selected_entity", []))
