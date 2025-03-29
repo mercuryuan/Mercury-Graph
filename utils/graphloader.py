@@ -10,6 +10,7 @@ Main Components:
 """
 from graph_construction.neo4j_data_migration import load_graph_to_neo4j
 from src.neo4j_connector import get_driver
+import logging
 
 
 class GraphLoader:
@@ -36,7 +37,14 @@ class GraphLoader:
 
 
 if __name__ == '__main__':
-    dataset_name = "spider"
-    db_name = "book_2"
+    dataset_name = "bird"
+    # dataset_name = "spider"
+    # db_name = "activity_1"
+    db_name = "books"
+    # db_name = "regional_sales"
+    # db_name = "soccer_1"
+    # db_name = "mondial_geo"
+    # db_name = "geo"
+    # db_name = "shakespeare"
     loader = GraphLoader()
     loader.load_graph(dataset_name, db_name)

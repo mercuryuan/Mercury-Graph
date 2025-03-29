@@ -16,7 +16,7 @@ class Enricher:
     2. 在外键连接不全的情况下，基于业务逻辑推断可能的外键关系。
     """
 
-    def __init__(self):
+    def __init__(self, dataset_name):
         """
         初始化 Enricher。
 
@@ -24,7 +24,8 @@ class Enricher:
         :param log_file: 处理日志存储路径。
         """
         self.ds_root = config.GRAPHS_REPO
-        self.log_file = "./Enrich_Process.log"
+        self.log_file = os.path.join(config.SCHEMA_ENRICHER, "Enrich_Process.log")
+        self.dataset_name = dataset_name
         os.makedirs(os.path.dirname(self.log_file), exist_ok=True)  # 确保日志文件夹存在
 
     def log(self, message: str):
@@ -42,7 +43,7 @@ class Enricher:
         :param db_path: 数据库文件夹路径。
         """
         db_name = os.path.basename(db_path)  # 数据库名称
-        description_file = f"./generated_descriptions/{db_name}.json"
+        description_file = os.path.join(config.GENERATED_DESCRIPTIONS, self.dataset_name, f"{db_name}.json")
 
         # 1. 检查是否已存在描述文件
         if os.path.exists(description_file):
@@ -65,12 +66,13 @@ class Enricher:
         """
         print("🔍 外键推断功能待实现...")
 
-    def enrich_schema(self, dataset_name: str):
+    def enrich_schema(self):
         """
         遍历数据集目录，对所有数据库执行 enrich_description。
 
         :param dataset_name: 数据集名称，必须是 'spider' 或 'bird'。
         """
+        dataset_name = self.dataset_name
         if dataset_name not in {"spider", "bird"}:
             raise ValueError("dataset_name 必须是 'spider' 或 'bird'")
 
@@ -87,7 +89,7 @@ class Enricher:
         for db_path in tqdm(db_folders, desc=f"Processing {dataset_name} databases"):
             # # 1. 对每个数据库执行 description生成，已完成可注释
             # self.enrich_description(db_path)
-            # # 2. 对每个数据库执行 description注入
+            # 2. 对每个数据库执行 description注入
             db_name = os.path.basename(db_path)
             inject_descriptions(dataset_name, db_name)
             pass
@@ -96,12 +98,12 @@ class Enricher:
 
 
 if __name__ == "__main__":
-    enricher = Enricher()
     """
     所有步骤写在enrich_schema函数中，调用一次就自动完成enrich的所有步骤,只需传入数据集名称即可。
     """
-    enricher.enrich_schema("spider")  # 处理 spider 数据集
-    # enricher.enrich_schema("bird")    # 处理 bird 数据集
+    # enricher = Enricher("spider") # 处理 spider 数据集
+    enricher = Enricher("bird")  # 处理 bird 数据集
+    enricher.enrich_schema()
 
     # #查看neo4j。动态测试效果
     # load_graph_to_neo4j("spider", "academic")
