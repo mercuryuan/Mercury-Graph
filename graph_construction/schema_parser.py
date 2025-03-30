@@ -390,7 +390,8 @@ class SchemaParser:
             props = {
                 "name": column_name,
                 "data_type": data_type,
-                "samples": samples
+                "samples": samples,
+                "belongs_to": table_name  # 新增属性，用于标识列所属的表名，便于追溯
             }
             # 扁平化处理additional_attributes字典，将每个键值对添加到props字典中
             for key, value in additional_attributes.items():
@@ -905,6 +906,7 @@ if __name__ == "__main__":
     # database_file = "E:/BIRD_train/train/train_databases/donor/donor.sqlite" # 百万级数据，论文表有长文本
     # database_file = "E:/BIRD_train/train/train_databases/talkingdata/talkingdata.sqlite" # DATETIME类型有问题数据的
     # database_file = "E:/BIRD_train/train/train_databases/mondial_geo/mondial_geo.sqlite"
+    database_file = "E:/BIRD_train/train/train_databases/synthea/synthea.sqlite"
     # database_file = "E:/BIRD_train/train/train_databases/ice_hockey_draft/ice_hockey_draft.sqlite"
     # database_file = "E:/BIRD_train/train/train_databases/address/address.sqlite"
     # spider2
