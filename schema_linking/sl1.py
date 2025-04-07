@@ -17,7 +17,7 @@ class TableSelector:
             ("system", """You are an expert in database schema reasoning. Respond ONLY with JSON format."""),
             ("user", """
 ### Task Description: 
-{task_description}
+Identify relevant database entities for SQL query generation.
 
 ### Database Schema:
 {db_schema}
@@ -28,7 +28,10 @@ class TableSelector:
 Generate response in the following JSON format:
 {{
   "selected_entity": ["table1", "table2"],
-  "reason": ["reason1", "reason2"]
+  "reasoning": {{
+    "<selected_table>": "<why columns were selected/discarded>",
+    ...
+  }},
   "the steps of decomposed the question": ["step1", "step2",...]
 }}
 
@@ -52,13 +55,12 @@ Guidelines:
                 return json.loads(matches[0])
             raise ValueError("No valid JSON found in response")
 
-    def select_relevant_tables(self, task_description: str, db_schema: str, question: str) -> Dict:
+    def select_relevant_tables(self, db_schema: str, question: str) -> Dict:
         # 构建处理链
         chain = self.schema_selection_prompt | self.llm
 
         # 获取原始响应
         raw_response = chain.invoke({
-            "task_description": task_description,
             "db_schema": db_schema,
             "question": question
         }).content
@@ -75,7 +77,6 @@ Guidelines:
 # 示例使用
 if __name__ == "__main__":
     ts = TableSelector()
-    task_description = "Identify relevant database entities for SQL query generation."
 
     # 加载数据并初始化模式生成器
     dl = DataLoader("spider")
@@ -86,18 +87,16 @@ if __name__ == "__main__":
     db_schema = "\n".join(
         sg.generate_combined_description(table) for table in sg.tables
     )
-    question = """Find the name of students who have taken the prerequisite course of the course with title International Finance.
+    question = """Of the 4 root beers that Frank-Paul Santangelo purchased on 2014/7/7, how many of them were in cans?
 """
 
     final_prompt = ts.schema_selection_prompt.format(
         db_schema=db_schema,
-        question=question,
-        task_description=task_description
+        question=question
     )
     print("Final Prompt:\n", final_prompt)
     # 执行表选择
     result = ts.select_relevant_tables(
-        task_description,
         db_schema,
         question
     )

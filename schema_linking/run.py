@@ -1,105 +1,173 @@
 import json
+import os
+import time
+from datetime import datetime
+
+import config
 from sl1 import TableSelector
-from sl2 import SubgraphSelector
+from sl2_new import SubgraphSelector
 from utils.graphloader import GraphLoader
 from schema_linking.surfing_in_graph import SchemaGenerator
 from validator import SLValidator
 
 
-def main():
-    # 初始化各个组件
-    graph_loader = GraphLoader()
-    sl1 = TableSelector()
-    sl2 = SubgraphSelector()
-    sg = SchemaGenerator()
-    validator = SLValidator()  # 只创建一次 validator
+class SchemaLinkingPipeline:
+    def __init__(self, dataset_name, db_name):
+        self.dataset_name = dataset_name
+        self.db_name = db_name
+        self.graph_loader = GraphLoader()
+        self.sl1 = TableSelector()
+        self.sl2 = SubgraphSelector()
+        self.sg = SchemaGenerator()
+        self.validator = SLValidator()
+        self.logs = []
+        self.hint = ''
+        self.per_table_results = {}  # 用于保存每个起点的最终子图选择结果
 
-    # 加载数据库模式图
-    # graph_loader.load_graph("spider", "college_2")
+    def log(self, msg):
+        print(msg)
+        self.logs.append(msg)
 
-    # 处理的自然语言查询
-    question = """
-    Find the name of students who have taken the prerequisite course of the course with title International Finance.
-    """
+    def save_log(self):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        markdown_filename = os.path.join(config.SCHEMA_LINKING, "logs", self.dataset_name, self.db_name,
+                                         f"iteration_log_{timestamp}.md")
+        os.makedirs(os.path.dirname(markdown_filename), exist_ok=True)
+        with open(markdown_filename, "w", encoding="utf-8") as f:
+            f.write("\n".join(self.logs))
 
-    # 生成数据库模式的文本描述
-    db_schema = "\n".join(
-        sg.generate_combined_description(table) for table in sg.tables
-    )
+    def save_final_results(self, question):
+        # 生成文件名: 数据集/数据库名目录下的 JSON 文件
+        filename = os.path.join(config.SCHEMA_LINKING, "results", self.dataset_name, f"{self.db_name}.json")
+        # 如果文件已存在，则加载已有结果，否则初始化为空字典
+        if os.path.exists(filename):
+            with open(filename, "r", encoding="utf-8") as f:
+                existing_results = json.load(f)
+        else:
+            existing_results = {"results": []}
 
-    # 第一轮表选择
-    print("=== 第一轮表选择 ===")
-    sl1_result = sl1.select_relevant_tables(
-        "Identify relevant database entities for SQL query generation.",
-        db_schema, question
-    )
-    selected_table = sl1_result.get("selected_entity", [])
+        # 当前问题的结果
+        current_result = {
+            "question": question,
+            "schema_linking_result": self.per_table_results
+        }
+        # 将当前结果追加到已有结果中
+        existing_results["results"].append(current_result)
 
-    if not selected_table:
-        print("未找到合适的表，终止执行。")
-        return
+        # 确保路径存在后写入文件
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(existing_results, f, indent=2, ensure_ascii=False)
+        self.log(f"\n最终结果已保存至 {filename}")
 
-    print(f"选中的表: {selected_table[0]}")
-    print("选择理由:")
-    print(json.dumps(sl1_result['reason'], indent=2, ensure_ascii=False))
+    def select_initial_tables(self, question):
+        db_schema = "\n".join(self.sg.generate_combined_description(table) for table in self.sg.tables)
+        self.log("## 第一轮表选择")
+        sl1_result = self.sl1.select_relevant_tables(db_schema, question)
+        selected_tables = sl1_result.get("selected_entity", [])
+        if not selected_tables:
+            self.log("未找到合适的表，终止执行。")
+        else:
+            self.log(f"选中的表: {selected_tables}")
+        self.log("选择理由:")
+        self.log("```json\n" + json.dumps(sl1_result['reasoning'], indent=2, ensure_ascii=False) + "\n```")
+        return selected_tables, sl1_result
 
-    # 第一轮表选择后进行子图扩展
-    print("\n=== 第一轮子图扩展 ===")
-    sl2_schema = sl2.generate_schema_description([selected_table[0]])
+    def expand_subgraph_once(self, question, selected_table, reasoning_json):
+        self.log(f"\n### 起始表: {selected_table}")
+        self.log("#### 第一次子图扩展")
+        sl2_schema = self.sl2.generate_schema_description([selected_table])
+        self.hint = self.sl2.generate_hint(reasoning_json)
+        sl2_result = self.sl2.select_relevant_tables(sl2_schema, question, [selected_table], hint=self.hint)
+        self.log("扩展结果:")
+        self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
 
-    sl2_result = sl2.select_relevant_tables(sl2_schema, question, [selected_table[0]])
-    print("扩展结果:")
-    print(json.dumps(sl2_result, indent=2, ensure_ascii=False))
+        sl2_result = self.validator.validate_and_correct(sl2_result)
+        self.log("修正后的结果:")
+        self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
+        return sl2_result
 
-    # 进行校验与修正
-    sl2_result = validator.validate_and_correct(sl2_result)
-    print("修正后的结果:")
-    print(json.dumps(sl2_result, indent=2, ensure_ascii=False))
-
-    is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
-    print(f"初始 is_solvable: {is_solvable}")
-
-    # 生成初始状态的结果
-    result_from_last_round = sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
-
-    # 迭代扩展，最大 10 轮，防止死循环
-    max_iterations = 10
-    iteration = 0
-    while not is_solvable and iteration < max_iterations:
-        iteration += 1
-        print(f"\n=== 第 {iteration} 轮迭代 ===")
-
-        # 确保 "selected_columns" 存在
-        if "selected_columns" not in sl2_result or not sl2_result["selected_columns"]:
-            print("selected_columns 为空，终止循环。")
-            break
-
-        selected_table = list(sl2_result["selected_columns"].keys())
-        print(f"新选择的表: {selected_table}")
-
-        sl2_schema = sl2.generate_schema_description(selected_table)
-
-        sl2_result = sl2.select_relevant_tables(sl2_schema, question, selected_table, result_from_last_round)
-        print("迭代扩展结果:")
-        print(json.dumps(sl2_result, indent=2, ensure_ascii=False))
-
-        # 进行校验与修正
-        sl2_result = validator.validate_and_correct(sl2_result)
-        print("修正后的结果:")
-        print(json.dumps(sl2_result, indent=2, ensure_ascii=False))
-
+    def iterate_until_solvable(self, question, sl2_result, max_iterations=10):
+        # 迭代直到达到最大轮数或生成可解析方案，返回最终的 sl2_result
         is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
-        print(f"当前 is_solvable: {is_solvable}")
+        self.log(f"初始 is_solvable: {is_solvable}\n")
+        result_from_last_round = self.sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
+        iteration = 0
+        while not is_solvable and iteration < max_iterations:
+            iteration += 1
+            self.log(f"\n#### 第 {iteration} 轮迭代")
 
-        # 更新上轮结果
-        result_from_last_round = sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
+            if "selected_columns" not in sl2_result or not sl2_result["selected_columns"]:
+                self.log("selected_columns 为空，终止循环。")
+                break
 
-    # 最终结果
-    if is_solvable:
-        print("\n✅ 成功找到可解析的 SQL 查询方案！")
-    else:
-        print("\n❌ 未能找到可解析的 SQL 查询方案，可能需要手动干预。")
+            selected_tables = list(sl2_result["selected_columns"].keys())
+            self.log(f"新选择的表: {selected_tables}")
+
+            sl2_schema = self.sl2.generate_schema_description(selected_tables)
+            sl2_result = self.sl2.select_relevant_tables(sl2_schema, question, selected_tables, result_from_last_round,
+                                                         self.hint)
+
+            self.log("迭代扩展结果:")
+            self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
+
+            sl2_result = self.validator.validate_and_correct(sl2_result)
+            self.log("修正后的结果:")
+            self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
+
+            is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
+            self.log(f"当前 is_solvable: {is_solvable}")
+            result_from_last_round = self.sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
+        return sl2_result
+
+    def run(self, question):
+        self.graph_loader.load_graph(self.dataset_name, self.db_name)
+        # 过一秒后再执行后续操作
+        time.sleep(1)
+        self.log(f"### 数据集: {self.dataset_name}")
+        self.log(f"### 数据库: {self.db_name}")
+        self.log(f"### 自然语言问题:\n{question.strip()}\n")
+
+        # 阶段一：获取所有初始选中的表
+        selected_tables, sl1_result = self.select_initial_tables(question)
+        if not selected_tables:
+            self.save_log()
+            return
+
+        reasoning_json = json.dumps(sl1_result['reasoning'], indent=2, ensure_ascii=False)
+
+        # 阶段二 & 三：遍历每个起点表，执行扩展与迭代
+        solvable_found = False
+        for table in selected_tables:
+            self.log(f"\n---\n## 起点表 `{table}` 的扩展与推理过程")
+
+            # 执行首次扩展
+            sl2_result = self.expand_subgraph_once(question, table, reasoning_json)
+            # 迭代更新，返回最终的结果
+            final_sl2_result = self.iterate_until_solvable(question, sl2_result)
+
+            if final_sl2_result.get("to_solve_the_question", {}).get("is_solvable", False):
+                self.log(f"\n✅ 起点 `{table}` 成功生成可解析的 SQL 查询方案。")
+                solvable_found = True
+            else:
+                self.log(f"\n❌ 起点 `{table}` 未能生成可解析 SQL 查询。")
+
+            # 保存每个起点的最终扩展结果（完整推理流程的结果）
+            self.per_table_results[table] = final_sl2_result
+
+        # 总结
+        if solvable_found:
+            self.log("\n🎯 至少一个起点生成了有效方案！")
+        else:
+            self.log("\n🛑 所有起点均未能找到可解析方案，建议人工检查。")
+
+        # 保存日志和最终 JSON 结果
+        self.save_log()
+        self.save_final_results(question)
 
 
 if __name__ == "__main__":
-    main()
+    pipeline = SchemaLinkingPipeline("bird", "codebase_comments")
+    # pipeline = SchemaLinkingPipeline("spider", "college_2")
+    pipeline.run(
+        """What is the task of the method whose tokenized name is "online median filter test median window filling"?""")
