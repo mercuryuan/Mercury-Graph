@@ -8,18 +8,27 @@ from validator import SLValidator
 
 
 class SubgraphSelector:
-    def __init__(self):
+    def __init__(self, dataset_name, db_name):
+        self.dataset_name = dataset_name
+        self.db_name = db_name
         self.explorer = Neo4jExplorer()
         self.schema_generator = SchemaGenerator()
-        self.validator = SLValidator()
+        self.validator = SLValidator(dataset_name, db_name)
         # 创建大语言模型实例
         self.llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
         self.schema_selection_prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are an SQL schema expert. Follow these ABSOLUTE RULES:
-1. Respond ONLY with valid JSON
-2. NEVER explain your reasoning outside the JSON structure
-3. STRICTLY adhere to the step-by-step process"""),
+            ("system", """
+            You are an SQL schema expert. Follow these ABSOLUTE RULES:
+            1. Respond ONLY with valid JSON.
+            2. NEVER explain your reasoning outside the JSON structure.
+            3. STRICTLY adhere to the step-by-step process.
+            \nYour task is to perform a text2sql operation using a database schema represented as a graph. In this graph, table nodes are connected via foreign key relationships, and column nodes belong to table nodes.
+            \nBased on the given question and the database schema, select the appropriate table nodes and the direct foreign key relationships connecting them. Note that the selected table nodes must be directly connected via foreign key relationships, not indirectly through intermediary nodes.
+            \nYou will be provided with a subgraph containing nodes within a 0-hop to 1-hop distance. Your task is to select appropriate table nodes and direct foreign key relationships from this provided subgraph.
+            \nThis round of selection is only one iteration, so do not choose table nodes that are more than 1-hop away."
+
+"""),
 
             ("user", """### Task Requirements (MUST FOLLOW):
 1. **Mandatory Starting Point**:
@@ -65,7 +74,7 @@ class SubgraphSelector:
     ...
   }},
   "reasoning": {{
-    "<selected_table>": "<why columns were selected/discarded>",
+    "<selected_table>": "<why columns were selected>",
     ...
     "<neighbor_table>": "<why this table is needed>"
     ...
@@ -85,6 +94,7 @@ class SubgraphSelector:
 {select_table}
 
 {result_from_last_round}
+{hint}
 ### Database Schema:
 {db_schema}
 
@@ -105,7 +115,7 @@ class SubgraphSelector:
             raise ValueError("No valid JSON found in response")
 
     def select_relevant_tables(self, db_schema: str, question: str, select_table: List[str],
-                               result_from_last_round='') -> Dict:
+                               result_from_last_round='', hint='') -> Dict:
         # Build the processing chain
         chain = self.schema_selection_prompt | self.llm
 
@@ -114,7 +124,8 @@ class SubgraphSelector:
             db_schema=db_schema,
             question=question,
             result_from_last_round=result_from_last_round,
-            select_table=select_table
+            select_table=select_table,
+            hint=hint
         )
         print("Final Prompt:\n", final_prompt)
 
@@ -123,7 +134,8 @@ class SubgraphSelector:
             "db_schema": db_schema,
             "question": question,
             "select_table": select_table,
-            "result_from_last_round": result_from_last_round
+            "result_from_last_round": result_from_last_round,
+            "hint": hint
         }).content
 
         # Extract and parse JSON from the response
@@ -146,8 +158,10 @@ class SubgraphSelector:
             for t in hop:
                 if i == 0:
                     schema.append(sg.generate_combined_description(t, "brief"))
+                    # schema.append(sg.generate_combined_description(t, "full"))
                 elif i == 1:
                     schema.append(sg.generate_combined_description(t, "brief", selected_table))
+                    # schema.append(sg.generate_combined_description(t, "full", selected_table))
                 # else:
                 #     schema.append(sg.generate_combined_description(t, "minimal"))
         return "\n".join(schema)
@@ -160,21 +174,29 @@ class SubgraphSelector:
         """
         return "### Result from last round:\n" + result
 
+    def generate_hint(self, hint: str):
+        """
+        :param hint:
+        :return:
+        """
+        return "### Recommendation table(s):\n" + hint
+
 
 if __name__ == '__main__':
     sl2 = SubgraphSelector()
 
-    selected_table = ["course"]
+    selected_table = ["transaction", "rootbeer"]
     db_schema = sl2.generate_schema_description(selected_table)
-    question = """Find the name of students who have taken the prerequisite course of the course with title International Finance.
+    question = """How many root beers of the Bulldog were purchased in August, 2014?
 """
-    sql = """SELECT DISTINCT T1.player_name FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T2.overall_rating  >  ( SELECT avg(overall_rating) FROM Player_Attributes )"""
     result_from_last_round = ''
+    hint = ''
     final_prompt = sl2.schema_selection_prompt.format(
         db_schema=db_schema,
         question=question,
         result_from_last_round=result_from_last_round,
-        select_table=selected_table
+        select_table=selected_table,
+        hint=hint
     )
     print("Final Prompt:\n", final_prompt)
     result = sl2.select_relevant_tables(db_schema, question, selected_table)
@@ -185,7 +207,3 @@ if __name__ == '__main__':
     filter_valid_tables = sl2.validator.filter_valid_tables(selected_table)
     result["selected_columns"] = filter_valid_tables
     print(json.dumps(result, indent=2))
-    # "Identify course ID for 'International Finance' from the course table.":<true/false>,
-    # 'Determine the prerequisite course ID for this course from the prereq table.':<true/false>,
-    # 'Use the takes table to find students who have taken the prerequisite course.':<true/false,
-    # 'Retrieve the names of these students from the student table.':<true/false>

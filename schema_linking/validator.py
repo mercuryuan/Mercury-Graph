@@ -1,12 +1,15 @@
 import json
 from typing import Dict
 from schema_linking.surfing_in_graph import Neo4jExplorer
+from schema_enricher.utils.fk_compare import extract_foreign_keys
 
 
 class SLValidator:
-    def __init__(self):
+    def __init__(self, dataset_name, db_name):
         self.explorer = Neo4jExplorer()
         self.valid_tables = {}
+        self.dataset_name = dataset_name
+        self.db_name = db_name
 
     def validate_entities(self, selected_columns: Dict) -> bool:
         """
@@ -40,8 +43,10 @@ class SLValidator:
         """
         验证外键连接涉及的实体都属于valid_tables。
         两侧的表列实体都要在valid_tables中找得到对应的表列结构
+        如果有一个外键连接的两侧实体不在valid_tables中，则返回False。
         """
         try:
+            # 注意在此之前要初始化好self.valid_tables
             for path, reason in selected_reference_path.items():
                 # print(path)
                 # print(reason)
@@ -54,7 +59,7 @@ class SLValidator:
                     right_table]:
                     return False
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Validation Error: {e}")
             return False
         return True
 
@@ -83,80 +88,154 @@ class SLValidator:
     # 总函数，输入结果字典，输出验证并校正的结果
     def validate_and_correct(self, result: Dict) -> Dict:
         """
-        验证并校正结果字典。
+        Validate and correct the result dictionary.
+        Add detailed failure reasons if validation fails.
         """
-        # 校正实体
         selected_columns = result["selected_columns"]
         self.valid_tables = self.filter_valid_tables(selected_columns)
-        # 校正外键连接
         selected_reference_path = result["selected_reference_path"]
         valid_foreign_keys = self.filter_valid_foreign_keys(selected_reference_path)
-        # 校正推理
         reasoning = result["reasoning"]
-
         valid_reasoning = self.filter_valid_reasoning(reasoning)
-        if self.validate_foreign_keys(selected_reference_path) and self.validate_entities(selected_columns):
+
+        failure_reasons = []
+
+        for table, columns in selected_columns.items():
+            if table not in self.explorer.get_all_tables():
+                failure_reasons.append(f"Table '{table}' does not exist in the database.Please check.")
+            else:
+                gtcols = self.explorer.get_columns_for_table(table)
+                invalid_cols = [col for col in columns if col not in gtcols]
+                if invalid_cols:
+                    failure_reasons.append(
+                        f"Table '{table}' does not contain columns: {', '.join(invalid_cols)}.Please check.")
+
+        for table, columns in selected_columns.items():
+            if not columns:
+                failure_reasons.append(f"Table '{table}' must contain at least one selected column.Please check.")
+
+        for path in selected_reference_path:
+            try:
+                left_table, left_column = path.split("=")[0].strip().split(".")
+                right_table, right_column = path.split("=")[1].strip().split(".")
+                left_exists = left_table in self.explorer.get_all_tables() and \
+                              left_column in self.explorer.get_columns_for_table(left_table)
+                right_exists = right_table in self.explorer.get_all_tables() and \
+                               right_column in self.explorer.get_columns_for_table(right_table)
+                if not (left_exists and right_exists):
+                    failure_reasons.append(f"Path '{path}' contains entities not found in the database.")
+            except Exception as e:
+                failure_reasons.append(f"Path '{path}' cannot be parsed: {e}")
+
+        for path in selected_reference_path:
+            try:
+                left_table, left_column = path.split("=")[0].strip().split(".")
+                right_table, right_column = path.split("=")[1].strip().split(".")
+
+                if left_table not in selected_columns or left_column not in selected_columns[left_table]:
+                    failure_reasons.append(
+                        f"Left entity of path '{path}' is not included in selected_columns.Please check.")
+
+                if right_table not in selected_columns or right_column not in selected_columns[right_table]:
+                    failure_reasons.append(
+                        f"Right entity of path '{path}' is not included in selected_columns.Please check.")
+            except Exception as e:
+                failure_reasons.append(f"Error parsing path '{path}': {e}")
+
+        if not failure_reasons:
             return result
         else:
-            to_solve_the_question = {"is_solvable": False}
-            return {"selected_columns": self.valid_tables, "selected_reference_path": valid_foreign_keys,
-                    "reasoning": valid_reasoning, "to_solve_the_question": to_solve_the_question}
+            return {
+                "selected_columns": self.valid_tables,
+                "selected_reference_path": valid_foreign_keys,
+                "reasoning": valid_reasoning,
+                "to_solve_the_question": {
+                    "is_solvable": False,
+                    "failure_reasons": failure_reasons
+                }
+            }
+
+    # 判断两表之间是否存在外键连接
+    def is_fk_exists(self, path: str) -> bool:
+        """
+        判断给定路径所描述的两表之间是否存在外键连接。
+
+        参数：
+            path (str): 形如 "Nutrition.recipe_id=Recipe.recipe_id" 的字符串，表示一对潜在的外键连接。
+
+        返回：
+            bool: 如果该连接存在于当前数据库的外键集合中，则返回 True；否则返回 False。
+        """
+        # 提取左右表和列
+        try:
+            left_table, left_column = path.split("=")[0].strip().split(".")
+            right_table, right_column = path.split("=")[1].strip().split(".")
+        except Exception as e:
+            print(f"Path 解析错误: {e}")
+            return False
+
+        # 调用外部函数获取当前数据库的所有外键连接
+        foreign_keys = extract_foreign_keys(self.dataset_name, self.db_name)
+
+        # 构造表示当前连接的 frozenset（两种方向都要考虑）
+        pair1 = frozenset({(left_table, left_column), (right_table, right_column)})
+        pair2 = frozenset({(right_table, right_column), (left_table, left_column)})
+
+        # 判断是否存在匹配的外键连接（frozenset 是无序的，单个判断就够）
+        return pair1 in foreign_keys
 
 
 if __name__ == '__main__':
-    validator = SLValidator()
+    validator = SLValidator("bird", "cookbook")
     result = """{
   "selected_columns": {
-    "course": [
-      "course_id",
-      "title"
-    ],
-    "prereq": [
-      "course_id",
-      "prereq_id"
-    ],
-    "takes": [
-      "ID",
-      "course_id"
-    ],
-    "student": [
-      "ID",
-      "name"
-    ]
-  },
-  "selected_reference_path": {
-    "course.course_id=prereq.course_id": "To find the prerequisite course for 'International Finance'",
-    "prereq.prereq_id=takes.course_id": "To identify students who have taken the prerequisite course",
-    "takes.ID=student.ID": "To retrieve the names of students who have taken the prerequisite course"
-  },
-  "reasoning": {
-    "course": "Selected course_id to identify the course with title 'International Finance' and needed the title for filtering.",
-    "prereq": "Selected course_id to relate it to the course and prereq_id to find the students' courses from takes.",
-    "takes": "Essential to link student IDs with the previously identified prereq course_id.",
-    "student": "Needed to fetch student names using their IDs."
-  },
-  "to_solve_the_question": {
-    "is_solvable": true,
-    "Identify course ID for 'International Finance' from the course table.": true,
-    "Determine the prerequisite course ID for this course from the prereq table.": true,
-    "Use the takes table to find students who have taken the prerequisite course.": true,
-    "Retrieve the names of these students from the student table.": true
-  }
+            "Nutrition": [
+              "recipe_id",
+              "total_fat",
+              "sat_fat",
+              "calories"
+            ],
+            "Recipe": [
+              "recipe_id",
+              "title"
+            ]
+          },
+          "selected_reference_path": {
+            "Nutrition.recipe_id=Recipe.recipe_id": "Link Nutrition data to Recipe titles to identify which recipe correlates with the high potential for weight gain."
+          },
+          "reasoning": {
+            "Nutrition": "Selected columns (total_fat, sat_fat, calories) are necessary to determine the recipes that could lead to weight gain. The recipe_id is also needed to join with the Recipe table.",
+            "Recipe": "Selected this table to get the title of the recipes, which is crucial to answering the question about which recipe is most likely to contribute to weight gain."
+          },
+          "to_solve_the_question": {
+            "is_solvable": true,
+            "question": "What is the title of the recipe that is most likely to gain weight?",
+            "reason": "To determine which recipe is most likely to cause weight gain, we need to analyze high total_fat, sat_fat, and calories from the Nutrition table and link this information to the corresponding recipe titles in the Recipe table."
+          }
 }"""
     result = json.loads(result)
     selected_columns = result["selected_columns"]
     referenced_paths = result["selected_reference_path"]
     # print(type(selected_columns))
     # print(selected_columns)
-    # print(validator.validate_entities(selected_columns))
+    # 验证selected_columns中的表列实体是否存在于数据库对应表中
+    print(validator.validate_entities(selected_columns))
     # validator.valid_tables = validator.filter_valid_tables(selected_columns)
-    # print(validator.validate_foreign_keys(referenced_paths))
-    # valid_foreign_keys = validator.filter_valid_foreign_keys(referenced_paths)
+    # 验证referenced_paths中的外键连接是否存在于数据库对应表中
+    print(referenced_paths)
+    print(validator.validate_foreign_keys(referenced_paths))
+    valid_foreign_keys = validator.filter_valid_foreign_keys(referenced_paths)
     # print(valid_foreign_keys)
     # reasoning = result["reasoning"]
     # print(json.dumps(validator.filter_valid_reasoning(reasoning), indent=2))
     # print()
     # print()
     # print()
+    # 输出是否通过验证
+    if validator.validate_foreign_keys(referenced_paths) and validator.validate_entities(selected_columns):
+        print("不需修改")
+    else:
+        print("需要修改")
     print(json.dumps(validator.validate_and_correct(result), indent=2))
-    print(validator.explorer.get_all_tables())
+    # print(validator.explorer.get_all_tables())
+    # print(validator.is_fk_exists("Nutrition.recipe_id=Recipe.recipe_id"))

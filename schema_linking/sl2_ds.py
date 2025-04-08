@@ -22,7 +22,7 @@ class SubgraphSelector:
         self.base_url = "https://api.deepseek.com"  # 确认实际API地址
         self.client = OpenAI(
             api_key=config.DEEPSEEK_API,
-            base_url="https://api.deepseek.com"  # 修正base_url
+            base_url=self.base_url
         )
 
         self.schema_selection_prompt = ChatPromptTemplate.from_messages([
@@ -115,8 +115,9 @@ class SubgraphSelector:
         try:
             response = self.client.chat.completions.create(
                 model="deepseek-chat",
+                # model="deepseek-reasoner",
                 messages=messages,
-                response_format={"type": "json_object"},  # 强制JSON模式
+                response_format={"type": "json_object"},  # 强制JSON模式，reasoner不支持则注释
                 temperature=0,
                 max_tokens=2000  # 确保足够长度
             )

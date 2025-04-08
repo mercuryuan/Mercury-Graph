@@ -4,8 +4,9 @@ import time
 from datetime import datetime
 
 import config
-from sl1 import TableSelector
-from sl2 import SubgraphSelector
+from sl1_ds import TableSelector
+from sl2_ds import SubgraphSelector
+from sl3 import CandidateSelector
 from utils.graphloader import GraphLoader
 from schema_linking.surfing_in_graph import SchemaGenerator
 from validator import SLValidator
@@ -16,13 +17,16 @@ class SchemaLinkingPipeline:
         self.dataset_name = dataset_name
         self.db_name = db_name
         self.graph_loader = GraphLoader()
+        self.graph_loader.load_graph(dataset_name, db_name)
+        self.validator = SLValidator(dataset_name, db_name)
+        self.sg = SchemaGenerator()
         self.sl1 = TableSelector()
         self.sl2 = SubgraphSelector(dataset_name, db_name)
-        self.sg = SchemaGenerator()
-        self.validator = SLValidator(dataset_name, db_name)
+        self.sl3 = CandidateSelector(dataset_name, db_name)
         self.logs = []
         self.hint = ''
         self.per_table_results = {}  # 用于保存每个起点的最终子图选择结果
+        self.ultimate_answer = {}
 
     def log(self, msg):
         print(msg)
@@ -49,7 +53,8 @@ class SchemaLinkingPipeline:
         # 当前问题的结果
         current_result = {
             "question": question,
-            "schema_linking_result": self.per_table_results
+            "schema_linking_result": self.per_table_results,
+            "final_results": self.ultimate_answer
         }
         # 将当前结果追加到已有结果中
         existing_results["results"].append(current_result)
@@ -127,8 +132,31 @@ class SchemaLinkingPipeline:
             result_from_last_round = self.sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
         return sl2_result
 
+    def select_candidate(self, question):
+        self.log("## 候选查询生成")
+
+        candidates = self.per_table_results
+        final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question)
+        final_selected_result = self.validator.validate_and_correct(final_selected_result)
+
+        is_solvable = final_selected_result.get("to_solve_the_question", {}).get("is_solvable", False)
+
+        # 如果不可解析，最多迭代 3 次重新选择候选
+        iteration = 0
+        while not is_solvable and iteration < 3:
+            iteration += 1
+            self.log(f"\n#### 候选选择第 {iteration} 次重试")
+            final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question)
+            final_selected_result = self.validator.validate_and_correct(final_selected_result)
+            is_solvable = final_selected_result.get("to_solve_the_question", {}).get("is_solvable", False)
+
+        if not is_solvable:
+            self.log("\n⚠️ 最终候选方案依然不可解析，请检查候选生成模块或人工介入。")
+
+        return final_selected_result, is_consistent
+
     def run(self, question):
-        self.graph_loader.load_graph(self.dataset_name, self.db_name)
+        # self.graph_loader.load_graph(self.dataset_name, self.db_name)
         # 过一秒后再执行后续操作
         time.sleep(1)
         self.log(f"### 数据集: {self.dataset_name}")
@@ -167,14 +195,18 @@ class SchemaLinkingPipeline:
             self.log(f"\n🎯 有效方案：{solvable_count}/{len(selected_tables)}个")
         else:
             self.log("\n🛑 所有起点均未能找到可解析方案，建议人工检查。")
-
+        # 阶段四：选择候选查询
+        self.ultimate_answer, is_consistent = self.select_candidate(question)
+        self.log("无需 LLM介入：" + str(is_consistent))
+        self.log("# 最终选择的候选查询:")
+        self.log("```json\n" + json.dumps(self.ultimate_answer, indent=2, ensure_ascii=False) + "\n```")
         # 保存日志和最终 JSON 结果
         self.save_log()
         self.save_final_results(question)
 
 
 if __name__ == "__main__":
-    pipeline = SchemaLinkingPipeline("bird", "cookbook")
+    pipeline = SchemaLinkingPipeline("bird", "mondial_geo")
     # pipeline = SchemaLinkingPipeline("spider", "college_2")
     pipeline.run(
-        """Calculate the percentage of recipes with no cholesterol included and have a cooking time less than 20 minutes among all recipes.""")
+        """Of the deserts on the America Continent, which one covers the greatest area?""")

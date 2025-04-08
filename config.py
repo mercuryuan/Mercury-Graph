@@ -1,5 +1,7 @@
 import os
 
+# deepseek api
+DEEPSEEK_API = "sk-efa109c79d984dd8908855d51b379f47"
 # 获取当前 config.py 所在目录的绝对路径，即项目根目录
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -8,6 +10,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 GRAPHS_REPO = os.path.join(PROJECT_ROOT, "graphs_repo")
 GENERATED_DESCRIPTIONS = os.path.join(PROJECT_ROOT, "schema_enricher", "generated_descriptions")
 SCHEMA_ENRICHER = os.path.join(PROJECT_ROOT, "schema_enricher")
+SCHEMA_LINKING = os.path.join(PROJECT_ROOT, "schema_linking")
 BIRD_TRAIN_DATABASES_PATH = "E:/BIRD_train/train/train_databases/"
 BIRD_TRAIN_JSON = "E:/BIRD_train/train/train.json"
 BIRD_DEV_JSON = "E:/BIRD/dev_20240627/dev.json"
