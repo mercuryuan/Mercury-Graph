@@ -1,22 +1,68 @@
 import json
+import os
 import re
+from datetime import datetime
 from typing import Dict
 
+import config
 from graph_construction.schema_parser import generate_fk_hash
 from schema_linking.validator import SLValidator
 from schema_linking.surfing_in_graph import SchemaGenerator
 from src.neo4j_connector import get_driver
+from utils.graphloader import GraphLoader
 from utils.sql_executor import SQLiteExecutor
 from utils.call_llm import LLMClient
 
 
 class FKFiller:
-    def __init__(self, db_name, schema_name):
-        self.validator = SLValidator(db_name, schema_name)
+    def __init__(self, db_name, database_name):
+        self.validator = SLValidator(db_name, database_name)
         self.sg = SchemaGenerator()
-        self.db_name = db_name
-        self.schema_name = schema_name
+        gloader = GraphLoader()
         self.driver = get_driver()
+        self.dataset = db_name
+        self.database_name = database_name
+        gloader.load_graph(self.dataset, self.database_name)
+        self.preprocess_json_path = os.path.join(config.SCHEMA_ENRICHER, "fk_in_preprocess.json")
+        self.preprocess_md_path = os.path.join(config.SCHEMA_ENRICHER, "preprocess.md")
+
+    def save_json(self, new_data: dict, filename: str):
+        # 如果文件存在，先读取原数据
+        if os.path.exists(filename):
+            with open(filename, 'r', encoding='utf-8') as f:
+                try:
+                    existing_data = json.load(f)
+                except json.JSONDecodeError:
+                    existing_data = {}
+        else:
+            existing_data = {}
+
+        # 合并逻辑：逐层更新（适用于 {db: {schema: {path: xxx}}} 这种结构）
+        for db, schemas in new_data.items():
+            if db not in existing_data:
+                existing_data[db] = {}
+            for schema, content in schemas.items():
+                if schema not in existing_data[db]:
+                    existing_data[db][schema] = {}
+                existing_data[db][schema].update(content)
+
+        # 写回文件
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(existing_data, f, indent=4, ensure_ascii=False)
+
+    def append_to_md(self, content: str):
+        """
+        向 markdown 日志文件中追加内容。
+        - 若 with_timestamp=True，会在前面加上时间戳（只用于处理起始记录）
+        - 标题类内容（以 # 开头）不会加时间戳
+        """
+        filename = self.preprocess_md_path
+        content = content.strip()
+
+        content = f"{content}"
+
+        with open(filename, 'a', encoding='utf-8') as f:
+            f.write(content + "\n")
 
     def find_unexist_foreign_keys(self, selected_reference_path):
         """分析并返回不存在的外键路径列表"""
@@ -36,7 +82,7 @@ class FKFiller:
         return left_desc, right_desc
 
     def execute_sql(self, sql: str):
-        with SQLiteExecutor(self.db_name, self.schema_name) as executor:
+        with SQLiteExecutor(self.dataset, self.database_name) as executor:
             result = executor.query(sql)
         return result
 
@@ -216,8 +262,8 @@ ensuring the entire database schema becomes fully connected.
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
-        print(system_prompt)
-        print(user_prompt)
+        # print(system_prompt)
+        # print(user_prompt)
         return messages
 
     def generate_prompt_for_potential_fk(self, path: str):
@@ -266,8 +312,8 @@ Your task is to assess whether this connection is logically justified."""
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
-        print(system_prompt)
-        print(user_prompt)
+        # print(system_prompt)
+        # print(user_prompt)
         return messages
 
     def generate_descriptions_for_connected_components(self):
@@ -279,7 +325,7 @@ Your task is to assess whether this connection is logically justified."""
         connected_components = self.sg.explorer.obtain_all_connected_components_in_database()
         # 按个数排序
         connected_components = sorted(connected_components, key=len, reverse=False)
-        print(connected_components)
+        # print(connected_components)
         components = []
         for component in connected_components:
             description = []
@@ -374,36 +420,68 @@ Your task is to assess whether this connection is logically justified."""
     def preprocess(self):
         """
         对数据库进行预处理，为数据库补全外键
-        :return:
         """
-        # 得到分析结果
+        # 加一条带时间戳的处理开始记录
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.append_to_md(f"# {timestamp}")
+        self.append_to_md(f"# {self.dataset} - {self.database_name}")
+
+        # 统计初始联通分量
+        components = self.sg.explorer.obtain_all_connected_components_in_database()
+        if len(components) == 1:
+            self.append_to_md("### 初始状态：数据库连通，无需补全外键")
+        else:
+            self.append_to_md(f"### 初始状态：数据库中存在 {len(components)} 个不连通的组件，开始尝试补全外键")
+
+        # 尝试推理缺失外键
         result = self.get_possible_missing_fk_for_disconnected_component()
-        # 若为空字典，则说明数据库原先就联通，无需补全
-        if result == {}:
+
+        if not result:
             print("无需补全外键")
         else:
-            print(json.dumps(result))
+            print(json.dumps(result, indent=4))
             for path in result:
                 left_table, left_column = path.split("=")[0].strip().split(".")
                 right_table, right_column = path.split("=")[1].strip().split(".")
-                # 为数据库补全外键
-                # 生成LLM是否判断外键的prompt
+
+                # 生成并发送 prompt 给 LLM 判断外键合理性
                 messages = self.generate_prompt_for_potential_fk(path)
                 deepseek = LLMClient("deepseek", "deepseek-reasoner")
                 decision = deepseek.chat(messages)
-                print(decision)
+
                 decision = self.extract_json(decision)
+                reason = decision["reason"]
+
                 if decision["fk_is_needed"]:
                     self.create_foreign_key(left_table, left_column, right_table, right_column, "preprocess")
-                    print(f"添加了{path}")
+                    self.append_to_md(f"#### ✅ 添加了 `{path}`")
+                    self.append_to_md(f"#### 理由：'{reason}'")
                 else:
-                    print(f"不添加{path}")
+                    self.append_to_md(f"#### ❌ 未添加 `{path}`")
+                    self.append_to_md(f"#### 理由：'{reason}'")
+
+                # 追加决策到 JSON 文件
+                fk = {self.dataset: {self.database_name: {
+                    path: decision
+                }}}
+                print(json.dumps(fk, indent=4))
+                self.save_json(fk, self.preprocess_json_path)
+
+        # 最终联通性状态
+        final_components = self.sg.explorer.obtain_all_connected_components_in_database()
+        if len(final_components) == 1:
+            self.append_to_md("### ✅补全外键后：数据库已连通")
+        else:
+            self.append_to_md(f"### 补全外键后：仍存在 {len(final_components)} 个不连通的组件❌")
 
 
 # 用法示例
 if __name__ == "__main__":
+    datasets = "spider"
+    database = "bike_1"
+
     # 创建对象，用于外键存在性验证、执行sql验证
-    processor = FKFiller("spider", "soccer_1")
+    processor = FKFiller(datasets, database)
     # 初始化deepseek
     llm = LLMClient("deepseek", "deepseek-chat")
     llm = LLMClient("deepseek", "deepseek-reasoner")

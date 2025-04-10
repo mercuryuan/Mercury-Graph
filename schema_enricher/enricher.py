@@ -7,6 +7,7 @@ import config
 from graph_construction.neo4j_data_migration import load_graph_to_neo4j
 from schema_enricher.utils.description_generator import TableSchemaDescriber
 from schema_enricher.utils.description_injector import inject_descriptions
+from schema_enricher.utils.fk_filler import FKFiller
 
 
 class Enricher:
@@ -60,11 +61,16 @@ class Enricher:
         except Exception as e:
             self.log(f"❌ 处理 {db_name} 时发生错误: {e}")
 
-    def infer_foreign_keys(self):
+    def infer_foreign_keys(self, dataset_name, db_name):
         """
         （占位函数）用于推断数据库的外键关系，并补充到数据库模式中。
         """
-        print("🔍 外键推断功能待实现...")
+        try:
+            fk_filler = FKFiller(dataset_name, db_name)
+            fk_filler.preprocess()
+            self.log(f"✅ {db_name} 的外键关系推断完成！")
+        except Exception as e:
+            self.log(f"❌ 处理 {db_name} 的外键关系时发生错误: {e}")
 
     def enrich_schema(self):
         """
@@ -87,11 +93,13 @@ class Enricher:
                       os.path.isdir(os.path.join(ds_path, db))]
 
         for db_path in tqdm(db_folders, desc=f"Processing {dataset_name} databases"):
+            db_name = os.path.basename(db_path)
             # # 1. 对每个数据库执行 description生成，已完成可注释
             # self.enrich_description(db_path)
             # 2. 对每个数据库执行 description注入
-            db_name = os.path.basename(db_path)
-            inject_descriptions(dataset_name, db_name)
+            # inject_descriptions(dataset_name, db_name)
+            # 3. 为每个数据库缺失外键进行预处理
+            self.infer_foreign_keys(dataset_name, db_name)
             pass
 
         self.log(f"🎉 数据集 {dataset_name} 处理完成！")
@@ -101,7 +109,7 @@ if __name__ == "__main__":
     """
     所有步骤写在enrich_schema函数中，调用一次就自动完成enrich的所有步骤,只需传入数据集名称即可。
     """
-    # enricher = Enricher("spider") # 处理 spider 数据集
+    # enricher = Enricher("spider")  # 处理 spider 数据集
     enricher = Enricher("bird")  # 处理 bird 数据集
     enricher.enrich_schema()
 
