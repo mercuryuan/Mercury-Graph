@@ -60,6 +60,30 @@ class SchemaLinkingPipeline:
             json.dump(existing_results, f, indent=2, ensure_ascii=False)
         self.log(f"\n最终结果已保存至 {filename}")
 
+        def save_sl_to_pipeline(self, question):
+            # 生成文件名: 数据集/数据库名目录下的 JSON 文件
+            filename = os.path.join(config.SCHEMA_LINKING, "results", self.dataset_name, f"{self.db_name}.json")
+            # 如果文件已存在，则加载已有结果，否则初始化为空字典
+            if os.path.exists(filename):
+                with open(filename, "r", encoding="utf-8") as f:
+                    existing_results = json.load(f)
+            else:
+                existing_results = {"results": []}
+
+            # 当前问题的结果
+            current_result = {
+                "question": question,
+                "schema_linking_result": self.per_table_results
+            }
+            # 将当前结果追加到已有结果中
+            existing_results["results"].append(current_result)
+
+            # 确保路径存在后写入文件
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            with open(filename, "w", encoding="utf-8") as f:
+                json.dump(existing_results, f, indent=2, ensure_ascii=False)
+            self.log(f"\n最终结果已保存至 {filename}")
+
     def select_initial_tables(self, question):
         db_schema = "\n".join(self.sg.generate_combined_description(table) for table in self.sg.tables)
         self.log("## 第一轮表选择")
