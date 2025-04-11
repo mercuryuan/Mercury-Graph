@@ -5,9 +5,10 @@ from datetime import datetime
 from typing import Dict
 
 import config
+from graph_construction.neo4j_data_migration import export_all
 from graph_construction.schema_parser import generate_fk_hash
 from schema_linking.validator import SLValidator
-from schema_linking.surfing_in_graph import SchemaGenerator
+from schema_linking.surfing_in_graph import SchemaGenerator, Neo4jExplorer
 from src.neo4j_connector import get_driver
 from utils.graphloader import GraphLoader
 from utils.sql_executor import SQLiteExecutor
@@ -15,14 +16,16 @@ from utils.call_llm import LLMClient
 
 
 class FKFiller:
-    def __init__(self, db_name, database_name):
-        self.validator = SLValidator(db_name, database_name)
-        self.sg = SchemaGenerator()
-        gloader = GraphLoader()
-        self.driver = get_driver()
+    def __init__(self, db_name, database_name, llm_provider="deepseek", llm_model="deepseek-reasoner"):
         self.dataset = db_name
         self.database_name = database_name
+        gloader = GraphLoader()
         gloader.load_graph(self.dataset, self.database_name)
+        self.driver = get_driver()
+        self.validator = SLValidator(db_name, database_name)
+        # 顺序非常关键，先加载图，再初始化 SchemaGenerator，否则sg使用的是缓存
+        self.sg = SchemaGenerator()
+        self.llm = LLMClient(llm_provider, llm_model)
         self.preprocess_json_path = os.path.join(config.SCHEMA_ENRICHER, "fk_in_preprocess.json")
         self.preprocess_md_path = os.path.join(config.SCHEMA_ENRICHER, "preprocess.md")
 
@@ -91,6 +94,13 @@ class FKFiller:
         left_table, left_column = left_part.strip().split(".")
         right_table, right_column = right_part.strip().split(".")
 
+        # 对表名进行合法性处理
+        left_table = self.quote_identifier(left_table)
+        right_table = self.quote_identifier(right_table)
+        # 对列名进行合法性处理
+        left_column = self.quote_identifier(left_column)
+        right_column = self.quote_identifier(right_column)
+
         sql = f"""
         SELECT
             COUNT(*) AS total_records,
@@ -102,6 +112,11 @@ class FKFiller:
         """.strip()
 
         return sql
+
+    def quote_identifier(self, name: str) -> str:
+        if "-" in name or " " in name or not name.isidentifier():
+            return f'"{name}"'
+        return name
 
     def execute_validation_sql(self, join_condition: str) -> str:
         # 生成 SQL 查询
@@ -182,6 +197,10 @@ Your task is to assess whether this connection is logically justified."""
 3. Focus primarily on the database schema and SQL validation outcomes; use the question as contextual guidance.
 4. Return your assessment in the following JSON format.
 
+### Attention:
+In some cases, the database may contain no data, rendering the SQL validation results inconclusive. 
+In such situations, you should rely primarily on the question,the logical structure and semantics of the database schema to determine whether the proposed connection is justified.
+
 ### Output JSON Format:
 ```json
 {{
@@ -205,6 +224,7 @@ Your task is to assess whether this connection is logically justified."""
         :return:
         """
         components = self.sg.explorer.obtain_all_connected_components_in_database()
+        components_str = '\n'.join([str(component) for component in components])
         schema = self.generate_descriptions_for_connected_components()
         system_prompt = """
 ### Task Description:
@@ -213,7 +233,7 @@ analyze and select the most confident foreign key relationships between these co
 ensuring the entire database schema becomes fully connected.
 
 ### Input Data Format:
--Current known connected components (e.g., [['trip'], ['weather'], ['station', 'status']]).
+-Current known connected components (e.g., [[table_name1], [table_name2], [table_name3, table_name4]]).
 -Structure of each component (column names, data types, sample values, PK/FK descriptions, etc.).
 
 ### Output JSON Format:
@@ -242,17 +262,10 @@ ensuring the entire database schema becomes fully connected.
 4. Output Results
 *Return proposed FK relationships in JSON with brief rationale.
 }}
-```
-
-### Example Output:
-{{
-    "trip.start_station_id=station.id": "Semantic match (station_id → id), data type consistency (INTEGER), and station.id is a PK.",
-    "weather.zip_code=trip.zip_code": "ZIP codes likely indicate shared geographic scope; data types match (INTEGER)."
-}}
 """
         user_prompt = f"""
 ### Current Known Connected Components:
-{components}
+{components_str}
 
 ### Components Structure(DIVIDED BY HORIZONTAL LINES):
 {schema}
@@ -262,8 +275,8 @@ ensuring the entire database schema becomes fully connected.
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
-        # print(system_prompt)
-        # print(user_prompt)
+        print(system_prompt)
+        print(user_prompt)
         return messages
 
     def generate_prompt_for_potential_fk(self, path: str):
@@ -299,6 +312,10 @@ Your task is to assess whether this connection is logically justified."""
 3. Focus primarily on the database schema and SQL validation outcomes; use the question as contextual guidance.
 4. Return your assessment in the following JSON format.
 
+### Attention:
+In some cases, the database may contain no data, rendering the SQL validation results inconclusive. 
+In such situations, you should rely primarily on the logical structure and semantics of the database schema to determine whether the proposed connection is justified.
+
 ### Output JSON Format:
 ```json
 {{
@@ -312,26 +329,26 @@ Your task is to assess whether this connection is logically justified."""
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
-        # print(system_prompt)
-        # print(user_prompt)
+        print(system_prompt)
+        print(user_prompt)
         return messages
 
-    def generate_descriptions_for_connected_components(self):
+    def generate_descriptions_for_connected_components(self, detail_level="brief"):
         """
         生成数据库中所有联通分量的描述
         :return:
         """
         # 获取联通分量
         connected_components = self.sg.explorer.obtain_all_connected_components_in_database()
-        # 按个数排序
-        connected_components = sorted(connected_components, key=len, reverse=False)
         # print(connected_components)
         components = []
+        count = 1
         for component in connected_components:
             description = []
             for table in component:
-                description.append(self.sg.generate_combined_description(table, "brief"))
-            components.append("\n".join(description))
+                description.append(self.sg.generate_combined_description(table, detail_level))
+            components.append(f"## Component {count}: {component}\n" + "\n".join(description))
+            count += 1
         return "\n----------------------------independent component-----------------------------\n".join(components)
 
     def extract_json(self, text: str) -> Dict:
@@ -406,7 +423,7 @@ Your task is to assess whether this connection is logically justified."""
         :return:
         """
         # 采用ds-R1进行严密推理
-        deepseek = LLMClient("deepseek", "deepseek-reasoner")
+        deepseek = self.llm
         # 判断本数据库是否有多个联通分量
         components = self.sg.explorer.obtain_all_connected_components_in_database()
         if len(components) == 1:
@@ -423,16 +440,17 @@ Your task is to assess whether this connection is logically justified."""
         """
         # 加一条带时间戳的处理开始记录
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.append_to_md(f"# {timestamp}")
         self.append_to_md(f"# {self.dataset} - {self.database_name}")
+        self.append_to_md(f"### `{timestamp}`")
 
         # 统计初始联通分量
         components = self.sg.explorer.obtain_all_connected_components_in_database()
         if len(components) == 1:
             self.append_to_md("### 初始状态：数据库连通，无需补全外键")
         else:
-            self.append_to_md(f"### 初始状态：数据库中存在 {len(components)} 个不连通的组件，开始尝试补全外键")
-
+            self.append_to_md(f"### ⚠️初始状态：数据库中存在 {len(components)} 个不连通的组件，开始尝试补全外键")
+            components_str = '  \n'.join(['`' + str(component) + '`' for component in components])
+            self.append_to_md(f"#### 初始联通分量：  \n{components_str}")
         # 尝试推理缺失外键
         result = self.get_possible_missing_fk_for_disconnected_component()
 
@@ -440,53 +458,86 @@ Your task is to assess whether this connection is logically justified."""
             print("无需补全外键")
         else:
             print(json.dumps(result, indent=4))
+            # 记录result
+            self.append_to_md(f"#### LLM推荐补全外键路径：{json.dumps(result, indent=4)}")
+            # 过滤掉已经存在的外键
+            result = self.find_unexist_foreign_keys(result)
+            if not result:
+                self.append_to_md("#### Ⓜ️所有推荐的外键路径均已存在")
+                # 统计初始联通分量
+                components = self.sg.explorer.obtain_all_connected_components_in_database()
+                components_str = '  \n'.join(['`' + str(component) + '`' for component in components])
+                self.append_to_md(f"#### 最终联通分量：  \n{components_str}")
+                return
+            # 记录过滤掉已存在的外键path
+            self.append_to_md(f"#### 过滤掉已存在的外键路径：{json.dumps(result, indent=4)}")
+
             for path in result:
-                left_table, left_column = path.split("=")[0].strip().split(".")
-                right_table, right_column = path.split("=")[1].strip().split(".")
+                try:
+                    left_table, left_column = path.split("=")[0].strip().split(".")
+                    right_table, right_column = path.split("=")[1].strip().split(".")
 
-                # 生成并发送 prompt 给 LLM 判断外键合理性
-                messages = self.generate_prompt_for_potential_fk(path)
-                deepseek = LLMClient("deepseek", "deepseek-reasoner")
-                decision = deepseek.chat(messages)
+                    # 生成并发送 prompt 给 LLM 判断外键合理性
+                    messages = self.generate_prompt_for_potential_fk(path)
+                    deepseek = self.llm
+                    decision = deepseek.chat(messages)
 
-                decision = self.extract_json(decision)
-                reason = decision["reason"]
+                    decision = self.extract_json(decision)
+                    reason = decision["reason"]
 
-                if decision["fk_is_needed"]:
-                    self.create_foreign_key(left_table, left_column, right_table, right_column, "preprocess")
-                    self.append_to_md(f"#### ✅ 添加了 `{path}`")
-                    self.append_to_md(f"#### 理由：'{reason}'")
-                else:
-                    self.append_to_md(f"#### ❌ 未添加 `{path}`")
-                    self.append_to_md(f"#### 理由：'{reason}'")
+                    if decision["fk_is_needed"]:
+                        # 在neo4j中创建外键path
+                        self.create_foreign_key(left_table, left_column, right_table, right_column, "preprocess")
+                        # 记录日志到md
+                        self.append_to_md(f"#### ✅ 添加了 `{path}`")
+                        self.append_to_md(f"#### Reason : `{reason}`")
+                    else:
+                        self.append_to_md(f"#### ❌ 未添加 `{path}`")
+                        self.append_to_md(f"#### Reason : `{reason}`")
 
-                # 追加决策到 JSON 文件
-                fk = {self.dataset: {self.database_name: {
-                    path: decision
-                }}}
-                print(json.dumps(fk, indent=4))
-                self.save_json(fk, self.preprocess_json_path)
+                    # 追加决策到 JSON 文件
+                    fk = {self.dataset: {self.database_name: {
+                        path: decision
+                    }}}
+                    print(json.dumps(fk, indent=4))
+                    self.save_json(fk, self.preprocess_json_path)
 
-        # 最终联通性状态
-        final_components = self.sg.explorer.obtain_all_connected_components_in_database()
-        if len(final_components) == 1:
-            self.append_to_md("### ✅补全外键后：数据库已连通")
-        else:
-            self.append_to_md(f"### 补全外键后：仍存在 {len(final_components)} 个不连通的组件❌")
+                except Exception as e:
+                    print(f"Error processing path {path}: {e}")
+                    self.append_to_md(f"#### ❌ 处理 `{path}` 时出错: {e}")
+
+            # 最终联通性状态
+            final_components = self.sg.explorer.obtain_all_connected_components_in_database()
+            if len(final_components) == 1:
+                self.append_to_md("### ✅补全外键后：数据库已连通")
+            else:
+                components_str = '  \n'.join(['`' + str(component) + '`' for component in final_components])
+                self.append_to_md(f"### 最终联通分量：  \n{components_str}")
+                self.append_to_md(f"### 补全外键后：仍存在 {len(final_components)} 个不连通的组件❌")
+            # 存储到Neo4j图结构中
+            # 导出存储schema graph
+            exp_path = os.path.join(config.GRAPHS_REPO, self.dataset, self.database_name)
+            export_all(exp_path)
+            print(f"✅ 新外键成功导出到{exp_path}！")
 
 
 # 用法示例
 if __name__ == "__main__":
-    datasets = "spider"
-    database = "bike_1"
+    # datasets = "spider"
+    datasets = "bird"
+    database = "imdb"
+    database = "soccer_1"
+    # database = "student_1"
+    # database = "legislator"
+    database = "music_platform_2"
+    # database = "works_cycles"
 
     # 创建对象，用于外键存在性验证、执行sql验证
     processor = FKFiller(datasets, database)
     # 初始化deepseek
-    llm = LLMClient("deepseek", "deepseek-chat")
-    llm = LLMClient("deepseek", "deepseek-reasoner")
+    deepseek = processor.llm
     # # 初始化gpt-4o
-    # llm = LLMClient()
+    # deepseek = LLMClient()
     # result = """{
     #     "selected_reference_path": {
     #         "country.Province = province.Name": "To link deserts to their respective countries"
@@ -499,7 +550,7 @@ if __name__ == "__main__":
     # question = """How many businesses were founded after 1960 in a nation that wasn't independent?"""
     # messages = processor.generate_prompt_in_inference(question, "organization.Country = politics.Country")
     #
-    # result = processor.extract_json(llm.chat(messages))
+    # result = processor.extract_json(deepseek.chat(messages))
     # print(json.dumps(result, indent=2))
     # print(result["is_justified"])
 
@@ -519,9 +570,17 @@ if __name__ == "__main__":
     # 查看path的匹配程度
 
     # # 执行 SQL 查询并获取结果
-    # result = processor.execute_sql(processor.generate_match_rate_sql("author.oid=organization.oid"))
-    # print(result)
-    # print(processor.execute_validation_sql("author.oid=organization.oid"))
+    result = processor.execute_sql(processor.generate_match_rate_sql("runs.max_rowid=reviews.rowid"))
+    print(result)
+    print(processor.execute_validation_sql("runs.max_rowid=reviews.rowid"))
+
+    # 查看当前数据库中所有联通分量的描述
+    # print(processor.generate_descriptions_for_connected_components())
+    # # 查看提交给LLM的提示
+    # print(processor.generate_prompt_in_preprocess())
 
     # 为当前数据库预先筛选最有可能的缺失外键关系，使得数据库最终联通
-    processor.preprocess()
+    # processor.preprocess()
+    # # 用chat再来一遍
+    # processor = FKFiller(datasets, database, llm_model="deepseek-chat")
+    # processor.preprocess()

@@ -66,8 +66,11 @@ class Enricher:
         （占位函数）用于推断数据库的外键关系，并补充到数据库模式中。
         """
         try:
-            fk_filler = FKFiller(dataset_name, db_name)
-            fk_filler.preprocess()
+            processor = FKFiller(dataset_name, db_name, llm_provider="deepseek", llm_model="deepseek-reasoner")
+            processor.preprocess()
+            # 用chat再来一遍
+            processor = FKFiller(dataset_name, db_name, llm_provider="deepseek", llm_model="deepseek-chat")
+            processor.preprocess()
             self.log(f"✅ {db_name} 的外键关系推断完成！")
         except Exception as e:
             self.log(f"❌ 处理 {db_name} 的外键关系时发生错误: {e}")
@@ -109,9 +112,13 @@ if __name__ == "__main__":
     """
     所有步骤写在enrich_schema函数中，调用一次就自动完成enrich的所有步骤,只需传入数据集名称即可。
     """
-    # enricher = Enricher("spider")  # 处理 spider 数据集
-    enricher = Enricher("bird")  # 处理 bird 数据集
+    # 处理 bird 数据集
+    enricher = Enricher("bird")
     enricher.enrich_schema()
+
+    # # 处理 spider 数据集
+    # enricher = Enricher("spider")
+    # enricher.enrich_schema()
 
     # #查看neo4j。动态测试效果
     # load_graph_to_neo4j("spider", "academic")
