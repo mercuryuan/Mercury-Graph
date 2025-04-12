@@ -1,7 +1,10 @@
 import json
 import os
 import time
+import concurrent.futures
+import threading
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
 from schema_enricher.utils.fk_filler import FKFiller
@@ -15,10 +18,9 @@ from schema_linking.validator import SLValidator
 
 
 class SchemaLinkingPipeline:
-    def __init__(self, dataset_name, db_name, question_data):
+    def __init__(self, dataset_name, db_name, question_data, concurrency=8):
         self.dataset_name = dataset_name
         self.db_name = db_name
-        # 问题样例数据
         self.question_data = question_data
         self.question = question_data['question']
         self.question_id = question_data['question_id']
@@ -33,14 +35,17 @@ class SchemaLinkingPipeline:
         self.sl4 = FKFiller(dataset_name, db_name)
         self.logs = []
         self.hint = ''
-        self.per_table_results = {}  # 用于保存每个起点的最终子图选择结果
+        self.per_table_results = {}
         self.ultimate_answer = {}
         self.sl2_per_iterations = []
         self.sl3_iteration = 0
+        self.concurrency = concurrency  # 控制二级并发的线程数
+        self.log_lock = threading.Lock()  # 日志线程锁
 
     def log(self, msg):
-        print(msg)
-        self.logs.append(msg)
+        with self.log_lock:  # 保证多线程日志安全
+            print(msg)
+            self.logs.append(msg)
 
     def save_log(self):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -51,16 +56,13 @@ class SchemaLinkingPipeline:
             f.write("\n".join(self.logs))
 
     def save_final_results(self):
-        # 生成文件名: 数据集/数据库名目录下的 JSON 文件
         filename = os.path.join(config.SCHEMA_LINKING, "results", self.dataset_name, f"{self.db_name}.json")
-        # 如果文件已存在，则加载已有结果，否则初始化为空字典
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 existing_results = json.load(f)
         else:
             existing_results = {"results": []}
 
-        # 当前问题的结果
         current_result = {
             "question_id": self.question_id,
             "question": self.question,
@@ -68,50 +70,36 @@ class SchemaLinkingPipeline:
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "final_results": self.ultimate_answer
         }
-        # 将当前结果追加到已有结果中
         existing_results["results"].append(current_result)
 
-        # 确保路径存在后写入文件
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(existing_results, f, indent=2, ensure_ascii=False)
         self.log(f"\n最终结果已保存至 {filename}")
 
     def save_sl_to_pipeline(self):
-        """
-        将 SchemaLinkingPipeline 的结果保存到 完整流程的结果 中（一个问题一个结果）
-        """
         filename = os.path.join(config.PROJECT_ROOT, "Results", f"{self.dataset_name}.json")
-
-        # 读取已有结果
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 existing_results = json.load(f)
         else:
             existing_results = {}
 
-        # 如果当前数据库还没有记录，则初始化
         if self.db_name not in existing_results:
             existing_results[self.db_name] = {}
 
-        # 当前问题的结果（覆盖写入）
         existing_results[self.db_name][self.question_id] = {
             "question": self.question,
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "schema_linking_results": self.ultimate_answer
         }
 
-        # 确保路径存在后写入文件
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(existing_results, f, indent=2, ensure_ascii=False)
-
         self.log(f"\n唯一结果已保存至 {filename}")
 
     def is_solved(self):
-        """
-        检查指定问题 ID 是否已经解决
-        """
         filename = os.path.join(config.PROJECT_ROOT, "Results", f"{self.dataset_name}.json")
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
@@ -139,7 +127,6 @@ class SchemaLinkingPipeline:
         sl2_schema = self.sl2.generate_schema_description([selected_table])
         self.hint = self.sl2.generate_hint(reasoning_json)
         sl2_result = self.sl2.select_relevant_tables(sl2_schema, question, [selected_table], hint=self.hint)
-        # 验证、修正结果
         if self.validator.validate_entities(
                 sl2_result["selected_columns"]) and self.validator.validate_foreign_keys(
             sl2_result["selected_reference_path"]):
@@ -149,11 +136,9 @@ class SchemaLinkingPipeline:
             sl2_result = self.validator.validate_and_correct(sl2_result)
             self.log("修正后的结果:")
         self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
-
         return sl2_result
 
     def iterate_until_solvable(self, question, sl2_result, max_iterations=10):
-        # 迭代直到达到最大轮数或生成可解析方案，返回最终的 sl2_result
         is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
         self.log(f"初始 is_solvable: {is_solvable}\n")
         result_from_last_round = self.sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
@@ -172,18 +157,15 @@ class SchemaLinkingPipeline:
             selected_tables = list(sl2_result["selected_columns"].keys())
             self.log(f"新选择的表:   \n{selected_tables}  \n")
 
-            # 如果子图连通，则重新生成 schema；否则使用上一轮的 schema
             if self.sg.explorer.is_subgraph_connected(selected_tables):
                 sl2_schema = self.sl2.generate_schema_description(selected_tables)
             else:
                 self.log("子图不连通，沿用上一轮的 schema。")
 
-            # 新一轮 schema linking
             sl2_result = self.sl2.select_relevant_tables(
                 sl2_schema, question, selected_tables, result_from_last_round, self.hint
             )
 
-            # 验证并修正结果
             if self.validator.validate_entities(sl2_result["selected_columns"]) and \
                     self.validator.validate_foreign_keys(sl2_result["selected_reference_path"]):
                 sl2_result = self.validator.validate_and_correct(sl2_result)
@@ -199,6 +181,13 @@ class SchemaLinkingPipeline:
             result_from_last_round = self.sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
 
         return sl2_result, iteration
+
+    def process_table(self, table, reasoning_json):
+        """处理单个表的二级并行任务"""
+        self.log(f"\n---\n## 起点表 `{table}` 的扩展与推理过程")
+        sl2_result = self.expand_subgraph_once(self.question, table, reasoning_json)
+        final_sl2_result, iteration = self.iterate_until_solvable(self.question, sl2_result)
+        return final_sl2_result, iteration, table
 
     def select_candidate(self, question):
         self.log("## 候选查询生成")
@@ -231,6 +220,7 @@ class SchemaLinkingPipeline:
         if self.is_solved():
             print(f"问题 '{self.question}' 已经解决过，跳过执行。")
             return
+
         self.log(f"# 数据集: {self.dataset_name}")
         self.log(f"# 数据库: {self.db_name}")
         self.log(f"# 自然语言问题:")
@@ -254,30 +244,33 @@ class SchemaLinkingPipeline:
 
         # 阶段二 & 三：遍历每个起点表，执行扩展与迭代
         solvable_count = 0
-        for table in selected_tables:
-            self.log(f"\n---\n## 起点表 `{table}` 的扩展与推理过程")
+        self.per_table_results = {}
+        self.sl2_per_iterations = []
 
-            # 执行首次扩展
-            sl2_result = self.expand_subgraph_once(self.question, table, reasoning_json)
-            # 迭代更新，返回最终的结果
-            final_sl2_result, iteration = self.iterate_until_solvable(self.question, sl2_result)
-            self.sl2_per_iterations.append({table: iteration})
+        # 二级并行处理每个表
+        with ThreadPoolExecutor(max_workers=self.concurrency) as executor:
+            futures = {executor.submit(self.process_table, table, reasoning_json): table for table in selected_tables}
+            for future in as_completed(futures):
+                table = futures[future]
+                try:
+                    final_sl2_result, iteration, table = future.result()
+                    self.sl2_per_iterations.append({table: iteration})
+                    if final_sl2_result.get("to_solve_the_question", {}).get("is_solvable", False):
+                        self.log(f"\n✅ 起点 `{table}` 成功生成可解析的 SQL 查询方案。")
+                        solvable_count += 1
+                    else:
+                        self.log(f"\n❌ 起点 `{table}` 未能生成可解析 SQL 查询。")
 
-            if final_sl2_result.get("to_solve_the_question", {}).get("is_solvable", False):
-                self.log(f"\n✅ 起点 `{table}` 成功生成可解析的 SQL 查询方案。")
-                solvable_count += 1
-            else:
-                self.log(f"\n❌ 起点 `{table}` 未能生成可解析 SQL 查询。")
+                    # 保存每个起点的最终扩展结果（完整推理流程的结果）
+                    self.per_table_results[table] = final_sl2_result
+                except Exception as e:
+                    self.log(f"处理表 `{table}` 时发生错误: {str(e)}")
 
-            # 保存每个起点的最终扩展结果（完整推理流程的结果）
-            self.per_table_results[table] = final_sl2_result
-
-        # 总结：输出有效方案数量，例如 “有效方案：2/3个”
         if solvable_count > 0:
             self.log(f"\n🎯 有效方案：{solvable_count}/{len(selected_tables)}个")
         else:
             self.log("\n🛑 所有起点均未能找到可解析方案，建议人工检查。")
-        # 阶段四：选择候选查询
+
         self.ultimate_answer, is_consistent = self.select_candidate(self.question)
         self.log("无需 LLM介入：" + str(is_consistent))
         self.log("# 最终选择的候选查询:")
@@ -289,60 +282,76 @@ class SchemaLinkingPipeline:
         self.save_sl_to_pipeline()
 
 
-def run_bird_dev():
-    # 读取 BIRD 开发数据集
+def process_single_sample(dataset_name, db_name, sample, concurrency):
+    """处理单个样本的一级并行任务"""
+    GraphLoader().load_graph(dataset_name, db_name)  # 确保图已加载（利用缓存）
+    pipeline = SchemaLinkingPipeline(dataset_name, db_name, sample, concurrency=concurrency)
+    pipeline.run()
+
+
+def run_bird_dev(outer_concurrency=8, inner_concurrency=8):
     bird_loader = DataLoader("bird_dev")
     bird_dev_list = bird_loader.list_dbname()
     all_samples = bird_loader.filter_data(show_count=True)
 
     for db_name in bird_dev_list:
         if db_name != "card_games":
-            continue  # 跳过其他数据库，只跑 card_games
+            continue
 
-        # 只对 card_games 数据库处理
+        GraphLoader().load_graph("bird", db_name)
         db_samples = [sample for sample in all_samples if sample["db_id"] == db_name]
 
-        # 加载图结构（一次即可）
-        graph_loader = GraphLoader()
-        graph_loader.load_graph("bird", db_name)
+        with ThreadPoolExecutor(max_workers=outer_concurrency) as executor:
+            futures = []
+            for sample in db_samples:
+                future = executor.submit(process_single_sample, "bird", db_name, sample, inner_concurrency)
+                futures.append(future)
+            for future in as_completed(futures):
+                try:
+                    future.result()
+                except Exception as e:
+                    print(f"处理样本时发生错误: {e}")
 
-        for sample in db_samples:
-            pipeline = SchemaLinkingPipeline("bird", db_name, sample)
-            pipeline.run()
-            # print(pipeline.question)
-            # print(pipeline.question_id)
-            break  # 测试用，先只跑一条
 
-
-def run_spider_dev():
-    # 读取 spider 开发数据集
+def run_spider_dev(outer_concurrency=8, inner_concurrency=8):
     spider_loader = DataLoader("spider_dev")
     spider_dev_list = spider_loader.list_dbname()
-    data = spider_loader.filter_data(fields=["db_id", "sql", "question"],
-                                     show_count=True)
-    # 给data添加一个question_id字段
+    data = spider_loader.filter_data(fields=["db_id", "sql", "question"], show_count=True)
     for question_id, d in enumerate(data):
         d['question_id'] = question_id
 
-    for database in spider_dev_list:
-        # 限定在特别数据库
-        if database == "voter_1":
-            graph_loader = GraphLoader()
-            graph_loader.load_graph("spider", database)
-            database_data = [item for item in data if item["db_id"] == database]
-            for data in database_data:
-                pipeline = SchemaLinkingPipeline("spider", database, data)
-                pipeline.run()
+    for db_name in spider_dev_list:
+        GraphLoader().load_graph("spider", db_name)
+        db_data = [item for item in data if item["db_id"] == db_name]
+        with ThreadPoolExecutor(max_workers=outer_concurrency) as executor:
+            futures = []
+            for sample in db_data:
+                future = executor.submit(process_single_sample, "spider", db_name, sample, inner_concurrency)
+                futures.append(future)
+            for future in as_completed(futures):
+                try:
+                    future.result()
+                except Exception as e:
+                    print(f"处理样本时发生错误: {e}")
 
 
 if __name__ == "__main__":
-    # run_bird_dev()
-    # run_spider_dev()
+    # 设置并发参数
+    outer_concurrency = 10  # 一级并发：同时处理的问题数
+    inner_concurrency = 5  # 二级并发：每个问题处理的表数
 
-    # 单个问题
-    GraphLoader().load_graph("bird", "card_games")
-    pipeline = SchemaLinkingPipeline("bird", "card_games",
-                                     {
-                                         "question": """Please list the names of the cards in the set "Hauptset Zehnte Edition".""",
-                                         "question_id": "10086"})
-    pipeline.run()
+    # 运行完整数据集测试
+    # run_bird_dev(outer_concurrency, inner_concurrency)
+    run_spider_dev(outer_concurrency, inner_concurrency)
+
+    # # 单个问题测试
+    # GraphLoader().load_graph("bird", "card_games")
+    # pipeline = SchemaLinkingPipeline(
+    #     "bird", "card_games",
+    #     {
+    #         "question": """Please list the names of the cards in the set "Hauptset Zehnte Edition".""",
+    #         "question_id": "10086"
+    #     },
+    #     concurrency=inner_concurrency
+    # )
+    # pipeline.run()
