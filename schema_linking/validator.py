@@ -2,6 +2,7 @@ import json
 from typing import Dict
 from schema_linking.surfing_in_graph import Neo4jExplorer
 from schema_enricher.utils.fk_compare import extract_foreign_keys
+from utils.graphloader import GraphLoader
 
 
 class SLValidator:
@@ -91,14 +92,20 @@ class SLValidator:
         Validate and correct the result dictionary.
         Add detailed failure reasons if validation fails.
         """
-        selected_columns = result["selected_columns"]
+        selected_columns = result.get("selected_columns", {})
+        selected_reference_path = result.get("selected_reference_path", {})
+        reasoning = result.get("reasoning", {})
+
         self.valid_tables = self.filter_valid_tables(selected_columns)
-        selected_reference_path = result["selected_reference_path"]
         valid_foreign_keys = self.filter_valid_foreign_keys(selected_reference_path)
-        reasoning = result["reasoning"]
         valid_reasoning = self.filter_valid_reasoning(reasoning)
 
         failure_reasons = []
+        # # 若是不联通的表，则无法生成schema，必须避免
+        # selected_tables = list(self.valid_tables.keys())
+        # if not self.explorer.is_subgraph_connected(selected_tables):
+        #     failure_reasons.append(
+        #         "There are no direct foreign key connections between the selected tables to make them connected, so strictly select the tables in the 1-hop.")
 
         for table, columns in selected_columns.items():
             if table not in self.explorer.get_all_tables():
@@ -166,7 +173,7 @@ class SLValidator:
         返回：
             bool: 如果该连接存在于当前数据库的外键集合中，则返回 True；否则返回 False。
         """
-        # 提取左右表和列
+        # 提取左右的表和列
         try:
             left_table, left_column = path.split("=")[0].strip().split(".")
             right_table, right_column = path.split("=")[1].strip().split(".")
@@ -187,6 +194,8 @@ class SLValidator:
 
 if __name__ == '__main__':
     validator = SLValidator("bird", "cookbook")
+    gloader = GraphLoader()
+    gloader.load_graph("bird", "cookbook")
     result = """{
   "selected_columns": {
             "Nutrition": [
@@ -223,7 +232,7 @@ if __name__ == '__main__':
     # validator.valid_tables = validator.filter_valid_tables(selected_columns)
     # 验证referenced_paths中的外键连接是否存在于数据库对应表中
     print(referenced_paths)
-    print(validator.validate_foreign_keys(referenced_paths))
+    # print(validator.validate_foreign_keys(referenced_paths))
     valid_foreign_keys = validator.filter_valid_foreign_keys(referenced_paths)
     # print(valid_foreign_keys)
     # reasoning = result["reasoning"]

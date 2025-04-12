@@ -8,7 +8,10 @@ import config
 from schema_linking.surfing_in_graph import SchemaGenerator, Neo4jExplorer
 from typing import List, Dict
 from langchain_core.prompts import ChatPromptTemplate
-from validator import SLValidator
+
+from utils.call_llm import LLMClient
+from utils.graphloader import GraphLoader
+from schema_linking.validator import SLValidator
 
 
 class SubgraphSelector:
@@ -18,23 +21,21 @@ class SubgraphSelector:
         self.explorer = Neo4jExplorer()
         self.schema_generator = SchemaGenerator()
         self.validator = SLValidator(dataset_name, db_name)
-        self.api_key = config.DEEPSEEK_API  # 替换为实际API Key
-        self.base_url = "https://api.deepseek.com"  # 确认实际API地址
-        self.client = OpenAI(
-            api_key=config.DEEPSEEK_API,
-            base_url=self.base_url
-        )
+        # 使用openai
+        # self.client = LLMClient("openai", "gpt-4o")
+        # 使用deepseek
+        self.client = LLMClient("deepseek", "deepseek-chat")
 
         self.schema_selection_prompt = ChatPromptTemplate.from_messages([
             ("system", """
-            You are an SQL schema expert. Follow these ABSOLUTE RULES:
-            1. Respond ONLY with valid JSON.
-            2. NEVER explain your reasoning outside the JSON structure.
-            3. STRICTLY adhere to the step-by-step process.
-            \nYour task is to perform a text2sql operation using a database schema represented as a graph. In this graph, table nodes are connected via foreign key relationships, and column nodes belong to table nodes.
-            \nBased on the given question and the database schema, select the appropriate table nodes and the direct foreign key relationships connecting them. Note that the selected table nodes must be directly connected via foreign key relationships, not indirectly through intermediary nodes.
-            \nYou will be provided with a subgraph containing nodes within a 0-hop to 1-hop distance. Your task is to select appropriate table nodes and direct foreign key relationships from this provided subgraph.
-            \nThis round of selection is only one iteration, so do not choose table nodes that are more than 1-hop away."
+You are an SQL schema expert. Follow these ABSOLUTE RULES:
+1. Respond ONLY with valid JSON.
+2. NEVER explain your reasoning outside the JSON structure.
+3. STRICTLY adhere to the step-by-step process.
+Your task is to perform a text2sql operation using a database schema represented as a graph. In this graph, table nodes are connected via foreign key relationships, and column nodes belong to table nodes.
+Based on the given question and the database schema, select the appropriate table nodes and the direct foreign key relationships connecting them. Note that the selected table nodes must be directly connected via foreign key relationships, not indirectly through intermediary nodes.
+You will be provided with a subgraph containing nodes within a 0-hop to 1-hop distance. Your task is to select appropriate table nodes and direct foreign key relationships from this provided subgraph.
+This round of selection is only one iteration, so do not choose table nodes that are more than 1-hop away."
 
 """),
 
@@ -94,6 +95,8 @@ class SubgraphSelector:
   }}
 }}
 ```
+### Database Name:
+{db_name}
 
 ### Question:
 {question}
@@ -109,22 +112,6 @@ class SubgraphSelector:
 ### Please provide the STRICTLY COMPLIANT JSON Response.
     """)
         ])
-
-    # 修改后的 API 调用方法
-    def _call_deepseek(self, messages):
-        try:
-            response = self.client.chat.completions.create(
-                model="deepseek-chat",
-                # model="deepseek-reasoner",
-                messages=messages,
-                response_format={"type": "json_object"},  # 强制JSON模式，reasoner不支持则注释
-                temperature=0,
-                max_tokens=2000  # 确保足够长度
-            )
-            return response.choices[0].message.content.strip()
-        except Exception as e:
-            print(f"API Error: {str(e)}")
-            return None
 
     def extract_json(self, text: str) -> Dict:
         """Extract JSON content from the given text."""
@@ -142,12 +129,17 @@ class SubgraphSelector:
                                result_from_last_round='', hint='') -> Dict:
         # 生成提示词模板
         prompt_messages = self.schema_selection_prompt.format_messages(
+            db_name=self.db_name,
             db_schema=db_schema,
             question=question,
             result_from_last_round=result_from_last_round,
             select_table=select_table,
             hint=hint
         )
+        # # 打印人类提示
+        # for msg in prompt_messages:
+        #     if msg.type == "human":
+        #         print(f"Human: {msg.content}")
 
         # 转换角色格式
         role_mapping = {
@@ -161,7 +153,7 @@ class SubgraphSelector:
         } for msg in prompt_messages]
 
         # 调用API
-        raw_response = self._call_deepseek(messages)
+        raw_response = self.client.chat(messages)
 
         if not raw_response:
             return {"selected_columns": {}, "reasoning": {}}
@@ -211,7 +203,8 @@ class SubgraphSelector:
 
 if __name__ == '__main__':
     sl2 = SubgraphSelector("bird", "cookbook")
-
+    gloder = GraphLoader()
+    gloder.load_graph("bird", "cookbook")
     selected_table = ["Nutrition"]
     db_schema = sl2.generate_schema_description(selected_table)
     question = """What is the title of the recipe that is most likely to gain weight?
@@ -219,6 +212,7 @@ if __name__ == '__main__':
     result_from_last_round = ''
     hint = ''
     final_prompt = sl2.schema_selection_prompt.format(
+        db_name=sl2.db_name,
         db_schema=db_schema,
         question=question,
         result_from_last_round=result_from_last_round,
