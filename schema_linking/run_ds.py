@@ -326,23 +326,23 @@ def run_spider_dev():
 
     for database in spider_dev_list:
         # 限定在特别数据库
-        if database == "voter_1":
-            graph_loader = GraphLoader()
-            graph_loader.load_graph("spider", database)
-            database_data = [item for item in data if item["db_id"] == database]
-            for data in database_data:
-                pipeline = SchemaLinkingPipeline("spider", database, data)
-                pipeline.run()
+        # if database == "voter_1":
+        graph_loader = GraphLoader()
+        graph_loader.load_graph("spider", database)
+        database_data = [item for item in data if item["db_id"] == database]
+        for data in database_data:
+            pipeline = SchemaLinkingPipeline("spider", database, data)
+            pipeline.run()
 
 
 if __name__ == "__main__":
     # run_bird_dev()
-    # run_spider_dev()
+    run_spider_dev()
 
-    # 单个问题
-    GraphLoader().load_graph("bird", "card_games")
-    pipeline = SchemaLinkingPipeline("bird", "card_games",
-                                     {
-                                         "question": """Please list the names of the cards in the set "Hauptset Zehnte Edition".""",
-                                         "question_id": "10086"})
-    pipeline.run()
+    # # 单个问题
+    # GraphLoader().load_graph("bird", "card_games")
+    # pipeline = SchemaLinkingPipeline("bird", "card_games",
+    #                                  {
+    #                                      "question": """Please list the names of the cards in the set "Hauptset Zehnte Edition".""",
+    #                                      "question_id": "10086"})
+    # pipeline.run()
