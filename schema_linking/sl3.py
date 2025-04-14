@@ -3,10 +3,11 @@ from openai import OpenAI
 import config
 from schema_linking.candidate_filter import CandidateFilter
 from schema_linking.validator import SLValidator
+from schema_linking.surfing_in_graph import SchemaGenerator
 
 
 class CandidateSelector:
-    def __init__(self, dataset_name, db_name):
+    def __init__(self, dataset_name, db_name, question_data=None):
         """
         初始化 CandidateSelector
 
@@ -18,9 +19,14 @@ class CandidateSelector:
         self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
         self.dataset_name = dataset_name
         self.db_name = db_name
+        self.question_data = question_data
+        self.evidence = "### Evidence:\n" + self.question_data.get("evidence", "") if \
+            self.question_data and self.question_data.get("evidence") else ""
         self.validator = SLValidator(self.dataset_name, self.db_name)
+        self.sg = SchemaGenerator()
 
-    def select_candidate(self, candidate_result_input, question: str) -> (dict, bool):
+    def select_candidate(self, candidate_result_input, question: str, recommend_tables: str,
+                         result_from_last_round: str = '') -> (dict, bool):
         """
         对候选结果进行过滤并最终选择最佳候选结果
 
@@ -33,7 +39,9 @@ class CandidateSelector:
             result_dict = json.loads(candidate_result_input)
         else:
             result_dict = candidate_result_input
-
+        # 如果有上一轮的结果
+        if result_from_last_round != '':
+            result_from_last_round = "### Result From Last Round::\n" + result_from_last_round
         # 调用 CandidateFilter 进行候选结果的过滤与比较
         final_result, is_consistent = CandidateFilter.schema_linking_final_answer(result_dict)
 
@@ -44,17 +52,25 @@ class CandidateSelector:
             return final_result, is_consistent
         else:
             # 候选结果不一致，将过滤后的候选结果交给 LLM 判断
+            # 生成候选schema
+            candidate_schema = self.sg.generate_combined_description_for_selected(result_dict)
             system_prompt = (
                 "You are a database domain expert skilled at analyzing which database entities and relationships are needed "
-                "to answer a natural language question. \nThe candidate results you receive come from traversing a database schema "
-                "represented as a graph. \nThe LLM first selects several table nodes most relevant to the question, then iteratively "
-                "expands subgraphs by including the most related entities and relationships. \nThe final candidates have passed strict "
-                "validation to ensure all selected entities are consistent with the real database schema.\n\n"
+                "to answer a natural language question.\n"
+                "The candidate results you receive come from traversing a database schema represented as a graph.\n"
+                "The LLM first selects several table nodes most relevant to the question, then iteratively expands subgraphs "
+                "by including the most related entities and relationships.\n"
+                "The final candidates have passed strict validation to ensure all selected entities are consistent with the real database schema.\n\n"
+
                 "### Task:\n"
                 "Your task is critical: you must carefully analyze the question, all candidate results, and their reasoning.\n"
-                "Your goal is to produce the most reasonable and complete final result.\n"
-                "If necessary, you may combine the strengths of different candidates to create a unified answer."
-                "This will help ensure that the downstream SQL generation process can produce accurate and executable queries.\n"
+                "You are presented with multiple candidate results, each representing a different perspective of the schema.\n"
+                "Each candidate may offer a valid but partial view of the information needed to solve the question.\n"
+                "Your goal is to select the most **reliable, stable, and complete** result — the one most likely to ensure downstream SQL generation is accurate, executable, and successful.\n"
+                "If necessary, you may combine the strengths of different candidates to create a unified answer.\n"
+                "\n⚠️ Do not choose a risky or speculative candidate, even if it has a chance to succeed.\n"
+                "✅ One word: **stable** — always prefer the safest, most grounded result, even if it is slightly conservative.\n\n"
+
                 "Return the chosen candidate result in JSON format, including all its fields "
                 "(selected_columns, selected_reference_path, reasoning, to_solve_the_question).\n\n"
                 """
@@ -85,8 +101,18 @@ class CandidateSelector:
 }}
 ```
 """
+                "### Database:\n"
+                "{}\n"
                 "### Question:\n"
-                "{}\n".format(question)
+                "{}\n"
+                "### Recommendation table(s):\n"
+                "{}\n"
+                "{}\n"
+                "### Candidate Schema:\n"
+                "{}\n"
+                "{}\n"
+                .format(self.db_name, question, recommend_tables, self.evidence, candidate_schema,
+                        result_from_last_round)
             )
 
             user_prompt = (
@@ -269,14 +295,19 @@ if __name__ == "__main__":
 
     # 初始化 CandidateSelector 实例
     selector = CandidateSelector("spider", "college_2")
-
+    # 假设这是推荐理由
+    recommend_tables = """
+    假设这是推荐理由
+    """
     # 调用选择方法并获得最终结果
-    final_candidate, is_consistent = selector.select_candidate(candidate_result, question)
+    final_candidate, is_consistent = selector.select_candidate(candidate_result, question, recommend_tables)
 
     # 可以根据需要进一步处理 final_candidate
     print(f"一致性：{is_consistent}")
     print("最终选择的候选结果：")
     print(json.dumps(final_candidate, indent=4, ensure_ascii=False))
-    # 调用验证器进行验证
-    is_valid = selector.validator.validate_and_correct(final_candidate)
-    print(f"验证结果：{is_valid}")
+    # # 调用验证器进行验证
+    # is_valid = selector.validator.validate_and_correct(final_candidate)
+    # print(f"验证结果：{is_valid}")
+    # 查看candidate schema
+    # print(selector.sg.generate_combined_description_for_selected(json.loads(candidate_result)))

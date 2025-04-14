@@ -15,9 +15,12 @@ from schema_linking.validator import SLValidator
 
 
 class SubgraphSelector:
-    def __init__(self, dataset_name, db_name):
+    def __init__(self, dataset_name, db_name, question_data=None):
         self.dataset_name = dataset_name
         self.db_name = db_name
+        self.question_data = question_data
+        self.evidence = "### Evidence:\n" + self.question_data.get("evidence", "") if \
+            self.question_data and self.question_data.get("evidence") else ""
         self.explorer = Neo4jExplorer()
         self.schema_generator = SchemaGenerator()
         self.validator = SLValidator(dataset_name, db_name)
@@ -25,17 +28,31 @@ class SubgraphSelector:
         # self.client = LLMClient("openai", "gpt-4o")
         # 使用deepseek
         self.client = LLMClient("deepseek", "deepseek-chat")
+        self.sl2_per_iterations = []
 
         self.schema_selection_prompt = ChatPromptTemplate.from_messages([
             ("system", """
 You are an SQL schema expert. Follow these ABSOLUTE RULES:
 1. Respond ONLY with valid JSON.
-2. NEVER explain your reasoning outside the JSON structure.
+2. NEVER include any explanation outside the JSON structure.
 3. STRICTLY adhere to the step-by-step process.
-Your task is to perform a text2sql operation using a database schema represented as a graph. In this graph, table nodes are connected via foreign key relationships, and column nodes belong to table nodes.
-Based on the given question and the database schema, select the appropriate table nodes and the direct foreign key relationships connecting them. Note that the selected table nodes must be directly connected via foreign key relationships, not indirectly through intermediary nodes.
-You will be provided with a subgraph containing nodes within a 0-hop to 1-hop distance. Your task is to select appropriate table nodes and direct foreign key relationships from this provided subgraph.
-This round of selection is only one iteration, so do not choose table nodes that are more than 1-hop away."
+
+Your task is to select appropriate table nodes and the direct foreign key relationships from the provided subgraph.
+
+The graph consists of:
+- Table nodes connected via foreign key relationships.
+- Column nodes that belong to specific table nodes.
+
+As an expert in Text-to-SQL over graph-structured database schemas, your goal is to select:
+- The relevant table nodes.
+- The direct foreign key relationships that connect them.
+
+IMPORTANT: Only select table nodes that are directly connected by foreign key relationships within the given subgraph. Do NOT select table nodes that are more than 1-hop away or indirectly connected through intermediate nodes.
+
+Note: This is only one iteration in a multi-step process. Focus solely on nodes and edges within a 0-hop to 1-hop distance for this step.
+
+⚠️ The current schema view is centered around the source table(s) connected via outgoing foreign keys, and includes only directly linked 1-hop tables. It does not represent the full schema.
+
 
 """),
 
@@ -50,42 +67,42 @@ This round of selection is only one iteration, so do not choose table nodes that
    - From these neighboring tables, only select columns that are **relevant to the question**.
    - If a neighboring table is selected, **include the foreign key columns** that link the neighboring table to the '{select_table}'.
 
-3. **Column Selection Criteria**:
-   - Select ONLY columns directly needed to answer: "{question}"
-   - If a column is needed for a foreign key relationship, include it
-   - For foreign keys, prefer the minimal set needed for joining
+3. **Column Selection Rules**:
+   - Select ONLY columns that are directly required to answer: "{question}".
+   - Always include foreign key columns needed to form the reference path.
+   - Prefer the **minimal** set of foreign keys necessary for the join.
 
-4. **Output Validation**:
-   - Your response WILL BE REJECTED if:
-     * Missing '{select_table}' analysis
-     * Violating 1-hop rule
-     * Via hypothetical reference paths
-     * Omitting required foreign keys
+4. **Validation Rules**:
+   ❌ The output will be REJECTED if:
+   - Analysis of '{select_table}' is missing
+   - Any selected table violates the 1-hop constraint
+   - Reference paths are hypothetical or indirect
+   - Required foreign keys are omitted
 
 ### Step-by-Step Process:
-1. Analyze if '{select_table}' suffices for the `question`
-2. If expanding:
-   a) Identify 1-hop neighbors via schema relationships
-   b) Select essential columns + foreign keys
-   c) Provide concise reasoning per table
+1. Determine if '{select_table}' alone can answer the question.
+2. If not:
+   a) Identify valid 1-hop neighbors via schema foreign key relationships
+   b) Select minimal and relevant columns (including required foreign keys)  
+   c) Provide concise justification for each table selected
 
 ### Required JSON Format:
 ```json
 {{
   "selected_columns": {{
-    "<selected_table>": ["<column>", ...],  /* REQUIRED unless empty */
+    "<selected_table>": ["<column>", ...],
     ...
     "<neighbor_table>": ["<column>", "<foreign_key>", ...],
     ...
   }},
   "selected_reference_path": {{
-  "<table1.column=table2.column>": "<why this reference_path is needed>"
+  "<table1.column=table2.column>": "<why this reference_path is selected>"
     ...
   }},
   "reasoning": {{
-    "<selected_table>": "<why columns were selected/discarded>",
+    "<selected_table>": "<why table and columns were selected>",
     ...
-    "<neighbor_table>": "<why this table is needed>"
+    "<neighbor_table>": "<why this table is selected>"
     ...
   }},
   "to_solve_the_question": {{
@@ -100,6 +117,8 @@ This round of selection is only one iteration, so do not choose table nodes that
 
 ### Question:
 {question}
+
+{evidence}
 
 ### Starting Table(s):
 {select_table}
@@ -134,12 +153,13 @@ This round of selection is only one iteration, so do not choose table nodes that
             question=question,
             result_from_last_round=result_from_last_round,
             select_table=select_table,
-            hint=hint
+            hint=hint,
+            evidence=self.evidence
         )
         # # 打印人类提示
-        # for msg in prompt_messages:
-        #     if msg.type == "human":
-        #         print(f"Human: {msg.content}")
+        for msg in prompt_messages:
+            if msg.type == "human":
+                print(f"Human: {msg.content}")
 
         # 转换角色格式
         role_mapping = {
@@ -217,7 +237,8 @@ if __name__ == '__main__':
         question=question,
         result_from_last_round=result_from_last_round,
         select_table=selected_table,
-        hint=hint
+        hint=hint,
+        evidence=sl2.evidence
     )
     print("Final Prompt:\n", final_prompt)
     result = sl2.select_relevant_tables(db_schema, question, selected_table)

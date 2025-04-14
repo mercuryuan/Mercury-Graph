@@ -95,7 +95,7 @@ class SchemaLinkingPipeline:
             existing_results[self.db_name] = {}
 
         # 当前问题的结果（覆盖写入）
-        existing_results[self.db_name][self.question_id] = {
+        existing_results[self.db_name][str(self.question_id)] = {
             "question": self.question,
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "schema_linking_results": self.ultimate_answer
@@ -117,7 +117,10 @@ class SchemaLinkingPipeline:
             with open(filename, "r", encoding="utf-8") as f:
                 existing_results = json.load(f)
             if self.db_name in existing_results and str(self.question_id) in existing_results[self.db_name]:
-                return True
+                if existing_results[self.db_name][str(self.question_id)]["schema_linking_results"][
+                    "to_solve_the_question"]["is_solvable"]:
+                    self.log(f"问题 {self.question} 已解决，无需重新执行。")
+                    return True
         return False
 
     def select_initial_tables(self, question):
@@ -210,14 +213,23 @@ class SchemaLinkingPipeline:
         is_solvable = final_selected_result.get("to_solve_the_question", {}).get("is_solvable", False)
 
         # 如果不可解析，最多迭代 3 次重新选择候选
+        result_from_last_round = None
         iteration = 0
         while not is_solvable and iteration < 3:
             iteration += 1
             self.log(f"\n#### 候选选择第 {iteration} 次重试")
-            final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question)
+            if result_from_last_round:
+                final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question,
+                                                                                 result_from_last_round)
+            else:
+                final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question,
+                                                                                 )
             # 确保实体正确
             final_selected_result = self.validator.validate_and_correct(final_selected_result)
             is_solvable = final_selected_result.get("to_solve_the_question", {}).get("is_solvable", False)
+            # 如果验证后失败，则将失败结果作为下一轮迭代的辅助信息
+            if not is_solvable:
+                result_from_last_round = json.dumps(final_selected_result, indent=2, ensure_ascii=False)
 
         if not is_solvable:
             self.log("\n⚠️ 最终候选方案依然不可解析，请检查候选生成模块或人工介入。")
@@ -229,7 +241,6 @@ class SchemaLinkingPipeline:
     def run(self):
         # 如果问题已经解决过，则跳过
         if self.is_solved():
-            print(f"问题 '{self.question}' 已经解决过，跳过执行。")
             return
         self.log(f"# 数据集: {self.dataset_name}")
         self.log(f"# 数据库: {self.db_name}")

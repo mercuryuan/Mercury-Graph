@@ -28,7 +28,7 @@ class SchemaLinkingPipeline:
             self.difficulty = question_data.get('difficulty', '')
         self.validator = SLValidator(dataset_name, db_name)
         self.sg = SchemaGenerator()
-        self.sl1 = TableSelector(self.question_data)
+        self.sl1 = TableSelector(dataset_name, db_name, self.question_data)
         self.sl2 = SubgraphSelector(dataset_name, db_name, self.question_data)
         self.sl3 = CandidateSelector(dataset_name, db_name, self.question_data)
         self.sl4 = FKFiller(dataset_name, db_name)
@@ -96,7 +96,7 @@ class SchemaLinkingPipeline:
             existing_results[self.db_name] = {}
 
         # 当前问题的结果（覆盖写入）
-        existing_results[self.db_name][self.question_id] = {
+        existing_results[self.db_name][str(self.question_id)] = {
             "question": self.question,
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "schema_linking_results": self.ultimate_answer
@@ -135,6 +135,9 @@ class SchemaLinkingPipeline:
             self.log(f"选中的表: {selected_tables}")
         self.log("选择理由:")
         self.log("```json\n" + json.dumps(sl1_result['reasoning'], indent=2, ensure_ascii=False) + "\n```")
+        self.log("问题分解:")
+        self.log("```json\n" + json.dumps(sl1_result['the steps of decomposed the question'], indent=2,
+                                          ensure_ascii=False) + "\n```")
         return selected_tables, sl1_result
 
     def expand_subgraph_once(self, question, selected_table, reasoning_json):
@@ -171,7 +174,7 @@ class SchemaLinkingPipeline:
 
             if not sl2_result.get("selected_columns"):
                 self.log("selected_columns 为空，终止循环。")
-                break
+                raise ValueError("selected_columns 为空，无法继续迭代。")
 
             selected_tables = list(sl2_result["selected_columns"].keys())
             self.log(f"新选择的表:   \n{selected_tables}  \n")
@@ -193,8 +196,10 @@ class SchemaLinkingPipeline:
                 sl2_result = self.validator.validate_and_correct(sl2_result)
                 self.log("迭代扩展结果:")
             else:
-                sl2_result = self.validator.validate_and_correct(sl2_result)
+                self.log("原结果")
+                self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
                 self.log("修正后的结果:")
+                sl2_result = self.validator.validate_and_correct(sl2_result)
 
             self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
 
@@ -204,24 +209,33 @@ class SchemaLinkingPipeline:
 
         return sl2_result, iteration
 
-    def select_candidate(self, question):
+    def select_candidate(self, question, recommend_tables):
         self.log("## 候选查询生成")
 
         candidates = self.per_table_results
-        final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question)
+        final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question, recommend_tables)
         final_selected_result = self.validator.validate_and_correct(final_selected_result)
 
         is_solvable = final_selected_result.get("to_solve_the_question", {}).get("is_solvable", False)
 
         # 如果不可解析，最多迭代 3 次重新选择候选
+        result_from_last_round = None
         iteration = 0
         while not is_solvable and iteration < 3:
             iteration += 1
             self.log(f"\n#### 候选选择第 {iteration} 次重试")
-            final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question)
+            if result_from_last_round:
+                final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question, recommend_tables,
+                                                                                 result_from_last_round)
+            else:
+                final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question, recommend_tables,
+                                                                                 )
             # 确保实体正确
             final_selected_result = self.validator.validate_and_correct(final_selected_result)
             is_solvable = final_selected_result.get("to_solve_the_question", {}).get("is_solvable", False)
+            # 如果验证后失败，则将失败结果作为下一轮迭代的辅助信息
+            if not is_solvable:
+                result_from_last_round = json.dumps(final_selected_result, indent=2, ensure_ascii=False)
 
         if not is_solvable:
             self.log("\n⚠️ 最终候选方案依然不可解析，请检查候选生成模块或人工介入。")
@@ -231,14 +245,14 @@ class SchemaLinkingPipeline:
         return final_selected_result, is_consistent
 
     def run(self):
+        # 如果问题已经解决过，则跳过
         if self.is_solved():
-            print(f"问题 '{self.question}' 已经解决过，跳过执行。")
             return
         self.log(f"# 数据集: {self.dataset_name}")
         self.log(f"# 数据库: {self.db_name}")
         self.log(f"# 自然语言问题:")
         self.log(f"`{self.question.strip()}`")
-
+        # 统计初始联通分量
         components = self.sg.explorer.obtain_all_connected_components_in_database()
         if len(components) == 1:
             self.log("### 初始状态：数据库连通")
@@ -247,7 +261,7 @@ class SchemaLinkingPipeline:
             components_str = '  \n'.join(['`' + str(component) + '`' for component in components])
             self.log(f"#### 联通分量：  \n{components_str}")
 
-        # 阶段一
+        # 阶段一：获取所有初始选中的表
         selected_tables, sl1_result = self.select_initial_tables(self.question)
         if not selected_tables:
             self.save_log()
@@ -265,6 +279,7 @@ class SchemaLinkingPipeline:
             self.log(f"\n---\n## 起点表 `{table}` 的扩展与推理过程")
             self._log = local_logger  # 替换 log 为局部 log 收集器
 
+            # 执行首次扩展
             sl2_result = self.expand_subgraph_once(self.question, table, reasoning_json)
             final_sl2_result, iteration = self.iterate_until_solvable(self.question, sl2_result)
 
@@ -308,15 +323,15 @@ class SchemaLinkingPipeline:
             self.log(f"\n🎯 有效方案：{solvable_count}/{len(selected_tables)}个")
         else:
             self.log("\n🛑 所有起点均未能找到可解析方案，建议人工检查。")
-
-        # 阶段四
-        self.ultimate_answer, is_consistent = self.select_candidate(self.question)
+        # 阶段四：选择候选查询
+        self.ultimate_answer, is_consistent = self.select_candidate(self.question, reasoning_json)
         self.log("无需 LLM介入：" + str(is_consistent))
         self.log("# 最终选择的候选查询:")
         self.log("```json\n" + json.dumps(self.ultimate_answer, indent=2, ensure_ascii=False) + "\n```")
-
+        # 保存日志和最终 JSON 结果
         self.save_log()
         self.save_final_results()
+        # 保存到完整总流程的结果中
         self.save_sl_to_pipeline()
 
 
@@ -356,6 +371,8 @@ def run_spider_dev():
         d['question_id'] = question_id
 
     for database in spider_dev_list:
+        # if database != "tvshow":
+        #     continue  # 跳过其他数据库
         graph_loader = GraphLoader()
         graph_loader.load_graph("spider", database)
         database_data = [item for item in data if item["db_id"] == database]
