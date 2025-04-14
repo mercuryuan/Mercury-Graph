@@ -2,6 +2,7 @@ import json
 import os.path
 import config
 
+
 # 提取重复的信息生成逻辑
 def generate_common_info(properties):
     key_info = []
@@ -198,6 +199,8 @@ def generate_table_schema_dict(nodes, relationships):
 
         # 展示表节点的属性
         prop_strs = []
+        if 'description' in properties:
+            prop_strs.append(f"Description: {properties['description']}")
         if 'database_name' in properties:
             prop_strs.append(f"Database Name: {properties['database_name']}")
         if 'primary_key' in properties:
@@ -269,6 +272,7 @@ def print_table_names(table_list):
     table_names = "  ".join(table_list)
     print("该数据库有以下的表： " + table_names + "\n")
 
+
 def get_table_schema(db_path, table_name=None, show_tables=False):
     # 提取 db_name，即 db_path 的文件夹名
     db_name = os.path.basename(os.path.normpath(db_path))
@@ -305,7 +309,6 @@ def get_table_schema(db_path, table_name=None, show_tables=False):
         return db_name, table_list, None, None
 
 
-
 def main(db_path):
     try:
         # 读取 node.json 和 relationship.json 文件
@@ -325,6 +328,7 @@ def main(db_path):
         print(f"Error: One or both of the files (nodes.json, relationships.json) were not found in {db_path}.")
     except json.JSONDecodeError:
         print(f"Error: There was an issue decoding the JSON files in {db_path}.")
+
 
 def get_full_database_schema(db_path):
     try:
@@ -349,16 +353,15 @@ def get_full_database_schema(db_path):
         return None
 
 
-
 if __name__ == "__main__":
-    db_path = os.path.join(config.GRAPHS_REPO, "BIRD", "world_development_indicators")
+    db_path = os.path.join(config.GRAPHS_REPO, "bird", "books")
     # db_path = "../graphs_repo/spider/activity_1"
     # main(db_path)
-    # db_path, table_list,table_name, schema = get_table_schema(db_path, "cust_order")
+    db_path, table_list, table_name, schema = get_table_schema(db_path, "orders")
     # print(db_path)
     # print(table_list)
     # print(table_name)
-    # print(schema)
-    full_schema = get_full_database_schema(db_path)
-    if full_schema:
-        print(full_schema)
+    print(schema)
+    # full_schema = get_full_database_schema(db_path)
+    # if full_schema:
+    #     print(full_schema)
