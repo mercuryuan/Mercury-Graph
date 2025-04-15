@@ -1,9 +1,13 @@
 import json
+import re
+from typing import Dict
+
 from openai import OpenAI
 import config
 from schema_linking.candidate_filter import CandidateFilter
 from schema_linking.validator import SLValidator
 from schema_linking.surfing_in_graph import SchemaGenerator
+from utils.call_llm import LLMClient
 
 
 class CandidateSelector:
@@ -14,9 +18,9 @@ class CandidateSelector:
         :param api_key: 用于调用 LLM 的 API key
         :param base_url: LLM 服务的基础 URL
         """
-        self.api_key = config.DEEPSEEK_API
-        self.base_url = "https://api.deepseek.com"
-        self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+        self.client = LLMClient("deepseek", "deepseek-reasoner")
+        # self.client = LLMClient("deepseek", "deepseek-chat")
+        # self.client = LLMClient()
         self.dataset_name = dataset_name
         self.db_name = db_name
         self.question_data = question_data
@@ -24,6 +28,18 @@ class CandidateSelector:
             self.question_data and self.question_data.get("evidence") else ""
         self.validator = SLValidator(self.dataset_name, self.db_name)
         self.sg = SchemaGenerator()
+
+    def extract_json(self, text: str) -> Dict:
+        """Extract JSON content from the given text."""
+        try:
+            # Try parsing the text directly
+            return json.loads(text)
+        except Exception:
+            # Use regex to extract JSON content if direct parsing fails
+            matches = re.findall(r'\{.*\}', text, re.DOTALL)
+            if matches:
+                return json.loads(matches[0])
+            raise ValueError("No valid JSON found in response")
 
     def select_candidate(self, candidate_result_input, question: str, recommend_tables: str,
                          result_from_last_round: str = '') -> (dict, bool):
@@ -124,17 +140,17 @@ class CandidateSelector:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
-            print("候选结果不一致，调用 LLM 进行判断。")
-            print("输入消息：")
-            print(system_prompt)
-            print(user_prompt)
+            # print("候选结果不一致，调用 LLM 进行判断。")
+            # print("输入消息：")
+            # print(system_prompt)
+            # print(user_prompt)
 
-            response = self.client.chat.completions.create(
-                model="deepseek-chat",
-                messages=messages,
-                response_format={'type': 'json_object'}
-            )
-            output = json.loads(response.choices[0].message.content)
+            response = self.client.chat(messages)
+            try:
+                output = self.extract_json(response)
+            except Exception as e:
+                print(f"JSON解析失败: {str(e)}")
+                print(f"原始响应: {response}")
             # print("候选结果不一致，LLM 判断后的最终结果：")
             # print(json.dumps(output, indent=4, ensure_ascii=False))
             return output, is_consistent

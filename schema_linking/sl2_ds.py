@@ -26,8 +26,10 @@ class SubgraphSelector:
         self.validator = SLValidator(dataset_name, db_name)
         # 使用openai
         # self.client = LLMClient("openai", "gpt-4o")
-        # 使用deepseek
-        self.client = LLMClient("deepseek", "deepseek-chat")
+        # # 使用deepseek
+        # self.client = LLMClient("deepseek", "deepseek-chat")
+        # 使用deepseek-reasoner
+        self.client = LLMClient(provider="deepseek", model="deepseek-reasoner")
         self.sl2_per_iterations = []
 
         self.schema_selection_prompt = ChatPromptTemplate.from_messages([
@@ -157,9 +159,9 @@ Note: This is only one iteration in a multi-step process. Focus solely on nodes 
             evidence=self.evidence
         )
         # # 打印人类提示
-        for msg in prompt_messages:
-            if msg.type == "human":
-                print(f"Human: {msg.content}")
+        # for msg in prompt_messages:
+        #     if msg.type == "human":
+        #         print(f"Human: {msg.content}")
 
         # 转换角色格式
         role_mapping = {

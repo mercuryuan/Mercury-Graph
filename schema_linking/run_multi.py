@@ -1,7 +1,9 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from tqdm import tqdm
+import multiprocessing
 from datetime import datetime
 
 import config
@@ -34,14 +36,22 @@ class SchemaLinkingPipeline:
         self.sl4 = FKFiller(dataset_name, db_name)
         self.logs = []
         self.hint = ''
+        self.reasoning = []
         self.per_table_results = {}  # 用于保存每个起点的最终子图选择结果
         self.ultimate_answer = {}
         self.sl2_per_iterations = []
         self.sl3_iteration = 0
+        self.default_logger = self._default_logger
 
-    def log(self, msg):
+    def _default_logger(self, msg):
         print(msg)
         self.logs.append(msg)
+
+    def log(self, msg, logger=None):
+        if logger:
+            logger(msg)
+        else:
+            self.default_logger(msg)
 
     def save_log(self):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -65,6 +75,7 @@ class SchemaLinkingPipeline:
         current_result = {
             "question_id": self.question_id,
             "question": self.question,
+            "reasoning": self.reasoning,
             "schema_linking_result": self.per_table_results,
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "final_results": self.ultimate_answer
@@ -76,7 +87,7 @@ class SchemaLinkingPipeline:
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(existing_results, f, indent=2, ensure_ascii=False)
-        self.log(f"\n最终结果已保存至 {filename}")
+        self.log(f"\n最终结果已保存至 {filename}", )
 
     def save_sl_to_pipeline(self):
         """
@@ -98,6 +109,7 @@ class SchemaLinkingPipeline:
         # 当前问题的结果（覆盖写入）
         existing_results[self.db_name][str(self.question_id)] = {
             "question": self.question,
+            "reasoning": self.reasoning,
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "schema_linking_results": self.ultimate_answer
         }
@@ -140,9 +152,9 @@ class SchemaLinkingPipeline:
                                           ensure_ascii=False) + "\n```")
         return selected_tables, sl1_result
 
-    def expand_subgraph_once(self, question, selected_table, reasoning_json):
-        self.log(f"\n### 起始表: {selected_table}")
-        self.log("#### 第一次子图扩展")
+    def expand_subgraph_once(self, question, selected_table, reasoning_json, logger=None):
+        self.log(f"\n### 起始表: {selected_table}", logger)
+        self.log("#### 第一次子图扩展", logger)
         sl2_schema = self.sl2.generate_schema_description([selected_table])
         self.hint = self.sl2.generate_hint(reasoning_json)
         sl2_result = self.sl2.select_relevant_tables(sl2_schema, question, [selected_table], hint=self.hint)
@@ -151,18 +163,18 @@ class SchemaLinkingPipeline:
                 sl2_result["selected_columns"]) and self.validator.validate_foreign_keys(
             sl2_result["selected_reference_path"]):
             sl2_result = self.validator.validate_and_correct(sl2_result)
-            self.log("迭代扩展结果:")
+            self.log("迭代扩展结果:", logger)
         else:
             sl2_result = self.validator.validate_and_correct(sl2_result)
-            self.log("修正后的结果:")
-        self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
+            self.log("修正后的结果:", logger)
+        self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```", logger)
 
         return sl2_result
 
-    def iterate_until_solvable(self, question, sl2_result, max_iterations=10):
+    def iterate_until_solvable(self, question, sl2_result, max_iterations=10, logger=None):
         # 迭代直到达到最大轮数或生成可解析方案，返回最终的 sl2_result
         is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
-        self.log(f"初始 is_solvable: {is_solvable}\n")
+        self.log(f"初始 is_solvable: {is_solvable}\n", logger)
         result_from_last_round = self.sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
         iteration = 0
         prev_selected_tables = list(sl2_result["selected_columns"].keys())
@@ -170,20 +182,20 @@ class SchemaLinkingPipeline:
 
         while not is_solvable and iteration < max_iterations:
             iteration += 1
-            self.log(f"\n#### 第 {iteration} 轮迭代")
+            self.log(f"\n#### 第 {iteration} 轮迭代", logger)
 
             if not sl2_result.get("selected_columns"):
-                self.log("selected_columns 为空，终止循环。")
+                self.log("selected_columns 为空，终止循环。", logger)
                 raise ValueError("selected_columns 为空，无法继续迭代。")
 
             selected_tables = list(sl2_result["selected_columns"].keys())
-            self.log(f"新选择的表:   \n{selected_tables}  \n")
+            self.log(f"新选择的表:   \n{selected_tables}  \n", logger)
 
             # 如果子图连通，则重新生成 schema；否则使用上一轮的 schema
             if self.sg.explorer.is_subgraph_connected(selected_tables):
                 sl2_schema = self.sl2.generate_schema_description(selected_tables)
             else:
-                self.log("子图不连通，沿用上一轮的 schema。")
+                self.log("子图不连通，沿用上一轮的 schema。", logger)
 
             # 新一轮 schema linking
             sl2_result = self.sl2.select_relevant_tables(
@@ -194,14 +206,14 @@ class SchemaLinkingPipeline:
             if self.validator.validate_entities(sl2_result["selected_columns"]) and \
                     self.validator.validate_foreign_keys(sl2_result["selected_reference_path"]):
                 sl2_result = self.validator.validate_and_correct(sl2_result)
-                self.log("迭代扩展结果:")
+                self.log("迭代扩展结果:", logger)
             else:
-                self.log("原结果")
-                self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
-                self.log("修正后的结果:")
+                self.log("原结果", logger)
+                self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```", logger)
+                self.log("修正后的结果:", logger)
                 sl2_result = self.validator.validate_and_correct(sl2_result)
 
-            self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```")
+            self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```", logger)
 
             is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
             self.log(f"当前 is_solvable: {is_solvable}")
@@ -245,6 +257,8 @@ class SchemaLinkingPipeline:
         return final_selected_result, is_consistent
 
     def run(self):
+        # 防止被api ban
+        time.sleep(1)
         # 如果问题已经解决过，则跳过
         if self.is_solved():
             return
@@ -253,7 +267,8 @@ class SchemaLinkingPipeline:
         self.log(f"# 自然语言问题:")
         self.log(f"`{self.question.strip()}`")
         # 统计初始联通分量
-        components = self.sg.explorer.obtain_all_connected_components_in_database()
+        components = self.sg.explorer.obtain_all_connected_components_in_database(
+            f"{self.dataset_name}_{self.question_id}")
         if len(components) == 1:
             self.log("### 初始状态：数据库连通")
         else:
@@ -268,6 +283,7 @@ class SchemaLinkingPipeline:
             return
 
         reasoning_json = json.dumps(sl1_result['reasoning'], indent=2, ensure_ascii=False)
+        self.reasoning = reasoning_json
 
         # 阶段二 & 三：并发处理每个起点表
         def process_start_table(table):
@@ -276,14 +292,12 @@ class SchemaLinkingPipeline:
             def local_logger(msg):
                 local_log.append(msg)
 
-            self.log(f"\n---\n## 起点表 `{table}` 的扩展与推理过程")
-            self._log = local_logger  # 替换 log 为局部 log 收集器
+            self.log(f"\n---\n## 起点表 `{table}` 的扩展与推理过程", logger=local_logger)
 
             # 执行首次扩展
-            sl2_result = self.expand_subgraph_once(self.question, table, reasoning_json)
-            final_sl2_result, iteration = self.iterate_until_solvable(self.question, sl2_result)
+            sl2_result = self.expand_subgraph_once(self.question, table, reasoning_json, logger=local_logger)
+            final_sl2_result, iteration = self.iterate_until_solvable(self.question, sl2_result, logger=local_logger)
 
-            self._log = self.log  # 恢复全局 log 函数
             self.sl2_per_iterations.append({table: iteration})
             self.per_table_results[table] = final_sl2_result
 
@@ -360,6 +374,76 @@ def run_bird_dev():
             break  # 测试用，先只跑一条
 
 
+def process_sample_bird_with_retry(args, max_retries=2):
+    dataset_name, db_name, sample = args
+    for attempt in range(max_retries + 1):
+        try:
+            pipeline = SchemaLinkingPipeline(dataset_name, db_name, sample)
+            pipeline.run()
+            return None  # 表示成功，无错误信息
+        except Exception as e:
+            if attempt == max_retries:
+                return {
+                    "db_name": db_name,
+                    "question_id": sample.get("question_id"),
+                    "question": sample.get("question"),
+                    "error": str(e)
+                }
+
+
+def run_bird_dev_bx():
+    # 加载 BIRD 数据
+    bird_loader = DataLoader("bird_dev")
+    bird_dev_list = bird_loader.list_dbname()
+    all_samples = bird_loader.filter_data(show_count=True)
+
+    # 添加 question_id
+    for question_id, sample in enumerate(all_samples):
+        sample["question_id"] = question_id
+
+    for db_name in bird_dev_list:
+        # if db_name != "card_games":
+        #     continue  # 只处理 card_games 数据库
+
+        print(f"\n=== 开始处理数据库: {db_name} ===")
+
+        # 加载图结构
+        graph_loader = GraphLoader()
+        graph_loader.load_graph("bird", db_name)
+
+        # 准备任务
+        db_samples = [sample for sample in all_samples if sample["db_id"] == db_name]
+        task_list = [("bird", db_name, sample) for sample in db_samples]
+
+        failed_logs = []
+        max_workers = min(20, multiprocessing.cpu_count())
+        progress_bar = tqdm(total=len(task_list), desc=f"{db_name} 进度", ncols=80)
+
+        # 执行线程池 + 自动重试
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_task = {executor.submit(process_sample_bird_with_retry, task): task for task in task_list}
+
+            for future in as_completed(future_to_task):
+                result = future.result()
+                if result is not None:
+                    failed_logs.append(result)
+                progress_bar.update(1)
+
+        progress_bar.close()
+        print(f"=== ✅ 完成数据库: {db_name} ===")
+
+        # 每个数据库处理后保存失败日志（追加模式）
+        if failed_logs:
+            file = os.path.join(config.PROJECT_ROOT, "Results", "bird.md")
+            with open(file, "a", encoding="utf-8") as f:
+                f.write(f"# ❌ 数据库 `{db_name}` 处理失败样本记录\n\n")
+                for item in failed_logs:
+                    f.write(f"## 问题 ID: {item['question_id']}\n")
+                    f.write(f"**Question:** {item['question']}\n\n")
+                    f.write(f"**Error:** `{item['error']}`\n\n---\n\n")
+            print(f"⚠️ 错误日志已追加写入 `{file}`\n")
+
+
 def run_spider_dev():
     # 读取 spider 开发数据集
     spider_loader = DataLoader("spider_dev")
@@ -381,9 +465,56 @@ def run_spider_dev():
             pipeline.run()
 
 
+def process_sample(args):
+    dataset_name, database, sample = args
+    pipeline = SchemaLinkingPipeline(dataset_name, database, sample)
+    pipeline.run()
+
+
+def run_spider_dev_bx():
+    # 加载数据
+    spider_loader = DataLoader("spider_dev")
+    spider_dev_list = spider_loader.list_dbname()
+    data = spider_loader.filter_data(fields=["db_id", "sql", "question"], show_count=True)
+
+    for question_id, d in enumerate(data):
+        d['question_id'] = question_id
+
+    for database in spider_dev_list:
+        print(f"\n=== 开始处理数据库: {database} ===")
+
+        # 加载图结构
+        graph_loader = GraphLoader()
+        graph_loader.load_graph("spider", database)
+
+        # 提取该数据库对应的样本
+        database_data = [item for item in data if item["db_id"] == database]
+        task_list = [("spider", database, sample) for sample in database_data]
+
+        # 设置线程池 & 进度条
+        max_workers = min(16, multiprocessing.cpu_count())
+        progress_bar = tqdm(total=len(task_list), desc=f"{database} 进度", ncols=80)
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_sample = {executor.submit(process_sample, task): task for task in task_list}
+
+            for future in as_completed(future_to_sample):
+                try:
+                    future.result()
+                except Exception as e:
+                    print(f"❌ 某个样本处理失败: {e}")
+                finally:
+                    progress_bar.update(1)
+
+        progress_bar.close()
+        print(f"=== ✅ 完成数据库: {database} ===\n")
+
+
 if __name__ == "__main__":
     # run_bird_dev()
-    run_spider_dev()
+    # run_spider_dev()
+    run_bird_dev_bx()
+    # run_spider_dev_bx()
 
     # # 单个问题
     # GraphLoader().load_graph("bird", "card_games")

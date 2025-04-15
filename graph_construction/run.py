@@ -47,6 +47,7 @@ def run(sqlite_path):
             exp_path = os.path.join(config.GRAPHS_REPO,
                                     os.path.join(parser.extract_dataset_name(sqlite_path),
                                                  parser.extract_database_name(sqlite_path)))
+            print(exp_path)
             export_all(exp_path)
             print("✅ 成功导出！")
             success = True
@@ -72,8 +73,15 @@ if __name__ == "__main__":
     neo4j_driver = get_driver()
 
     # 请将 'root_folder' 替换为你想要遍历的文件夹的实际路径
+
+    # BIRD 开发集路径
+    root_folder = config.BIRD_DEV_DATABASES_PATH
+    traverse_folders(root_folder)
+
     # # BIRD 训练集路径
     # root_folder = config.BIRD_TRAIN_DATABASES_PATH
-    # SPIDER 训练集路径
-    root_folder = config.SPIDER_DATABASES_PATH
-    traverse_folders(root_folder)
+    # traverse_folders(root_folder)
+
+    # # SPIDER 训练集路径
+    # root_folder = config.SPIDER_DATABASES_PATH
+    # traverse_folders(root_folder)
