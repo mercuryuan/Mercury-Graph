@@ -18,9 +18,9 @@ class CandidateSelector:
         :param api_key: 用于调用 LLM 的 API key
         :param base_url: LLM 服务的基础 URL
         """
-        self.client = LLMClient("deepseek", "deepseek-reasoner")
+        # self.client = LLMClient("deepseek", "deepseek-reasoner")
         # self.client = LLMClient("deepseek", "deepseek-chat")
-        # self.client = LLMClient()
+        self.client = LLMClient()
         self.dataset_name = dataset_name
         self.db_name = db_name
         self.question_data = question_data
@@ -41,7 +41,7 @@ class CandidateSelector:
                 return json.loads(matches[0])
             raise ValueError("No valid JSON found in response")
 
-    def select_candidate(self, candidate_result_input, question: str, recommend_tables: str,
+    def select_candidate(self, candidate_result_input, question: str, recommend_tables: str, keyword_hints,
                          result_from_last_round: str = '') -> (dict, bool):
         """
         对候选结果进行过滤并最终选择最佳候选结果
@@ -124,10 +124,11 @@ class CandidateSelector:
                 "### Recommendation table(s):\n"
                 "{}\n"
                 "{}\n"
+                "{}\n"
                 "### Candidate Schema:\n"
                 "{}\n"
                 "{}\n"
-                .format(self.db_name, question, recommend_tables, self.evidence, candidate_schema,
+                .format(self.db_name, question, recommend_tables, self.evidence, keyword_hints, candidate_schema,
                         result_from_last_round)
             )
 

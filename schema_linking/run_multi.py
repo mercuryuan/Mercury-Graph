@@ -1,5 +1,11 @@
 import json
 import os
+
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
@@ -15,6 +21,7 @@ from utils.dataloader import DataLoader
 from utils.graphloader import GraphLoader
 from schema_linking.surfing_in_graph import SchemaGenerator
 from schema_linking.validator import SLValidator
+from keyword_searcher import KeywordSearcher
 
 
 class SchemaLinkingPipeline:
@@ -30,6 +37,7 @@ class SchemaLinkingPipeline:
             self.difficulty = question_data.get('difficulty', '')
         self.validator = SLValidator(dataset_name, db_name)
         self.sg = SchemaGenerator()
+        self.keyword_searcher = KeywordSearcher(dataset_name, db_name)
         self.sl1 = TableSelector(dataset_name, db_name, self.question_data)
         self.sl2 = SubgraphSelector(dataset_name, db_name, self.question_data)
         self.sl3 = CandidateSelector(dataset_name, db_name, self.question_data)
@@ -37,6 +45,8 @@ class SchemaLinkingPipeline:
         self.logs = []
         self.hint = ''
         self.reasoning = []
+        self.keyword = []
+        self.keyword_hints = ''
         self.per_table_results = {}  # 用于保存每个起点的最终子图选择结果
         self.ultimate_answer = {}
         self.sl2_per_iterations = []
@@ -76,6 +86,8 @@ class SchemaLinkingPipeline:
             "question_id": self.question_id,
             "question": self.question,
             "reasoning": self.reasoning,
+            "keyword": self.keyword,
+            "keyword_hints": self.keyword_hints,
             "schema_linking_result": self.per_table_results,
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "final_results": self.ultimate_answer
@@ -110,6 +122,8 @@ class SchemaLinkingPipeline:
         existing_results[self.db_name][str(self.question_id)] = {
             "question": self.question,
             "reasoning": self.reasoning,
+            "keyword": self.keyword,
+            "keyword_hints": self.keyword_hints,
             "sl_iterations": {"sl2": self.sl2_per_iterations, "sl3": self.sl3_iteration},
             "schema_linking_results": self.ultimate_answer
         }
@@ -132,9 +146,32 @@ class SchemaLinkingPipeline:
             if self.db_name in existing_results and str(self.question_id) in existing_results[self.db_name]:
                 if existing_results[self.db_name][str(self.question_id)]["schema_linking_results"][
                     "to_solve_the_question"]["is_solvable"]:
-                    self.log(f"问题 {self.question} 已解决，无需重新执行。")
+                    # self.log(f"问题 {self.question} 已解决，无需重新执行。")
                     return True
         return False
+
+    def get_keyword_hints(self, sl1_result):
+        """"""
+        # 获取关键词
+        self.keyword = sl1_result.get("value_keywords")
+
+        if not self.keyword:
+            self.keyword_hints = ""
+        else:
+            self.log("### 关键词：")
+            self.log(f"`{self.keyword}`")
+
+            hints = []
+            for keyword in self.keyword:
+                hint_str = self.keyword_searcher.format_llm_hints_as_string(keyword)
+                if hint_str:
+                    hints.append(f"- `{keyword}`:\n{hint_str}")
+
+            if hints:
+                self.keyword_hints = "### KEYWORD MATCH RESULTS:\n" + "\n".join(hints) + "\n"
+            else:
+                self.keyword_hints = ""
+        return self.keyword_hints
 
     def select_initial_tables(self, question):
         db_schema = "\n".join(self.sg.generate_combined_description(table) for table in self.sg.tables)
@@ -147,17 +184,18 @@ class SchemaLinkingPipeline:
             self.log(f"选中的表: {selected_tables}")
         self.log("选择理由:")
         self.log("```json\n" + json.dumps(sl1_result['reasoning'], indent=2, ensure_ascii=False) + "\n```")
-        self.log("问题分解:")
-        self.log("```json\n" + json.dumps(sl1_result['the steps of decomposed the question'], indent=2,
+        self.log("初步判断:")
+        self.log("```json\n" + json.dumps(sl1_result, indent=2,
                                           ensure_ascii=False) + "\n```")
         return selected_tables, sl1_result
 
-    def expand_subgraph_once(self, question, selected_table, reasoning_json, logger=None):
+    def expand_subgraph_once(self, question, selected_table, reasoning_json, keyword_hints, logger=None):
         self.log(f"\n### 起始表: {selected_table}", logger)
         self.log("#### 第一次子图扩展", logger)
         sl2_schema = self.sl2.generate_schema_description([selected_table])
         self.hint = self.sl2.generate_hint(reasoning_json)
-        sl2_result = self.sl2.select_relevant_tables(sl2_schema, question, [selected_table], hint=self.hint)
+        sl2_result = self.sl2.select_relevant_tables(sl2_schema, question, [selected_table], keyword_hints,
+                                                     hint=self.hint)
         # 验证、修正结果
         if self.validator.validate_entities(
                 sl2_result["selected_columns"]) and self.validator.validate_foreign_keys(
@@ -171,7 +209,7 @@ class SchemaLinkingPipeline:
 
         return sl2_result
 
-    def iterate_until_solvable(self, question, sl2_result, max_iterations=10, logger=None):
+    def iterate_until_solvable(self, question, sl2_result, keyword_hints, max_iterations=10, logger=None):
         # 迭代直到达到最大轮数或生成可解析方案，返回最终的 sl2_result
         is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
         self.log(f"初始 is_solvable: {is_solvable}\n", logger)
@@ -199,7 +237,7 @@ class SchemaLinkingPipeline:
 
             # 新一轮 schema linking
             sl2_result = self.sl2.select_relevant_tables(
-                sl2_schema, question, selected_tables, result_from_last_round, self.hint
+                sl2_schema, question, selected_tables, keyword_hints, result_from_last_round, self.hint
             )
 
             # 验证并修正结果
@@ -216,16 +254,17 @@ class SchemaLinkingPipeline:
             self.log("```json\n" + json.dumps(sl2_result, indent=2, ensure_ascii=False) + "\n```", logger)
 
             is_solvable = sl2_result["to_solve_the_question"]["is_solvable"]
-            self.log(f"当前 is_solvable: {is_solvable}")
+            self.log(f"当前 is_solvable: {is_solvable}", logger)
             result_from_last_round = self.sl2.generate_result_from_last_round(json.dumps(sl2_result, indent=2))
 
         return sl2_result, iteration
 
-    def select_candidate(self, question, recommend_tables):
+    def select_candidate(self, question, recommend_tables, keyword_hints):
         self.log("## 候选查询生成")
 
         candidates = self.per_table_results
-        final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question, recommend_tables)
+        final_selected_result, is_consistent = self.sl3.select_candidate(candidates, question, recommend_tables,
+                                                                         keyword_hints)
         final_selected_result = self.validator.validate_and_correct(final_selected_result)
 
         is_solvable = final_selected_result.get("to_solve_the_question", {}).get("is_solvable", False)
@@ -281,9 +320,15 @@ class SchemaLinkingPipeline:
         if not selected_tables:
             self.save_log()
             return
-
+        # 获取选择表理由
         reasoning_json = json.dumps(sl1_result['reasoning'], indent=2, ensure_ascii=False)
         self.reasoning = reasoning_json
+        # 获取关键词线索
+        self.get_keyword_hints(sl1_result)
+        # 有则记录
+        if self.keyword_hints:
+            kh = self.keyword_hints.replace('#', '').replace('\n', '  \n')
+            self.log(f"### 关键词匹配：  \n{kh}")
 
         # 阶段二 & 三：并发处理每个起点表
         def process_start_table(table):
@@ -295,8 +340,10 @@ class SchemaLinkingPipeline:
             self.log(f"\n---\n## 起点表 `{table}` 的扩展与推理过程", logger=local_logger)
 
             # 执行首次扩展
-            sl2_result = self.expand_subgraph_once(self.question, table, reasoning_json, logger=local_logger)
-            final_sl2_result, iteration = self.iterate_until_solvable(self.question, sl2_result, logger=local_logger)
+            sl2_result = self.expand_subgraph_once(self.question, table, reasoning_json, self.keyword_hints,
+                                                   logger=local_logger)
+            final_sl2_result, iteration = self.iterate_until_solvable(self.question, sl2_result, self.keyword_hints,
+                                                                      logger=local_logger)
 
             self.sl2_per_iterations.append({table: iteration})
             self.per_table_results[table] = final_sl2_result
@@ -323,7 +370,8 @@ class SchemaLinkingPipeline:
                     if is_solvable:
                         solvable_count += 1
                 except Exception as exc:
-                    logs_per_table.append((table, f"\n❌ 起点 `{table}` 执行失败: {exc}"))
+                    # 抛出异常，终止整个处理流程
+                    raise RuntimeError(f"\n❌ 起点 `{table}` 执行失败: {exc}") from exc
 
         # 保证日志按原始顺序输出
         for table in selected_tables:
@@ -338,7 +386,7 @@ class SchemaLinkingPipeline:
         else:
             self.log("\n🛑 所有起点均未能找到可解析方案，建议人工检查。")
         # 阶段四：选择候选查询
-        self.ultimate_answer, is_consistent = self.select_candidate(self.question, reasoning_json)
+        self.ultimate_answer, is_consistent = self.select_candidate(self.question, reasoning_json, self.keyword_hints)
         self.log("无需 LLM介入：" + str(is_consistent))
         self.log("# 最终选择的候选查询:")
         self.log("```json\n" + json.dumps(self.ultimate_answer, indent=2, ensure_ascii=False) + "\n```")
@@ -356,8 +404,8 @@ def run_bird_dev():
     all_samples = bird_loader.filter_data(show_count=True)
 
     for db_name in bird_dev_list:
-        if db_name != "card_games":
-            continue  # 跳过其他数据库，只跑 card_games
+        # if db_name != "card_games":
+        #     continue  # 跳过其他数据库，只跑 card_games
 
         # 只对 card_games 数据库处理
         db_samples = [sample for sample in all_samples if sample["db_id"] == db_name]
@@ -403,6 +451,7 @@ def run_bird_dev_bx():
 
     for db_name in bird_dev_list:
         # if db_name != "card_games":
+        # if db_name != "debit_card_specializing":
         #     continue  # 只处理 card_games 数据库
 
         print(f"\n=== 开始处理数据库: {db_name} ===")
@@ -416,7 +465,7 @@ def run_bird_dev_bx():
         task_list = [("bird", db_name, sample) for sample in db_samples]
 
         failed_logs = []
-        max_workers = min(20, multiprocessing.cpu_count())
+        max_workers = min(10, multiprocessing.cpu_count())
         progress_bar = tqdm(total=len(task_list), desc=f"{db_name} 进度", ncols=80)
 
         # 执行线程池 + 自动重试

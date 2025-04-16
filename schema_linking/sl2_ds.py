@@ -25,11 +25,11 @@ class SubgraphSelector:
         self.schema_generator = SchemaGenerator()
         self.validator = SLValidator(dataset_name, db_name)
         # 使用openai
-        # self.client = LLMClient("openai", "gpt-4o")
+        self.client = LLMClient("openai", "gpt-4o")
         # # 使用deepseek
         # self.client = LLMClient("deepseek", "deepseek-chat")
         # 使用deepseek-reasoner
-        self.client = LLMClient(provider="deepseek", model="deepseek-reasoner")
+        # self.client = LLMClient(provider="deepseek", model="deepseek-reasoner")
         self.sl2_per_iterations = []
 
         self.schema_selection_prompt = ChatPromptTemplate.from_messages([
@@ -71,6 +71,7 @@ Note: This is only one iteration in a multi-step process. Focus solely on nodes 
 
 3. **Column Selection Rules**:
    - Select ONLY columns that are directly required to answer: "{question}".
+   - Consider the keyword match results provided in "KEYWORD MATCH RESULTS" as potential strong signals of relevance.
    - Always include foreign key columns needed to form the reference path.
    - Prefer the **minimal** set of foreign keys necessary for the join.
 
@@ -120,6 +121,7 @@ Note: This is only one iteration in a multi-step process. Focus solely on nodes 
 ### Question:
 {question}
 
+{keyword_hints}
 {evidence}
 
 ### Starting Table(s):
@@ -146,7 +148,7 @@ Note: This is only one iteration in a multi-step process. Focus solely on nodes 
                 return json.loads(matches[0])
             raise ValueError("No valid JSON found in response")
 
-    def select_relevant_tables(self, db_schema: str, question: str, select_table: List[str],
+    def select_relevant_tables(self, db_schema: str, question: str, select_table: List[str], keyword_hints,
                                result_from_last_round='', hint='') -> Dict:
         # 生成提示词模板
         prompt_messages = self.schema_selection_prompt.format_messages(
@@ -155,6 +157,7 @@ Note: This is only one iteration in a multi-step process. Focus solely on nodes 
             question=question,
             result_from_last_round=result_from_last_round,
             select_table=select_table,
+            keyword_hints=keyword_hints,
             hint=hint,
             evidence=self.evidence
         )
@@ -239,6 +242,7 @@ if __name__ == '__main__':
         question=question,
         result_from_last_round=result_from_last_round,
         select_table=selected_table,
+        keyword_hints='假装有',
         hint=hint,
         evidence=sl2.evidence
     )
