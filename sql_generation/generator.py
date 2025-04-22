@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from collections import OrderedDict
 
 import config
 from schema_linking.surfing_in_graph import SchemaGenerator
@@ -71,8 +72,10 @@ class SQLGenerator:
         selected_reference_path = example.selected_reference_path
         schema_reasoning = example.schema_reasoning
         sg = SchemaGenerator()
-        schema = sg.generate_combined_description_for_selected({"schema_linking_results": schema_linking_results})
-
+        # schema = sg.generate_combined_description_for_selected({"schema_linking_results": schema_linking_results})
+        schema = "\n".join(
+            sg.generate_combined_description(table) for table in sg.tables
+        )  # full schema
         # System Prompt
         system_prompt = """
 ### Task:
@@ -123,16 +126,16 @@ If information is missing, reason cautiously based on provided evidence and sche
 
             f"{keyword_hints}\n"
 
-            "### Selected Relevant Columns:\n"
-            f"{json.dumps(selected_columns, indent=2)}\n\n"
-
-            f"{selected_reference_path}\n\n"
+            # "### Selected Relevant Columns:\n"
+            # f"{json.dumps(selected_columns, indent=2)}\n\n"
+            # 
+            # f"{selected_reference_path}\n\n"
 
             "### Schema:\n"
             f"{schema}\n\n"
 
-            "### Solvable Reason:\n"
-            f"{schema_reasoning if schema_reasoning else 'None'}"
+            # "### Solvable Reason:\n"
+            # f"{schema_reasoning if schema_reasoning else 'None'}"
             "\n\n"
             "### Please Return SQL:\n"
             "```sql\n"
@@ -143,8 +146,8 @@ If information is missing, reason cautiously based on provided evidence and sche
             {"role": "user", "content": user_prompt.strip()}
         ]
 
-        # print(system_prompt)
-        # print(user_prompt)
+        print(system_prompt)
+        print(user_prompt)
 
         return messages
 
@@ -165,13 +168,26 @@ class SQLResultSaver:
                 f.write("# SQL Generation Error Log\n\n")
 
     def save_success(self, record: dict):
-        """保存一条成功记录到JSON"""
-        with open(self.save_json_path, "r+", encoding="utf-8") as f:
-            data = json.load(f)
-            data.append(record)
-            f.seek(0)
+        """保存一条成功记录到JSON (以qid为key)，避免重复存储"""
+        if not os.path.exists(self.save_json_path):
+            # 如果文件不存在，先初始化为空字典
+            data = {}
+        else:
+            with open(self.save_json_path, "r", encoding="utf-8") as f:
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError:
+                    data = {}
+
+        qid = record["qid"]
+        if qid in data:
+            print(f"QID {qid} already exists. Skipping save.")
+            return  # 不覆盖已经存在的
+
+        data[qid] = record
+
+        with open(self.save_json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-            f.truncate()
 
     def save_error(self, qid: str, question: str, error_message: str):
         """保存一条错误记录到Markdown日志"""
@@ -243,6 +259,9 @@ def run():
         sql_generator = SQLGenerator(dataset_name, db_name)
         with SQLiteExecutor(dataset_name, db_name) as db:
             for qid, qdata in questions.items():
+                # # 只做某条
+                # if qid != "959":
+                #     continue
                 sample = all_samples[int(qid)]
                 evidence = sample.get("evidence", [])
 
@@ -265,8 +284,16 @@ def run():
                     if sql.strip():  # 成功提取到了SQL
                         saver.save_success({
                             "qid": qid,
+                            "db_id": db_name,
                             "question": example.question,
-                            "sql": sql
+                            "sql": sql,
+                            "evidence": example.evidence,
+                            "reasoning": example.reasoning,
+                            "keyword": example.keywords,
+                            "keyword_hints": example.keyword_hints,
+                            "selected_columns": example.selected_columns,
+                            "selected_reference_path": example.selected_reference_path,
+                            "schema_reasoning": example.schema_reasoning
                         })
                     else:
                         raise ValueError("SQL extraction failed (empty result)")
@@ -280,5 +307,137 @@ def run():
             # break
 
 
-if __name__ == '__main__':
-    run()
+import concurrent.futures
+
+import threading
+
+
+def run_concurrent():
+    llm = LLMClient("deepseek", "deepseek-chat")
+    dataset_name = "bird"
+
+    save_json_path = os.path.join(config.SQL_GENERATION, f"{dataset_name}_sql_results.json")
+    save_log_path = os.path.join(config.SQL_GENERATION, f"{dataset_name}_sql_errors.md")
+    saver = SQLResultSaver(save_json_path, save_log_path)
+
+    bird_loader = DataLoader("bird_dev")
+    all_samples = bird_loader.filter_data()
+
+    result_file = os.path.join(config.PROJECT_ROOT, "Results", f"{dataset_name}.json")
+    if not os.path.exists(result_file):
+        print(f"File {result_file} does not exist.")
+        return
+
+    with open(result_file, "r", encoding="utf-8") as f:
+        schema_linking_results = json.load(f)
+
+    # === 新加：加载已保存的 qid 集合
+    saved_qids = set()
+    if os.path.exists(save_json_path):
+        with open(save_json_path, "r", encoding="utf-8") as f:
+            try:
+                saved_data = json.load(f)
+                saved_qids = {idx for idx, data in saved_data.items()}
+            except json.JSONDecodeError:
+                print(f"Warning: Failed to decode {save_json_path}, treating as empty.")
+
+    # 因为是多线程，所以要加锁保护
+    save_lock = threading.Lock()
+
+    graphloader = GraphLoader()
+    for db_name, questions in schema_linking_results.items():
+        print(f"\nLoading graph and DB: {db_name}")
+        graphloader.load_graph("bird", db_name)
+        sql_generator = SQLGenerator(dataset_name, db_name)
+
+        with SQLiteExecutor(dataset_name, db_name) as db:
+
+            def process_question(qid, qdata):
+                # 检查是否已经保存过
+                if qid in saved_qids:
+                    print(f"[DB: {db_name}] Skipping QID {qid} (already saved)")
+                    return
+
+                sample = all_samples[int(qid)]
+                evidence = sample.get("evidence", [])
+
+                example = QuestionExample(qid, evidence, qdata)
+
+                if example.qid != qid:
+                    raise ValueError(f"Question ID mismatch: {example.qid} != {qid}")
+
+                print(f"[DB: {db_name}] Question ID: {example.qid}")
+                print(f"Question: {example.question}")
+
+                try:
+                    messages = sql_generator.generate_sql_prompt(example)
+                    response = llm.chat(messages)
+                    print(response)
+
+                    sql = extract_sql_from_response(response)
+                    print(sql)
+
+                    if sql.strip():
+                        with save_lock:  # 保存时加锁
+                            saver.save_success({
+                                "qid": qid,
+                                "db_id": db_name,
+                                "question": example.question,
+                                "sql": sql,
+                                "evidence": example.evidence,
+                                "reasoning": example.reasoning,
+                                "keyword": example.keywords,
+                                "keyword_hints": example.keyword_hints,
+                                "selected_columns": example.selected_columns,
+                                "selected_reference_path": example.selected_reference_path,
+                                "schema_reasoning": example.schema_reasoning
+                            })
+                            saved_qids.add(qid)  # 也更新内存里的 saved_qids
+                    else:
+                        raise ValueError("SQL extraction failed (empty result)")
+
+                except Exception as e:
+                    error_message = str(e)
+                    print(f"Error for QID {qid}: {error_message}")
+                    with save_lock:
+                        saver.save_error(qid, example.question, error_message)
+
+            # 每个问题开一个线程并发跑
+            with concurrent.futures.ThreadPoolExecutor(max_workers=12) as executor:
+                futures = [
+                    executor.submit(process_question, qid, qdata)
+                    for qid, qdata in questions.items()
+                ]
+                concurrent.futures.wait(futures)
+
+
+def process_json_file(input_file: str, output_file: str):
+    """
+    输入一个原始 JSON 文件路径，输出一个整理好的 JSON 文件
+    要求：
+    - 按 qid 整数升序排序
+    - SQL 语句中去除换行符和制表符
+    - 输出格式： { "0": "SQL\t----- bird -----\tdb_id", ... }
+    """
+    with open(input_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    result = {}
+    sorted_items = sorted(data.items(), key=lambda x: int(x[0]))
+
+    for qid, item in sorted_items:
+        sql = item.get("sql", "").replace("\n", " ").replace("\t", " ").strip()
+        db_id = item.get("db_id", "")
+        result[qid] = f"{sql}\t----- bird -----\t{db_id}"
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+
+
+# 使用示例
+if __name__ == "__main__":
+    # run()
+    # run_concurrent()
+    input_file = "bird_sql_results.json"
+    output_file = "bird_formatted.json"
+    process_json_file(input_file, output_file)
